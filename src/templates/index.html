@@ -1,0 +1,41 @@
+{%extends './base.html'%}
+{%block head%}<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">{%endblock%}
+{%block title%} Cotecmar || LSA {%endblock%}
+{%block nombre%}LSA{%endblock%}
+{%block body%}
+    <div class="search-bar">
+        <input type="text" id="livebox" placeholder="Buscar por equipos">
+        <button>Nuevo equipo +</button>
+    </div>
+
+    <div id="resultados" class="equipos-grid">
+        <!-- Los resultados de la búsqueda se mostrarán aquí -->
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    <!-- Cargar la versión completa de jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+    <!-- Luego tu código que depende de jQuery -->
+    <script>
+        $(document).ready(function() {
+            $("#livebox").on("input", function(e) {
+                var text_label = $("#livebox").val();
+                $.ajax({
+                    method: "POST",
+                    url: "/LSA",
+                    data: { text: text_label },
+                    success: function(res) {
+                        var data = '<ul>';
+                        $.each(res,function(index,value){
+                            data +='<li>'+value.nombre_equipo+'</li>'
+                        });    
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error:", error);
+                    }
+                });
+            });
+        });
+    </script>
+{%endblock%}
