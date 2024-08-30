@@ -1,0 +1,120 @@
+{% extends './base.html' %}
+
+{% block title %}Cotecmar || Equipo Nuevo{% endblock %}
+
+{% block custom %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/mostrar_equipo.css') }}">
+{% endblock %}
+
+{% block nombre %}LSA | "nombre del equipo :v"{% endblock %}
+
+{% block body %}
+<div class="imagens">
+  <img src="{{ url_for('static', filename='img/prueba.jfif') }}"  class="imagen">
+  <h1>"nombre del equipo :v"</h1>
+</div>
+<div class="navbarvertical">
+  <ul class="nav flex-column">
+    <li class="nav-item">
+      <a class="nav-link active" href="#">Generalidades</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">Contexto operacional</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">Procedimiento</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">Análisis funcional</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link active" href="#">Análisis de herramientas</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">Herramientas Especiales</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">Repuesto</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">FMEA</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">RCM</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">MTA</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">LORA</a>
+    </li>
+  </ul>
+</div>
+<div class="show">
+  <form>
+    <div class="section1">
+      <div>
+        <label for="fecha">fecha:</label>
+        <span id="fecha">juan@example.com</span>
+      </div>
+      
+      <div>
+        <label for="grupo_construtivo">Grupo construtivo:</label>
+        <span id="grupo_construtivo">Juan Pérez</span>
+      </div>
+      
+      <div>
+        <label for="subgrupo_construtivo">Subgrupo construtivo:</label>
+        <span id="subgrupo_construtivo">juan@example.com</span>
+      </div>
+  
+      <div>
+        <label for="sistema">Sistema:</label>
+        <span id="sistema">Juan Pérez</span>
+      </div>
+      
+      <div>
+        <label for="tipo_equipo">Tipo de equipo:</label>
+        <span id="tipo_equipo">juan@example.com</span>
+      </div>
+      
+      <div>
+        <label for="equipo">Equipo:</label>
+        <span id="equipo">Juan Pérez</span>
+      </div>
+    </div>
+    <div class="section2">
+      <div>
+        todo esto se llamara a la base de datos<br>
+        <label for="nombre">Responsable:</label>
+        <span id="nombre">Juan Pérez</span>
+      </div>
+
+      <div>
+        <label for="criticidad_sistema">Criticidad de sistema:</label>
+        <span id="criticidad_sistema">juan@example.com</span>
+      </div>
+
+      <div>
+        <label for="fiabilidad_equipo">Fiabilidad del sistema:</label>
+        <span id="fiabilidad_equipo">Juan Pérez</span>
+      </div>
+      
+      <div>
+        <label for="MTBF">MTBF:</label>
+        <span id="MTBF">juan@example.com</span>
+      </div>
+      
+      <div>
+        <label for="AOR">AOR:</label>
+        <span id="AOR">Juan Pérez</span>
+      </div>
+      
+      <div>
+        <label for="GRES">GRES:</label>
+        <span id="GRES">juan@example.com</span>
+      </div>
+    </div>
+  </form>  
+</div>
+{% endblock %}
