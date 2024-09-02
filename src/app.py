@@ -37,8 +37,8 @@ def lsa():
 def equipo_nuevo():
     return render_template('equipo_nuevo.html')
 
-@app.route('/LSA/mostrar-equipo', methods=['POST','GET'])
-def mostrar_quipo():
+@app.route('/LSA/mostrar-equipo')
+def mostrar_equipo():
     return render_template('mostrar_equipo.html')
 
 if __name__ == '__main__':
