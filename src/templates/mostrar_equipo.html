@@ -15,11 +15,11 @@
 {% block body %}
 <div class="container-fluid">
   <div class="row">
-    <div class="col-auto">
-      <button class="navbar-toggler custom-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+    <div class="col-auto ">
+      <button class="navbar-toggler custom-toggler sticky-top" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon "></span>
       </button>
-      <div class="collapse navbar-collapse navbarvertical " id="navbarContent">
+      <div class="collapse navbar-collapse navbarvertical sticky-top" id="navbarContent">
         <ul class="nav flex-column ">
           <li class="nav-item">
             <a class="nav-link active" href="#">Información del equipo</a>
@@ -162,7 +162,7 @@
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elementum sapien varius, dapibus justo non, consectetur libero. Nam ac ante nec sapien fermentum semper et eu ante. Proin eget malesuada sapien, auctor consequat est. Nunc id diam non purus luctus porttitor. Aenean suscipit mauris ante, non consequat nibh lobortis ac. Suspendisse a congue arcu. Phasellus gravida gravida gravida. Vivamus suscipit, velit quis ultricies maximus, nisl eros imperdiet velit, a condimentum odio turpis porta nulla. Vestibulum imperdiet elit nec rutrum rutrum. Aliquam eros dui, ultrices eget turpis ac, feugiat faucibus enim. Ut est justo, feugiat non neque nec, finibus molestie elit. Ut sit amet libero purus. Integer a venenatis dui, sit amet elementum enim.
       </p>
 
-      <h3>Diagrama de Flujo del Subsistema en el que esta Ubicado el Equipo</h3>
+      <h3>Diagrama de Flujo del Subsistema Ubicado en el Equipo</h3>
       <img src="{{ url_for('static', filename='img/prueba.jpg') }}" class="imagend">
 
       <h3>Diagrama Caja Negra de la Función</h3>
