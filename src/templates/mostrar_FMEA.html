@@ -1,0 +1,134 @@
+{% extends './base.html' %}
+
+{% block title %}Cotecmar || Equipo{% endblock %}
+
+{% block custom %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/FMEA.css') }}">
+{% endblock %}
+
+
+
+{% block nombre %}LSA | hola mundo{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-auto ">
+      <button class="navbar-toggler custom-toggler sticky-top" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon "></span>
+      </button>
+      <div class="collapse navbar-collapse navbarvertical sticky-top" id="navbarContent">
+        <ul class="nav flex-column ">
+          <li class="nav-item">
+            <a class="nav-link active" href="#">Información del equipo</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Análisis funcional</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="#">Análisis de herramientas</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Herramientas especiales</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Repuesto</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">FMEA</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">RCM</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">MTA</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">LORA</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="col ">
+        <div class="scroll-container-horizontal">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <td colspan="12"></td>
+                        <td colspan="2">Consecuencia de severidad FO - Fallos Ocultos</td>
+                        <td colspan="2">SF - Seguridad Física</td>
+                        <td colspan="2">MA - Medio Ambiente</td>
+                        <td colspan="2">IO - Impacto Operacional</td>
+                        <td colspan="2">OR - Costos de Reparación</td>
+                        <td colspan="2">FO - Flexibilidad Operacional</td>
+                        <td></td>
+                        <td colspan="2">Ocurrencia</td>
+                        <td>AOR/MTBF</td>
+                        <td colspan="2">Probabilidad de Detección</td>
+                        <td colspan="4"></td>
+                    </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>#</td>
+                    <td>Sistema</td>
+                    <td>Falla Funcional</td>
+                    <td>Item o componente</td>
+                    <td>Codigo Modo de Falla</td>
+                    <td>Consecutivo de Modo de Falla</td>
+                    <td>Descripción Modo de Falla</td>
+                    <td>Causas</td>
+                    <td>Mecancismo de Falla</td>
+                    <td >Detalle del Mecancismo de Falla</td>
+                    <td >MTBF</td>
+                    <td >MTTR</td>
+                    <td >Valor</td>
+                    <td >Descripción</td>
+                    <td >Valor</td>
+                    <td >Descripción</td>
+                    <td >Valor</td>
+                    <td >Descripción</td>
+                    <td >Valor</td>
+                    <td >Descripción</td>
+                    <td >Valor</td>
+                    <td >Descripción</td>
+                    <td >Valor</td>
+                    <td >Descripción</td>
+                    <td >Calculo de Severidad </td>
+                    <td >Valor</td>
+                    <td >Descripción</td>
+                    <td >Ocurrencia Matematica</td>
+                    <td >Valor</td>
+                    <td >Descripción</td>
+                    <td >RPN Valor Total de Riesgo</td>
+                    <td >Riesgo</td>
+                    <td >Accion recomendada FMEA</td>
+                    <td >Frecuencia inicial</td>
+                  </tr>
+                  <tr>
+                    <td scope="row">1</td>
+                    <td>Mark</td>
+                    <td>Otto</td>
+                    <td>@mdo</td>
+                  </tr>
+                  <tr>
+                    <td scope="row">2</td>
+                    <td>Jacob</td>
+                    <td>tdornton</td>
+                    <td>@fat</td>
+                  </tr>
+                  <tr>
+                    <td scope="row">3</td>
+                    <td colspan="2">Larry tde Bird</td>
+                    <td>@twitter</td>
+                  </tr>
+                </tbody>
+              </table>
+        </div>  
+    </div>
+  </div>
+</div>
+{% endblock %}

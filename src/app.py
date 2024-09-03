@@ -37,9 +37,13 @@ def lsa():
 def equipo_nuevo():
     return render_template('equipo_nuevo.html')
 
-@app.route('/LSA/mostrar-equipo')
+@app.route('/LSA/equipo')
 def mostrar_equipo():
     return render_template('mostrar_equipo.html')
+
+@app.route('/LSA/equipo/FMEA')
+def fmea():
+    return render_template('mostrar_FMEA.html')
 
 if __name__ == '__main__':
     app.run()
