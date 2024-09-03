@@ -1,7 +1,8 @@
  .scroll-container-horizontal {
     width:1250px;        /* Ancho del contenedor */
     overflow-x: scroll;  /* Habilita el scroll horizontal */
-    border: 1px solid #ccc; /* Borde para visualizar mejor el área */
+    border-bottom: 1px solid #ccc; /* Borde para visualizar mejor el área */
+    border-top: 1px solid #ccc;
 }
 
 .navbarvertical {

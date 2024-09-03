@@ -45,6 +45,22 @@ def mostrar_equipo():
 def fmea():
     return render_template('mostrar_FMEA.html')
 
+@app.route('/LSA/equipo/MTA')
+def mta():
+    return render_template('mostrar_MTA.html')
+
+@app.route('/LSA/equipo/RCM')
+def rcm():
+    return render_template('mostrar_RCM.html')
+
+@app.route('/LSA/equipo/LORA')
+def lora():
+    return render_template('mostrar_lora.html')
+
+@app.route('/LSA/equipo/analisis-funcional')
+def analisis_funcional():
+    return render_template('mostrar_analisis-funcional.html')
+
 if __name__ == '__main__':
     app.run()
 
