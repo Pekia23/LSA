@@ -61,6 +61,24 @@ def lora():
 def analisis_funcional():
     return render_template('mostrar_analisis-funcional.html')
 
+@app.route('/LSA/equipo/herramientas-especiales')
+def herramientas_especiales():
+    return render_template('mostrar_herramientas-especiales.html')
+
+@app.route('/LSA/equipo/analisis-herramientas')
+def analisis_herramientas():
+    return render_template('mostrar_analisis-herramientas.html')
+
+@app.route('/LSA/equipo/repuestos')
+def repuestos():
+    return render_template('mostrar_repuesto.html')
+
+@app.route('/LSA/prueba')
+def prueba():
+    return render_template('prueba.html')
+
+
+
 if __name__ == '__main__':
     app.run()
 

@@ -42,7 +42,7 @@
 
 .custom-toggler .navbar-toggler-icon {
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%23052647' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
-    background-size: 45px 45px; /* Ajusta el tamaño aquí */
+    background-size: 40px 40px; /* Ajusta el tamaño aquí */
     width: 45px;
     height: 45px; 
     text-align: center;
@@ -52,3 +52,18 @@
     align-items: center;
 }
 
+.navbarvertical {
+    width: auto;
+    padding: 10px;
+}
+.navbarvertical .nav-link {
+    white-space: nowrap; /* Asegura que el texto no se corte en varias líneas */
+    margin-bottom: 10px;
+    color: #052647;;
+    font-weight: bold;
+
+}
+
+.col-auto{
+    align-items: center;
+}
