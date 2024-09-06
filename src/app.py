@@ -78,6 +78,47 @@ def prueba():
     return render_template('prueba.html')
 
 
+@app.route('/LSA/registro-mta-2')
+def registro_mta_2():
+    return render_template('registro_mta_2.html')
+
+@app.route('/LSA/registro-mta')
+def registro_mta():
+    return render_template('registro_mta.html')
+
+@app.route('/LSA/registro-rcm-2')
+def registro_rcm_2():
+    return render_template('registro_rcm_2.html')
+
+@app.route('/LSA/registro-rcm')
+def registro_rcm():
+    return render_template('registro_rcm.html')
+
+@app.route('/LSA/generalidades')
+def generalidades():
+    return render_template('generalidades.html')
+
+@app.route('/LSA/ingresar-FMEA')
+def ingresarFMEA():
+    return render_template('ingresar_FMEA.html')
+
+@app.route('/LSA/fmea-form-2')
+def fmea_form_2():
+    return render_template('fmea-form-2.html')
+
+@app.route('/LSA/analisis-funcional')
+def analisis_funcional():
+    return render_template('analisis_funcional.html')
+
+@app.route('/LSA/herramientas-especiales')
+def herramientas_especiales():
+    return render_template('herramientas_especiales.html')
+
+@app.route('/LSA/repuesto')
+def repuesto():
+    return render_template('repuesto.html')
+
+
 
 if __name__ == '__main__':
     app.run()
