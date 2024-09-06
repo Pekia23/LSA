@@ -1,0 +1,35 @@
+
+
+/* Estilos para el título */
+.section-title {
+    color: rgb(13, 2, 63); /* Color verde */
+    font-weight: bold;
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+/* Estilos para el formulario */
+.form-label {
+    font-weight: bold;
+}
+
+/* Estilo de los campos de entrada */
+.form-control {
+    margin-bottom: 15px;
+}
+
+/* Botón de Agregar FMEA */
+
+#btn-agregar-fmea {
+    background-color: rgb(13, 2, 63);
+    color: rgb(13, 2, 63);
+    padding: 10px 20px;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#btn-agregar-fmea:hover {
+    background-color: rgb(13, 2, 63);
+}

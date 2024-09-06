@@ -1,0 +1,166 @@
+{% extends './base.html' %}
+
+{% block title %}Cotecmar || Registro del MTA{% endblock %}
+
+{% block custom %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/registro_mta.css') }}">
+{% endblock %}
+
+{% block nombre %}Registro del MTA{% endblock %}
+
+{% block body %}
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-auto">
+            <button class="navbar-toggler custom-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse navbarvertical" id="navbarContent">
+                <ul class="nav flex-column">
+                    <li class="nav-item"><a class="nav-link active" href="#">Información del equipo</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Análisis funcional</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Análisis de herramientas</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Herramientas especiales</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Repuesto</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">FMEA</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">RCM</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">MTA</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">LORA</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Contenido principal -->
+        <div class="col">
+            <h2 class="section-title text-center">LSA | REGISTRO DEL MTA</h2>
+            <form id="mta-form">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="sistema" class="form-label">Sistema</label>
+                        <select id="sistema" class="form-select"></select>
+
+                        <label for="componente" class="form-label">Componente</label>
+                        <input type="text" id="componente" class="form-control">
+
+                        <label for="falla_funcional" class="form-label">Falla Funcional</label>
+                        <input type="text" id="falla_funcional" class="form-control">
+
+                        <label for="tipo_mantenimiento" class="form-label">Tipo de mantenimiento</label>
+                        <select id="tipo_mantenimiento" class="form-select"></select>
+
+                        <label for="tarea_mantenimiento" class="form-label">Tarea de mantenimiento</label>
+                        <select id="tarea_mantenimiento" class="form-select"></select>
+
+                        <label for="personal_requerido" class="form-label">Cantidad de personal requerido</label>
+                        <input type="number" id="personal_requerido" class="form-control">
+                    </div>
+
+                    <!-- Herramientas / Equipos Requeridos -->
+                    <div class="col-md-6">
+                        <h3 class="section-title text-center">HERRAMIENTAS / EQUIPOS REQUERIDOS</h3>
+
+                        <!-- Seguridad -->
+                        <div class="form-group">
+                            <h5>Seguridad</h5>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="casco">
+                                <label for="casco" class="form-check-label">Casco</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="botas">
+                                <label for="botas" class="form-check-label">Botas de seguridad</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="guantes">
+                                <label for="guantes" class="form-check-label">Guantes de seguridad</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="camisa">
+                                <label for="camisa" class="form-check-label">Camisa overol</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="mascarilla">
+                                <label for="mascarilla" class="form-check-label">Mascarilla</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="tapaoidos">
+                                <label for="tapaoidos" class="form-check-label">Tapaoídos</label>
+                            </div>
+                            <!-- Seleccionar todo -->
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="select-all-seguridad">
+                                <label for="select-all-seguridad" class="form-check-label">Seleccionar todo</label>
+                            </div>
+                        </div>
+
+                        <!-- Elemento de Soporte -->
+                        <div class="form-group">
+                            <h5>Elemento de Soporte</h5>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="linterna">
+                                <label for="linterna" class="form-check-label">Linterna</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="embudo">
+                                <label for="embudo" class="form-check-label">Embudo</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="cinta">
+                                <label for="cinta" class="form-check-label">Cinta</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="bisturi">
+                                <label for="bisturi" class="form-check-label">Bisturí</label>
+                            </div>
+                            <!-- Seleccionar todo -->
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="select-all-soporte">
+                                <label for="select-all-soporte" class="form-check-label">Seleccionar todo</label>
+                            </div>
+                        </div>
+
+                        <!-- Generales -->
+                        <div class="form-group">
+                            <h5>Generales</h5>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="martillo">
+                                <label for="martillo" class="form-check-label">Martillo</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="segura">
+                                <label for="segura" class="form-check-label">Segueta</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="taladro">
+                                <label for="taladro" class="form-check-label">Taladro</label>
+                            </div>
+                            <!-- Seleccionar todo -->
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="select-all-generales">
+                                <label for="select-all-generales" class="form-check-label">Seleccionar todo</label>
+                            </div>
+                        </div>
+
+                        <!-- Botón siguiente -->
+                        <div class="text-end mt-4">
+                            <button type="button" class="btn btn-siguiente" id="btn-siguiente">Siguiente</button>
+                        </div>
+                        <script>
+                            document.getElementById('btn-siguiente').addEventListener('click', function() {
+                            window.location.href = 'registro-mta-2'; // Cambiar a la segunda vista de FMEA
+                            });
+                        </script>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/registro_mta.js') }}"></script>
+
+{% endblock %}
