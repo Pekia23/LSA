@@ -1,36 +1,30 @@
-import MySQLdb
+
 from flask import Flask, render_template, request,jsonify
-from flask_mysqldb import MySQL
+from database import buscar_equipos 
 from config import config
 from flask import Flask, jsonify
+from database import verificar_conexion
+from __init__ import create_app
 
-
+app = create_app()
 app = Flask(__name__)
-db = MySQL(app)
+
 app.config.from_object(config['development'])
 
 @app.route('/check', methods=['GET'])
 def check_db_connection():
-    try:
-        # Crear un cursor para realizar la consulta
-        cursor = db.connection.cursor()
-        cursor.execute("SELECT 1")
-        cursor.close()
-        return jsonify({"status": "success", "message": "Database connection successful"}), 200
-    except MySQLdb.Error as e:
-        return jsonify({"status": "error", "message": str(e)}), 500
+    # Llamar a la función que verifica la conexión a la base de datos
+    result, status_code = verificar_conexion()
+    return jsonify(result), status_code
 
 @app.route('/')
 def home():
     return render_template('index.html')
 
-@app.route('/LSA', methods=['POST','GET'])
+@app.route('/LSA', methods=['POST', 'GET'])
 def lsa():
     searchbox = request.form.get("text")
-    cursor = db.connection.cursor()
-    query = "SELECT nombre_equipo FROM equipo_info WHERE nombre_equipo LIKE '{}%' ORDER BY nombre_equipo".format(searchbox)
-    cursor.execute(query)
-    result = cursor.fetchall()
+    result = buscar_equipos(searchbox)  # Llama a la función que está en database.py
     return jsonify(result)
 
 @app.route('/LSA/equipo-nuevo', methods=['POST','GET'])
@@ -57,16 +51,16 @@ def rcm():
 def lora():
     return render_template('mostrar_lora.html')
 
-@app.route('/LSA/equipo/analisis-funcional')
-def analisis_funcional():
+@app.route('/LSA/equipo/mostrar-analisis-funcional')
+def mostrar_analisis_funcional():
     return render_template('mostrar_analisis-funcional.html')
 
-@app.route('/LSA/equipo/herramientas-especiales')
-def herramientas_especiales():
+@app.route('/LSA/equipo/mostrar-herramientas-especiales')
+def mostrar_herramientas_especiales():
     return render_template('mostrar_herramientas-especiales.html')
 
-@app.route('/LSA/equipo/analisis-herramientas')
-def analisis_herramientas():
+@app.route('/LSA/equipo/mostrar-analisis-herramientas')
+def mostrar_analisis_herramientas():
     return render_template('mostrar_analisis-herramientas.html')
 
 @app.route('/LSA/equipo/repuestos')
@@ -98,12 +92,12 @@ def registro_rcm():
 def generalidades():
     return render_template('generalidades.html')
 
-@app.route('/LSA/ingresar-FMEA')
+@app.route('/LSA/ingresar-fmea')
 def ingresarFMEA():
     return render_template('ingresar_FMEA.html')
 
-@app.route('/LSA/fmea-form-2')
-def fmea_form_2():
+@app.route('/LSA/ingresar-fmea-2')
+def ingresar_fmea_2():
     return render_template('fmea-form-2.html')
 
 @app.route('/LSA/analisis-funcional')

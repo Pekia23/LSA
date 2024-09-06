@@ -9,7 +9,18 @@ class DevelopmentConfig(Config):
     MYSQL_HOST = 'localhost'
     MYSQL_USER = 'root'
     MYSQL_PASSWORD = ''
-    MYSQL_DB = 'lsa'
+    MYSQL_DB = 'lsa3'
+    MYSQL_PORT = 3306
+    MYSQL_UNIX_SOCKET = None
+    MYSQL_CONNECT_TIMEOUT = 10  # Valor en segundos
+    MYSQL_READ_DEFAULT_FILE = None
+    MYSQL_USE_UNICODE = True
+    MYSQL_CHARSET = 'utf8'
+    MYSQL_SQL_MODE = None
+    MYSQL_CURSORCLASS = 'DictCursor'
+    MYSQL_AUTOCOMMIT = True
+    MYSQL_CUSTOM_OPTIONS = {}
+
 
 config = {
     'development': DevelopmentConfig
