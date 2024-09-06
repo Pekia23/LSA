@@ -1,7 +1,6 @@
 
 from flask import Flask, render_template, request,jsonify, redirect, url_for
 from database import buscar_equipos 
-
 from config import config
 from flask import Flask, jsonify
 from database import verificar_conexion
