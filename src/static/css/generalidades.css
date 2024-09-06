@@ -1,24 +1,6 @@
-.imagen{
-    border: solid;
-    border-color: rgba(211, 211, 211, 0.534);
-    max-height: 500px; /* Establece el valor máximo de altura */
-    width: auto; /* Asegura que la proporción se mantenga */
-    height: auto; /* Asegura que la proporción se mantenga */
+.row{
+    background-color: #f0f0f0;
 }
-
-.imagend{
-    border: solid;
-    border-color: rgba(211, 211, 211, 0.534);
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.imagens{
-    padding: 5px;
-    background-color: rgba(211, 211, 211, 0.534);
-}
-
 .navbarvertical {
     width: auto;
     padding: 10px;
@@ -41,7 +23,7 @@
 }
 
 .section-title {
-    color: rgb(13, 2, 63); /* Azul */
+    color:  #0c377f !important; /* Azul */
     font-weight: bold; /* Negrita */
     margin-top: 20px;
     margin-bottom: 20px;
@@ -55,4 +37,18 @@
 
 .form-control {
     margin-bottom: 15px;
+}
+
+.nav-link{
+    color: #0c377f; /* Azul */
+    font-weight: bold;
+}
+
+.col{
+    padding:30px 80px;
+}
+
+.navbar-toggler-icon{
+    padding:60px 0;
+    text-align: center;
 }
