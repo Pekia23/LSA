@@ -19,22 +19,22 @@
             </button>
             <div class="collapse navbar-collapse navbarvertical" id="navbarContent">
                 <ul class="nav flex-column">
-                    <li class="nav-item"><a class="nav-link active" href="#">Información del equipo</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Análisis funcional</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="{{url_for('registro_generalidades')}}">Información del equipo</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{url_for('registro_analisis_funcional')}}">Análisis funcional</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">Análisis de herramientas</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Herramientas especiales</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Repuesto</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">FMEA</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">RCM</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">MTA</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{url_for('registro_herramientas_especiales')}}">Herramientas especiales</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{url_for('registro_repuesto')}}">Repuesto</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{url_for('registro_FMEA')}}">FMEA</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{url_for('registro_RCM')}}">RCM</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{url_for('registro_MTA')}}">MTA</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">LORA</a></li>
                 </ul>
             </div>
         </div>
 
         <div class="col">
-            <h2 class="section-title text-center">LSA | Registro de Herramientas Especiales</h2>
-
+            <h2 class="section-title text-center">Herramientas Especiales</h2>
+            <br>
             <form id="herramientas-especiales-form">
                 <div class="row">
                     <!-- Primera Columna -->
@@ -66,10 +66,10 @@
                         <input type="text" class="form-control" id="dibujo_seccion" name="dibujo_seccion" placeholder="Dibujo de sección transversal">
                     </div>
                 </div>
-
+                <br>
                 <!-- Botón "Agregar herramientas especiales" -->
                 <div class="text-end mt-4">
-                    <button type="submit" class="btn btn-primary" id="btn-agregar-herramientas">Agregar herramientas especiales</button>
+                    <button type="submit" class="btn btn-primary" id="btn-agregar-herramientas">Guardar herramientas especiales</button>
                 </div>
             </form>
         </div>

@@ -1,4 +1,8 @@
- .scroll-container-horizontal {
+body {
+    background-color: #f5f5f5;
+}
+
+.scroll-container-horizontal {
     width:1250px;        /* Ancho del contenedor */
     overflow-x: scroll;  /* Habilita el scroll horizontal */
     border-bottom: 1px solid #ccc; /* Borde para visualizar mejor el área */
@@ -23,7 +27,7 @@
     align-items: center;   /* Centra verticalmente */
     width: 50px;           /* Ajusta el ancho del botón si es necesario */
     height: 50px;          /* Ajusta la altura del botón si es necesario */
-
+    margin-top: 60px;      /* Mueve el ícono 60px hacia abajo */
 }
 
 .custom-toggler .navbar-toggler-icon {
@@ -36,4 +40,43 @@
 
 .col-auto{
     align-items: center;
+}
+
+.section-title {
+    color:  #0c377f !important; /* Azul */
+    font-weight: bold; /* Negrita */
+    margin-top: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.form-label {
+    font-weight: bold; 
+    display: block;
+}
+
+.form-control {
+    margin-bottom: 15px;
+}
+
+.nav-link{
+    color: #0c377f; /* Azul */
+    font-weight: bold;
+}
+
+.col{
+    padding:35px 80px 30px 45px;
+}
+
+.btn-primary {
+    background-color: rgb(13, 2, 63);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: rgb(33, 33, 99);
 }

@@ -1,6 +1,6 @@
 {% extends './base.html' %}
 
-{% block title %}Cotecmar || Análisis Funcional{% endblock %}
+{% block title %}Cotecmar || Registro - Análisis Funcional{% endblock %}
 
 {% block custom %}
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -19,22 +19,22 @@
             </button>
             <div class="collapse navbar-collapse navbarvertical" id="navbarContent">
                 <ul class="nav flex-column">
-                    <li class="nav-item"><a class="nav-link active" href="#">Información del equipo</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Análisis funcional</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="{{url_for('registro_generalidades')}}">Información del equipo</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{url_for('registro_analisis_funcional')}}">Análisis funcional</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">Análisis de herramientas</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Herramientas especiales</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Repuesto</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">FMEA</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">RCM</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">MTA</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{url_for('registro_herramientas_especiales')}}">Herramientas especiales</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{url_for('registro_repuesto')}}">Repuesto</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{url_for('registro_FMEA')}}">FMEA</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{url_for('registro_RCM')}}">RCM</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{url_for('registro_MTA')}}">MTA</a></li>
                     <li class="nav-item"><a class="nav-link" href="#">LORA</a></li>
                 </ul>
             </div>
         </div>
 
         <div class="col">
-            <h2 class="section-title text-center">LSA | Registro de Análisis Funcional</h2>
-
+            <h2 class="section-title text-center"> Análisis Funcional</h2>
+            <br>
             <form id="analisis-funcional-form">
                 <div class="row">
                     <div class="col-md-6">
@@ -68,9 +68,9 @@
                         <textarea class="form-control" id="notas" name="notas" placeholder="Notas"></textarea>
                     </div>
                 </div>
-
+                <br>
                 <div class="text-end mt-4">
-                    <button type="submit" class="btn btn-primary" id="btn-agregar-analisis-funcional">Agregar análisis funcional</button>
+                    <button type="submit" class="btn btn-primary" id="btn-agregar-analisis-funcional">Guardar análisis funcional</button>
                 </div>
             </form>
         </div>

@@ -1,24 +1,3 @@
-.imagen{
-    border: solid;
-    border-color: rgba(211, 211, 211, 0.534);
-    max-height: 500px; /* Establece el valor máximo de altura */
-    width: auto; /* Asegura que la proporción se mantenga */
-    height: auto; /* Asegura que la proporción se mantenga */
-}
-
-.imagend{
-    border: solid;
-    border-color: rgba(211, 211, 211, 0.534);
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.imagens{
-    padding: 5px;
-    background-color: rgba(211, 211, 211, 0.534);
-}
-
 .navbarvertical {
     width: auto;
     padding: 10px;

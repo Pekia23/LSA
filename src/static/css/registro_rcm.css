@@ -50,3 +50,17 @@ body {
 .col-auto{
     align-items: center;
 }
+
+.col{
+    padding:35px 80px 30px 45px;
+}
+
+.navbar-toggler-icon{
+    padding:60px 0;
+    text-align: center;
+}
+
+.nav-link{
+    color: #0c377f; /* Azul */
+    font-weight: bold;
+}

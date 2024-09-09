@@ -89,10 +89,6 @@ def registro_generalidades():
 def registro_FMEA():
     return render_template('registro_FMEA.html')
 
-@app.route('/LSA/registro-FMEA-2')
-def registro_FMEA_2():
-    return render_template('registro-FMEA_2.html')
-
 @app.route('/LSA/registro-analisis-funcional')
 def registro_analisis_funcional():
     return render_template('registro_analisis_funcional.html')
