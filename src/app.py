@@ -65,17 +65,9 @@ def mostrar_analisis_herramientas():
 def mostrar_repuesto():
     return render_template('mostrar_repuesto.html')
 
-@app.route('/LSA/registro-MTA-2')
-def registro_MTA_2():
-    return render_template('registro_MTA_2.html')
-
 @app.route('/LSA/registro-MTA')
 def registro_MTA():
     return render_template('registro_MTA.html')
-
-@app.route('/LSA/registro-RCM-2')
-def registro_RCM_2():
-    return render_template('registro_RCM_2.html')
 
 @app.route('/LSA/registro-RCM')
 def registro_RCM():

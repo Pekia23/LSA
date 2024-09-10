@@ -20,94 +20,77 @@
         <span class="navbar-toggler-icon "></span>
       </button>
       <div class="collapse navbar-collapse navbarvertical"  id="navbarContent">
-        <ul class="nav flex-column ">
-          <li class="nav-item">
-            <a class="nav-link active" href="#">Información del equipo</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Análisis funcional</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link active" href="#">Análisis de herramientas</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Herramientas especiales</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Repuesto</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">FMEA</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">RCM</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">MTA</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">LORA</a>
-          </li>
+        <ul class="nav flex-column">
+          <li class="nav-item"><a class="nav-link active" href="{{url_for('mostrar_equipo')}}">Información del equipo</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_analisis_funcional')}}">Análisis funcional</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Análisis de herramientas</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_herramientas_especiales')}}">Herramientas especiales</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_repuesto')}}">Repuesto</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_FMEA')}}">FMEA</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_RCM')}}">RCM</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_MTA')}}">MTA</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">LORA</a></li>
         </ul>
       </div>
     </div>
 
     <div class="col ">
-            <table class="table">
-                <thead>
-                    <tr>
-                      <th scope="col" >Sistema del equipo</th>
-                      <th scope="col" >Verbo</th>
-                      <th scope="col" >Acción</th>
-                      <th scope="col" >Estandar de desempeño deseado</th>
-                    </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                    <td>@fat</td>
-                  </tr>
-                  <tr>
-                    <td>Jacob</td>
-                    <td>tdornton</td>
-                    <td>@fat</td>
-                    <td>@fat</td>
-                  </tr>
-                  <tr>
-                    <td colspan="2">Larry tde Bird</td>
-                    <td>@twitter</td>
-                    <td>@fat</td>
-                  </tr>
-                </tbody>
-              </table>
-              <br>
-              <table class="table">
-                <thead>
-                    <tr>
-                      <th scope="col" colspan="3">Sistema del equipo x</th>
-                    </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td  >Sistema del equipo</td>
-                    <td  >Verbo</td>
-                    <td  >Acción</td>
-                  </tr>
-                  <tr>
-                    <td>Jacob</td>
-                    <td>tdornton</td>
-                    <td>@fat</td>
-                    
-                  </tr>
-                  <tr>
-                    <td colspan="2">Larry tde Bird</td>
-                    <td>@twitter</td>
-                    
-                  </tr>
-                </tbody>
-              </table> 
+      <h2 class="section-title text-center"> Análisis Funcional</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                  <th scope="col" >Sistema del equipo</th>
+                  <th scope="col" >Verbo</th>
+                  <th scope="col" >Acción</th>
+                  <th scope="col" >Estandar de desempeño deseado</th>
+                </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>@mdo</td>
+                <td>@fat</td>
+              </tr>
+              <tr>
+                <td>Jacob</td>
+                <td>tdornton</td>
+                <td>@fat</td>
+                <td>@fat</td>
+              </tr>
+              <tr>
+                <td colspan="2">Larry tde Bird</td>
+                <td>@twitter</td>
+                <td>@fat</td>
+              </tr>
+            </tbody>
+          </table>
+          <br>
+          <table class="table">
+            <thead>
+                <tr>
+                  <th scope="col" colspan="3">Sistema del equipo x</th>
+                </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td  >Sistema del equipo</td>
+                <td  >Verbo</td>
+                <td  >Acción</td>
+              </tr>
+              <tr>
+                <td>Jacob</td>
+                <td>tdornton</td>
+                <td>@fat</td>
+                
+              </tr>
+              <tr>
+                <td colspan="2">Larry tde Bird</td>
+                <td>@twitter</td>
+                
+              </tr>
+            </tbody>
+          </table> 
     </div>
   </div>
 </div>

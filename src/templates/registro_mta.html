@@ -36,126 +36,487 @@
 
         <!-- Contenido principal -->
         <div class="col">
-            <h2 class="section-title text-center">LSA | REGISTRO DEL MTA</h2>
+            <h2 class="section-title text-center">Maintenance Task Analysis (MTA)</h2>
+            <br>
             <form id="mta-form">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <label for="sistema" class="form-label">Sistema</label>
                         <select id="sistema" class="form-select"></select>
 
+                        <label for="tipo_mantenimiento" class="form-label">Tipo de mantenimiento</label>
+                        <select id="tipo_mantenimiento" class="form-select"></select>
+                    </div>    
+                    <div class="col-md-4">
                         <label for="componente" class="form-label">Componente</label>
                         <input type="text" id="componente" class="form-control">
 
+                        <label for="tarea_mantenimiento" class="form-label">Tarea de mantenimiento</label>
+                        <select id="tarea_mantenimiento" class="form-select"></select>   
+                    </div>
+                    <div class="col-md-4">
                         <label for="falla_funcional" class="form-label">Falla Funcional</label>
                         <input type="text" id="falla_funcional" class="form-control">
-
-                        <label for="tipo_mantenimiento" class="form-label">Tipo de mantenimiento</label>
-                        <select id="tipo_mantenimiento" class="form-select"></select>
-
-                        <label for="tarea_mantenimiento" class="form-label">Tarea de mantenimiento</label>
-                        <select id="tarea_mantenimiento" class="form-select"></select>
 
                         <label for="personal_requerido" class="form-label">Cantidad de personal requerido</label>
                         <input type="number" id="personal_requerido" class="form-control">
                     </div>
-
+                    
+                    
                     <!-- Herramientas / Equipos Requeridos -->
-                    <div class="col-md-6">
-                        <h3 class="section-title text-center">HERRAMIENTAS / EQUIPOS REQUERIDOS</h3>
+                    <h4 class="section-title text-center my-4">HERRAMIENTAS / EQUIPOS REQUERIDOS</h4>
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="seguridad-tab" data-bs-toggle="tab" data-bs-target="#seguridad" type="button" role="tab" aria-controls="seguridad" aria-selected="true">Seguridad</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="soporte-tab" data-bs-toggle="tab" data-bs-target="#soporte" type="button" role="tab" aria-controls="soporte" aria-selected="false">Elemento de soporte</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="generales-tab" data-bs-toggle="tab" data-bs-target="#generales" type="button" role="tab" aria-controls="generales" aria-selected="false">Generales</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="electronicos-tab" data-bs-toggle="tab" data-bs-target="#electronicos" type="button" role="tab" aria-controls="electronicos" aria-selected="false">Electrónicos</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="limpieza-tab" data-bs-toggle="tab" data-bs-target="#limpieza" type="button" role="tab" aria-controls="limpieza" aria-selected="false">De limpieza</button>
+                        </li>
+                        </ul>
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active" id="seguridad" role="tabpanel" aria-labelledby="seguridad-tab">
+                                <br>
+                                <div class="row">
+                                    <!-- Primera fila de tres elementos -->
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="casco">
+                                        <label for="casco" class="form-check-label">Casco</label>
+                                    </div>
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="botas">
+                                        <label for="botas" class="form-check-label">Botas de seguridad</label>
+                                    </div>
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="guantes">
+                                        <label for="guantes" class="form-check-label">Guantes de seguridad</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <!-- Segunda fila de tres elementos -->
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="camisa">
+                                        <label for="camisa" class="form-check-label">Camisa overol</label>
+                                    </div>
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="mascarilla">
+                                        <label for="mascarilla" class="form-check-label">Mascarilla</label>
+                                    </div>
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="tapaoidos">
+                                        <label for="tapaoidos" class="form-check-label">Tapaoídos</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <!-- Tercera fila de tres elementos -->
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="gafas_seguridad">
+                                        <label for="gafas_seguridad" class="form-check-label">Gafas de seguridad</label>
+                                    </div>
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="pantalon_overol">
+                                        <label for="pantalon_overol" class="form-check-label">Pantalón overol</label>
+                                    </div>
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="mascara_gas">
+                                        <label for="mascara_gas" class="form-check-label">Mascara de gas</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <!-- Fila para 'Seleccionar todo' -->
+                                    <div class="col-12 form-check">
+                                        <input type="checkbox" class="form-check-input" id="select-all-seguridad">
+                                        <label for="select-all-seguridad" class="form-check-label">Seleccionar todo</label>
+                                    </div>
+                                </div>
+                            </div>
 
-                        <!-- Seguridad -->
-                        <div class="form-group">
-                            <h5>Seguridad</h5>
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="casco">
-                                <label for="casco" class="form-check-label">Casco</label>
+                            <div class="tab-pane fade" id="soporte" role="tabpanel" aria-labelledby="soporte-tab">
+                                <br>
+                                <div class="row">
+                                    <!-- Primera fila de tres elementos -->
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="linterna">
+                                        <label for="linterna" class="form-check-label">Linterna</label>
+                                    </div>
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="embudo">
+                                        <label for="embudo" class="form-check-label">Embudo</label>
+                                    </div>
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="cinta">
+                                        <label for="cinta" class="form-check-label">Cinta</label>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <!-- Segunda fila de tres elementos -->
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="bisturi">
+                                        <label for="bisturi" class="form-check-label">Bisturí</label>
+                                    </div>
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="escuadra">
+                                        <label for="escuadra" class="form-check-label">Escuadra</label>
+                                    </div>
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="polea">
+                                        <label for="polea" class="form-check-label">Polea</label>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <!-- Tercera fila de tres elementos -->
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="flexometro">
+                                        <label for="flexometro" class="form-check-label">Flexometro</label>
+                                    </div>
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="cinta_aislante">
+                                        <label for="cinta_aislante" class="form-check-label">Cinta aislante</label>
+                                    </div>
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="atomizador">
+                                        <label for="atomizador" class="form-check-label">Atomizador</label>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <!-- Cuarta fila de tres elementos -->
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="bridas">
+                                        <label for="bridas" class="form-check-label">Bridas</label>
+                                    </div>
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="tensor_correas">
+                                        <label for="tensor_correas" class="form-check-label">Tensores de correas</label>
+                                    </div>
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="calibrador">
+                                        <label for="calibrador" class="form-check-label">Calibrador</label>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <!-- Fila para 'Seleccionar todo' -->
+                                    <div class="col-12 form-check">
+                                        <input type="checkbox" class="form-check-input" id="select-all-soporte">
+                                        <label for="select-all-soporte" class="form-check-label">Seleccionar todo</label>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="botas">
-                                <label for="botas" class="form-check-label">Botas de seguridad</label>
+
+                            <div class="tab-pane fade" id="generales" role="tabpanel" aria-labelledby="generales-tab">
+                                <br>
+                                <div class="row">
+                                    <!-- Primera fila de tres elementos -->
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="martillo">
+                                        <label for="martillo" class="form-check-label">Martillo</label>
+                                    </div>
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="segueta">
+                                        <label for="segueta" class="form-check-label">Segueta</label>
+                                    </div>
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="taladro">
+                                        <label for="taladro" class="form-check-label">Taladro</label>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <!-- Segunda fila de tres elementos -->
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="machosolo">
+                                        <label for="machosolo" class="form-check-label">Machosolo</label>
+                                    </div>
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="cortatubo">
+                                        <label for="cortatubo" class="form-check-label">Cortatubo</label>
+                                    </div>
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="remachadora">
+                                        <label for="remachadora" class="form-check-label">Remachadora</label>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <!-- Tercera fila de tres elementos -->
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="juego_destornilladores">
+                                        <label for="juego_destornilladores" class="form-check-label">Juego de destornilladores</label>
+                                    </div>
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="prensas">
+                                        <label for="prensas" class="form-check-label">Prensas</label>
+                                    </div>
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="pulidora">
+                                        <label for="pulidora" class="form-check-label">Pulidora</label>
+                                    </div>
+                                </div>
+                            
+                                <div class="row">
+                                    <!-- Cuarta fila de tres elementos -->
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="maquina_soldadura">
+                                        <label for="maquina_soldadura" class="form-check-label">Maquina de soldadura</label>
+                                    </div>
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="mazo">
+                                        <label for="mazo" class="form-check-label">Mazo</label>
+                                    </div>
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="engrasador">
+                                        <label for="engrasador" class="form-check-label">Engrasador</label>
+                                    </div>
+                                </div>
+                            
+                                <div class="row">
+                                    <!-- Quinta fila de tres elementos -->
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="tiza">
+                                        <label for="tiza" class="form-check-label">Tiza</label>
+                                    </div>
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="juego_llave">
+                                        <label for="juego_llave" class="form-check-label">Juego de llaves</label>
+                                    </div>
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="alicate">
+                                        <label for="alicate" class="form-check-label">Alicate</label>
+                                    </div>
+                                </div>
+                            
+                                <div class="row">
+                                    <!-- Sexta fila de tres elementos -->
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="sierra">
+                                        <label for="sierra" class="form-check-label">Sierra</label>
+                                    </div>
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="llave_dinamometrica">
+                                        <label for="llave_dinamometrica" class="form-check-label">Llave de dinamometrica</label>
+                                    </div>
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="cincel">
+                                        <label for="cincel" class="form-check-label">Cincel</label>
+                                    </div>
+                                </div>
+                            
+                                <div class="row">
+                                    <!-- Séptima fila de dos elementos -->
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="nivel">
+                                        <label for="nivel" class="form-check-label">Nivel</label>
+                                    </div>
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="marcador">
+                                        <label for="marcador" class="form-check-label">Marcador</label>
+                                    </div>
+                                </div>
+                            
+                                <div class="row">
+                                    <!-- Fila para 'Seleccionar todo' -->
+                                    <div class="col-12 form-check">
+                                        <input type="checkbox" class="form-check-input" id="select-all-generales">
+                                        <label for="select-all-generales" class="form-check-label">Seleccionar todo</label>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="guantes">
-                                <label for="guantes" class="form-check-label">Guantes de seguridad</label>
+                            
+                            <div class="tab-pane fade" id="electronicos" role="tabpanel" aria-labelledby="electronicos-tab">
+                                <br>
+                                <div class="row">
+                                    <!-- Primera fila de tres elementos -->
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="cautin">
+                                        <label for="cautin" class="form-check-label">Cautín</label>
+                                    </div>
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="estano">
+                                        <label for="estano" class="form-check-label">Estaño</label>
+                                    </div>
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="desoldador">
+                                        <label for="desoldador" class="form-check-label">Desoldador</label>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <!-- Segunda fila de tres elementos -->
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="multimetro">
+                                        <label for="multimetro" class="form-check-label">Multímetro</label>
+                                    </div>
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="pinza_voltiamperimetrica">
+                                        <label for="pinza_voltiamperimetrica" class="form-check-label">Pinza voltiamperimétrica</label>
+                                    </div>
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="lupa">
+                                        <label for="lupa" class="form-check-label">Lupa</label>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <!-- Tercera fila de tres elementos -->
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="pasta_soldar">
+                                        <label for="pasta_soldar" class="form-check-label">Pasta de soldar</label>
+                                    </div>
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="malla_desoldadora">
+                                        <label for="malla_desoldadora" class="form-check-label">Malla desoldadora</label>
+                                    </div>
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="pelacables">
+                                        <label for="pelacables" class="form-check-label">Pelacables</label>
+                                    </div>
+                                </div>
+                            
+                                <div class="row">
+                                    <!-- Cuarta fila de tres elementos -->
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="probador_analogico">
+                                        <label for="probador_analogico" class="form-check-label">Probador analógico</label>
+                                    </div>
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="bomba_vacio">
+                                        <label for="bomba_vacio" class="form-check-label">Bomba de vacío</label>
+                                    </div>
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="medidor_aislamiento">
+                                        <label for="medidor_aislamiento" class="form-check-label">Medidor de aislamiento</label>
+                                    </div>
+                                </div>
+                            
+                                <div class="row">
+                                    <!-- Fila para 'Seleccionar todo' -->
+                                    <div class="col-12 form-check">
+                                        <input type="checkbox" class="form-check-input" id="select-all-generales">
+                                        <label for="select-all-generales" class="form-check-label">Seleccionar todo</label>
+                                    </div>
+                                </div>
+                                
                             </div>
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="camisa">
-                                <label for="camisa" class="form-check-label">Camisa overol</label>
-                            </div>
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="mascarilla">
-                                <label for="mascarilla" class="form-check-label">Mascarilla</label>
-                            </div>
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="tapaoidos">
-                                <label for="tapaoidos" class="form-check-label">Tapaoídos</label>
-                            </div>
-                            <!-- Seleccionar todo -->
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="select-all-seguridad">
-                                <label for="select-all-seguridad" class="form-check-label">Seleccionar todo</label>
+
+                            <div class="tab-pane fade" id="limpieza" role="tabpanel" aria-labelledby="limpieza-tab">
+                                <br>
+                                <div class="row">
+                                    <!-- Primera fila de tres elementos -->
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="toalla">
+                                        <label for="toalla" class="form-check-label">Toalla</label>
+                                    </div>
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="jabon">
+                                        <label for="jabon" class="form-check-label">Jabón</label>
+                                    </div>
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="alcohol">
+                                        <label for="alcohol" class="form-check-label">Alcohol</label>
+                                    </div>
+                                </div>
+                            
+                                <div class="row">
+                                    <!-- Segunda fila de tres elementos -->
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="cepillo_brocha">
+                                        <label for="cepillo_brocha" class="form-check-label">Cepillo tipo brocha</label>
+                                    </div>
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="cepillo_acero">
+                                        <label for="cepillo_acero" class="form-check-label">Cepillo cerdas de acero</label>
+                                    </div>
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="escoba">
+                                        <label for="escoba" class="form-check-label">Escoba</label>
+                                    </div>
+                                </div>
+                            
+                                <div class="row">
+                                    <!-- Tercera fila de tres elementos -->
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="trapero">
+                                        <label for="trapero" class="form-check-label">Trapero</label>
+                                    </div>
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="balde">
+                                        <label for="balde" class="form-check-label">Balde</label>
+                                    </div>
+                                    <div class="col-md-4 form-check">
+                                        <input type="checkbox" class="form-check-input" id="recogedor">
+                                        <label for="recogedor" class="form-check-label">Recogedor</label>
+                                    </div>
+                                </div>
+                            
+                                <div class="row">
+                                    <!-- Fila para 'Seleccionar todo' -->
+                                    <div class="col-12 form-check">
+                                        <input type="checkbox" class="form-check-input" id="select-all-generales">
+                                        <label for="select-all-generales" class="form-check-label">Seleccionar todo</label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-
-                        <!-- Elemento de Soporte -->
-                        <div class="form-group">
-                            <h5>Elemento de Soporte</h5>
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="linterna">
-                                <label for="linterna" class="form-check-label">Linterna</label>
-                            </div>
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="embudo">
-                                <label for="embudo" class="form-check-label">Embudo</label>
-                            </div>
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="cinta">
-                                <label for="cinta" class="form-check-label">Cinta</label>
-                            </div>
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="bisturi">
-                                <label for="bisturi" class="form-check-label">Bisturí</label>
-                            </div>
-                            <!-- Seleccionar todo -->
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="select-all-soporte">
-                                <label for="select-all-soporte" class="form-check-label">Seleccionar todo</label>
-                            </div>
-                        </div>
-
-                        <!-- Generales -->
-                        <div class="form-group">
-                            <h5>Generales</h5>
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="martillo">
-                                <label for="martillo" class="form-check-label">Martillo</label>
-                            </div>
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="segura">
-                                <label for="segura" class="form-check-label">Segueta</label>
-                            </div>
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="taladro">
-                                <label for="taladro" class="form-check-label">Taladro</label>
-                            </div>
-                            <!-- Seleccionar todo -->
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="select-all-generales">
-                                <label for="select-all-generales" class="form-check-label">Seleccionar todo</label>
-                            </div>
-                        </div>
-
-                        <!-- Botón siguiente -->
-                        <div class="text-end mt-4">
-                            <button type="button" class="btn btn-siguiente" id="btn-siguiente">Siguiente</button>
-                        </div>
-                        <script>
-                            document.getElementById('btn-siguiente').addEventListener('click', function() {
-                            window.location.href = 'registro-mta-2'; // Cambiar a la segunda vista de FMEA
-                            });
-                        </script>
+                    </ul> 
+                    
+                    <!-- Primera columna -->
+                    <div class="col-md-4 my-4">
+                        <label for="consumibles" class="form-label">Consumibles requeridos</label>
+                        <input type="text" class="form-control" id="consumibles" name="consumibles">
+                        
+                        <label for="repuestos" class="form-label">Repuestos requeridos (referenciado del manual)</label>
+                        <input type="text" class="form-control" id="repuestos" name="repuestos">
+                        
+                        <label for="requeridos_tarea" class="form-label">Requeridos por Tarea</label>
+                        <input type="text" class="form-control" id="requeridos_tarea" name="requeridos_tarea">
                     </div>
-                </div>
+
+                    <!-- Segunda columna -->
+                    <div class="col-md-4 my-4">
+                        <label for="ambientales" class="form-label">Condiciones Requeridas (Ambientales)</label>
+                        <input type="text" class="form-control" id="ambientales" name="ambientales">
+                        
+                        <label for="estado_equipo" class="form-label">Condiciones Requeridas (Estado del equipo)</label>
+                        <input type="text" class="form-control" id="estado_equipo" name="estado_equipo">
+                        
+                        <label for="especiales" class="form-label">Condiciones Requeridas (Especiales)</label>
+                        <input type="text" class="form-control" id="especiales" name="especiales">
+                    </div>
+
+                    <!-- Tercera columna -->
+                    <div class="col-md-4 my-4">
+                        <label for="horas" class="form-label">Duración de la Tarea (Horas)</label>
+                        <input type="number" class="form-control" id="horas" name="horas">
+                        
+                        <label for="minutos" class="form-label">Duración de la Tarea (Minutos)</label>
+                        <input type="number" class="form-control" id="minutos" name="minutos">
+                        
+                        <label for="detalle_tarea" class="form-label">Detalle de tarea</label>
+                        <input type="text" class="form-control" id="detalle_tarea" name="detalle_tarea">
+                    </div>
+
+
+                    <!-- Botón siguiente -->
+                    <div class="text-end mt-4">
+                        <button type="button" class="btn btn-siguiente" id="btn-siguiente">Siguiente modo de falla </button>
+                    </div>
+                    <script>
+                        document.getElementById('btn-siguiente').addEventListener('click', function() {
+                        window.location.href = 'registro-MTA-2'; // Cambiar a la segunda vista de FMEA
+                        });
+                    </script>
+                </div>    
             </form>
         </div>
     </div>

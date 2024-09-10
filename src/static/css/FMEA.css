@@ -26,8 +26,7 @@ body {
     justify-content: center; /* Centra horizontalmente */
     align-items: center;   /* Centra verticalmente */
     width: 50px;           /* Ajusta el ancho del botón si es necesario */
-    height: 50px;          /* Ajusta la altura del botón si es necesario */
-    margin-top: 60px;      /* Mueve el ícono 60px hacia abajo */
+    height: 50px;          /* Ajusta la altura del botón si es necesario */      /* Mueve el ícono 60px hacia abajo */
 }
 
 .custom-toggler .navbar-toggler-icon {
@@ -40,6 +39,8 @@ body {
 
 .col-auto{
     align-items: center;
+    max-height:auto ;
+    /*box-shadow: 10px 10px 5px rgba(137, 143, 233, 0.3)*/
 }
 
 .section-title {
@@ -80,3 +81,6 @@ body {
 .btn-primary:hover {
     background-color: rgb(33, 33, 99);
 }
+
+
+
