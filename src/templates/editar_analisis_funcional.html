@@ -43,6 +43,7 @@
                   <th scope="col" >Verbo</th>
                   <th scope="col" >Acción</th>
                   <th scope="col" >Estandar de desempeño deseado</th>
+                  <th scope="col" ></th>
                 </tr>
             </thead>
             <tbody>
@@ -51,50 +52,54 @@
                 <td>Otto</td>
                 <td>@mdo</td>
                 <td>@fat</td>
+                <td><button class="btn btn-primary"  data-bs-toggle="tooltip" data-bs-placement="top" title="Editar este registro"><a href = "{{url_for('registro_analisis_funcional')}}"> <i class="bi bi-pen pen" ></i></a></button></td>
               </tr>
               <tr>
                 <td>Jacob</td>
                 <td>tdornton</td>
                 <td>@fat</td>
                 <td>@fat</td>
+                <td><button class="btn btn-primary"  data-bs-toggle="tooltip" data-bs-placement="top" title="Editar este registro"><a href = "{{url_for('registro_analisis_funcional')}}"> <i class="bi bi-pen pen" ></i></a></button></td>
               </tr>
               <tr>
                 <td colspan="2">Larry tde Bird</td>
                 <td>@twitter</td>
                 <td>@fat</td>
+                <td><button class="btn btn-primary"  data-bs-toggle="tooltip" data-bs-placement="top" title="Editar este registro"><a href = "{{url_for('registro_analisis_funcional')}}"> <i class="bi bi-pen pen" ></i></a></button></td>
               </tr>
             </tbody>
           </table>
           <br>
           <table class="table">
             <thead>
-                <tr>
-                  <th scope="col" colspan="3">Sistema del equipo x</th>
+                <tr align="center">
+                  <th scope="col" colspan="4">Sistema del equipo x</th>
                 </tr>
             </thead>
             <tbody>
-              <tr>
-                <td  >Sistema del equipo</td>
-                <td  >Verbo</td>
-                <td  >Acción</td>
+              <tr style="font-weight:bold;">
+                <td>Sistema del equipo</td>
+                <td>Verbo</td>
+                <td>Acción</td>
+                <td></td>
               </tr>
               <tr>
                 <td>Jacob</td>
                 <td>tdornton</td>
                 <td>@fat</td>
-                
+                <td><button class="btn btn-primary"  data-bs-toggle="tooltip" data-bs-placement="top" title="Editar este registro"><a href = "{{url_for('registro_analisis_funcional')}}"> <i class="bi bi-pen pen" ></i></a></button></td>
               </tr>
               <tr>
                 <td colspan="2">Larry tde Bird</td>
                 <td>@twitter</td>
-                
+                <td><button class="btn btn-primary"  data-bs-toggle="tooltip" data-bs-placement="top" title="Editar este registro"><a href = "{{url_for('registro_analisis_funcional')}}"> <i class="bi bi-pen pen" ></i></a></button></td>
               </tr>
             </tbody>
           </table> 
     </div>
     <div class="text-end mt-4">
-      <button type="button" class="btn btn-primary" id="btn-agregar-analisis-funcional">Editar análisis funcional</button>
-    </div>  
+      <button type="submit" class="btn btn-primary" id="btn-agregar-analisis-funcional" href="{{url_for('editar_analisis_funcional')}}">Regresar</button>
+    </div>
   </div>
 </div>
 {% endblock %}

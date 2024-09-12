@@ -77,14 +77,20 @@ body {
     border: none;
     font-size: 16px;
     cursor: pointer;
+    text-decoration: none; /* Evita subrayado en el enlace si lo hubiera */
 }
 
 .btn-primary:hover {
     background-color: rgb(33, 33, 99);
+    color: inherit; /* Esto asegura que el link no cambie de color */
+    text-decoration: none; /* Evita subrayado en el enlace si lo hubiera */
+    color: white;
 }
 
 #navbarContent{
     padding-top: 40px;
 }
 
-
+.pen {
+    color: white !important; /* Cambia el color del icono a blanco */
+}

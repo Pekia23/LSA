@@ -51,7 +51,7 @@
                         <th scope="col"  colspan="2">Ocurrencia</th>
                         <th scope="col" >AOR/MTBF</th>
                         <th scope="col"  colspan="2">Probabilidad de Detección</th>
-                        <th colspan="4"></th>
+                        <th colspan="5"></th>
                     </tr>
                   </thead>  
                   <tbody>  
@@ -90,30 +90,34 @@
                       <td>Riesgo</td>
                       <td>Accion recomendada FMEA</td>
                       <td>Frecuencia inicial</td>
+                      <td></td>
                     </tr>
                     <tr>
                       <td scope="row">1</td>
                       <td>Mark</td>
                       <td>Otto</td>
-                      <td>@mdo</td>
+                      <td colspan="31">@mdo</td>
+                      <td><button class="btn btn-primary"  data-bs-toggle="tooltip" data-bs-placement="top" title="Editar este registro"><a href = "{{url_for('registro_FMEA')}}"> <i class="bi bi-pen pen" ></i></a></button></td>
                     </tr>
                     <tr>
                       <td scope="row">2</td>
                       <td>Jacob</td>
                       <td>tdornton</td>
-                      <td>@fat</td>
+                      <td colspan="31">@fat</td>
+                      <td><button class="btn btn-primary"  data-bs-toggle="tooltip" data-bs-placement="top" title="Editar este registro"><a href = "{{url_for('registro_FMEA')}}"> <i class="bi bi-pen pen" ></i></a></button></td>
                     </tr>
                     <tr>
                       <td scope="row">3</td>
                       <td colspan="2">Larry tde Bird</td>
-                      <td>@twitter</td>
+                      <td colspan="31">@twitter</td>
+                      <td><button class="btn btn-primary"  data-bs-toggle="tooltip" data-bs-placement="top" title="Editar este registro"><a href = "{{url_for('registro_FMEA')}}"> <i class="bi bi-pen pen" ></i></a></button></td>
                     </tr>
                 </tbody>
               </table>
         </div>  
     </div>
     <div class="text-end mt-4">
-      <button type="submit" class="btn btn-primary" id="btn-agregar-analisis-funcional">Editar FMEA</button>
+      <button type="submit" class="btn btn-primary" id="btn-agregar-analisis-funcional">Regresar</button>
     </div>
   </div>
 </div>

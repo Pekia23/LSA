@@ -29,6 +29,19 @@ def lsa():
     return jsonify(result)
 
 
+@app.route('/LSA/equipo/editar-analisis-funcional')
+def editar_analisis_funcional():
+    return render_template('editar_analisis_funcional.html')
+
+@app.route('/LSA/equipo/editar-FMEA')
+def editar_FMEA():
+    return render_template('editar_FMEA.html')
+
+@app.route('/LSA/equipo/editar-herramientas-especiales')
+def editar_herramientas_especiales():
+    return render_template('editar_herramientas-especiales.html')
+
+
 @app.route('/LSA/mostrar-equipo')
 def mostrar_equipo():
     return render_template('mostrar_equipo.html')
