@@ -40,6 +40,7 @@ body {
 .col-auto{
     align-items: center;
     max-height:auto ;
+    padding-top: 50px;
     /*box-shadow: 10px 10px 5px rgba(137, 143, 233, 0.3)*/
 }
 
@@ -82,5 +83,8 @@ body {
     background-color: rgb(33, 33, 99);
 }
 
+#navbarContent{
+    padding-top: 40px;
+}
 
 
