@@ -41,6 +41,17 @@ def editar_FMEA():
 def editar_herramientas_especiales():
     return render_template('editar_herramientas-especiales.html')
 
+@app.route('/LSA/equipo/editar-repuestos')
+def editar_repuesto():
+    return render_template('editar_repuesto.html')
+
+@app.route('/LSA/equipo/editar-RCM')
+def editar_RCM():
+    return render_template('editar_RCM.html')
+
+@app.route('/LSA/equipo/editar-MTA')
+def editar_MTA():
+    return render_template('editar_MTA.html')
 
 @app.route('/LSA/mostrar-equipo')
 def mostrar_equipo():

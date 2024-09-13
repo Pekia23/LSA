@@ -15,27 +15,8 @@
 {% block body %}
 <div class="container-fluid">
   <div class="row">
-    <div class="col-auto ">
-      <button class="navbar-toggler custom-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon "></span>
-      </button>
-      <div class="collapse navbar-collapse navbarvertical"  id="navbarContent">
-        <ul class="nav flex-column">
-          <li class="nav-item"><a class="nav-link active" href="{{url_for('mostrar_equipo')}}">Información del equipo</a></li>
-          <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_analisis_funcional')}}">Análisis funcional</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Análisis de herramientas</a></li>
-          <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_herramientas_especiales')}}">Herramientas especiales</a></li>
-          <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_repuesto')}}">Repuesto</a></li>
-          <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_FMEA')}}">FMEA</a></li>
-          <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_RCM')}}">RCM</a></li>
-          <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_MTA')}}">MTA</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">LORA</a></li>
-        </ul>
-      </div>
-    </div>
-
    
-    <div class="col col-md-9 ">
+    <div class="col ">
       <h2 class="section-title text-center"> Reliability Centred Maintenance Analysis (RCMA)</h2>
         <div class="scroll-container-horizontal">
             <table class="table">
@@ -61,6 +42,7 @@
                       <th scope="col" >Tarea</th>
                       <th scope="col">Accion Recomendada</th>
                       <th scope="col" >Intervalo Inicial</th>
+                      <td> </td>
                     </tr>
                 </thead>
                 <tbody>
@@ -71,25 +53,28 @@
                     <td scope="row">1</td>
                     <td>Mark</td>
                     <td>Otto</td>
-                    <td>@mdo</td>
+                    <td colspan="17">@mdo</td>
+                    <td><button class="btn btn-primary"  data-bs-toggle="tooltip" data-bs-placement="top" title="Editar este registro"><a href = "{{url_for('registro_RCM')}}"> <i class="bi bi-pen pen" ></i></a></button></td>
                   </tr>
                   <tr>
                     <td scope="row">2</td>
                     <td>Jacob</td>
                     <td>tdornton</td>
-                    <td>@fat</td>
+                    <td colspan="17">@fat</td>
+                    <td><button class="btn btn-primary"  data-bs-toggle="tooltip" data-bs-placement="top" title="Editar este registro"><a href = "{{url_for('registro_RCM')}}"> <i class="bi bi-pen pen" ></i></a></button></td>
                   </tr>
                   <tr>
                     <td scope="row">3</td>
                     <td colspan="2">Larry tde Bird</td>
-                    <td>@twitter</td>
+                    <td colspan="17">@twitter</td>
+                    <td><button class="btn btn-primary"  data-bs-toggle="tooltip" data-bs-placement="top" title="Editar este registro"><a href = "{{url_for('registro_RCM')}}"> <i class="bi bi-pen pen" ></i></a></button></td>
                   </tr>
                 </tbody>
               </table>
         </div>  
     </div>
     <div class="text-end mt-4">
-      <button type="button" class="btn btn-primary"><a href="{{url_for('editar_RCM')}}">Editar RCM</a></button>
+      <button type="button" class="btn btn-primary"><a href="{{url_for('mostrar_RCM')}}">Regresar</a></button>
     </div>
   </div>
 </div>

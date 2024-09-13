@@ -94,3 +94,9 @@ body {
 .pen {
     color: white !important; /* Cambia el color del icono a blanco */
 }
+
+a{
+    color: inherit; /* Esto asegura que el link no cambie de color */
+    text-decoration: none; /* Evita subrayado en el enlace si lo hubiera */
+    color: white;
+}
