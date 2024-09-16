@@ -6,6 +6,7 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <link rel="stylesheet" href="{{ url_for('static', filename='css/generalidades.css') }}">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 {% endblock %}
 
 {% block nombre %}LSA | Equipo nuevo{% endblock %}
@@ -35,7 +36,7 @@
     <!-- Generalidades -->
     <div class="col">
       <div class="container">
-        <form id="generalidades-form">
+        <form id="generalidades-form" method="post" enctype="multipart/form-data">
           <div class="row">
             <div class="col-md-4">
               <label for="fecha" class="form-label">Fecha</label>
@@ -47,7 +48,11 @@
             </div>
             <div class="col-md-4">
               <label for="responsable" class="form-label">Responsable</label>
-              <input type="text" class="form-control" id="responsable" name="responsable">
+              <select class="form-control" id="responsable" name="responsable">
+                {% for persona in responsables %}
+                <option value="{{ persona[0] }}">{{ persona[1] }}</option>
+                {% endfor %}
+              </select>
             </div>
           </div>
 
@@ -55,27 +60,43 @@
           <div class="row mt-3">
             <div class="col-md-6">
               <label for="grupo_constructivo" class="form-label">Grupo Constructivo</label>
-              <select class="form-control" id="grupo_constructivo" name="grupo_constructivo"></select>
+              <select class="form-control" id="grupo_constructivo" name="grupo_constructivo">
+                <option value="">Seleccione Grupo Constructivo</option>
+                {% for grupo in grupos %}
+                <option value="{{ grupo[0] }}">{{ grupo[2] }}</option>
+                {% endfor %}
+              </select>
             </div>
             <div class="col-md-6">
               <label for="subgrupo_constructivo" class="form-label">Sub-grupo Constructivo</label>
-              <select class="form-control" id="subgrupo_constructivo" name="subgrupo_constructivo"></select>
+              <select class="form-control" id="subgrupo_constructivo" name="subgrupo_constructivo">
+                <option value="">Seleccione Subgrupo Constructivo</option>
+              </select>
             </div>
           </div>
           <div class="row mt-3">
             <div class="col-md-6">
               <label for="sistema" class="form-label">Sistema</label>
-              <select class="form-control" id="sistema" name="sistema"></select>
+              <select class="form-control" id="sistema" name="sistema">
+                <option value="">Seleccione Sistema</option>
+              </select>
             </div>
             <div class="col-md-6">
               <label for="tipo_equipo" class="form-label">Tipo de equipo</label>
-              <select class="form-control" id="tipo_equipo" name="tipo_equipo"></select>
+              <select class="form-control" id="tipo_equipo" name="tipo_equipo">
+                <option value="">Seleccione Tipo de Equipo</option>
+                {% for tipo in tipos_equipos %}
+                <option value="{{ tipo[0] }}">{{ tipo[1] }}</option>
+                {% endfor %}
+              </select>
             </div>
           </div>
           <div class="row mt-3">
             <div class="col-md-6">
               <label for="equipo" class="form-label">Equipo</label>
-              <select class="form-control" id="equipo" name="equipo"></select>
+              <select class="form-control" id="equipo" name="equipo">
+                <option value="">Seleccione Equipo</option>
+              </select>
             </div>
             <div class="col-md-6">
               <label for="aor" class="form-label">AOR (Anual Operation Rate)</label>
@@ -104,7 +125,6 @@
           </div>
         </form>
       </div>
-      
       <!-- Contexto Operacional -->
       <div class="container">
         <form id="contexto-operacional-form">
@@ -129,36 +149,33 @@
               <input type="text" class="form-control" id="dimensiones" name="dimensiones">
             </div>
           </div>
-          <div>
+          <div class="mt-3">
             <label for="imagen_equipo" class="form-label">Imagen del equipo</label>
-            <input type="file" class="custom-file-input" id="imagen" name="imagen" accept="image/*">
+            <input type="file" class="form-control" id="imagen_equipo" name="imagen_equipo" accept="image/*">
           </div>
-          <br>
-          <div>
+          <div class="mt-3">
             <label for="descripcion_equipo" class="form-label">Descripción del equipo</label>
-            <textarea id="comentarios" name="comentarios" class="form-control" rows="4" cols="50" placeholder="Escribe tus comentarios aquí..."></textarea>
+            <textarea id="descripcion_equipo" name="descripcion_equipo" class="form-control" rows="4" placeholder="Escribe tus comentarios aquí..."></textarea>
           </div>
-          <div>
+          <div class="mt-3">
             <label for="procedimiento_arranque" class="form-label">Procedimiento de arranque</label>
-            <textarea id="comentarios" name="comentarios" class="form-control" rows="4" cols="50" placeholder="Escribe tus comentarios aquí..."></textarea>
+            <textarea id="procedimiento_arranque" name="procedimiento_arranque" class="form-control" rows="4" placeholder="Escribe tus comentarios aquí..."></textarea>
           </div>
-          <div>
+          <div class="mt-3">
             <label for="procedimiento_parada" class="form-label">Procedimiento de parada</label>
-            <textarea id="comentarios" name="comentarios" class="form-control" rows="4" cols="50" placeholder="Escribe tus comentarios aquí..."></textarea>
+            <textarea id="procedimiento_parada" name="procedimiento_parada" class="form-control" rows="4" placeholder="Escribe tus comentarios aquí..."></textarea>
           </div>
-          <div>
+          <div class="mt-3">
             <label for="diagrama_flujo" class="form-label">Diagrama de flujo del subsistema</label>
-            <input type="file" class="custom-file-input" id="imagen" name="imagen" accept="image/*">
+            <input type="file" class="form-control" id="diagrama_flujo" name="diagrama_flujo" accept="image/*">
           </div>
-          <br>
-          <div>
+          <div class="mt-3">
             <label for="diagrama_caja_negra" class="form-label">Diagrama caja negra de la función</label>
-            <input type="file" class="custom-file-input" id="imagen" name="imagen" accept="image/*">
+            <input type="file" class="form-control" id="diagrama_caja_negra" name="diagrama_caja_negra" accept="image/*">
           </div>
-          <br>
-          <div>
+          <div class="mt-3">
             <label for="diagrama_caja_transparente" class="form-label">Diagrama caja transparente de la función</label>
-            <input type="file" class="custom-file-input" id="imagen" name="imagen" accept="image/*">
+            <input type="file" class="form-control" id="diagrama_caja_transparente" name="diagrama_caja_transparente" accept="image/*">
           </div>
           <br>
           <div class="text-end mt-4">
@@ -169,5 +186,90 @@
     </div>
  </div>
 </div>
-{% endblock %}
 
+<!-- JavaScript para los dropdowns dependientes -->
+<script>
+  $(document).ready(function() {
+    // Cuando cambia el grupo_constructivo
+    $('#grupo_constructivo').on('change', function() {
+        var grupoId = $(this).val();
+        if(grupoId) {
+            $.ajax({
+                url: '/api/subgrupos/' + grupoId,
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    $('#subgrupo_constructivo').empty();
+                    $('#subgrupo_constructivo').append('<option value="">Seleccione Subgrupo Constructivo</option>');
+                    $.each(data, function(index, subgrupo) {
+                        $('#subgrupo_constructivo').append('<option value="' + subgrupo[0] + '">' + subgrupo[2] + '</option>');
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error al obtener subgrupos:', error);
+                }
+            });
+        } else {
+            $('#subgrupo_constructivo').empty();
+            $('#subgrupo_constructivo').append('<option value="">Seleccione Subgrupo Constructivo</option>');
+        }
+        // Limpiar los campos dependientes
+        $('#sistema').empty().append('<option value="">Seleccione Sistema</option>');
+        $('#equipo').empty().append('<option value="">Seleccione Equipo</option>');
+    });
+
+    // Cuando cambia el subgrupo_constructivo
+    $('#subgrupo_constructivo').on('change', function() {
+        var subgrupoId = $(this).val();
+        if(subgrupoId) {
+            $.ajax({
+                url: '/api/sistemas/' + subgrupoId,
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    $('#sistema').empty();
+                    $('#sistema').append('<option value="">Seleccione Sistema</option>');
+                    $.each(data, function(index, sistema) {
+                        $('#sistema').append('<option value="' + sistema[0] + '">' + sistema[2] + '</option>');
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error al obtener sistemas:', error);
+                }
+            });
+        } else {
+            $('#sistema').empty();
+            $('#sistema').append('<option value="">Seleccione Sistema</option>');
+        }
+        // Limpiar el campo de equipos
+        $('#equipo').empty().append('<option value="">Seleccione Equipo</option>');
+    });
+
+    // Cuando cambia el sistema
+    $('#sistema').on('change', function() {
+        var sistemaId = $(this).val();
+        if(sistemaId) {
+            $.ajax({
+                url: '/api/equipos/' + sistemaId,
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    $('#equipo').empty();
+                    $('#equipo').append('<option value="">Seleccione Equipo</option>');
+                    $.each(data, function(index, equipo) {
+                        $('#equipo').append('<option value="' + equipo[0] + '">' + equipo[1] + '</option>');
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error al obtener equipos:', error);
+                }
+            });
+        } else {
+            $('#equipo').empty();
+            $('#equipo').append('<option value="">Seleccione Equipo</option>');
+        }
+    });
+});
+
+</script>
+{% endblock %}
