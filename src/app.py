@@ -130,16 +130,6 @@ def registro_generalidades():
         tipos_equipos = obtener_tipos_equipos()
         return render_template('registro_generalidades.html', grupos=grupos, responsables=responsables, tipos_equipos=tipos_equipos)
 
-
-
-
-
-
-
-
-
-
-
 @app.route('/LSA/equipo/editar-analisis-funcional')
 def editar_analisis_funcional():
     return render_template('editar_analisis_funcional.html')

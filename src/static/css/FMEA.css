@@ -3,7 +3,7 @@ body {
 }
 
 .scroll-container-horizontal {
-    width:1250px;        /* Ancho del contenedor */
+    width:auto;      /* Ancho del contenedor */
     overflow-x: scroll;  /* Habilita el scroll horizontal */
     border-bottom: 1px solid #ccc; /* Borde para visualizar mejor el área */
     border-top: 1px solid #ccc;
@@ -67,7 +67,7 @@ body {
 }
 
 .col{
-    padding:35px 80px 30px 45px;
+    padding:35px 0 30px 0px;
 }
 
 .btn-primary {
