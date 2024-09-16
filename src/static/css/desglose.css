@@ -1,0 +1,93 @@
+/* Estilos generales */
+body {
+    background-color: #b1aeae; /* Fondo gris claro */
+}
+
+/* Si el navbar necesita estilos específicos para mantenerse blanco */
+.navbar {
+    background-color: white !important;
+}
+
+/* General layout */
+.grid-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px; /* Espacio mayor entre tarjetas */
+    justify-content: center;
+    margin-top: 30px;
+}
+
+/* Estilos para las tarjetas de los grupos, subgrupos, sistemas y equipos */
+.card {
+    width: 220px; /* Tamaño de tarjeta ajustado */
+    height: 170px; /* Ajuste de altura */
+    background-color: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    color: #003366; /* Color de texto */
+    font-weight: bold; /* Fuente más gruesa */
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card p {
+    margin: 0; /* Elimina el margen para centrar mejor el texto */
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Barra de búsqueda */
+.search-bar {
+    text-align: center;
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px; /* Ajusta la separación entre los elementos */
+}
+
+#searchbox {
+    width: 350px;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 25px; /* Bordes redondeados */
+}
+
+#buscarBtn, #nuevoEquipoBtn {
+    padding: 12px 25px;
+    background-color: #003366;
+    color: white;
+    border: none;
+    border-radius: 25px; /* Botones redondeados */
+    cursor: pointer;
+}
+
+#buscarBtn:hover, #nuevoEquipoBtn:hover {
+    background-color: #002244;
+}
+
+#nuevoEquipoBtn {
+    background-color: #0c1a6b; /* Verde para "Nuevo equipo" */
+}
+
+#nuevoEquipoBtn:hover {
+    background-color: #070f53;
+}
+
+/* Botón de volver */
+#volverBtn {
+    margin: 20px auto;
+    text-align: center;
+}
+
+.hidden {
+    display: none;
+}
