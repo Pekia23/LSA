@@ -19,7 +19,7 @@ body {
 
 /* Estilos para las tarjetas de los grupos, subgrupos, sistemas y equipos */
 .card {
-    width: 220px; /* Tamaño de tarjeta ajustado */
+    width: 250px; /* Tamaño de tarjeta ajustado */
     height: 170px; /* Ajuste de altura */
     background-color: white;
     box-shadow: 0 4px 10px #a5b0fb;
@@ -37,6 +37,7 @@ body {
 
 .card p {
     margin: 0; /* Elimina el margen para centrar mejor el texto */
+    padding: 15px;
 }
 
 .card:hover {
