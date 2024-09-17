@@ -15,63 +15,60 @@
 
 {% block body %}
 <div class="container-fluid">
-    <div class="col">
-      <h2 class="section-title text-center">Maintenance Task Analysis (MTA)</h2>
-        <div class="scroll-container-horizontal">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th  colspan="11"></th>
-                        <th scope="col"  colspan="3">Condiciones requeridas</th>
-                        <th scope="col"  colspan="2">Duración de la tarea</th>
-                        <td colspan="2"></td>
-                    </tr>
-                </thead>
-                <tbody>
-                  <tr style="font-weight:bold;">
-                    <td>#</td>
-                    <td>Sistema</td>
-                    <td>Item o componente</td>
-                    <td>Falla Funcional</td>
-                    <td>Descripción Modo de Falla</td>
-                    <td>Tipo de Mantenimiento</td>
-                    <td>Tarea de Mantenimiento</td>
-                    <td>Cantidad de Personal Requerido</td>
-                    <td>Herramientas/Equipos Requeridos</td>
-                    <td>Repuestos requeridos(refenciado del manual)</td>
-                    <td>Requeridos por Tarea</td>
-                    <td>Ambientales</td>
-                    <td>Estado del equipo</td>
-                    <td>Especiales</td>
-                    <td>Horas</td>
-                    <td>Minutos</td>
-                    <td>Detalle de la tarea</td>
-                    <td></td>
-                  </tr>
-                  <tr>
-                    <td scope="row">1</td>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td colspan="14">@mdo</td>
-                    <td><button class="btn btn-primary"  data-bs-toggle="tooltip" data-bs-placement="top" title="Editar este registro"><a href = "{{url_for('registro_MTA')}}"> <i class="bi bi-pen pen" ></i></a></button></td>
-                  </tr>
-                  <tr>
-                    <td scope="row">2</td>
-                    <td>Jacob</td>
-                    <td>tdornton</td>
-                    <td colspan="14">@fat</td>
-                    <td><button class="btn btn-primary"  data-bs-toggle="tooltip" data-bs-placement="top" title="Editar este registro"><a href = "{{url_for('registro_MTA')}}"> <i class="bi bi-pen pen" ></i></a></button></td>
-                  </tr>
-                  <tr>
-                    <td scope="row">3</td>
-                    <td colspan="2">Larry tde Bird</td>
-                    <td colspan="14">@twitter</td>
-                    <td><button class="btn btn-primary"  data-bs-toggle="tooltip" data-bs-placement="top" title="Editar este registro"><a href = "{{url_for('registro_MTA')}}"> <i class="bi bi-pen pen" ></i></a></button></td>
-                  </tr>
-                </tbody>
-              </table>
-        </div>  
-    </div>
+  <h2 class="section-title text-center">Maintenance Task Analysis (MTA)</h2>
+  <div class="scroll-container-horizontal">
+    <table class="table">
+      <thead>
+        <tr>
+          <th  colspan="11"></th>
+          <th scope="col"  colspan="3">Condiciones requeridas</th>
+          <th scope="col"  colspan="2">Duración de la tarea</th>
+          <td colspan="2"></td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="font-weight:bold;">
+          <td>#</td>
+          <td>Sistema</td>
+          <td>Item o componente</td>
+          <td>Falla Funcional</td>
+          <td>Descripción Modo de Falla</td>
+          <td>Tipo de Mantenimiento</td>
+          <td>Tarea de Mantenimiento</td>
+          <td>Cantidad de Personal Requerido</td>
+          <td>Herramientas/Equipos Requeridos</td>
+          <td>Repuestos requeridos(refenciado del manual)</td>
+          <td>Requeridos por Tarea</td>
+          <td>Ambientales</td>
+          <td>Estado del equipo</td>
+          <td>Especiales</td>
+          <td>Horas</td>
+          <td>Minutos</td>
+          <td>Detalle de la tarea</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td scope="row">1</td>
+          <td>Mark</td>
+          <td>Otto</td>
+          <td colspan="14">@mdo</td>
+          <td><button class="btn btn-primary"  data-bs-toggle="tooltip" data-bs-placement="top" title="Editar este registro"><a href = "{{url_for('registro_MTA')}}"> <i class="bi bi-pen pen" ></i></a></button></td>
+        </tr>
+        <tr>
+          <td scope="row">2</td>
+          <td>Jacob</td>
+          <td>tdornton</td>
+          <td colspan="14">@fat</td>
+          <td><button class="btn btn-primary"  data-bs-toggle="tooltip" data-bs-placement="top" title="Editar este registro"><a href = "{{url_for('registro_MTA')}}"> <i class="bi bi-pen pen" ></i></a></button></td>
+        </tr>
+        <tr>
+          <td scope="row">3</td>
+          <td colspan="2">Larry tde Bird</td>
+          <td colspan="14">@twitter</td>
+          <td><button class="btn btn-primary"  data-bs-toggle="tooltip" data-bs-placement="top" title="Editar este registro"><a href = "{{url_for('registro_MTA')}}"> <i class="bi bi-pen pen" ></i></a></button></td>
+        </tr>
+      </tbody>
+    </table>  
   </div>
   <div class="text-end mt-5">
     <button type="button" class="btn btn-primary"><a href="{{url_for('mostrar_MTA')}}">Regresar</a></button>
