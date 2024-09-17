@@ -13,7 +13,8 @@ from database import (
     obtener_tipos_equipos,
     insertar_procedimiento,
     insertar_diagrama,
-    insertar_equipo_info
+    insertar_equipo_info,
+    obtener_equipos_por_tipo
 )
 from __init__ import create_app
 
@@ -131,14 +132,10 @@ def registro_generalidades():
         return render_template('registro_generalidades.html', grupos=grupos, responsables=responsables, tipos_equipos=tipos_equipos)
 
 
-
-
-
-
-
-
-
-
+@app.route('/api/equipos_por_tipo/<int:id_tipo_equipo>', methods=['GET'])
+def obtener_equipos_por_tipo_api(id_tipo_equipo):
+    equipos = obtener_equipos_por_tipo(id_tipo_equipo)
+    return jsonify(equipos)
 
 @app.route('/LSA/equipo/editar-analisis-funcional')
 def editar_analisis_funcional():

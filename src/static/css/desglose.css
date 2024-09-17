@@ -1,11 +1,11 @@
 /* Estilos generales */
 body {
-    background-color: #b1aeae; /* Fondo gris claro */
+    background-color: #e4dddd; /* Fondo gris claro */
 }
 
-/* Si el navbar necesita estilos específicos para mantenerse blanco */
+/* Asegurar que el navbar permanece blanco */
 .navbar {
-    background-color: white !important;
+    background-color: rgb(255, 255, 255) !important;
 }
 
 /* General layout */
@@ -61,9 +61,10 @@ body {
     border-radius: 25px; /* Bordes redondeados */
 }
 
+/* Estilos actualizados para los botones */
 #buscarBtn, #nuevoEquipoBtn {
     padding: 12px 25px;
-    background-color: #003366;
+    background-color: #003366; /* Azul oscuro */
     color: white;
     border: none;
     border-radius: 25px; /* Botones redondeados */
@@ -71,15 +72,7 @@ body {
 }
 
 #buscarBtn:hover, #nuevoEquipoBtn:hover {
-    background-color: #002244;
-}
-
-#nuevoEquipoBtn {
-    background-color: #0c1a6b; /* Verde para "Nuevo equipo" */
-}
-
-#nuevoEquipoBtn:hover {
-    background-color: #070f53;
+    background-color: #002244; /* Azul aún más oscuro al pasar el mouse */
 }
 
 /* Botón de volver */

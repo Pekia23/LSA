@@ -1,4 +1,6 @@
 from __init__ import db
+import MySQLdb.cursors
+
 
 def verificar_conexion():
     try:
@@ -10,7 +12,7 @@ def verificar_conexion():
         return {"status": "error", "message": str(e)}, 500
 
 def obtener_grupos_constructivos():
-    cursor = db.connection.cursor()
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
     query = "SELECT id, numeracion, nombre FROM grupo_constructivo ORDER BY numeracion"
     cursor.execute(query)
     grupos = cursor.fetchall()
@@ -18,7 +20,7 @@ def obtener_grupos_constructivos():
     return grupos
 
 def obtener_subgrupos(id_grupo):
-    cursor = db.connection.cursor()
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
     query = "SELECT id, numeracion, nombre FROM subgrupo WHERE id_grupo_constructivo = %s ORDER BY numeracion"
     cursor.execute(query, (id_grupo,))
     subgrupos = cursor.fetchall()
@@ -26,7 +28,7 @@ def obtener_subgrupos(id_grupo):
     return subgrupos
 
 def obtener_sistemas(id_subgrupo):
-    cursor = db.connection.cursor()
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
     query = "SELECT id, numeracion, nombre FROM sistema WHERE id_subgrupo = %s ORDER BY numeracion"
     cursor.execute(query, (id_subgrupo,))
     sistemas = cursor.fetchall()
@@ -34,12 +36,28 @@ def obtener_sistemas(id_subgrupo):
     return sistemas
 
 def obtener_equipos(id_sistema):
-    cursor = db.connection.cursor()
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
     query = "SELECT id, nombre_equipo FROM equipo_info WHERE id_sistema = %s ORDER BY nombre_equipo"
     cursor.execute(query, (id_sistema,))
     equipos = cursor.fetchall()
     cursor.close()
     return equipos
+
+def obtener_personal():
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = "SELECT id, nombre_completo FROM personal ORDER BY nombre_completo"
+    cursor.execute(query)
+    personal = cursor.fetchall()
+    cursor.close()
+    return personal
+
+def obtener_tipos_equipos():
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = "SELECT id, nombre FROM tipo_equipos ORDER BY nombre"
+    cursor.execute(query)
+    tipos = cursor.fetchall()
+    cursor.close()
+    return tipos
 
 def buscar_subgrupos(busqueda, id_grupo):
     cursor = db.connection.cursor()
@@ -131,3 +149,11 @@ def insertar_equipo_info(nombre_equipo, aor, fecha, fiabilidad_equipo, mtbf, gre
     equipo_info_id = cursor.lastrowid
     cursor.close()
     return equipo_info_id
+
+def obtener_equipos_por_tipo(id_tipo_equipo):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = "SELECT id, nombre FROM equipos WHERE id_tipo_equipo = %s ORDER BY nombre"
+    cursor.execute(query, (id_tipo_equipo,))
+    equipos = cursor.fetchall()
+    cursor.close()
+    return equipos
