@@ -15,6 +15,7 @@
 <div class="container-fluid">
  <div class="row">
     <div class="col-auto">
+      <!-- Navbar lateral -->
       <button class="navbar-toggler custom-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon "></span>
       </button>
@@ -50,20 +51,20 @@
               <label for="responsable" class="form-label">Responsable</label>
               <select class="form-control" id="responsable" name="responsable">
                 {% for persona in responsables %}
-                <option value="{{ persona[0] }}">{{ persona[1] }}</option>
+                <option value="{{ persona.id }}">{{ persona.nombre_completo }}</option>
                 {% endfor %}
               </select>
             </div>
           </div>
 
-          <h2 class="section-title text-center">Generalidades</h2>
+          <h2 class="section-title text-center">GENERALIDADES</h2>
           <div class="row mt-3">
             <div class="col-md-6">
               <label for="grupo_constructivo" class="form-label">Grupo Constructivo</label>
               <select class="form-control" id="grupo_constructivo" name="grupo_constructivo">
                 <option value="">Seleccione Grupo Constructivo</option>
                 {% for grupo in grupos %}
-                <option value="{{ grupo[0] }}">{{ grupo[2] }}</option>
+                <option value="{{ grupo.id }}">{{ grupo.nombre }}</option>
                 {% endfor %}
               </select>
             </div>
@@ -86,7 +87,7 @@
               <select class="form-control" id="tipo_equipo" name="tipo_equipo">
                 <option value="">Seleccione Tipo de Equipo</option>
                 {% for tipo in tipos_equipos %}
-                <option value="{{ tipo[0] }}">{{ tipo[1] }}</option>
+                <option value="{{ tipo.id }}">{{ tipo.nombre }}</option>
                 {% endfor %}
               </select>
             </div>
@@ -123,12 +124,8 @@
               <input type="text" class="form-control" id="criticidad_equipo" name="criticidad_equipo">
             </div>
           </div>
-        </form>
-      </div>
-      <!-- Contexto Operacional -->
-      <div class="container">
-        <form id="contexto-operacional-form">
-          <h2 class="section-title text-center">Contexto Operacional</h2>
+
+          <h2 class="section-title text-center">CONTEXTO OPERACIONAL</h2>
           <div class="row">
             <div class="col-md-6">
               <label for="marca" class="form-label">Marca</label>
@@ -177,10 +174,8 @@
             <label for="diagrama_caja_transparente" class="form-label">Diagrama caja transparente de la función</label>
             <input type="file" class="form-control" id="diagrama_caja_transparente" name="diagrama_caja_transparente" accept="image/*">
           </div>
-          <br>
-          <div class="text-end mt-4">
-            <button type="submit" class="btn btn-primary" id="btn-agregar-analisis-funcional">Guardar generalidades</button>
-          </div>
+
+          <button type="submit" class="btn btn-primary mt-3">Guardar</button>
         </form>
       </div>
     </div>
@@ -202,7 +197,7 @@
                     $('#subgrupo_constructivo').empty();
                     $('#subgrupo_constructivo').append('<option value="">Seleccione Subgrupo Constructivo</option>');
                     $.each(data, function(index, subgrupo) {
-                        $('#subgrupo_constructivo').append('<option value="' + subgrupo[0] + '">' + subgrupo[2] + '</option>');
+                        $('#subgrupo_constructivo').append('<option value="' + subgrupo.id + '">' + subgrupo.nombre + '</option>');
                     });
                 },
                 error: function(xhr, status, error) {
@@ -230,7 +225,7 @@
                     $('#sistema').empty();
                     $('#sistema').append('<option value="">Seleccione Sistema</option>');
                     $.each(data, function(index, sistema) {
-                        $('#sistema').append('<option value="' + sistema[0] + '">' + sistema[2] + '</option>');
+                        $('#sistema').append('<option value="' + sistema.id + '">' + sistema.nombre + '</option>');
                     });
                 },
                 error: function(xhr, status, error) {
@@ -246,7 +241,8 @@
     });
 
     // Cuando cambia el sistema
-    $('#sistema').on('change', function() {
+    $('#sistema').on('change', function() 
+    {
         var sistemaId = $(this).val();
         if(sistemaId) {
             $.ajax({
@@ -257,7 +253,31 @@
                     $('#equipo').empty();
                     $('#equipo').append('<option value="">Seleccione Equipo</option>');
                     $.each(data, function(index, equipo) {
-                        $('#equipo').append('<option value="' + equipo[0] + '">' + equipo[1] + '</option>');
+                        $('#equipo').append('<option value="' + equipo.id + '">' + equipo.nombre_equipo + '</option>');
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error al obtener equipos:', error);
+                }
+            });
+        } else {
+            $('#equipo').empty();
+            $('#equipo').append('<option value="">Seleccione Equipo</option>');
+        }
+    });
+    // Cuando cambia el tipo de equipo
+    $('#tipo_equipo').on('change', function() {
+        var tipoEquipoId = $(this).val();
+        if(tipoEquipoId) {
+            $.ajax({
+                url: '/api/equipos_por_tipo/' + tipoEquipoId,
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    $('#equipo').empty();
+                    $('#equipo').append('<option value="">Seleccione Equipo</option>');
+                    $.each(data, function(index, equipo) {
+                        $('#equipo').append('<option value="' + equipo.id + '">' + equipo.nombre + '</option>');
                     });
                 },
                 error: function(xhr, status, error) {
@@ -270,6 +290,5 @@
         }
     });
 });
-
 </script>
 {% endblock %}
