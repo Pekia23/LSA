@@ -4,8 +4,9 @@
 {% block body %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/desglose.css') }}">
     <div class="search-bar">
-        <input type="text" id="livebox" placeholder="Buscar por equipos">
-        <button><a class="nav-link" href="{{url_for('registro_generalidades')}}">Nuevo equipo +</a></button>
+        <input type="text" id="searchbox" placeholder="Buscar equipos">
+        <button id="buscarBtn">Buscar</button>
+        <button id="nuevoEquipoBtn" class="nuevo-equipo-btn">Nuevo equipo +</button>
     </div>
 
     <div id="resultados" class="grid-container">
