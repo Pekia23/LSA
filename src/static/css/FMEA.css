@@ -68,7 +68,7 @@ body {
 
 .col{
     padding:25px;
-    width: 80%;
+    width: 75%;
 }
 
 .btn-primary {
@@ -100,4 +100,10 @@ a{
     color: inherit; /* Esto asegura que el link no cambie de color */
     text-decoration: none; /* Evita subrayado en el enlace si lo hubiera */
     color: white;
+}
+
+.severidad{
+    padding:10px;
+    border-radius: 8px;
+    background-color: #dad8d8;
 }
