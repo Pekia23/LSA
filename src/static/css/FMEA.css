@@ -3,7 +3,7 @@ body {
 }
 
 .scroll-container-horizontal {
-    width:1250px;        /* Ancho del contenedor */
+    width:auto;        /* Ancho del contenedor */
     overflow-x: scroll;  /* Habilita el scroll horizontal */
     border-bottom: 1px solid #ccc; /* Borde para visualizar mejor el área */
     border-top: 1px solid #ccc;
@@ -67,7 +67,7 @@ body {
 }
 
 .col{
-    padding:35px 80px 30px 45px;
+    padding:35px 70px 30px 45px;
 }
 
 .btn-primary {
@@ -99,4 +99,15 @@ a{
     color: inherit; /* Esto asegura que el link no cambie de color */
     text-decoration: none; /* Evita subrayado en el enlace si lo hubiera */
     color: white;
+}
+
+hr {
+    width: 95%;
+    margin: 0 auto; /* Esto centrará el <hr> */
+    margin-top: 20px;
+}
+
+.gray-input {
+    background-color: #e0e0e0;
+    color: #333;
 }

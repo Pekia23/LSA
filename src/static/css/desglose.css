@@ -33,6 +33,8 @@ body {
     font-weight: bold; /* Fuente más gruesa */
     cursor: pointer;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    padding-left:10px ;
+    padding-right:10px ;
 }
 
 .card p {
@@ -71,12 +73,14 @@ body {
     border-radius: 10px; /* Botones redondeados */
     cursor: pointer;
 }
-
 #buscarBtn{
-    border: none;
+    border:none;
+    background-color: transparent;
 }
 
-#buscarBtn:hover, #nuevoEquipoBtn:hover {
+
+
+ #nuevoEquipoBtn:hover {
     background-color: #002244; /* Azul aún más oscuro al pasar el mouse */
 }
 
@@ -86,6 +90,25 @@ body {
     text-align: center;
 }
 
+i{
+    color:#002244;
+}
+
+.volverBtn{
+    padding: 12px 25px;
+    background-color: #003366; /* Azul oscuro */
+    color: white;
+    border: none;
+    border-radius: 10px; /* Botones redondeados */
+    cursor: pointer;
+}
+
+
 .hidden {
     display: none;
+}
+
+.new_equipo{
+    text-decoration: none;
+    color:white;
 }
