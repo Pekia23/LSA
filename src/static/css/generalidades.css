@@ -64,3 +64,13 @@
 .btn-primary:hover {
     background-color: rgb(13, 2, 63);
 }
+
+.nav-item.active{
+    background-color: #0c367f3a;
+    border-radius: 10px;
+}
+
+.nav-item:hover{
+    background-color: #0c367f17;
+    border-radius: 10px;
+}

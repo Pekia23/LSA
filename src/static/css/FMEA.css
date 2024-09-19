@@ -13,6 +13,7 @@ body {
     width: auto;
     padding: 10px;
 }
+
 .navbarvertical .nav-link {
     white-space: nowrap; /* Asegura que el texto no se corte en varias líneas */
     margin-bottom: 10px;
@@ -64,6 +65,7 @@ body {
 .nav-link{
     color: #0c377f; /* Azul */
     font-weight: bold;
+    margin: 0;
 }
 
 .col{
@@ -110,4 +112,14 @@ hr {
 .gray-input {
     background-color: #e0e0e0;
     color: #333;
+}
+
+.nav-item.active{
+    background-color: #0c367f3a;
+    border-radius: 10px;
+}
+
+.nav-item:hover{
+    background-color: #0c367f17;
+    border-radius: 10px;
 }
