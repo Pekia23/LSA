@@ -1,4 +1,6 @@
 from flask import Flask, render_template, request, jsonify, redirect, url_for
+import MySQLdb.cursors
+from __init__ import db
 from config import config
 from database import (
     verificar_conexion,
@@ -90,39 +92,41 @@ def registro_generalidades():
         # Extracción de datos del formulario
         fecha = request.form.get('fecha')
         nombre_equipo = request.form.get('nombre_equipo')
-        responsable_id = request.form.get('responsable')
-        grupo_constructivo_id = request.form.get('grupo_constructivo')
-        subgrupo_constructivo_id = request.form.get('subgrupo_constructivo')
-        sistema_id = request.form.get('sistema')
-        tipo_equipo_id = request.form.get('tipo_equipo')
-        equipo_id = request.form.get('equipo')
-        aor = request.form.get('aor')
-        mtbf = request.form.get('mtbf')
-        gres_sistema = request.form.get('gres_sistema')
+        id_personal = request.form.get('responsable')
+        id_sistema = request.form.get('sistema')
+        id_equipo = request.form.get('equipo')
+        AOR = request.form.get('aor')
+        MTBF = request.form.get('mtbf')
+        GRES = request.form.get('gres_sistema')
         fiabilidad_equipo = request.form.get('fiabilidad_equipo')
         criticidad_equipo = request.form.get('criticidad_equipo')
         marca = request.form.get('marca')
         modelo = request.form.get('modelo')
         peso_seco = request.form.get('peso_seco')
         dimensiones = request.form.get('dimensiones')
-        descripcion_equipo = request.form.get('descripcion_equipo')
+        descripcion = request.form.get('descripcion_equipo')
         procedimiento_arranque = request.form.get('procedimiento_arranque')
         procedimiento_parada = request.form.get('procedimiento_parada')
         # Manejo de archivos
-        imagen_equipo = request.files.get('imagen_equipo')
+        imagen = request.files.get('imagen_equipo')
         diagrama_flujo = request.files.get('diagrama_flujo')
         diagrama_caja_negra = request.files.get('diagrama_caja_negra')
         diagrama_caja_transparente = request.files.get('diagrama_caja_transparente')
         # Insertar en la tabla procedimientos
-        procedimiento_id = insertar_procedimiento(procedimiento_arranque, procedimiento_parada)
+        id_procedimiento = insertar_procedimiento(procedimiento_arranque, procedimiento_parada)
         # Insertar en la tabla diagramas
-        diagrama_id = insertar_diagrama(diagrama_flujo, diagrama_caja_negra, diagrama_caja_transparente)
-        # Insertar en la tabla equipo_info
+        id_diagrama = insertar_diagrama(diagrama_flujo, diagrama_caja_negra, diagrama_caja_transparente)
+
+
+
+        print(f"Nombre del tipo de equipo recibido: {id_equipo}")
+       
+
+        # Insertar en la tabla equipo_infos
         equipo_info_id = insertar_equipo_info(
-            nombre_equipo, aor, fecha, fiabilidad_equipo, mtbf, gres_sistema, criticidad_equipo,
-            marca, modelo, peso_seco, dimensiones, descripcion_equipo, imagen_equipo,
-            responsable_id, diagrama_id, procedimiento_id, sistema_id, equipo_id, tipo_equipo_id,
-            grupo_constructivo_id, subgrupo_constructivo_id
+            nombre_equipo, AOR, fecha, fiabilidad_equipo, MTBF, GRES, criticidad_equipo,
+            marca, modelo, peso_seco, dimensiones, descripcion, imagen,
+            id_personal, id_diagrama, id_procedimiento, id_sistema, id_equipo
         )
         return redirect(url_for('index'))  # Redirige después de guardar
     else:
@@ -134,8 +138,8 @@ def registro_generalidades():
 
 @app.route('/api/equipos_por_tipo/<int:id_tipo_equipo>', methods=['GET'])
 def obtener_equipos_por_tipo_api(id_tipo_equipo):
-    equipos = obtener_equipos_por_tipo(id_tipo_equipo)
-    return jsonify(equipos)
+    equipospro = obtener_equipos_por_tipo(id_tipo_equipo)
+    return jsonify(equipospro)
 
 @app.route('/LSA/equipo/editar-analisis-funcional')
 def editar_analisis_funcional():

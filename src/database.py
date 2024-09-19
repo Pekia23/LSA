@@ -125,25 +125,24 @@ def insertar_diagrama(diagrama_flujo_file, diagrama_caja_negra_file, diagrama_ca
     return diagrama_id
 
 
-def insertar_equipo_info(nombre_equipo, aor, fecha, fiabilidad_equipo, mtbf, gres_sistema, criticidad_equipo, 
+
+def insertar_equipo_info(nombre_equipo, AOR, fecha, fiabilidad_equipo, MTBF, GRES, criticidad_equipo, 
                          marca, modelo, peso_seco, dimensiones, descripcion, imagen_equipo_file,
-                         id_personal, id_diagrama, id_procedimiento, id_sistema, id_equipo, id_tipo_equipo,
-                         id_grupo_constructivo, id_subgrupo_constructivo):
+                         id_personal, id_diagrama, id_procedimiento, id_sistema, id_equipo
+                         ):
     cursor = db.connection.cursor()
     imagen = imagen_equipo_file.read() if imagen_equipo_file else None
     query = """
         INSERT INTO equipo_info (
             nombre_equipo, AOR, fecha, fiabilidad_equipo, MTBF, GRES, criticidad_equipo,
             marca, modelo, peso_seco, dimensiones, descripcion, imagen,
-            id_personal, id_diagrama, id_procedimiento, id_sistema, id_equipo, id_tipo_equipo,
-            id_grupo_constructivo, id_subgrupo_constructivo
-        ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            id_personal, id_diagrama, id_procedimiento, id_sistema, id_equipo
+        ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
     """
     cursor.execute(query, (
-        nombre_equipo, aor, fecha, fiabilidad_equipo, mtbf, gres_sistema, criticidad_equipo,
+        nombre_equipo, AOR, fecha, fiabilidad_equipo, MTBF, GRES, criticidad_equipo,
         marca, modelo, peso_seco, dimensiones, descripcion, imagen,
-        id_personal, id_diagrama, id_procedimiento, id_sistema, id_equipo, id_tipo_equipo,
-        id_grupo_constructivo, id_subgrupo_constructivo
+        id_personal, id_diagrama, id_procedimiento, id_sistema, id_equipo
     ))
     db.connection.commit()
     equipo_info_id = cursor.lastrowid
@@ -152,8 +151,8 @@ def insertar_equipo_info(nombre_equipo, aor, fecha, fiabilidad_equipo, mtbf, gre
 
 def obtener_equipos_por_tipo(id_tipo_equipo):
     cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
-    query = "SELECT id, nombre FROM equipos WHERE id_tipo_equipo = %s ORDER BY nombre"
+    query = "SELECT id, nombre FROM equipos WHERE id_tipos_equipos = %s ORDER BY nombre"
     cursor.execute(query, (id_tipo_equipo,))
-    equipos = cursor.fetchall()
+    equipospro = cursor.fetchall()
     cursor.close()
-    return equipos
+    return equipospro
