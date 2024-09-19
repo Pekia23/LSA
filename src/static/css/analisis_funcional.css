@@ -12,7 +12,7 @@ body {
 }
 
 .btn-primary {
-    background-color: rgb(13, 2, 63);
+    background-color: rgb(33, 33, 99);
     color: white;
     padding: 10px 20px;
     border: none;
@@ -21,7 +21,7 @@ body {
 }
 
 .btn-primary:hover {
-    background-color: rgb(33, 33, 99);
+    background-color: rgb(13, 2, 63);
 }
 
 .navbarvertical {
@@ -46,7 +46,7 @@ body {
 }
 
 .col{
-    padding:35px 80px 30px 45px;
+    padding:35px 70px 30px 45px;
 }
 
 .navbar-toggler-icon{
@@ -59,3 +59,12 @@ body {
     font-weight: bold;
 }
 
+.nav-item.active{
+    background-color: #0c367f3a;
+    border-radius: 10px;
+}
+
+.nav-item:hover{
+    background-color: #0c367f17;
+    border-radius: 10px;
+}

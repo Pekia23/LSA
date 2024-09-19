@@ -5,8 +5,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/desglose.css') }}">
     <div class="search-bar">
         <input type="text" id="searchbox" placeholder="Buscar equipos">
-        <button id="buscarBtn">Buscar</button>
-        <button id="nuevoEquipoBtn" class="nuevo-equipo-btn">Nuevo equipo +</button>
+        <button id="buscarBtn"><i class="bi bi-search" style="font-size: 25px;" ></i></button>
+        <button id="nuevoEquipoBtn" class="nuevo-equipo-btn"><a class="new_equipo" href="{{url_for('registro_generalidades')}}">Nuevo equipo</a></button>
     </div>
 
     <div id="resultados" class="grid-container">
@@ -18,7 +18,7 @@
     </div>
 
     <div id="volverBtn" class="hidden">
-        <button>Volver</button>
+        <button class="volverBtn">Volver</button>
     </div>
 
     <script src="{{ url_for('static', filename='js/desglose.js') }}"></script>

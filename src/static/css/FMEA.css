@@ -3,7 +3,7 @@ body {
 }
 
 .scroll-container-horizontal {
-    width:1250px;        /* Ancho del contenedor */
+    width:auto;        /* Ancho del contenedor */
     overflow-x: scroll;  /* Habilita el scroll horizontal */
     border-bottom: 1px solid #ccc; /* Borde para visualizar mejor el área */
     border-top: 1px solid #ccc;
@@ -13,6 +13,7 @@ body {
     width: auto;
     padding: 10px;
 }
+
 .navbarvertical .nav-link {
     white-space: nowrap; /* Asegura que el texto no se corte en varias líneas */
     margin-bottom: 10px;
@@ -64,14 +65,15 @@ body {
 .nav-link{
     color: #0c377f; /* Azul */
     font-weight: bold;
+    margin: 0;
 }
 
 .col{
-    padding:35px 80px 30px 45px;
+    padding:35px 70px 30px 45px;
 }
 
 .btn-primary {
-    background-color: rgb(13, 2, 63);
+    background-color: rgb(33, 33, 99);
     color: white;
     padding: 10px 20px;
     border: none;
@@ -81,7 +83,7 @@ body {
 }
 
 .btn-primary:hover {
-    background-color: rgb(33, 33, 99);
+    background-color:rgb(13, 2, 63) ;
     color: inherit; /* Esto asegura que el link no cambie de color */
     text-decoration: none; /* Evita subrayado en el enlace si lo hubiera */
     color: white;
@@ -99,4 +101,25 @@ a{
     color: inherit; /* Esto asegura que el link no cambie de color */
     text-decoration: none; /* Evita subrayado en el enlace si lo hubiera */
     color: white;
+}
+
+hr {
+    width: 95%;
+    margin: 0 auto; /* Esto centrará el <hr> */
+    margin-top: 20px;
+}
+
+.gray-input {
+    background-color: #e0e0e0;
+    color: #333;
+}
+
+.nav-item.active{
+    background-color: #0c367f3a;
+    border-radius: 10px;
+}
+
+.nav-item:hover{
+    background-color: #0c367f17;
+    border-radius: 10px;
 }

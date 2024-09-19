@@ -1,6 +1,6 @@
 /* Estilos generales */
 body {
-    background-color: #e4dddd; /* Fondo gris claro */
+    background-color: #f5f5f5; /* Fondo gris claro */
 }
 
 /* Asegurar que el navbar permanece blanco */
@@ -22,7 +22,7 @@ body {
     width: 220px; /* Tamaño de tarjeta ajustado */
     height: 170px; /* Ajuste de altura */
     background-color: white;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 10px rgba(123, 115, 235, 0.473);
     border-radius: 8px;
     text-align: center;
     display: flex;
@@ -33,6 +33,8 @@ body {
     font-weight: bold; /* Fuente más gruesa */
     cursor: pointer;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    padding-left:10px ;
+    padding-right:10px ;
 }
 
 .card p {
@@ -41,7 +43,7 @@ body {
 
 .card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 16px rgba(123, 115, 235, 0.473);
 }
 
 /* Barra de búsqueda */
@@ -49,30 +51,37 @@ body {
     text-align: center;
     margin-bottom: 30px;
     display: flex;
+    padding: 30px;
     justify-content: center;
     align-items: center;
     gap: 15px; /* Ajusta la separación entre los elementos */
 }
 
 #searchbox {
-    width: 350px;
     padding: 12px;
     border: 1px solid #ccc;
-    border-radius: 25px; /* Bordes redondeados */
+    border-radius: 10px; /* Bordes redondeados */
+    width: 50%;
 }
 
 /* Estilos actualizados para los botones */
-#buscarBtn, #nuevoEquipoBtn {
+ #nuevoEquipoBtn {
     padding: 12px 25px;
-    background-color: #003366; /* Azul oscuro */
+    background-color: rgb(33, 33, 99); /* Azul oscuro */
     color: white;
     border: none;
-    border-radius: 25px; /* Botones redondeados */
+    border-radius: 10px; /* Botones redondeados */
     cursor: pointer;
 }
+#buscarBtn{
+    border:none;
+    background-color: transparent;
+}
 
-#buscarBtn:hover, #nuevoEquipoBtn:hover {
-    background-color: #002244; /* Azul aún más oscuro al pasar el mouse */
+
+
+ #nuevoEquipoBtn:hover {
+    background-color: rgb(13, 2, 63); /* Azul aún más oscuro al pasar el mouse */
 }
 
 /* Botón de volver */
@@ -81,6 +90,25 @@ body {
     text-align: center;
 }
 
+i{
+    color:#002244;
+}
+
+.volverBtn{
+    padding: 12px 25px;
+    background-color:  rgb(33, 33, 99); /* Azul oscuro */
+    color: white;
+    border: none;
+    border-radius: 10px; /* Botones redondeados */
+    cursor: pointer;
+}
+
+
 .hidden {
     display: none;
+}
+
+.new_equipo{
+    text-decoration: none;
+    color:white;
 }

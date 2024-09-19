@@ -21,14 +21,14 @@
       </button>
       <div class="collapse navbar-collapse navbarvertical"  id="navbarContent">
         <ul class="nav flex-column">
-          <li class="nav-item"><a class="nav-link active" href="{{url_for('mostrar_equipo')}}">Información del equipo</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_equipo')}}">Información del equipo</a></li>
           <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_analisis_funcional')}}">Análisis funcional</a></li>
           <li class="nav-item"><a class="nav-link" href="#">Análisis de herramientas</a></li>
           <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_herramientas_especiales')}}">Herramientas especiales</a></li>
           <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_repuesto')}}">Repuesto</a></li>
           <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_FMEA')}}">FMEA</a></li>
           <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_RCM')}}">RCM</a></li>
-          <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_MTA')}}">MTA</a></li>
+          <li class="nav-item active"><a class="nav-link" href="{{url_for('mostrar_MTA')}}">MTA</a></li>
           <li class="nav-item"><a class="nav-link" href="#">LORA</a></li>
         </ul>
       </div>
@@ -37,59 +37,59 @@
     <div class="col col-md-9">
       <h2 class="section-title text-center">Maintenance Task Analysis (MTA)</h2>
         <div class="scroll-container-horizontal">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th  colspan="11"></th>
-                        <th scope="col"  colspan="3">Condiciones requeridas</th>
-                        <th scope="col"  colspan="2">Duración de la tarea</th>
-                        <td></td>
-                    </tr>
-                </thead>
-                <tbody>
-                  <tr style="font-weight:bold;">
-                    <td>#</td>
-                    <td>Sistema</td>
-                    <td>Item o componente</td>
-                    <td>Falla Funcional</td>
-                    <td>Descripción Modo de Falla</td>
-                    <td>Tipo de Mantenimiento</td>
-                    <td>Tarea de Mantenimiento</td>
-                    <td>Cantidad de Personal Requerido</td>
-                    <td>Herramientas/Equipos Requeridos</td>
-                    <td>Repuestos requeridos(refenciado del manual)</td>
-                    <td>Requeridos por Tarea</td>
-                    <td>Ambientales</td>
-                    <td>Estado del equipo</td>
-                    <td>Especiales</td>
-                    <td>Horas</td>
-                    <td>Minutos</td>
-                    <td>Detalle de la tarea</td>
-                  </tr>
-                  <tr>
-                    <td scope="row">1</td>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                  </tr>
-                  <tr>
-                    <td scope="row">2</td>
-                    <td>Jacob</td>
-                    <td>tdornton</td>
-                    <td>@fat</td>
-                  </tr>
-                  <tr>
-                    <td scope="row">3</td>
-                    <td colspan="2">Larry tde Bird</td>
-                    <td>@twitter</td>
-                  </tr>
-                </tbody>
-              </table>
-        </div>  
+          <table class="table">
+            <thead>
+                <tr>
+                    <th  colspan="11"></th>
+                    <th scope="col"  colspan="3">Condiciones requeridas</th>
+                    <th scope="col"  colspan="2">Duración de la tarea</th>
+                    <td></td>
+                </tr>
+            </thead>
+            <tbody>
+              <tr style="font-weight:bold;">
+                <td>#</td>
+                <td>Sistema</td>
+                <td>Item o componente</td>
+                <td>Falla Funcional</td>
+                <td>Descripción Modo de Falla</td>
+                <td>Tipo de Mantenimiento</td>
+                <td>Tarea de Mantenimiento</td>
+                <td>Cantidad de Personal Requerido</td>
+                <td>Herramientas/Equipos Requeridos</td>
+                <td>Repuestos requeridos(refenciado del manual)</td>
+                <td>Requeridos por Tarea</td>
+                <td>Ambientales</td>
+                <td>Estado del equipo</td>
+                <td>Especiales</td>
+                <td>Horas</td>
+                <td>Minutos</td>
+                <td>Detalle de la tarea</td>
+              </tr>
+              <tr>
+                <td scope="row">1</td>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>@mdo</td>
+              </tr>
+              <tr>
+                <td scope="row">2</td>
+                <td>Jacob</td>
+                <td>tdornton</td>
+                <td>@fat</td>
+              </tr>
+              <tr>
+                <td scope="row">3</td>
+                <td colspan="2">Larry tde Bird</td>
+                <td>@twitter</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      <div class="mt-5">
+        <button type="button" class="btn btn-primary"><a href="{{url_for('editar_MTA')}}">Editar MTA</a></button>
+      </div>   
     </div>
-  </div>
-  <div class="text-end mt-5">
-    <button type="button" class="btn btn-primary"><a href="{{url_for('editar_MTA')}}">Editar MTA</a></button>
   </div>
 </div>
 {% endblock %}

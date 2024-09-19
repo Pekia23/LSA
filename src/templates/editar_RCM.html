@@ -15,66 +15,65 @@
 {% block body %}
 <div class="container-fluid">
   <div class="row">
-   
     <div class="col ">
-      <h2 class="section-title text-center"> Reliability Centred Maintenance Analysis (RCMA)</h2>
+      <h2 class="section-title text-center"> Reliability Centered Maintenance (RCM)</h2>
         <div class="scroll-container-horizontal">
-            <table class="table">
-                <thead>
-                    <tr>
-                      <th scope="col" >#</th>
-                      <th scope="col" >Sistema</th>
-                      <th scope="col" >Falla Funcional</th>
-                      <th scope="col" >Item o componente</th>
-                      <th scope="col" >Codigo Modo de Falla</th>
-                      <th scope="col" >Consecutivo de Modo de Falla</th>
-                      <th scope="col" >Descripción Modo de Falla</th>
-                      <th scope="col" >Causas</th>
-                      <th scope="col" >Hidden Failures</th>
-                      <th scope="col" >Safety</th>
-                      <th scope="col" >Environment</th>
-                      <th scope="col" >Operation</th>
-                      <th scope="col" >H1/S1/N1/O1</th>
-                      <th scope="col" >H2/S2/N2/O2</th>
-                      <th scope="col" >H3/S3/N3/O3</th>
-                      <th scope="col" >H4/S4/</th>
-                      <th scope="col" >H5</th>
-                      <th scope="col" >Tarea</th>
-                      <th scope="col">Accion Recomendada</th>
-                      <th scope="col" >Intervalo Inicial</th>
-                      <td> </td>
-                    </tr>
-                </thead>
-                <tbody>
+          <table class="table">
+              <thead>
                   <tr>
-              
+                    <th scope="col" >#</th>
+                    <th scope="col" >Sistema</th>
+                    <th scope="col" >Falla Funcional</th>
+                    <th scope="col" >Item o componente</th>
+                    <th scope="col" >Codigo Modo de Falla</th>
+                    <th scope="col" >Consecutivo de Modo de Falla</th>
+                    <th scope="col" >Descripción Modo de Falla</th>
+                    <th scope="col" >Causas</th>
+                    <th scope="col" >Hidden Failures</th>
+                    <th scope="col" >Safety</th>
+                    <th scope="col" >Environment</th>
+                    <th scope="col" >Operation</th>
+                    <th scope="col" >H1/S1/N1/O1</th>
+                    <th scope="col" >H2/S2/N2/O2</th>
+                    <th scope="col" >H3/S3/N3/O3</th>
+                    <th scope="col" >H4/S4/</th>
+                    <th scope="col" >H5</th>
+                    <th scope="col" >Tarea</th>
+                    <th scope="col">Accion Recomendada</th>
+                    <th scope="col" >Intervalo Inicial</th>
+                    <td> </td>
                   </tr>
-                  <tr>
-                    <td scope="row">1</td>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td colspan="17">@mdo</td>
-                    <td><button class="btn btn-primary"  data-bs-toggle="tooltip" data-bs-placement="top" title="Editar este registro"><a href = "{{url_for('registro_RCM')}}"> <i class="bi bi-pen pen" ></i></a></button></td>
-                  </tr>
-                  <tr>
-                    <td scope="row">2</td>
-                    <td>Jacob</td>
-                    <td>tdornton</td>
-                    <td colspan="17">@fat</td>
-                    <td><button class="btn btn-primary"  data-bs-toggle="tooltip" data-bs-placement="top" title="Editar este registro"><a href = "{{url_for('registro_RCM')}}"> <i class="bi bi-pen pen" ></i></a></button></td>
-                  </tr>
-                  <tr>
-                    <td scope="row">3</td>
-                    <td colspan="2">Larry tde Bird</td>
-                    <td colspan="17">@twitter</td>
-                    <td><button class="btn btn-primary"  data-bs-toggle="tooltip" data-bs-placement="top" title="Editar este registro"><a href = "{{url_for('registro_RCM')}}"> <i class="bi bi-pen pen" ></i></a></button></td>
-                  </tr>
-                </tbody>
-              </table>
-        </div>  
-    </div>
-    <div class="text-end mt-4">
-      <button type="button" class="btn btn-primary"><a href="{{url_for('mostrar_RCM')}}">Regresar</a></button>
+              </thead>
+              <tbody>
+                <tr>
+            
+                </tr>
+                <tr>
+                  <td scope="row">1</td>
+                  <td>Mark</td>
+                  <td>Otto</td>
+                  <td colspan="17">@mdo</td>
+                  <td><button class="btn btn-primary"  data-bs-toggle="tooltip" data-bs-placement="top" title="Editar este registro"><a href = "{{url_for('registro_RCM')}}"> <i class="bi bi-pen pen" ></i></a></button></td>
+                </tr>
+                <tr>
+                  <td scope="row">2</td>
+                  <td>Jacob</td>
+                  <td>tdornton</td>
+                  <td colspan="17">@fat</td>
+                  <td><button class="btn btn-primary"  data-bs-toggle="tooltip" data-bs-placement="top" title="Editar este registro"><a href = "{{url_for('registro_RCM')}}"> <i class="bi bi-pen pen" ></i></a></button></td>
+                </tr>
+                <tr>
+                  <td scope="row">3</td>
+                  <td colspan="2">Larry tde Bird</td>
+                  <td colspan="17">@twitter</td>
+                  <td><button class="btn btn-primary"  data-bs-toggle="tooltip" data-bs-placement="top" title="Editar este registro"><a href = "{{url_for('registro_RCM')}}"> <i class="bi bi-pen pen" ></i></a></button></td>
+                </tr>
+              </tbody>
+          </table>
+        </div>
+      <div class=" mt-4">
+        <button type="button" class="btn btn-primary"><a href="{{url_for('mostrar_RCM')}}">Regresar</a></button>
+      </div>    
     </div>
   </div>
 </div>

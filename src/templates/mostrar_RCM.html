@@ -21,13 +21,13 @@
       </button>
       <div class="collapse navbar-collapse navbarvertical"  id="navbarContent">
         <ul class="nav flex-column">
-          <li class="nav-item"><a class="nav-link active" href="{{url_for('mostrar_equipo')}}">Información del equipo</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_equipo')}}">Información del equipo</a></li>
           <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_analisis_funcional')}}">Análisis funcional</a></li>
           <li class="nav-item"><a class="nav-link" href="#">Análisis de herramientas</a></li>
           <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_herramientas_especiales')}}">Herramientas especiales</a></li>
           <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_repuesto')}}">Repuesto</a></li>
           <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_FMEA')}}">FMEA</a></li>
-          <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_RCM')}}">RCM</a></li>
+          <li class="nav-item active"><a class="nav-link" href="{{url_for('mostrar_RCM')}}">RCM</a></li>
           <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_MTA')}}">MTA</a></li>
           <li class="nav-item"><a class="nav-link" href="#">LORA</a></li>
         </ul>
@@ -36,60 +36,60 @@
 
    
     <div class="col col-md-9 ">
-      <h2 class="section-title text-center"> Reliability Centred Maintenance Analysis (RCMA)</h2>
+      <h2 class="section-title text-center"> Reliability Centered Maintenance (RCM)</h2>
         <div class="scroll-container-horizontal">
-            <table class="table">
-                <thead>
-                    <tr>
-                      <th scope="col" >#</th>
-                      <th scope="col" >Sistema</th>
-                      <th scope="col" >Falla Funcional</th>
-                      <th scope="col" >Item o componente</th>
-                      <th scope="col" >Codigo Modo de Falla</th>
-                      <th scope="col" >Consecutivo de Modo de Falla</th>
-                      <th scope="col" >Descripción Modo de Falla</th>
-                      <th scope="col" >Causas</th>
-                      <th scope="col" >Hidden Failures</th>
-                      <th scope="col" >Safety</th>
-                      <th scope="col" >Environment</th>
-                      <th scope="col" >Operation</th>
-                      <th scope="col" >H1/S1/N1/O1</th>
-                      <th scope="col" >H2/S2/N2/O2</th>
-                      <th scope="col" >H3/S3/N3/O3</th>
-                      <th scope="col" >H4/S4/</th>
-                      <th scope="col" >H5</th>
-                      <th scope="col" >Tarea</th>
-                      <th scope="col">Accion Recomendada</th>
-                      <th scope="col" >Intervalo Inicial</th>
-                    </tr>
-                </thead>
-                <tbody>
-                  <tr>
-              
-                  </tr>
-                  <tr>
-                    <td scope="row">1</td>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                  </tr>
-                  <tr>
-                    <td scope="row">2</td>
-                    <td>Jacob</td>
-                    <td>tdornton</td>
-                    <td>@fat</td>
-                  </tr>
-                  <tr>
-                    <td scope="row">3</td>
-                    <td colspan="2">Larry tde Bird</td>
-                    <td>@twitter</td>
-                  </tr>
-                </tbody>
-              </table>
-        </div>  
-    </div>
-    <div class="text-end mt-4">
-      <button type="button" class="btn btn-primary"><a href="{{url_for('editar_RCM')}}">Editar RCM</a></button>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col" >#</th>
+                <th scope="col" >Sistema</th>
+                <th scope="col" >Falla Funcional</th>
+                <th scope="col" >Item o componente</th>
+                <th scope="col" >Codigo Modo de Falla</th>
+                <th scope="col" >Consecutivo de Modo de Falla</th>
+                <th scope="col" >Descripción Modo de Falla</th>
+                <th scope="col" >Causas</th>
+                <th scope="col" >Hidden Failures</th>
+                <th scope="col" >Safety</th>
+                <th scope="col" >Environment</th>
+                <th scope="col" >Operation</th>
+                <th scope="col" >H1/S1/N1/O1</th>
+                <th scope="col" >H2/S2/N2/O2</th>
+                <th scope="col" >H3/S3/N3/O3</th>
+                <th scope="col" >H4/S4/</th>
+                <th scope="col" >H5</th>
+                <th scope="col" >Tarea</th>
+                <th scope="col">Accion Recomendada</th>
+                <th scope="col" >Intervalo Inicial</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+          
+              </tr>
+              <tr>
+                <td scope="row">1</td>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>@mdo</td>
+              </tr>
+              <tr>
+                <td scope="row">2</td>
+                <td>Jacob</td>
+                <td>tdornton</td>
+                <td>@fat</td>
+              </tr>
+              <tr>
+                <td scope="row">3</td>
+                <td colspan="2">Larry tde Bird</td>
+                <td>@twitter</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      <div class="mt-4">
+        <button type="button" class="btn btn-primary"><a href="{{url_for('editar_RCM')}}">Editar RCM</a></button>
+      </div>  
     </div>
   </div>
 </div>

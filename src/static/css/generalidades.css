@@ -53,7 +53,7 @@
     text-align: center;
 }
 .btn-primary {
-    background-color: rgb(13, 2, 63);
+    background-color:rgb(33, 33, 99);
     color: white;
     padding: 10px 20px;
     border: none;
@@ -62,5 +62,15 @@
 }
 
 .btn-primary:hover {
-    background-color: rgb(33, 33, 99);
+    background-color: rgb(13, 2, 63);
+}
+
+.nav-item.active{
+    background-color: #0c367f3a;
+    border-radius: 10px;
+}
+
+.nav-item:hover{
+    background-color: #0c367f17;
+    border-radius: 10px;
 }
