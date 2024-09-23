@@ -16,9 +16,14 @@ from database import (
     insertar_procedimiento,
     insertar_diagrama,
     insertar_equipo_info,
-    obtener_equipos_por_tipo
+    obtener_equipos_por_tipo,
+    obtener_sistema_por_id, 
+    obtener_subsistemas_por_equipo, 
+    insertar_analisis_funcional
 )
 from __init__ import create_app
+
+
 
 app = create_app()
 app.config.from_object(config['development'])
@@ -87,7 +92,7 @@ def buscar_sistemas_api():
     return jsonify([])
 
 @app.route('/LSA/registro-generalidades', methods=['GET', 'POST'])
-def registro_generalidades():
+def registro_generalidades(id_sistema=None,id_equipo=None):
     if request.method == 'POST':
         # Extracción de datos del formulario
         fecha = request.form.get('fecha')
@@ -128,18 +133,63 @@ def registro_generalidades():
             marca, modelo, peso_seco, dimensiones, descripcion, imagen,
             id_personal, id_diagrama, id_procedimiento, id_sistema, id_equipo
         )
-        return redirect(url_for('index'))  # Redirige después de guardar
+        return redirect(url_for('registro_analisis_funcional', id_sistema=id_sistema,id_equipo=id_equipo))
     else:
         grupos = obtener_grupos_constructivos()
         responsables = obtener_personal()
         tipos_equipos = obtener_tipos_equipos()
-        return render_template('registro_generalidades.html', grupos=grupos, responsables=responsables, tipos_equipos=tipos_equipos)
+        return render_template('registro_generalidades.html', id_equipo=id_equipo,id_sistema=id_sistema, grupos=grupos, responsables=responsables, tipos_equipos=tipos_equipos)
 
 
 @app.route('/api/equipos_por_tipo/<int:id_tipo_equipo>', methods=['GET'])
 def obtener_equipos_por_tipo_api(id_tipo_equipo):
     equipospro = obtener_equipos_por_tipo(id_tipo_equipo)
     return jsonify(equipospro)
+
+@app.route('/LSA/registro-analisis-funcional')
+@app.route('/LSA/registro-analisis-funcional/<int:id_sistema>/<int:id_equipo>', methods=['GET'])
+def registro_analisis_funcional(id_sistema=None,id_equipo=None):
+    # Si no se proporciona id_sistema, sistema es None
+    if id_sistema is None:
+        sistema = None
+        subsistemas = []
+    else:
+        # Obtener información del sistema
+        sistema = obtener_sistema_por_id(id_sistema)
+        
+        # Verificar si el sistema existe
+        if sistema:
+            if id_equipo:
+                subsistemas = obtener_subsistemas_por_equipo(id_equipo)
+            else:
+                subsistemas = []
+        else:
+            # Si no se encuentra el sistema, no hay subsistemas
+            subsistemas = []        
+
+    # Renderizar la plantilla con los datos obtenidos
+    return render_template('registro_analisis_funcional.html', sistema=sistema,subsistemas=subsistemas)
+
+@app.route('/api/analisis-funcional', methods=['POST'])
+def api_analisis_funcional():
+    data = request.get_json()
+    
+    sistema_id = data.get('sistema')
+    subsistema_id = data.get('subsistema')
+    verbo = data.get('verbo')
+    accion = data.get('accion')
+    notas = data.get('notas')
+    
+    # Validar los datos recibidos (puedes agregar más validaciones)
+    if not sistema_id or not subsistema_id or not verbo or not accion:
+        return jsonify({'error': 'Faltan datos obligatorios'}), 400
+    
+    # Insertar en la base de datos
+    analisis_funcional_id = insertar_analisis_funcional(sistema_id, subsistema_id, verbo, accion, notas)
+    
+    return jsonify({'message': 'Análisis funcional agregado', 'id': analisis_funcional_id}), 200
+
+
 
 @app.route('/LSA/equipo/editar-analisis-funcional')
 def editar_analisis_funcional():
@@ -214,11 +264,11 @@ def registro_RCM():
 @app.route('/LSA/registro-FMEA')
 def registro_FMEA():
     return render_template('registro_FMEA.html')
-
+"""
 @app.route('/LSA/registro-analisis-funcional')
 def registro_analisis_funcional():
     return render_template('registro_analisis_funcional.html')
-
+"""
 @app.route('/LSA/registro-herramientas-especiales')
 def registro_herramientas_especiales():
     return render_template('registro_herramientas_especiales.html')

@@ -156,3 +156,33 @@ def obtener_equipos_por_tipo(id_tipo_equipo):
     equipospro = cursor.fetchall()
     cursor.close()
     return equipospro
+
+
+def obtener_sistema_por_id(id_sistema):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = "SELECT * FROM sistema WHERE id = %s"
+    cursor.execute(query, (id_sistema,))
+    sistema = cursor.fetchone()
+    cursor.close()
+    return sistema
+
+def obtener_subsistemas_por_equipo(id_equipo):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = "SELECT * FROM subsistemas WHERE id_equipo = %s"
+    cursor.execute(query, (id_equipo,))
+    subsistemas = cursor.fetchall()
+    cursor.close()
+    return subsistemas
+
+def insertar_analisis_funcional(id_sistema, subsistema_id, verbo, accion, notas):
+    cursor = db.connection.cursor()
+    query = """
+        INSERT INTO analisis_funcional (id_sistema, id_subsistema, verbo, accion, notas)
+        VALUES (%s, %s, %s, %s, %s)
+    """
+    cursor.execute(query, (id_sistema, subsistema_id, verbo, accion, notas))
+    db.connection.commit()
+    analisis_funcional_id = cursor.lastrowid
+    cursor.close()
+    return analisis_funcional_id
+

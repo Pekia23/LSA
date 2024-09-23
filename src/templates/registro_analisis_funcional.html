@@ -1,4 +1,5 @@
-{% extends './base.html' %}
+{% extends 'base_navbar.html' %}
+
 
 {% block title %}Cotecmar || Registro - Análisis Funcional{% endblock %}
 
@@ -10,43 +11,26 @@
 
 {% block nombre %}LSA | Registro de Análisis Funcional{% endblock %}
 
-{% block body %}
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-auto">
-            <button class="navbar-toggler custom-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse navbarvertical" id="navbarContent">
-                <ul class="nav flex-column">
-                    <li class="nav-item"><a class="nav-link" href="{{url_for('registro_generalidades')}}">Información del equipo</a></li>
-                    <li class="nav-item active"><a class="nav-link" href="{{url_for('registro_analisis_funcional')}}">Análisis funcional</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Análisis de herramientas</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{url_for('registro_herramientas_especiales')}}">Herramientas especiales</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{url_for('registro_repuesto')}}">Repuesto</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{url_for('registro_FMEA')}}">FMEA</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{url_for('registro_RCM')}}">RCM</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{url_for('registro_MTA')}}">MTA</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">LORA</a></li>
-                </ul>
-            </div>
-        </div>
+{% block content %}
+
 
         <div class="col">
             <h2 class="section-title text-center"> Análisis Funcional</h2>
             <br>
             <form id="analisis-funcional-form">
                 <div class="row">
-                    <div class="col-md-6">
-                        <label for="sistema" class="form-label">Sistema</label>
-                        <select class="form-control" id="sistema" name="sistema">
-                            <!-- Opciones del sistema -->
-                        </select>
-                    </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Sistema</label>
+                            <p>{{ sistema.nombre if sistema else 'No hay sistema seleccionado' }}</p>
+                            <input type="hidden" id="sistema" name="sistema" value="{{ sistema.id if sistema else '' }}">
+                        </div>
                     <div class="col-md-6">
                         <label for="subsistema" class="form-label">Subsistema</label>
                         <select class="form-control" id="subsistema" name="subsistema">
-                            <!-- Opciones del subsistema -->
+                            <option value="">Seleccione Subsistema</option>
+                            {% for subsistema in subsistemas %}
+                                <option value="{{ subsistema.id }}">{{ subsistema.nombre }}</option>
+                            {% endfor %}
                         </select>
                     </div>
                 </div>

@@ -1,4 +1,5 @@
-{% extends './base.html' %}
+{% extends 'base_navbar.html' %}
+
 
 {% block title %}Cotecmar || Herramientas Especiales{% endblock %}
 
@@ -10,28 +11,7 @@
 
 {% block nombre %}LSA | Registro de Herramientas Especiales{% endblock %}
 
-{% block body %}
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-auto">
-            <button class="navbar-toggler custom-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse navbarvertical" id="navbarContent">
-                <ul class="nav flex-column">
-                    <li class="nav-item"><a class="nav-link" href="{{url_for('registro_generalidades')}}">Información del equipo</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{url_for('registro_analisis_funcional')}}">Análisis funcional</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Análisis de herramientas</a></li>
-                    <li class="nav-item active"><a class="nav-link" href="{{url_for('registro_herramientas_especiales')}}">Herramientas especiales</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{url_for('registro_repuesto')}}">Repuesto</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{url_for('registro_FMEA')}}">FMEA</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{url_for('registro_RCM')}}">RCM</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{url_for('registro_MTA')}}">MTA</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">LORA</a></li>
-                </ul>
-            </div>
-        </div>
-
+{% block content %}
         <div class="col">
             <h2 class="section-title text-center">Herramientas Especiales</h2>
             <br>
