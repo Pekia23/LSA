@@ -33,29 +33,38 @@
         </div>
 
         <div class="col">
-            <h2 class="section-title text-center">Repuesto</h2>
+            <h2 class="section-title text-center">Level of Repair Analysis (LORA)</h2>
 
-            <form id="repuesto-form">
-                <div class="row">
-                    <!-- Única Columna -->
-                    <div class="col-md-12">
-                        <label for="parte_numero" class="form-label">Parte número</label>
-                        <input type="text" class="form-control" id="parte_numero" name="parte_numero" placeholder="Parte número">
-
-                        <label for="nombre_herramienta" class="form-label mt-3">Nombre de la Herramienta</label>
-                        <input type="text" class="form-control" id="nombre_herramienta" name="nombre_herramienta" placeholder="Nombre de la herramienta">
-
-                        <label for="valor" class="form-label mt-3">Valor</label>
-                        <input type="text" class="form-control" id="valor" name="valor" placeholder="Valor">
-
-                        <label for="dibujo_seccion" class="form-label mt-3">Dibujo de Sección Transversal</label>
-                        <input type="text" class="form-control" id="dibujo_seccion" name="dibujo_seccion" placeholder="Dibujo de sección transversal">
-
-                        <label for="notas" class="form-label mt-3">Notas</label>
-                        <textarea class="form-control" id="notas" name="notas" placeholder="Notas"></textarea>
+            <div class="mt-3">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" id="startQuizBtn">
+                    Realizar Cuestionario RCM
+                </button>
+                
+                <!-- El Modal (popup) -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Cuestionario RCM</h5>
+                                <button id="startQuizBtn" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body text-center">
+                                <label id="questionText" class="d-block mb-3"></label>
+                                <div id="answers">
+                                    <!-- Los botones "Sí" y "No" -->
+                                    <button type="button" class="btn btn-primary me-2" id="yesBtn">Sí</button>
+                                    <button type="button" class="btn btn-primary" id="noBtn">No</button>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <br><br>
+                                <button type="button" class="btn btn-secondary" id="backBtn"><i class="bi bi-arrow-left-circle-fill"></i></button>
+                            </div>                             
+                        </div>
                     </div>
                 </div>
-
+                
+            </div>
                 <!-- Botón "Agregar repuesto" -->
                 <div class="text-end mt-4">
                     <button type="submit" class="btn btn-primary" id="btn-agregar-repuesto">Agregar repuesto</button>
