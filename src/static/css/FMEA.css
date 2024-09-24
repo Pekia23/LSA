@@ -16,7 +16,6 @@ body {
 
 .navbarvertical .nav-link {
     white-space: nowrap; /* Asegura que el texto no se corte en varias líneas */
-    margin-bottom: 10px;
     color: #052647;;
     font-weight: bold;
 
@@ -69,7 +68,7 @@ body {
 }
 
 .col{
-    padding:35px 70px 30px 45px;
+    padding:35px 85px 30px 45px;
 }
 
 .btn-primary {

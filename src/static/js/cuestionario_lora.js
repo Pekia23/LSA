@@ -10,397 +10,402 @@ const nodos = {
     "P1": {
         pregunta: "¿Es posible realizar la reparación del modo de falla en el lugar de operación?",
         respuestas: {
-            "Sí": "P7",
+            "Sí": "P16",
             "No": "P2"
         }
     },
     "P2": {
         pregunta:"¿Existe alguna limitación en la disponibilidad de información para la reparación del modo de falla debido a restricciones en la transferencia de tecnología?",
         respuestas: {
-            "Sí": "R1",
+            "Sí": "P4",
             "No": "P3"
         }
     },
     "P3": {
         pregunta: "¿La reparación del modo de falla puede producir un riesgo inaceptable para la seguridad del personal de mantenimiento que no puede ser mitigado mediante recursos de apoyo o procedimientos?",
         respuestas: {
-            "Sí": "R2",
-            "No": "P4"
+            "Sí": "P4",
+            "No": "P6"
         }
     },
     "P4": {
         pregunta: "¿El modo de falla puede producir una degradación inaceptable en las misiones del buque?",
         respuestas: {
-            "Sí": "R3",
-            "No": "P5"
+            "Sí": "P5",
+            "No": "R3E_ini"
         }
     },
     "P5": {
         pregunta: "¿Es la probabilidad de ocurrencia del modo de falla mayor o igual a una vez cada cuatro años?",
         respuestas: {
-            "Sí": "R4",
-            "No": "P6"
+            "Sí": "R3E_iniBA",
+            "No": "R3E_ini"
         }
     },
     "P6": {
         pregunta: "¿La duración de la reparación del modo de falla es menor o igual al tiempo máximo de reparación asignado al primer escalón por la política de mantenimiento?",
         respuestas: {
-            "Sí": "R5",
-            "No": "R6"
+            "Sí": "P9",
+            "No": "P7"
         }
     },
     "P7": {
         pregunta: "¿El modo de falla puede producir una degradación inaceptable en las misiones del buque?",
         respuestas: {
-            "Sí": "P8",
-            "No": "P12"
+            "Sí": "P10",
+            "No": "P8"
         }
     },
     "P8": {
         pregunta: "¿Dispone de segundo escalón todos los conocimientos, documentación y medios para realizar la reparación del modo de falla?",
         respuestas: {
-            "Sí": "R1",
-            "No": "P9"
+            "Sí": "R2E_B",
+            "No": "P15"
         }
     },
     "P9": {
         pregunta: "¿Dispone el primer escalón de los conocimientos, documentación y recursos humanos y materiales para realizar la reparación del modo de falla?",
         respuestas: {
-            "Sí": "R2",
-            "No": "P10"
+            "Sí": "R1E_B",
+            "No": "P11"
         }
     },
     "P10": {
         pregunta: "¿Es la probabilidad de ocurrencia del modo de falla menor o igual a una vez cada cuatro años?",
         respuestas: {
-            "Sí": "R3",
-            "No": "P11"
+            "Sí": "ABB_B",
+            "No": "P8"
         }
     },
     "P11": {
         pregunta: "¿El modo de falla puede producir una degradación inaceptable en las misiones del buque?",
         respuestas: {
-            "Sí": "R7",
-            "No": "R5"
+            "Sí": "P12",
+            "No": "P13"
         }
     },
     "P12": {
         pregunta: "¿Es la probabilidad de ocurrencia del modo de falla mayor o igual a una vez cada cuatro años?",
         respuestas: {
-            "Sí": "P8",
-            "No": "P16"
+            "Sí": "R1E_C",
+            "No": "P13"
         }
     },
     "P13": {
         pregunta: "¿Existe algún recurso de apoyo el cual es inviable disponer de él en el primer escalón para realizar la reparación del modo de falla?",
         respuestas: {
-            "Sí": "P8",
-            "No": "P16"
+            "Sí": "P14",
+            "No": "R3E_C"
         }
     },
     "P14": {
         pregunta: "¿Dispone el segundo escalón de los conocimientos, documentación y medios para realizar la reparación del modo de falla?",
         respuestas: {
-            "Sí": "P8",
-            "No": "P16"
+            "Sí": "R3E_C",
+            "No": "P15"
         }
     },
     "P15": {
         pregunta: "¿Existe algún recurso de apoyo el cual es inviable disponer de él en el segundo escalón?",
         respuestas: {
-            "Sí": "P8",
-            "No": "P16"
+            "Sí": "R4E_D",
+            "No": "R3E_C"
         }
     },
     "P16": {
         pregunta:"¿El modo de falla se puede reparar en el lugar de operación por desmontaje y reemplazo?",
         respuestas: {
-            "Sí": "P17",
+            "Sí": "P19",
             "No": "P17"
         }
     },
     "P17": {
         pregunta:"¿El desmontaje y reemplazo del componente puede producir un riesgo inaceptable para la seguridad del personal de mantenimiento que no puede ser mitigado mediante recursos de apoyo o procedimientos?",
         respuestas: {
-            "Sí": "R1",
+            "Sí": "P20",
             "No": "P18"
         }
     },
     "P18": {
         pregunta:"¿La duración del desmontaje y reemplazo del componente es menor a la del tiempo máximo de reparación asignado al primer escalón por la política de mantenimiento?",
         respuestas: {
-            "Sí": "R2",
-            "No": "P19"
+            "Sí": "P28",
+            "No": "P24"
         }
     }, 
     "P19": {
         pregunta:"¿Es el tiempo de reparación en el lugar de operación dos o mas veces mayor que el tiempo de desmontaje y reemplazo?",
         respuestas: {
-            "Sí": "R3",
-            "No": "R8"
+            "Sí": "P17",
+            "No": "P2"
         }
     }, 
     "P20": {
         pregunta: "¿El modo de falla puede producir una degradación inaceptable en las misiones del buque?",
         respuestas: {
-            "Sí": "P7",
-            "No": "P2"
+            "Sí": "P21",
+            "No": "P23"
         }
     },
     "P21": {
         pregunta:"¿Es la probabilidad de ocurrencia del modo de falla mayor o igual a una vez cada cuatro años?",
         respuestas: {
-            "Sí": "R1",
-            "No": "P3"
+            "Sí": "P22",
+            "No": "P23"
         }
     },
     "P22": {
         pregunta: "¿Está considerado el componente que se desmonta y reemplaza como reparable por el fabricante?",
         respuestas: {
-            "Sí": "R2",
-            "No": "P4"
+            "Sí": "DYR3E_D3E_E_BD2",
+            "No": "DYR3E_D3E_E_BD"
         }
     },
     "P23": {
         pregunta: "¿Está considerado el componente que se desmonta y reemplaza como reparable por el fabricante?",
         respuestas: {
-            "Sí": "R3",
-            "No": "P5"
+            "Sí": "DYR3E_R3E_E",
+            "No": "DYR3E_D3E_E"
         }
     },
     "P24": {
         pregunta: "¿El modo de falla puede producir una degradación inaceptable en las misiones del buque?",
         respuestas: {
-            "Sí": "R4",
-            "No": "P6"
+            "Sí": "P25",
+            "No": "P26"
         }
     },
     "P25": {
         pregunta: "¿Es la probabilidad de ocurrencia del modo de falla menor o igual a una vez cada cuatro años?",
         respuestas: {
-            "Sí": "R5",
-            "No": "R6"
+            "Sí": "P36",
+            "No": "P26"
         }
     },
     "P26": {
         pregunta: "¿Dispone el segundo escalón de los conocimientos, documentación y medios para realizar el desmontaje y reemplazo del componente?",
         respuestas: {
-            "Sí": "P8",
-            "No": "P12"
+            "Sí": "P27",
+            "No": "P31"
         }
     },
     "P27": {
         pregunta: "¿Está considerado el componente que se desmonta y reemplaza como reparable por el fabricante?",
         respuestas: {
-            "Sí": "R1",
-            "No": "P9"
+            "Sí": "DYR2E_D2E_F",
+            "No": "P34"
         }
     },
     "P28": {
         pregunta: "¿El componente afectado por el modo de falla tiene un peso máximo de 15 Kg y ninguna de sus dimensiones (altura, anchura, profundidad) es mayor de 500 mm?",
         respuestas: {
-            "Sí": "R2",
-            "No": "P10"
+            "Sí": "P29",
+            "No": "P39"
         }
     },
     "P29": {
         pregunta: "¿Dispone el primer escalón de los conocimientos, documentación y recursos para realizar el desmontaje y reemplazo del componente?",
         respuestas: {
-            "Sí": "R3",
-            "No": "P11"
+            "Sí": "P30",
+            "No": "P45"
         }
     },
     "P30": {
         pregunta: "¿Está considerado el componente que se desmonta y reemplaza como reparable por el fabricante?",
         respuestas: {
-            "Sí": "R7",
-            "No": "R5"
+            "Sí": "P49",
+            "No": "DYR1E_D1E_G"
         }
     },
     "P31": {
         pregunta: "¿Existe algún recurso de apoyo el cual es inviable disponer de él en el segundo escalón para realizar el desmontaje y reemplazo del componente?",
         respuestas: {
-            "Sí": "P8",
-            "No": "P16"
+            "Sí": "P33",
+            "No": "P32"
         }
     },
     "P32": {
         pregunta: "¿Está considerado el componente que se desmonta y reemplaza como reparable por el fabricante?",
         respuestas: {
-            "Sí": "P8",
-            "No": "P16"
+            "Sí": "P34",
+            "No": "DYR2E_D2E_H"
         }
     },
     "P33": {
         pregunta: "¿Está considerado el componente que se desmonta y reemplaza como reparable por el fabricante?",
         respuestas: {
-            "Sí": "P8",
-            "No": "P16"
+            "Sí": "DYR3E_R3E_H",
+            "No": "DYR3E_D3E_H"
         }
     },
     "P34": {
         pregunta:"¿Existe alguna limitación en la disponibilidad de información para la reparación del componente reparable debido a la existencia de restricciones a la transferencia de tecnología?",
         respuestas: {
-            "Sí": "P8",
-            "No": "P16"
+            "Sí": "DYR2E_R3E_I",
+            "No": "P35"
         }
     },
     "P35": {
         pregunta:"¿Existe algún recurso de apoyo el cual es inviable disponer de él en el segundo escalón para realizar la reparación del componente reparable?",
         respuestas: {
-            "Sí": "P17",
-            "No": "P17"
+            "Sí": "DYR2E_R3E_I2",
+            "No": "DYR2E_D2E_H"
         }
     },
     "P36": {
         pregunta:"¿El componente afectado por el modo de falla tiene un peso máximo de 15 Kg y ninguna de sus dimensiones (altura, anchura, profundidad) es mayor de 500 mm?",
         respuestas: {
-            "Sí": "R1",
-            "No": "P18"
+            "Sí": "P37",
+            "No": "P52"
         }
     },
     "P37": {
         pregunta:"¿Dispone el primer escalón de los conocimientos, documentación y recursos para realizar el desmontaje y reemplazo del componente?",
         respuestas: {
-            "Sí": "R2",
-            "No": "P19"
+            "Sí": "P38",
+            "No": "P56"
         }
     }, 
     "P38": {
         pregunta:"¿Está considerado el componente que se desmonta y reemplaza como reparable por el fabricante?",
         respuestas: {
-            "Sí": "R3",
-            "No": "R8"
+            "Sí": "C_R34E_Q",
+            "No": "DYR1E_D1E_J"
         }
     }, 
     "P39": {
         pregunta: "¿El modo de falla puede producir una degradación inaceptable en las misiones del buque?",
         respuestas: {
-            "Sí": "P7",
-            "No": "P2"
+            "Sí": "P40",
+            "No": "P43"
         }
     },
     "P40": {
         pregunta:"¿Es la probabilidad de ocurrencia del modo de falla menor o igual a una vez cada cuatro años?",
         respuestas: {
-            "Sí": "R1",
-            "No": "P3"
+            "Sí": "P41",
+            "No": "P43"
         }
     },
     "P41": {
         pregunta: "¿Sería viable realizar el desmontaje y reemplazo por más de una persona y se dispone de rutas de desmontaje para realizarlo?",
         respuestas: {
-            "Sí": "R2",
-            "No": "P4"
+            "Sí": "P42",
+            "No": "ABE_K"
         }
     },
     "P42": {
         pregunta:"¿Está considerado el componente que se desmonta y reemplaza como reparable por el fabricante?",
         respuestas: {
-            "Sí": "R3",
-            "No": "P5"
+            "Sí": "C_R34E_Q",
+            "No": "DYR1E_D1E_K"
         }
     },
     "P43": {
         pregunta: "¿Dispone el segundo escalón de los conocimientos, documentación y medios para realizar el desmontaje y reemplazo del componente?",
         respuestas: {
-            "Sí": "R4",
-            "No": "P6"
+            "Sí": "P44",
+            "No": "P45"
         }
     },
     "P44": {
         pregunta:"¿Está considerado el componente que se desmonta y reemplaza como reparable por el fabricante?",
         respuestas: {
-            "Sí": "R5",
-            "No": "R6"
+            "Sí": "P49",
+            "No": "DYR2E_D2E_K"
         }
     },
     "P45": {
         pregunta: "¿Existe algún recurso de apoyo el cual es inviable disponer de él en el primer escalón para realizar el desmontaje y reemplazo del componente?",
         respuestas: {
-            "Sí": "P8",
-            "No": "P12"
+            "Sí": "P47",
+            "No": "P46"
         }
     },
     "P46": {
         pregunta: "¿Está considerado el componente que se desmonta y reemplaza como reparable por el fabricante?",
         respuestas: {
-            "Sí": "R1",
-            "No": "P9"
+            "Sí": "P49",
+            "No": "DYR1E_D1E_L"
         }
     },
     "47": {
         pregunta:"¿El modo de falla puede producir una degradación inaceptable en las misiones del buque?",
         respuestas: {
-            "Sí": "R2",
-            "No": "P10"
+            "Sí": "P48",
+            "No": "P31"
         }
     },
     "P48": {
         pregunta:"¿Es la probabilidad de ocurrencia del modo de falla menor o igual a una vez cada cuatro años?",
         respuestas: {
-            "Sí": "R3",
-            "No": "P11"
+            "Sí": "ABF_L",
+            "No": "P31"
         }
     },
     "P49": {
         pregunta:"¿Existe alguna limitación en la disponibilidad de información para la reparación del componente reparable debido a la existencia de restricciones a la transferencia de tecnología?",
         respuestas: {
-            "Sí": "R7",
-            "No": "R5"
+            "Sí": "DYR1E_R3E_M",
+            "No": "P50"
         }
     },
     "P50": {
         pregunta:"¿Existe algún recurso de apoyo el cual es inviable disponer de él en el segundo escalón para realizar la reparación del componente reparable?",
         respuestas: {
-            "Sí": "P8",
-            "No": "P16"
+            "Sí": "DYR1E_R3E_M",
+            "No": "DYR1E_R2E"
         }
     },
     "P52": {
         pregunta:"¿Sería viable realizar el desmontaje y reemplazo por más de una persona y se disponen de rutas de desmontaje para realizarlo?",
         respuestas: {
-            "Sí": "P8",
-            "No": "P16"
+            "Sí": "P53",
+            "No": "ABG_N"
         }
     },
     "P53": {
         pregunta:"¿Está considerado el componente que se desmonta y reemplaza como reparable por el fabricante?",
         respuestas: {
-            "Sí": "P8",
-            "No": "P16"
+            "Sí": "P49",
+            "No": "DYR1E_D1E_N"
         }
     },
     "P54": {
         pregunta:"¿Dispone el segundo escalón de los conocimientos, documentación y medios para realizar el desmontaje y reemplazo del componente?",
         respuestas: {
-            "Sí": "P8",
-            "No": "P16"
+            "Sí": "P55",
+            "No": "P45"
         }
     },
     "P55": {
         pregunta:"¿Está considerado el componente que se desmonta y reemplaza como reparable por el fabricante?",
         respuestas: {
-            "Sí": "P17",
-            "No": "P17"
+            "Sí": "DYR2E_R2E",
+            "No": "DYR2E_D2E_N"
         }
     },
     "P56": {
         pregunta:"¿Existe algún recurso de apoyo el cual es inviable disponer de él en el primer escalón para realizar el desmontaje y reemplazo del componente?",
         respuestas: {
-            "Sí": "R1",
-            "No": "P18"
+            "Sí": "ABG_O",
+            "No": "P57"
         }
     },
     "P57": {
         pregunta:"¿Está considerado el componente que se desmonta y reemplaza como reparable por el fabricante?",
         respuestas: {
-            "Sí": "R2",
-            "No": "P19"
+            "Sí": "P49",
+            "No": "DYR1E_D1E_O"
         }
     }, 
-
-
+    
+    "DYR1E_D1E_J": {
+        pregunta: "Desmontar y reemplazar por el primer escalón y desechar en el primer escalón.",
+        respuestas: {
+            "Fin": "fin"
+        }
+    },
     "R3E_ini": {
         pregunta: "Reparar por el 3er escalón.",
         respuestas: {
@@ -413,13 +418,19 @@ const nodos = {
             "Fin": "fin"
         }
     },
+    "R2E_B":{
+        pregunta:"Reparar por el 2do escalon",
+        respuestas:{
+            "Fin:":"fin"
+        }
+    },
     "ABA_ini": {
         pregunta: "Activar bandera A.",
         respuestas: {
             "Fin": "fin"
         }
     },
-    "R1E": {
+    "R1E_B": {
         pregunta: "Reparar por el primer escalón.",
         respuestas: {
             "Fin": "fin"
