@@ -177,9 +177,7 @@ def mostrar_MTA():
 def mostrar_RCM():
     return render_template('mostrar_RCM.html')
 
-@app.route('/LSA/equipo/mostrar-LORA')
-def mostrar_lora():
-    return render_template('mostrar_lora.html')
+
 
 @app.route('/LSA/equipo/mostrar-analisis-funcional')
 def mostrar_analisis_funcional():
@@ -209,9 +207,6 @@ def registro_RCM():
 def registro_FMEA():
     return render_template('registro_FMEA.html')
 
-@app.route('/LSA/equipo/registro-LORA')
-def registro_lora():
-    return render_template('registro_lora.html')
 
 @app.route('/LSA/registro-analisis-funcional')
 def registro_analisis_funcional():
