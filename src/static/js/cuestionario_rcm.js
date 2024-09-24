@@ -81,7 +81,7 @@ const nodos = {
         pregunta: "¿Es técnicamente factible y merece la pena realizar una combinación de tareas?",
         respuestas: {
             "Sí": "R7",
-            "No": "R8"
+            "No": "R5"
         }
     },
     "P12": {
@@ -115,7 +115,7 @@ const nodos = {
     "P19": {
         pregunta: "¿Es técnicamente factible y merece la pena realizar una tarea de sustitución cíclica?",
         respuestas: {
-            "Sí": "R7",
+            "Sí": "R3",
             "No": "R8"
         }
     }, 
@@ -177,6 +177,8 @@ const nodos = {
 // Variables para controlar el flujo del cuestionario
 let currentNode = "inicio";
 let questionHistory = []; // Historial de las preguntas anteriores
+let contadorRespuestas = 1; // Iniciamos un contador para ir llenando los inputs secuencialmente
+let respuestas = {}; // Almacena las respuestas asociadas a cada pregunta
 
 // Función para mostrar el nodo actual
 function mostrarPregunta(nodeId) {
@@ -186,17 +188,19 @@ function mostrarPregunta(nodeId) {
     // Actualizamos el texto de la pregunta
     questionText.textContent = nodo.pregunta;
 
-    // Si es el nodo de fin, ocultamos los botones
+    // Si es el nodo de fin, ocultamos todos los botones
     if (nodeId === "fin") {
-        document.getElementById("yesBtn").style.display = "none";
-        document.getElementById("noBtn").style.display = "none";
-        document.getElementById("backBtn").style.display = "none";
+        ocultarBotones(); // Aseguramos que todos los botones estén ocultos
         return;
     }
 
-    // Mostrar los botones "Sí" y "No" si el nodo tiene respuestas
-    document.getElementById("yesBtn").style.display = "inline-block";
-    document.getElementById("noBtn").style.display = "inline-block";
+    // Mostrar los botones "Sí" y "No" solo si el nodo tiene respuestas disponibles
+    if (nodo.respuestas["Sí"] && nodo.respuestas["No"]) {
+        document.getElementById("yesBtn").style.display = "inline-block";
+        document.getElementById("noBtn").style.display = "inline-block";
+    } else {
+        ocultarBotones();
+    }
 
     // Si ya hay preguntas en el historial, mostrar el botón "Volver"
     if (questionHistory.length > 0) {
@@ -207,29 +211,82 @@ function mostrarPregunta(nodeId) {
 
     // Actualizamos los eventos de los botones según la lógica del nodo
     document.getElementById("yesBtn").onclick = function() {
+        if (currentNode !== "inicio") { // No guardar si es el nodo de inicio
+            guardarRespuesta(currentNode, "Sí");
+        }
         questionHistory.push(currentNode); // Guardamos la pregunta actual antes de avanzar
         currentNode = nodo.respuestas["Sí"]; // Actualizamos al nodo siguiente según "Sí"
-        mostrarPregunta(currentNode);
+        ocultarBotones(); // Ocultamos los botones inmediatamente
+        mostrarPregunta(currentNode); // Mostramos la siguiente pregunta
     };
 
     document.getElementById("noBtn").onclick = function() {
+        if (currentNode !== "inicio") { // No guardar si es el nodo de inicio
+            guardarRespuesta(currentNode, "No");
+        }
         questionHistory.push(currentNode); // Guardamos la pregunta actual antes de avanzar
         currentNode = nodo.respuestas["No"]; // Actualizamos al nodo siguiente según "No"
-        mostrarPregunta(currentNode);
+        ocultarBotones(); // Ocultamos los botones inmediatamente
+        mostrarPregunta(currentNode); // Mostramos la siguiente pregunta
     };
 
     // Evento para volver a la pregunta anterior
     document.getElementById("backBtn").onclick = function() {
         if (questionHistory.length > 0) {
-            currentNode = questionHistory.pop(); // Volver al último nodo del historial
-            mostrarPregunta(currentNode);
+            const preguntaAnterior = questionHistory.pop(); // Volver al último nodo del historial
+            volverAtras(preguntaAnterior); // Actualizamos la respuesta cuando se vuelve atrás
+            currentNode = preguntaAnterior;
+            mostrarPregunta(currentNode); // Mostramos la pregunta anterior
         }
     };
+}
+
+// Función para ocultar todos los botones
+function ocultarBotones() {
+    document.getElementById("yesBtn").style.display = "none";
+    document.getElementById("noBtn").style.display = "none";
+    document.getElementById("backBtn").style.display = "none";
+}
+
+// Función para guardar la respuesta
+function guardarRespuesta(preguntaId, respuesta) {
+    // Si ya respondimos esta pregunta antes, actualizamos su input
+    if (respuestas[preguntaId]) {
+        const inputId = respuestas[preguntaId]; // Obtenemos el id del input correspondiente
+        const inputElement = document.getElementById(inputId);
+        if (inputElement) {
+            inputElement.value = respuesta; // Actualizamos la respuesta
+        }
+    } else {
+        // Si es una nueva respuesta, llenamos el siguiente input secuencial
+        const inputId = `cuestionario_rcm${contadorRespuestas}`; // Generamos el id del input correspondiente
+        const inputElement = document.getElementById(inputId); // Obtenemos el input correspondiente
+        
+        if (inputElement) {
+            inputElement.value = respuesta; // Guardamos la respuesta en el input
+            respuestas[preguntaId] = inputId; // Almacenamos la relación de la pregunta con el input
+            contadorRespuestas++; // Incrementamos el contador
+        }
+    }
+}
+
+// Función para retroceder en el cuestionario
+function volverAtras(preguntaId) {
+    const inputId = respuestas[preguntaId]; // Obtenemos el id del input asociado con la pregunta
+    if (inputId) {
+        const inputElement = document.getElementById(inputId);
+        if (inputElement) {
+            inputElement.value = ""; // Borramos la respuesta del input al retroceder
+            contadorRespuestas--; // Reducimos el contador ya que volvemos atrás
+        }
+    }
 }
 
 // Iniciar el cuestionario cuando se abra el modal
 document.getElementById("startQuizBtn").addEventListener("click", function () {
     currentNode = "inicio"; // Reiniciar el cuestionario al inicio
     questionHistory = []; // Limpiar el historial cuando se reinicia
+    respuestas = {}; // Limpiar las respuestas anteriores
+    contadorRespuestas = 1; // Reiniciar el contador
     mostrarPregunta(currentNode);
 });

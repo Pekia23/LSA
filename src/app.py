@@ -259,11 +259,14 @@ def registro_MTA():
 def registro_RCM():
     return render_template('registro_RCM.html')
 
-
-
 @app.route('/LSA/registro-FMEA')
 def registro_FMEA():
     return render_template('registro_FMEA.html')
+
+
+@app.route('/LSA/equipo/registro-LORA')
+def registro_lora():
+    return render_template('registro_lora.html')
 """
 @app.route('/LSA/registro-analisis-funcional')
 def registro_analisis_funcional():
