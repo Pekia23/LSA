@@ -23,7 +23,7 @@
         <ul class="nav flex-column">
           <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_equipo')}}">Información del equipo</a></li>
           <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_analisis_funcional')}}">Análisis funcional</a></li>
-          <li class="nav-item active"><a class="nav-link" href="{{url_for('mostrar_herramientas_especiales')}}">Herramientas especiales</a></li>
+          <li class="nav-item active"><a class="nav-link" href="{{url_for('mostrar_herramientas_especiales')}}">Modulo de herramientas</a></li>
           <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_repuesto')}}">Repuesto</a></li>
           <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_FMEA')}}">FMEA</a></li>
           <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_RCM')}}">RCM</a></li>
@@ -33,18 +33,50 @@
     </div>
 
     <div class="col ">
-      <h2 class="section-title text-center"> Herramientas Especiales </h2>
+      <h2 class="section-title text-center"> Modulo de Herramientas </h2>
+      <h3> Analisis de herramientas</h3>
       <table class="table">
         <thead>
             <tr>
               <th scope="col" >Equipo</th>
-              <th scope="col" >Parte numero</th>
               <th scope="col" >Nombre de la herramienta</th>
-              <th scope="col" >Valor</th>
-              <th scope="col" >MTBF</th>
-              <th scope="col" >Dibujo de sección transversal</th>
-              <th scope="col" >Notas</th>
-              
+              <th scope="col" >Parte numero</th>
+              <th scope="col" >Dibujo de seccion transversal</th>
+              <th scope="col" >Costo</th>
+            </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Mark</td>
+            <td>Otto</td>
+            <td>@mdo</td>
+            <td>@fat</td>
+          </tr>
+          <tr>
+            <td>Jacob</td>
+            <td>tdornton</td>
+            <td>@fat</td>
+            <td>@fat</td>
+          </tr>
+          <tr>
+            <td colspan="2">Larry tde Bird</td>
+            <td>@twitter</td>
+            <td>@fat</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3> Herramientas especiales</h3>
+      <table class="table">
+        <thead>
+            <tr>
+              <th scope="col" >Equipo</th>
+              <th scope="col" >Nombre de la herramienta</th>
+              <th scope="col" >Parte numero</th>
+              <th scope="col" >Dibujo de seccion transversal</th>
+              <th scope="col" >Cantidad</th>
+              <th scope="col" >Costo</th>
+              <th scope="col" >Manual referenciado</th>
             </tr>
         </thead>
         <tbody>

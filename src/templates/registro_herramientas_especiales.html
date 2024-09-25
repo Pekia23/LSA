@@ -21,7 +21,7 @@
                 <ul class="nav flex-column">
                     <li class="nav-item"><a class="nav-link" href="{{url_for('registro_generalidades')}}">Información del equipo</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{url_for('registro_analisis_funcional')}}">Análisis funcional</a></li>
-                    <li class="nav-item active"><a class="nav-link" href="{{url_for('registro_herramientas_especiales')}}">Herramientas especiales</a></li>
+                    <li class="nav-item active"><a class="nav-link" href="{{url_for('registro_herramientas_especiales')}}">Modulo de herramientas</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{url_for('registro_repuesto')}}">Repuesto</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{url_for('registro_FMEA')}}">FMEA</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{url_for('registro_RCM')}}">RCM</a></li>
@@ -31,43 +31,82 @@
         </div>
 
         <div class="col">
+            <h2 class="section-title text-center">Analisis de Herramientas</h2>
+            <br>
+            <form id="herramientas-especiales-form">
+                <div class="row">
+                    <div class="col-md-4 my-4">
+                        <label for="consumibles" class="form-label ">Equipo</label>
+                        <input type="text" class="form-control" id="equipo" name="consumibles">
+
+                        <label for="dibujo_transversal" class="form-label mt-3">Dibujo de sección transversal</label>
+                        <input type="file" class="form-control" id="dibujo_transversal" name="dibujo_transversal" accept=".jpg, .jpeg, .png, .pdf">
+                        
+                    </div>
+
+                    <!-- Segunda columna -->
+                    <div class="col-md-4 my-4">
+                        <label for="ambientales" class="form-label">Nombre de la herramienta</label>
+                        <input type="text" class="form-control" id="ambientales" name="ambientales">
+
+                        <label for="minutos" class="form-label mt-3">Costo</label>
+                        <input type="number" class="form-control" id="minutos" name="minutos">
+                        
+                        
+                    </div>
+
+                    <!-- Tercera columna -->
+                    <div class="col-md-4 my-4">
+                        <label for="horas" class="form-label">Parte numero</label>
+                        <input type="number" class="form-control" id="horas" name="horas">
+                    </div>
+                </div>
+                <!-- Botón "Agregar herramientas especiales" -->
+                <div class="text-end mt-4">
+                    <button type="submit" class="btn btn-primary" id="btn-agregar-herramientas">Agregar herramienta</button>
+                </div>
+            </form>
+
             <h2 class="section-title text-center">Herramientas Especiales</h2>
             <br>
             <form id="herramientas-especiales-form">
                 <div class="row">
-                    <!-- Primera Columna -->
-                    <div class="col-md-6">
-                        <label for="equipo" class="form-label">Equipo</label>
-                        <select class="form-control" id="equipo" name="equipo">
-                            <!-- Opciones del equipo -->
-                        </select>
+                    <div class="col-md-4 my-4">
+                        <label for="consumibles" class="form-label ">Equipo</label>
+                        <input type="text" class="form-control" id="equipo" name="consumibles">
 
-                        <label for="nombre_herramienta" class="form-label mt-3">Nombre de la Herramienta</label>
-                        <input type="text" class="form-control" id="nombre_herramienta" name="nombre_herramienta" placeholder="Nombre de la herramienta">
+                        <label for="dibujo_transversal" class="form-label mt-3">Dibujo de sección transversal</label>
+                        <input type="file" class="form-control" id="dibujo_transversal" name="dibujo_transversal" accept=".jpg, .jpeg, .png, .pdf">
 
-                        <label for="mtbf" class="form-label mt-3">MTBF</label>
-                        <input type="number" class="form-control" id="mtbf" name="mtbf" placeholder="MTBF">
-
-                        <label for="notas" class="form-label mt-3">Notas</label>
-                        <textarea class="form-control" id="notas" name="notas" placeholder="Notas"></textarea>
+                        <label for="consumibles" class="form-label mt-3">Manual referenciado</label>
+                        <input type="text" class="form-control" id="consumibles" name="consumibles">
+                        
                     </div>
 
-                    <!-- Segunda Columna -->
-                    <div class="col-md-6">
-                        <label for="parte_numero" class="form-label">Parte número</label>
-                        <input type="text" class="form-control" id="parte_numero" name="parte_numero" placeholder="Parte número">
+                    <!-- Segunda columna -->
+                    <div class="col-md-4 my-4">
+                        <label for="ambientales" class="form-label">Nombre de la herramienta</label>
+                        <input type="text" class="form-control" id="ambientales" name="ambientales">
+                        
+                        <label for="estado_equipo" class="form-label mt-3">Cantidad</label>
+                        <input type="text" class="form-control" id="estado_equipo" name="estado_equipo">
+                        
+                    </div>
 
-                        <label for="valor" class="form-label mt-3">Valor</label>
-                        <input type="text" class="form-control" id="valor" name="valor" placeholder="Valor">
-
-                        <label for="dibujo_seccion" class="form-label mt-3">Dibujo de Sección Transversal</label>
-                        <input type="text" class="form-control" id="dibujo_seccion" name="dibujo_seccion" placeholder="Dibujo de sección transversal">
+                    <!-- Tercera columna -->
+                    <div class="col-md-4 my-4">
+                        <label for="horas" class="form-label">Parte numero</label>
+                        <input type="number" class="form-control" id="horas" name="horas">
+                        
+                        <label for="minutos" class="form-label mt-3">Costo</label>
+                        <input type="number" class="form-control" id="minutos" name="minutos">
+                        
                     </div>
                 </div>
-                <br>
+
                 <!-- Botón "Agregar herramientas especiales" -->
                 <div class="text-end mt-4">
-                    <button type="submit" class="btn btn-primary" id="btn-agregar-herramientas">Guardar herramientas especiales</button>
+                    <button type="submit" class="btn btn-primary" id="btn-agregar-herramientas">Agregar herramientas especiales</button>
                 </div>
             </form>
         </div>

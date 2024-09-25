@@ -102,6 +102,12 @@ a{
     color: white;
 }
 
+h3 {
+    color:  #0c377f !important; /* Azul */
+    font-weight: bold; /* Negrita */
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
 
 
 .nav-item.active{
