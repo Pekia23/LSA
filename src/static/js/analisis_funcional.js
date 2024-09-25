@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
             subsistema: document.getElementById('subsistema').value,
             verbo: document.getElementById('verbo').value,
             accion: document.getElementById('accion').value,
-            notas: document.getElementById('notas').value
+            estandar_desempeño: document.getElementById('estandar_desempeño').value
         };
 
         // Enviar los datos mediante fetch

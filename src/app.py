@@ -1,5 +1,7 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for
+from flask import Flask, render_template, request, jsonify, redirect, url_for, make_response
+import uuid
 import MySQLdb.cursors
+import uuid  # Para generar un token único
 from __init__ import db
 from config import config
 from database import (
@@ -19,7 +21,8 @@ from database import (
     obtener_equipos_por_tipo,
     obtener_sistema_por_id, 
     obtener_subsistemas_por_equipo, 
-    insertar_analisis_funcional
+    insertar_analisis_funcional,
+    obtener_usuario_por_correo
 )
 from __init__ import create_app
 
@@ -133,7 +136,7 @@ def registro_generalidades(id_sistema=None,id_equipo=None):
             marca, modelo, peso_seco, dimensiones, descripcion, imagen,
             id_personal, id_diagrama, id_procedimiento, id_sistema, id_equipo
         )
-        return redirect(url_for('registro_analisis_funcional', id_sistema=id_sistema,id_equipo=id_equipo))
+        return redirect(url_for('registro_analisis_funcional', id_sistema=id_sistema,id_equipo=id_equipo,id_equipo_info=equipo_info_id))
     else:
         grupos = obtener_grupos_constructivos()
         responsables = obtener_personal()
@@ -147,8 +150,8 @@ def obtener_equipos_por_tipo_api(id_tipo_equipo):
     return jsonify(equipospro)
 
 @app.route('/LSA/registro-analisis-funcional')
-@app.route('/LSA/registro-analisis-funcional/<int:id_sistema>/<int:id_equipo>', methods=['GET'])
-def registro_analisis_funcional(id_sistema=None,id_equipo=None):
+@app.route('/LSA/registro-analisis-funcional/<int:id_sistema>/<int:id_equipo>/<int:id_equipo_info>', methods=['GET', 'POST'])
+def registro_analisis_funcional(id_sistema=None,id_equipo=None,id_equipo_info=None):
     # Si no se proporciona id_sistema, sistema es None
     if id_sistema is None:
         sistema = None
@@ -168,7 +171,7 @@ def registro_analisis_funcional(id_sistema=None,id_equipo=None):
             subsistemas = []        
 
     # Renderizar la plantilla con los datos obtenidos
-    return render_template('registro_analisis_funcional.html', sistema=sistema,subsistemas=subsistemas)
+    return render_template('registro_analisis_funcional.html', sistema=sistema,subsistemas=subsistemas, id_equipo_info=id_equipo_info)
 
 @app.route('/api/analisis-funcional', methods=['POST'])
 def api_analisis_funcional():
@@ -178,16 +181,58 @@ def api_analisis_funcional():
     subsistema_id = data.get('subsistema')
     verbo = data.get('verbo')
     accion = data.get('accion')
-    notas = data.get('notas')
+    estandar_desempeño = data.get('estandar_desempeño')
+    id_equipo_info = data.get('id_equipo_info')
     
     # Validar los datos recibidos (puedes agregar más validaciones)
-    if not sistema_id or not subsistema_id or not verbo or not accion:
+    if not sistema_id or not subsistema_id or not verbo or not accion or not estandar_desempeño or not id_equipo_info:
         return jsonify({'error': 'Faltan datos obligatorios'}), 400
     
     # Insertar en la base de datos
-    analisis_funcional_id = insertar_analisis_funcional(sistema_id, subsistema_id, verbo, accion, notas)
+    analisis_funcional_id = insertar_analisis_funcional(subsistema_id, verbo, accion, estandar_desempeño)
     
     return jsonify({'message': 'Análisis funcional agregado', 'id': analisis_funcional_id}), 200
+
+
+
+
+# Diccionario global para almacenar la información temporal de los usuarios
+usuario_info_temporal = {}
+
+# Función para guardar la información temporal del usuario
+def guardar_info_usuario(token, id_sistema=None, id_equipo=None, id_equipo_info=None):
+    usuario_info_temporal[token] = {
+        'id_sistema': id_sistema,
+        'id_equipo': id_equipo,
+        'id_equipo_info': id_equipo_info
+    }
+
+# Función para obtener la información temporal del usuario
+def obtener_info_usuario(token):
+    return usuario_info_temporal.get(token, {})
+
+# Ruta para establecer la cookie con un token
+@app.route('/set_cookie', methods=['POST'])
+def set_cookie():
+    correo = request.form['correo']  # Supongamos que el correo se envía en un formulario
+
+    # Consultar al usuario en la tabla 'personal'
+    usuario = obtener_usuario_por_correo(correo)
+
+    if usuario:
+        # Crear un token único para el usuario
+        token = str(uuid.uuid4())
+
+        # Crear la respuesta y configurar la cookie
+        response = make_response(jsonify({'message': 'Cookie configurada correctamente'}))
+        response.set_cookie('user_token', token)
+
+        # Guardar la información del usuario en el diccionario temporal
+        guardar_info_usuario(token, id_sistema=None, id_equipo=None, id_equipo_info=None)
+
+        return response
+    else:
+        return jsonify({'error': 'Usuario no encontrado'}), 404
 
 
 
