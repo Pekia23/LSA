@@ -174,21 +174,9 @@ def obtener_subsistemas_por_equipo(id_equipo):
     cursor.close()
     return subsistemas
 
-def insertar_analisis_funcional( verbo, accion, estandar_desempeño,subsistema_id,):
-    cursor = db.connection.cursor()
-    query = """
-        INSERT INTO analisis_funcional (id_sistema, id_subsistema, verbo, accion, estandar_desempeño)
-        VALUES (%s, %s, %s, %s)
-    """
-    cursor.execute(query, (subsistema_id, verbo, accion, estandar_desempeño))
-    db.connection.commit()
-    analisis_funcional_id = cursor.lastrowid
-    cursor.close()
-    return analisis_funcional_id
 
+# ... otras funciones ...
 
-
-# Función para consultar el usuario en la tabla personal por correo
 def obtener_usuario_por_correo(correo):
     cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
     query = "SELECT id, correo, password, nombre_completo FROM personal WHERE correo = %s"
@@ -196,3 +184,17 @@ def obtener_usuario_por_correo(correo):
     usuario = cursor.fetchone()
     cursor.close()
     return usuario
+
+def insertar_analisis_funcional(subsistema_id, verbo, accion, estandar_desempeño, id_equipo_info):
+    cursor = db.connection.cursor()
+    query = """
+        INSERT INTO analisis_funcional (id_subsistema, verbo, accion, estandar_desempeño, id_equipo_info)
+        VALUES (%s, %s, %s, %s, %s)
+    """
+    cursor.execute(query, (subsistema_id, verbo, accion, estandar_desempeño, id_equipo_info))
+    db.connection.commit()
+    analisis_funcional_id = cursor.lastrowid
+    cursor.close()
+    return analisis_funcional_id
+
+

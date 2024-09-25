@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for, make_response
+from flask import Flask, render_template, request, jsonify, redirect, url_for, make_response, g
 import uuid
 import MySQLdb.cursors
 import uuid  # Para generar un token único
@@ -27,11 +27,12 @@ from database import (
 from __init__ import create_app
 
 
-
+app = Flask(__name__)
 app = create_app()
 app.config.from_object(config['development'])
 app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
+app.secret_key = 'tu_clave_secreta'
 
 @app.route('/check', methods=['GET'])
 def check_db_connection():
@@ -42,7 +43,7 @@ def check_db_connection():
 def obtener_datos_popup():
     return render_template('pop.html')
 
-@app.route('/')
+@app.route('/LSA')
 def index():
     grupos = obtener_grupos_constructivos()
     return render_template('index.html', grupos=grupos)
@@ -95,7 +96,8 @@ def buscar_sistemas_api():
     return jsonify([])
 
 @app.route('/LSA/registro-generalidades', methods=['GET', 'POST'])
-def registro_generalidades(id_sistema=None,id_equipo=None):
+def registro_generalidades(id_sistema=None, id_equipo=None):
+    token = g.user_token
     if request.method == 'POST':
         # Extracción de datos del formulario
         fecha = request.form.get('fecha')
@@ -136,7 +138,7 @@ def registro_generalidades(id_sistema=None,id_equipo=None):
             marca, modelo, peso_seco, dimensiones, descripcion, imagen,
             id_personal, id_diagrama, id_procedimiento, id_sistema, id_equipo
         )
-        return redirect(url_for('registro_analisis_funcional', id_sistema=id_sistema,id_equipo=id_equipo,id_equipo_info=equipo_info_id))
+        return redirect(url_for('registro_analisis_funcional', id_sistema=id_sistema,id_equipo=id_equipo,equipo_info_id=equipo_info_id))
     else:
         grupos = obtener_grupos_constructivos()
         responsables = obtener_personal()
@@ -151,7 +153,12 @@ def obtener_equipos_por_tipo_api(id_tipo_equipo):
 
 @app.route('/LSA/registro-analisis-funcional')
 @app.route('/LSA/registro-analisis-funcional/<int:id_sistema>/<int:id_equipo>/<int:id_equipo_info>', methods=['GET', 'POST'])
-def registro_analisis_funcional(id_sistema=None,id_equipo=None,id_equipo_info=None):
+def registro_analisis_funcional():
+    token = g.user_token
+    user_data = obtener_info_usuario(token)
+    id_sistema = user_data.get('id_sistema')
+    id_equipo = user_data.get('id_equipo')
+    id_equipo_info = user_data.get('id_equipo_info')
     # Si no se proporciona id_sistema, sistema es None
     if id_sistema is None:
         sistema = None
@@ -175,6 +182,10 @@ def registro_analisis_funcional(id_sistema=None,id_equipo=None,id_equipo_info=No
 
 @app.route('/api/analisis-funcional', methods=['POST'])
 def api_analisis_funcional():
+    token = g.user_token
+    user_data = obtener_info_usuario(token)
+    id_equipo_info = user_data.get('id_equipo_info')
+    
     data = request.get_json()
     
     sistema_id = data.get('sistema')
@@ -182,14 +193,13 @@ def api_analisis_funcional():
     verbo = data.get('verbo')
     accion = data.get('accion')
     estandar_desempeño = data.get('estandar_desempeño')
-    id_equipo_info = data.get('id_equipo_info')
     
     # Validar los datos recibidos (puedes agregar más validaciones)
     if not sistema_id or not subsistema_id or not verbo or not accion or not estandar_desempeño or not id_equipo_info:
         return jsonify({'error': 'Faltan datos obligatorios'}), 400
     
     # Insertar en la base de datos
-    analisis_funcional_id = insertar_analisis_funcional(subsistema_id, verbo, accion, estandar_desempeño)
+    analisis_funcional_id = insertar_analisis_funcional(subsistema_id, verbo, accion, estandar_desempeño,id_equipo_info)
     
     return jsonify({'message': 'Análisis funcional agregado', 'id': analisis_funcional_id}), 200
 
@@ -199,40 +209,97 @@ def api_analisis_funcional():
 # Diccionario global para almacenar la información temporal de los usuarios
 usuario_info_temporal = {}
 
-# Función para guardar la información temporal del usuario
-def guardar_info_usuario(token, id_sistema=None, id_equipo=None, id_equipo_info=None):
+def generar_token():
+    return str(uuid.uuid4())
+
+@app.before_request
+def before_request():
+    rutas_sin_autenticacion = ['login', 'static']  # Rutas que no requieren autenticación
+    if request.endpoint not in rutas_sin_autenticacion:
+        token = request.cookies.get('user_token')  # Leer la cookie 'user_token'
+        if not token or token not in usuario_info_temporal:
+            return redirect(url_for('login'))  # Redirigir al login si no está autenticado
+        else:
+            g.user_token = token  # Almacenar el token en 'g' para usarlo en las vistas
+            g.usuario_id = usuario_info_temporal[token]['usuario_id']
+    else:
+        g.user_token = None
+
+# No es necesario 'after_request' en este caso
+
+def guardar_info_usuario(token, id_sistema=None, id_equipo=None, id_equipo_info=None, usuario_id=None):
     usuario_info_temporal[token] = {
         'id_sistema': id_sistema,
         'id_equipo': id_equipo,
-        'id_equipo_info': id_equipo_info
+        'id_equipo_info': id_equipo_info,
+        'usuario_id': usuario_id
     }
 
-# Función para obtener la información temporal del usuario
 def obtener_info_usuario(token):
     return usuario_info_temporal.get(token, {})
 
-# Ruta para establecer la cookie con un token
-@app.route('/set_cookie', methods=['POST'])
-def set_cookie():
-    correo = request.form['correo']  # Supongamos que el correo se envía en un formulario
+@app.route('/', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        correo = request.form.get('correo')
+        password = request.form.get('password')
 
-    # Consultar al usuario en la tabla 'personal'
-    usuario = obtener_usuario_por_correo(correo)
-
-    if usuario:
-        # Crear un token único para el usuario
-        token = str(uuid.uuid4())
-
-        # Crear la respuesta y configurar la cookie
-        response = make_response(jsonify({'message': 'Cookie configurada correctamente'}))
-        response.set_cookie('user_token', token)
-
-        # Guardar la información del usuario en el diccionario temporal
-        guardar_info_usuario(token, id_sistema=None, id_equipo=None, id_equipo_info=None)
-
-        return response
+        # Verificar las credenciales del usuario
+        usuario = obtener_usuario_por_correo(correo)
+        if usuario and usuario['password'] == password:
+            # Autenticación exitosa
+            token = generar_token()  # Generar un token único
+            # Guardar la información del usuario en el diccionario temporal
+            guardar_info_usuario(token, usuario_id=usuario['id'])
+            # Crear la respuesta y configurar la cookie
+            response = make_response(redirect(url_for('registro_generalidades')))
+            response.set_cookie('user_token', token, httponly=True, secure=True, samesite='Lax')  # Establecer la cookie con el token
+            return response
+        else:
+            # Autenticación fallida
+            return render_template('login.html', error='Correo o contraseña incorrectos')
     else:
-        return jsonify({'error': 'Usuario no encontrado'}), 404
+        # Mostrar el formulario de inicio de sesión
+        return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    token = request.cookies.get('user_token')
+    if token and token in usuario_info_temporal:
+        usuario_info_temporal.pop(token)  # Eliminar la información del usuario
+    response = make_response(redirect(url_for('login')))
+    response.set_cookie('user_token', '', expires=0)  # Eliminar la cookie
+    return response
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
