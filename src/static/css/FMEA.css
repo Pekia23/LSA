@@ -2,6 +2,13 @@ body {
     background-color: #f5f5f5;
 }
 
+.navbar{
+    position: sticky;  /* Hace que el elemento sea pegajoso */
+    top: 0;            /* El valor de 'top' define a partir de qué punto se pega */
+    z-index: 1000;     /* Asegura que esté por encima de otros elementos */
+    /* Otros estilos que necesites para el diseño */
+}
+
 .scroll-container-horizontal {
     width:auto;        /* Ancho del contenedor */
     overflow-x: scroll;  /* Habilita el scroll horizontal */
