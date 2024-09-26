@@ -128,8 +128,8 @@ def registro_generalidades():
     else:
         grupos = obtener_grupos_constructivos()
         responsables = obtener_personal()
-        tipos_equipos = obtener_tipos_equipos()
-        return render_template('registro_generalidades.html', grupos=grupos, responsables=responsables, tipos_equipos=tipos_equipos)
+        tipos_equipsos = obtener_tipos_equipos()
+        return render_template('registro_generalidades.html', grupos=grupos, responsables=responsables, tipos_equipos=tipos_equipsos)
 
 
 @app.route('/api/equipos_por_tipo/<int:id_tipo_equipo>', methods=['GET'])
@@ -145,9 +145,17 @@ def editar_analisis_funcional():
 def editar_FMEA():
     return render_template('editar_FMEA.html')
 
+@app.route('/LSA/equipo/editar-modulo-herramientas')
+def editar_modulo_herramientas():
+    return render_template('editar_herramientas-especiales.html')
+
+@app.route('/LSA/equipo/editar-analisis-herramientas')
+def editar_analisis_herramientas():
+    return render_template('editar_analisis_herramientas.html')
+
 @app.route('/LSA/equipo/editar-herramientas-especiales')
 def editar_herramientas_especiales():
-    return render_template('editar_herramientas-especiales.html')
+    return render_template('editar_herramientas_especiales2.html')
 
 @app.route('/LSA/equipo/editar-repuestos')
 def editar_repuesto():
