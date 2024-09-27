@@ -1,5 +1,8 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for
+from flask import Flask, render_template, request, jsonify, redirect, url_for, send_file, make_response
 from config import config
+from io import BytesIO
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
 from database import (
     verificar_conexion,
     obtener_grupos_constructivos,
@@ -185,8 +188,6 @@ def mostrar_MTA():
 def mostrar_RCM():
     return render_template('mostrar_RCM.html')
 
-
-
 @app.route('/LSA/equipo/mostrar-analisis-funcional')
 def mostrar_analisis_funcional():
     return render_template('mostrar_analisis-funcional.html')
@@ -202,6 +203,10 @@ def mostrar_analisis_herramientas():
 @app.route('/LSA/equipo/mostrar-repuestos')
 def mostrar_repuesto():
     return render_template('mostrar_repuesto.html')
+
+@app.route('/LSA/equipo/mostrar-informe')
+def mostrar_informe():
+    return render_template('mostrar_informe.html')
 
 @app.route('/LSA/registro-MTA')
 def registro_MTA():
@@ -229,6 +234,43 @@ def registro_herramientas_especiales():
 def registro_repuesto():
     return render_template('registro_repuesto.html')
 
+@app.route('/view_pdf_1')
+def view_pdf_1():
+    pdf_buffer = BytesIO()
+
+    # Crear un PDF usando reportlab
+    p = canvas.Canvas(pdf_buffer, pagesize=letter)
+    p.drawString(100, 750, "Este es el PDF 1 generado desde Flask y visualizado en el navegador!")
+    p.showPage()
+    p.save()
+
+    # Mover el puntero al principio del archivo
+    pdf_buffer.seek(0)
+
+    # Crear una respuesta personalizada para visualizar el PDF
+    response = make_response(send_file(pdf_buffer, mimetype='application/pdf'))
+
+    # Añadir encabezado para asegurar que no se descargue, solo se visualice
+    response.headers['Content-Disposition'] = 'inline; filename="documento.pdf"'
+
+    return response
+
+# Ruta para descargar el primer PDF
+@app.route('/download_pdf_1')
+def download_pdf_1():
+    pdf_buffer = BytesIO()
+
+    # Crear un PDF usando reportlab
+    p = canvas.Canvas(pdf_buffer, pagesize=letter)
+    p.drawString(100, 750, "Este es el PDF 1 generado desde Flask!")
+    p.showPage()
+    p.save()
+
+    # Mover el puntero al principio del archivo
+    pdf_buffer.seek(0)
+
+    # Enviar el PDF para su descarga
+    return send_file(pdf_buffer, as_attachment=True, download_name="pdf_1.pdf", mimetype='application/pdf')
 
 
 if __name__ == '__main__':

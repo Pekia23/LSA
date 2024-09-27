@@ -126,3 +126,18 @@ h3 {
     background-color: #0c367f17;
     border-radius: 10px;
 }
+
+.icon-size {
+    font-size: 24px; /* Puedes ajustar el tamaño aquí */
+  }
+
+.tablas{
+    width: 40%;
+    align-content: center !important;
+    margin: 0 auto; /* Centra la tabla horizontalmente */
+    display: table;
+}
+
+
+  
+   
