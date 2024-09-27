@@ -9,9 +9,11 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/registro_mta.css') }}">
 {% endblock %}
 
-{% block nombre %}Registro del MTA{% endblock %}
+{% block nombre %}Registro del MTA - LORA{% endblock %}
 
 {% block content %}
+
+
         <!-- Contenido principal -->
         <div class="col">
             <h2 class="section-title text-center">Maintenance Task Analysis (MTA)</h2>
@@ -484,22 +486,76 @@
                         <input type="text" class="form-control" id="detalle_tarea" name="detalle_tarea">
                     </div>
 
+                    <h2 class="section-title text-center">Level Of Repair Analysis (LORA)</h2>
+
+                    <div class="mt-3 popup">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" id="startQuizBtn">
+                            Realizar Cuestionario LORA
+                        </button>
+                        
+                        <!-- El Modal (popup) -->
+                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Cuestionario LORA</h5>
+                                        <button id="startQuizBtn" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body text-center">
+                                        <label id="questionText" class="d-block mb-3"></label>
+                                        <div id="answers">
+                                            <!-- Los botones "Sí" y "No" -->
+                                            <button type="button" class="btn btn-primary me-2" id="yesBtn">Sí</button>
+                                            <button type="button" class="btn btn-primary" id="noBtn">No</button>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <br><br>
+                                        <button type="button" class="btn btn-secondary" id="backBtn"><i class="bi bi-arrow-left-circle-fill"></i></button>
+                                    </div>                             
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+
+                    <table class="table mt-3">
+                        <thead>
+                          <tr>
+                            <th scope="col">Nivel</th>
+                            <th scope="col">Actividades</th>
+                            <th scope="col">Operario</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>Mark</td>
+                            <td>Otto</td>
+                            <td>@mdo</td>
+                          </tr>
+                          <tr>
+                            <td>Jacob</td>
+                            <td>tdornton</td>
+                            <td>@fat</td>
+                          </tr>
+                          <tr>
+                            <td colspan="2">Larry tde Bird</td>
+                            <td>@twitter</td>
+                            
+                          </tr>
+                        </tbody>
+                      </table>
 
                     <!-- Botón siguiente -->
                     <div class="text-end mt-4">
                         <button type="button" class="btn btn-siguiente" id="btn-siguiente">Siguiente modo de falla </button>
                     </div>
-                    <script>
-                        document.getElementById('btn-siguiente').addEventListener('click', function() {
-                        window.location.href = 'registro-MTA-2'; // Cambiar a la segunda vista de FMEA
-                        });
-                    </script>
                 </div>    
             </form>
         </div>
     </div>
 </div>
-
+<script src="{{ url_for('static', filename='js/cuestionario_lora.js') }}"></script>
 <script src="{{ url_for('static', filename='js/registro_mta.js') }}"></script>
 
 {% endblock %}

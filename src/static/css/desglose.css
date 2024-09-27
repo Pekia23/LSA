@@ -6,6 +6,10 @@ body {
 /* Asegurar que el navbar permanece blanco */
 .navbar {
     background-color: rgb(255, 255, 255) !important;
+    position: sticky;  /* Hace que el elemento sea pegajoso */
+    top: 0;            /* El valor de 'top' define a partir de qué punto se pega */
+    z-index: 1000;     /* Asegura que esté por encima de otros elementos */
+    /* Otros estilos que necesites para el diseño */
 }
 
 /* General layout */

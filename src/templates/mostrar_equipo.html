@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/mostrar_equipo.css') }}">
 {% endblock %}
 
-{% block nombre %}LSA | Registro de FMEA{% endblock %}
+{% block nombre %}LSA | Información del equipo {% endblock %}
 
 {% block body %}
 <div class="container-fluid">
@@ -21,13 +21,12 @@
                 <ul class="nav flex-column">
                     <li class="nav-item active"><a class="nav-link" href="{{url_for('mostrar_equipo')}}">Información del equipo</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_analisis_funcional')}}">Análisis funcional</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Análisis de herramientas</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_herramientas_especiales')}}">Herramientas especiales</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_herramientas_especiales')}}">Modulo de herramientas</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_repuesto')}}">Repuesto</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_FMEA')}}">FMEA</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_RCM')}}">RCM</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_MTA')}}">MTA</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">LORA</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_MTA')}}">MTA - LORA</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Generación de informes</a></li>
                 </ul>
             </div>
         </div>
