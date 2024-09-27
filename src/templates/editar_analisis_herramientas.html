@@ -1,4 +1,4 @@
-{% extends 'base_navbar.html' %}
+{% extends './base.html' %}
 
 {% block title %}Cotecmar || Herramientas Especiales{% endblock %}
 
@@ -8,10 +8,27 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/herramientas_especiales.css') }}">
 {% endblock %}
 
-
 {% block nombre %}LSA | Registro de Modulo de herramientas{% endblock %}
 
-{% block content %}
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-auto">
+            <button class="navbar-toggler custom-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse navbarvertical" id="navbarContent">
+                <ul class="nav flex-column">
+                    <li class="nav-item"><a class="nav-link" href="{{url_for('registro_generalidades')}}">Información del equipo</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{url_for('registro_analisis_funcional')}}">Análisis funcional</a></li>
+                    <li class="nav-item active"><a class="nav-link" href="{{url_for('registro_herramientas_especiales')}}">Modulo de herramientas</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{url_for('registro_repuesto')}}">Repuesto</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{url_for('registro_FMEA')}}">FMEA</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{url_for('registro_RCM')}}">RCM</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{url_for('registro_MTA')}}">MTA - LORA</a></li>
+                </ul>
+            </div>
+        </div>
 
         <div class="col">
             <h2 class="section-title text-center">Analisis de Herramientas</h2>
@@ -47,49 +64,6 @@
                 <!-- Botón "Agregar herramientas especiales" -->
                 <div class="text-end mt-4">
                     <button type="submit" class="btn btn-primary" id="btn-agregar-herramientas">Agregar herramienta</button>
-                </div>
-            </form>
-
-            <h2 class="section-title text-center">Herramientas Especiales</h2>
-            <br>
-            <form id="herramientas-especiales-form">
-                <div class="row">
-                    <div class="col-md-4 my-4">
-                        <label for="consumibles" class="form-label ">Equipo</label>
-                        <input type="text" class="form-control" id="equipo" name="consumibles">
-
-                        <label for="dibujo_transversal" class="form-label mt-3">Dibujo de sección transversal</label>
-                        <input type="file" class="form-control" id="dibujo_transversal" name="dibujo_transversal" accept=".jpg, .jpeg, .png, .pdf">
-
-                        <label for="consumibles" class="form-label mt-3">Manual referenciado</label>
-                        <input type="text" class="form-control" id="consumibles" name="consumibles">
-                        
-                    </div>
-
-                    <!-- Segunda columna -->
-                    <div class="col-md-4 my-4">
-                        <label for="ambientales" class="form-label">Nombre de la herramienta</label>
-                        <input type="text" class="form-control" id="ambientales" name="ambientales">
-                        
-                        <label for="estado_equipo" class="form-label mt-3">Cantidad</label>
-                        <input type="text" class="form-control" id="estado_equipo" name="estado_equipo">
-                        
-                    </div>
-
-                    <!-- Tercera columna -->
-                    <div class="col-md-4 my-4">
-                        <label for="horas" class="form-label">Parte numero</label>
-                        <input type="number" class="form-control" id="horas" name="horas">
-                        
-                        <label for="minutos" class="form-label mt-3">Costo</label>
-                        <input type="number" class="form-control" id="minutos" name="minutos">
-                        
-                    </div>
-                </div>
-
-                <!-- Botón "Agregar herramientas especiales" -->
-                <div class="text-end mt-4">
-                    <button type="submit" class="btn btn-primary" id="btn-agregar-herramientas">Agregar herramientas especiales</button>
                 </div>
             </form>
         </div>

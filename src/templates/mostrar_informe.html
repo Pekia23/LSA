@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/FMEA.css') }}">
 {% endblock %}
 
-{% block nombre %}LSA | hola mundo - Repuestos{% endblock %}
+{% block nombre %}LSA | hola mundo - Informe del equipo{% endblock %}
 
 {% block body %}
 <div class="container-fluid">
@@ -26,48 +26,39 @@
           <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_FMEA')}}">FMEA</a></li>
           <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_RCM')}}">RCM</a></li>
           <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_MTA')}}">MTA - LORA</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Generación de informes</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_informe')}}">Generación de informes</a></li>
         </ul>
       </div>
     </div>
     <div class="col">
-      <h2 class="section-title text-center">Repuesto</h2>
-      <table class="table mt-3">
-        <thead>
+      <h2 class="section-title text-center">Informes</h2>
+      <diV class="tablas">
+        <table class="table mt-3">
           <tr>
-            <th scope="col">Parte número</th>
-            <th scope="col">Nombre del repuesto</th>
-            <th scope="col">Valor</th>
-            <th scope="col">Dibujo de sección transversal</th>
-            <th scope="col">MTBF</th>
-            <th scope="col">Código OTAN</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
-            <td>@fat</td>
+            <td>Informe sobre el equipo</td>
+            <td><a href="/view_pdf_1" target="_blank"><i class="bi bi-eye icon-size"></i></a></td>
+            <td><a href="/download_pdf_1"><i class="bi bi-arrow-down-circle icon-size"></i></a></td>
           </tr>
           <tr>
-            <td>Jacob</td>
-            <td>tdornton</td>
-            <td>@fat</td>
-            <td>@fat</td>
+            <td>Ficha de mantenimiento</td>
+            <td><a href="/view_pdf_1" target="_blank"><i class="bi bi-eye icon-size"></i></a></td>
+            <td><a href="/download_pdf_1"><i class="bi bi-arrow-down-circle icon-size"></i></a></td>
           </tr>
           <tr>
-            <td colspan="2">Larry tde Bird</td>
-            <td>@twitter</td>
-            <td>@fat</td>
+            <td>Informe de herramientas</td>
+            <td><a href="/view_pdf_1" target="_blank"><i class="bi bi-eye icon-size"></i></a></td>
+            <td><a href="/download_pdf_1"><i class="bi bi-arrow-down-circle icon-size"></i></a></td>
           </tr>
-        </tbody>
-      </table>
+          <tr></tr>
+            <td>Plan de mantenimiento</td>
+            <td><a href="/view_pdf_1" target="_blank"><i class="bi bi-eye icon-size"></i></a></td>
+            <td><a href="/download_pdf_1"><i class="bi bi-arrow-down-circle icon-size"></i></a></td>
+          </tr>
+        </table>
+      </diV>
+      
       <br>
       <!-- Botón "Editar análisis funcional" -->
-      <div class="mt-4">
-        <button type="button" class="btn btn-primary"><a href="{{url_for('editar_repuesto')}}">Editar repuesto</a></button>
-      </div>
     </div>
   </div>
 </div>
