@@ -138,7 +138,14 @@ def registro_generalidades(id_sistema=None, id_equipo=None):
             marca, modelo, peso_seco, dimensiones, descripcion, imagen,
             id_personal, id_diagrama, id_procedimiento, id_sistema, id_equipo
         )
-        return redirect(url_for('registro_analisis_funcional', id_sistema=id_sistema,id_equipo=id_equipo,equipo_info_id=equipo_info_id))
+        guardar_info_usuario(
+            token,
+            id_sistema=id_sistema,
+            id_equipo=id_equipo,
+            id_equipo_info=equipo_info_id,
+            usuario_id=g.usuario_id
+        )
+        return redirect(url_for('registro_analisis_funcional'))
     else:
         grupos = obtener_grupos_constructivos()
         responsables = obtener_personal()
@@ -152,13 +159,19 @@ def obtener_equipos_por_tipo_api(id_tipo_equipo):
     return jsonify(equipospro)
 
 @app.route('/LSA/registro-analisis-funcional')
-@app.route('/LSA/registro-analisis-funcional/<int:id_sistema>/<int:id_equipo>/<int:id_equipo_info>', methods=['GET', 'POST'])
+@app.route('/LSA/registro-analisis-funcional', methods=['GET', 'POST'])
 def registro_analisis_funcional():
     token = g.user_token
     user_data = obtener_info_usuario(token)
     id_sistema = user_data.get('id_sistema')
     id_equipo = user_data.get('id_equipo')
     id_equipo_info = user_data.get('id_equipo_info')
+
+    # Agregar prints para depuración
+    print(f"Token: {token}")
+    print(f"id_sistema: {id_sistema}")
+    print(f"id_equipo: {id_equipo}")
+    print(f"id_equipo_info: {id_equipo_info}")
     # Si no se proporciona id_sistema, sistema es None
     if id_sistema is None:
         sistema = None
@@ -178,7 +191,7 @@ def registro_analisis_funcional():
             subsistemas = []        
 
     # Renderizar la plantilla con los datos obtenidos
-    return render_template('registro_analisis_funcional.html', sistema=sistema,subsistemas=subsistemas, id_equipo_info=id_equipo_info)
+    return render_template('registro_analisis_funcional.html', sistema=sistema,subsistemas=subsistemas)
 
 @app.route('/api/analisis-funcional', methods=['POST'])
 def api_analisis_funcional():
@@ -199,8 +212,14 @@ def api_analisis_funcional():
         return jsonify({'error': 'Faltan datos obligatorios'}), 400
     
     # Insertar en la base de datos
-    analisis_funcional_id = insertar_analisis_funcional(subsistema_id, verbo, accion, estandar_desempeño,id_equipo_info)
     
+    analisis_funcional_id = insertar_analisis_funcional(
+    verbo,
+    accion,
+    estandar_desempeño,
+    id_equipo_info,
+    subsistema_id
+    )
     return jsonify({'message': 'Análisis funcional agregado', 'id': analisis_funcional_id}), 200
 
 
@@ -217,6 +236,7 @@ def before_request():
     rutas_sin_autenticacion = ['login', 'static']  # Rutas que no requieren autenticación
     if request.endpoint not in rutas_sin_autenticacion:
         token = request.cookies.get('user_token')  # Leer la cookie 'user_token'
+        print(f"Token en before_request: {token}")
         if not token or token not in usuario_info_temporal:
             return redirect(url_for('login'))  # Redirigir al login si no está autenticado
         else:
@@ -228,12 +248,25 @@ def before_request():
 # No es necesario 'after_request' en este caso
 
 def guardar_info_usuario(token, id_sistema=None, id_equipo=None, id_equipo_info=None, usuario_id=None):
-    usuario_info_temporal[token] = {
-        'id_sistema': id_sistema,
-        'id_equipo': id_equipo,
-        'id_equipo_info': id_equipo_info,
-        'usuario_id': usuario_id
-    }
+    
+    if token in usuario_info_temporal:
+        # Actualizar la información existente
+        if id_sistema is not None:
+            usuario_info_temporal[token]['id_sistema'] = id_sistema
+        if id_equipo is not None:
+            usuario_info_temporal[token]['id_equipo'] = id_equipo
+        if id_equipo_info is not None:
+            usuario_info_temporal[token]['id_equipo_info'] = id_equipo_info
+        if usuario_id is not None:
+            usuario_info_temporal[token]['usuario_id'] = usuario_id
+    else:
+
+        usuario_info_temporal[token] = {
+            'id_sistema': id_sistema,
+            'id_equipo': id_equipo,
+            'id_equipo_info': id_equipo_info,
+            'usuario_id': usuario_id
+        }
 
 def obtener_info_usuario(token):
     return usuario_info_temporal.get(token, {})

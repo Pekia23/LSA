@@ -185,16 +185,16 @@ def obtener_usuario_por_correo(correo):
     cursor.close()
     return usuario
 
-def insertar_analisis_funcional(subsistema_id, verbo, accion, estandar_desempeño, id_equipo_info):
-    cursor = db.connection.cursor()
-    query = """
-        INSERT INTO analisis_funcional (id_subsistema, verbo, accion, estandar_desempeño, id_equipo_info)
-        VALUES (%s, %s, %s, %s, %s)
-    """
-    cursor.execute(query, (subsistema_id, verbo, accion, estandar_desempeño, id_equipo_info))
-    db.connection.commit()
-    analisis_funcional_id = cursor.lastrowid
-    cursor.close()
-    return analisis_funcional_id
+def insertar_analisis_funcional(verbo, accion, estandar_desempeño, id_equipo_info,subsistema_id):
+        cursor = db.connection.cursor()
+        query = """
+            INSERT INTO analisis_funcional (verbo, accion, estandar_desempeño, id_equipo_info,id_subsistema)
+            VALUES (%s, %s, %s, %s, %s)
+        """
+        cursor.execute(query, (verbo, accion, estandar_desempeño, id_equipo_info, subsistema_id,))
+        db.connection.commit()
+        analisis_funcional_id = cursor.lastrowid
+        cursor.close()
+        return analisis_funcional_id
 
 
