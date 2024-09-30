@@ -16,11 +16,6 @@ body {
     border-top: 1px solid #ccc;
 }
 
-.navbarvertical {
-    width: auto;
-    padding: 10px;
-}
-
 .navbarvertical .nav-link {
     white-space: nowrap; /* Asegura que el texto no se corte en varias líneas */
     color: #052647;;
@@ -48,7 +43,7 @@ body {
     align-items: center;
     max-height:auto ;
     padding-top: 50px;
-    /*box-shadow: 10px 10px 5px rgba(137, 143, 233, 0.3)*/
+
 }
 
 .section-title {
@@ -75,7 +70,15 @@ body {
 }
 
 .col{
-    padding:35px 85px 30px 45px;
+    padding-top: 30px;
+    flex: 0 0 75%;
+    max-width: 81%;
+    padding-left: 15px;
+    padding-right: 15px;
+    box-sizing: border-box;
+    align-self: center;
+    align-content: center !important;
+    margin: 0 auto; /* Centra la tabla horizontalmente */
 }
 
 .btn-primary {
@@ -99,9 +102,6 @@ body {
     padding-top: 40px;
 }
 
-.pen {
-    color: white !important; /* Cambia el color del icono a blanco */
-}
 
 a{
     color: inherit; /* Esto asegura que el link no cambie de color */
@@ -109,24 +109,7 @@ a{
     color: white;
 }
 
-h3 {
-    color:  #0c377f !important; /* Azul */
-    font-weight: bold; /* Negrita */
-    margin-top: 20px;
-    margin-bottom: 20px;
-}
 
-
-.icon-size {
-    font-size: 24px; /* Puedes ajustar el tamaño aquí */
-  }
-
-.tablas{
-    width: 60%;
-    align-content: center !important;
-    margin: 0 auto; /* Centra la tabla horizontalmente */
-    display: table;
-}
 
 
   

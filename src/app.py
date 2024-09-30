@@ -311,38 +311,6 @@ def logout():
     response.set_cookie('user_token', '', expires=0)  # Eliminar la cookie
     return response
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 @app.route('/LSA/equipo/editar-analisis-funcional')
 def editar_analisis_funcional():
     return render_template('editar_analisis_funcional.html')
@@ -399,9 +367,6 @@ def mostrar_analisis_funcional():
 def mostrar_herramientas_especiales():
     return render_template('mostrar_herramientas-especiales.html')
 
-@app.route('/LSA/equipo/mostrar-analisis-herramientas')
-def mostrar_analisis_herramientas():
-    return render_template('mostrar_analisis-herramientas.html')
 
 @app.route('/LSA/equipo/mostrar-repuestos')
 def mostrar_repuesto():

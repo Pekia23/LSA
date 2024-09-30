@@ -30,16 +30,6 @@ body {
     background-color: rgba(211, 211, 211, 0.534);
 }
 
-.navbarvertical {
-    width: auto;
-    padding: 10px;
-}
-.navbarvertical .nav-link {
-    white-space: nowrap; /* Asegura que el texto no se corte en varias líneas */
-    color: #052647;;
-    font-weight: bold;
-
-}
 
 .custom-toggler {
     display: flex;         /* Establece un contenedor flex para centrar el ícono */
@@ -57,13 +47,11 @@ body {
     text-align: center;
 }
 
-.col-auto{
-    align-items: center;
-}
 
 .navbarvertical {
     width: auto;
     padding: 10px;
+    padding-top: 40px;
 }
 .navbarvertical .nav-link {
     white-space: nowrap; /* Asegura que el texto no se corte en varias líneas */

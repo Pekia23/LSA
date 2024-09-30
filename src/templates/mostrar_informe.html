@@ -1,4 +1,4 @@
-{% extends './base.html' %}
+{% extends './base_navbar_mostrar.html' %}
 
 {% block title %}Cotecmar || Equipo - Repuestos{% endblock %}
 
@@ -10,56 +10,30 @@
 
 {% block nombre %}LSA | hola mundo - Informe del equipo{% endblock %}
 
-{% block body %}
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-auto">
-      <button class="navbar-toggler custom-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse navbarvertical" id="navbarContent">
-        <ul class="nav flex-column">
-          <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_equipo')}}">Información del equipo</a></li>
-          <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_analisis_funcional')}}">Análisis funcional</a></li>
-          <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_herramientas_especiales')}}">Modulo de herramientas</a></li>
-          <li class="nav-item active"><a class="nav-link" href="{{url_for('mostrar_repuesto')}}">Repuesto</a></li>
-          <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_FMEA')}}">FMEA</a></li>
-          <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_RCM')}}">RCM</a></li>
-          <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_MTA')}}">MTA - LORA</a></li>
-          <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_informe')}}">Generación de informes</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="col">
-      <h2 class="section-title text-center">Informes</h2>
-      <diV class="tablas">
-        <table class="table mt-3">
-          <tr>
-            <td>Informe sobre el equipo</td>
-            <td><a href="/view_pdf_1" target="_blank"><i class="bi bi-eye icon-size"></i></a></td>
-            <td><a href="/download_pdf_1"><i class="bi bi-arrow-down-circle icon-size"></i></a></td>
-          </tr>
-          <tr>
-            <td>Ficha de mantenimiento</td>
-            <td><a href="/view_pdf_1" target="_blank"><i class="bi bi-eye icon-size"></i></a></td>
-            <td><a href="/download_pdf_1"><i class="bi bi-arrow-down-circle icon-size"></i></a></td>
-          </tr>
-          <tr>
-            <td>Informe de herramientas</td>
-            <td><a href="/view_pdf_1" target="_blank"><i class="bi bi-eye icon-size"></i></a></td>
-            <td><a href="/download_pdf_1"><i class="bi bi-arrow-down-circle icon-size"></i></a></td>
-          </tr>
-          <tr></tr>
-            <td>Plan de mantenimiento</td>
-            <td><a href="/view_pdf_1" target="_blank"><i class="bi bi-eye icon-size"></i></a></td>
-            <td><a href="/download_pdf_1"><i class="bi bi-arrow-down-circle icon-size"></i></a></td>
-          </tr>
-        </table>
-      </diV>
-      
-      <br>
-      <!-- Botón "Editar análisis funcional" -->
-    </div>
-  </div>
-</div>
+{% block content %}
+<h2 class="section-title text-center">Informes</h2>
+<diV class="tablas">
+  <table class="table mt-3">
+    <tr>
+      <td>Informe sobre el equipo</td>
+      <td><a href="/view_pdf_1" target="_blank"><i class="bi bi-eye icon-size"></i></a></td>
+      <td><a href="/download_pdf_1"><i class="bi bi-arrow-down-circle icon-size"></i></a></td>
+    </tr>
+    <tr>
+      <td>Ficha de mantenimiento</td>
+      <td><a href="/view_pdf_1" target="_blank"><i class="bi bi-eye icon-size"></i></a></td>
+      <td><a href="/download_pdf_1"><i class="bi bi-arrow-down-circle icon-size"></i></a></td>
+    </tr>
+    <tr>
+      <td>Informe de herramientas</td>
+      <td><a href="/view_pdf_1" target="_blank"><i class="bi bi-eye icon-size"></i></a></td>
+      <td><a href="/download_pdf_1"><i class="bi bi-arrow-down-circle icon-size"></i></a></td>
+    </tr>
+    <tr></tr>
+      <td>Plan de mantenimiento</td>
+      <td><a href="/view_pdf_1" target="_blank"><i class="bi bi-eye icon-size"></i></a></td>
+      <td><a href="/download_pdf_1"><i class="bi bi-arrow-down-circle icon-size"></i></a></td>
+    </tr>
+  </table>
+</diV>
 {% endblock %}

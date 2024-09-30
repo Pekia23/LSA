@@ -1,4 +1,4 @@
-{% extends './base.html' %}
+{% extends './base_navbar_mostrar.html' %}
 
 {% block title %}Cotecmar || Equipo - Herramientas Especiales{% endblock %}
 
@@ -12,115 +12,90 @@
 
 {% block nombre %}LSA | hola mundo - Herramientas especiales{% endblock %}
 
-{% block body %}
-<div class="container-fluid">
-  <div class="row">
+{% block content %}
+<h2 class="section-title text-center"> Modulo de Herramientas </h2>
 
-    <div class="col-auto ">
-      <button class="navbar-toggler custom-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon "></span>
-      </button>
-      <div class="collapse navbar-collapse navbarvertical"  id="navbarContent">
-        <ul class="nav flex-column">
-          <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_equipo')}}">Información del equipo</a></li>
-          <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_analisis_funcional')}}">Análisis funcional</a></li>
-          <li class="nav-item active"><a class="nav-link" href="{{url_for('mostrar_herramientas_especiales')}}">Modulo de herramientas</a></li>
-          <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_repuesto')}}">Repuesto</a></li>
-          <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_FMEA')}}">FMEA</a></li>
-          <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_RCM')}}">RCM</a></li>
-          <li class="nav-item"><a class="nav-link" href="{{url_for('mostrar_MTA')}}">MTA - LORA</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Generación de informes</a></li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="col ">
-      <h2 class="section-title text-center"> Modulo de Herramientas </h2>
-
-      <ul class="nav nav-tabs" id="myTab" role="tablist">
-        <li class="nav-item" role="presentation">
-          <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Analisis de herramientas</button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Herramientas especiales</button>
-        </li>
-      </ul>
-      <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-          <h3> Analisis de herramientas</h3>
-          <table class="table">
-            <thead>
-                <tr>
-                  <th scope="col" >Equipo</th>
-                  <th scope="col" >Nombre de la herramienta</th>
-                  <th scope="col" >Parte numero</th>
-                  <th scope="col" >Dibujo de seccion transversal</th>
-                  <th scope="col" >Costo</th>
-                </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                <td>@fat</td>
-              </tr>
-              <tr>
-                <td>Jacob</td>
-                <td>tdornton</td>
-                <td>@fat</td>
-                <td>@fat</td>
-              </tr>
-              <tr>
-                <td colspan="2">Larry tde Bird</td>
-                <td>@twitter</td>
-                <td>@fat</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-          <h3> Herramientas especiales</h3>
-          <table class="table">
-            <thead>
-                <tr>
-                  <th scope="col" >Equipo</th>
-                  <th scope="col" >Nombre de la herramienta</th>
-                  <th scope="col" >Parte numero</th>
-                  <th scope="col" >Dibujo de seccion transversal</th>
-                  <th scope="col" >Cantidad</th>
-                  <th scope="col" >Costo</th>
-                  <th scope="col" >Manual referenciado</th>
-                </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                <td>@fat</td>
-              </tr>
-              <tr>
-                <td>Jacob</td>
-                <td>tdornton</td>
-                <td>@fat</td>
-                <td>@fat</td>
-              </tr>
-              <tr>
-                <td colspan="2">Larry tde Bird</td>
-                <td>@twitter</td>
-                <td>@fat</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <br>
-      <div class="mt-4">
-        <button type="button" class="btn btn-primary"><a href="{{ url_for('editar_modulo_herramientas') }}">Editar modulo de herramientas</a></button>
-      </div>        
-    </div>
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Analisis de herramientas</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Herramientas especiales</button>
+  </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+    <h3> Analisis de herramientas</h3>
+    <table class="table">
+      <thead>
+          <tr>
+            <th scope="col" >Equipo</th>
+            <th scope="col" >Nombre de la herramienta</th>
+            <th scope="col" >Parte numero</th>
+            <th scope="col" >Dibujo de seccion transversal</th>
+            <th scope="col" >Costo</th>
+          </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Mark</td>
+          <td>Otto</td>
+          <td>@mdo</td>
+          <td>@fat</td>
+        </tr>
+        <tr>
+          <td>Jacob</td>
+          <td>tdornton</td>
+          <td>@fat</td>
+          <td>@fat</td>
+        </tr>
+        <tr>
+          <td colspan="2">Larry tde Bird</td>
+          <td>@twitter</td>
+          <td>@fat</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+    <h3> Herramientas especiales</h3>
+    <table class="table">
+      <thead>
+          <tr>
+            <th scope="col" >Equipo</th>
+            <th scope="col" >Nombre de la herramienta</th>
+            <th scope="col" >Parte numero</th>
+            <th scope="col" >Dibujo de seccion transversal</th>
+            <th scope="col" >Cantidad</th>
+            <th scope="col" >Costo</th>
+            <th scope="col" >Manual referenciado</th>
+          </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Mark</td>
+          <td>Otto</td>
+          <td>@mdo</td>
+          <td>@fat</td>
+        </tr>
+        <tr>
+          <td>Jacob</td>
+          <td>tdornton</td>
+          <td>@fat</td>
+          <td>@fat</td>
+        </tr>
+        <tr>
+          <td colspan="2">Larry tde Bird</td>
+          <td>@twitter</td>
+          <td>@fat</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>
+
+<br>
+<div class="mt-4">
+  <button type="button" class="btn btn-primary"><a href="{{ url_for('editar_modulo_herramientas') }}">Editar modulo de herramientas</a></button>
+</div>        
 {% endblock %}

@@ -116,3 +116,13 @@ i{
     text-decoration: none;
     color:white;
 }
+
+.nav-link.active {
+    background-color: #0c367f3a;
+    border-radius: 10px;
+}
+
+.nav-item:hover{
+    background-color: #0c367f17;
+    border-radius: 10px;
+}
