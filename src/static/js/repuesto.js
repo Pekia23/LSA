@@ -26,6 +26,8 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(result => {
             console.log('Repuesto guardado:', result);
             alert('Repuesto agregado correctamente');
+            // Redirigir a la lista de repuestos
+            window.location.href = '/LSA/repuestos';
         })
         .catch(error => {
             console.error('Error al guardar repuesto:', error);

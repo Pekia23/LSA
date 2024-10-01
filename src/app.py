@@ -27,7 +27,11 @@ from database import (
     obtener_sistema_por_id, 
     obtener_subsistemas_por_equipo, 
     insertar_analisis_funcional,
-    obtener_usuario_por_correo
+    obtener_usuario_por_correo,
+    insertar_repuesto,
+    eliminar_repuesto,
+    actualizar_repuesto,
+    obtener_repuestos_por_equipo_info
 )
 from __init__ import create_app
 
@@ -311,6 +315,87 @@ def logout():
     response.set_cookie('user_token', '', expires=0)  # Eliminar la cookie
     return response
 
+
+
+#Rutas para repuesto
+# app.py
+@app.route('/LSA/repuestos', methods=['GET'])
+def mostrar_repuestos():
+    token = g.user_token
+    user_data = obtener_info_usuario(token)
+    id_equipo_info = user_data.get('id_equipo_info')
+
+    if id_equipo_info is None:
+        return redirect(url_for('registro_generalidades'))
+
+    repuestos = obtener_repuestos_por_equipo_info(id_equipo_info)
+    return render_template('mostrar_repuestos.html', repuestos=repuestos)
+
+
+# app.py
+@app.route('/api/repuesto', methods=['POST'])
+def agregar_repuesto():
+    token = g.user_token
+    user_data = obtener_info_usuario(token)
+    id_equipo_info = user_data.get('id_equipo_info')
+
+    data = request.get_json()
+    nombre_repuesto = data.get('nombre_repuesto')
+    valor = data.get('valor')
+    dibujo_transversal = data.get('dibujo_transversal')
+    notas = data.get('notas')
+
+    if not id_equipo_info or not nombre_repuesto:
+        return jsonify({'error': 'Faltan datos obligatorios'}), 400
+
+    repuesto_id = insertar_repuesto(id_equipo_info, nombre_repuesto, valor, dibujo_transversal, notas)
+    return jsonify({'message': 'Repuesto agregado correctamente', 'id': repuesto_id}), 200
+
+
+
+# app.py
+@app.route('/api/repuesto/<int:id_repuesto>', methods=['PUT'])
+def actualizar_repuesto_route(id_repuesto):
+    data = request.get_json()
+    nombre_repuesto = data.get('nombre_repuesto')
+    valor = data.get('valor')
+    dibujo_transversal = data.get('dibujo_transversal')
+    notas = data.get('notas')
+
+    if not nombre_repuesto:
+        return jsonify({'error': 'Faltan datos obligatorios'}), 400
+
+    actualizar_repuesto(id_repuesto, nombre_repuesto, valor, dibujo_transversal, notas)
+    return jsonify({'message': 'Repuesto actualizado correctamente'}), 200
+
+
+
+
+# app.py
+@app.route('/api/repuesto/<int:id_repuesto>', methods=['DELETE'])
+def eliminar_repuesto_route(id_repuesto):
+    eliminar_repuesto(id_repuesto)
+    return jsonify({'message': 'Repuesto eliminado correctamente'}), 200
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 @app.route('/LSA/equipo/editar-analisis-funcional')
 def editar_analisis_funcional():
     return render_template('editar_analisis_funcional.html')
@@ -367,6 +452,9 @@ def mostrar_analisis_funcional():
 def mostrar_herramientas_especiales():
     return render_template('mostrar_herramientas-especiales.html')
 
+@app.route('/LSA/equipo/mostrar-analisis-herramientas')
+def mostrar_analisis_herramientas():
+    return render_template('mostrar_analisis-herramientas.html')
 
 @app.route('/LSA/equipo/mostrar-repuestos')
 def mostrar_repuesto():

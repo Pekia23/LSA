@@ -197,4 +197,48 @@ def insertar_analisis_funcional(verbo, accion, estandar_desempeño, id_equipo_in
         cursor.close()
         return analisis_funcional_id
 
+#crud repuesto
+
+def insertar_repuesto(id_equipo_info, nombre_repuesto, valor, dibujo_transversal, notas):
+    cursor = db.connection.cursor()
+    query = """
+        INSERT INTO repuesto (id_equipo_info, nombre_repuesto, valor, dibujo_transversal, notas)
+        VALUES (%s, %s, %s, %s, %s)
+    """
+    cursor.execute(query, (id_equipo_info, nombre_repuesto, valor, dibujo_transversal, notas))
+    db.connection.commit()
+    repuesto_id = cursor.lastrowid
+    cursor.close()
+    return repuesto_id
+
+def obtener_repuestos_por_equipo_info(id_equipo_info):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = "SELECT * FROM repuesto WHERE id_equipo_info = %s"
+    cursor.execute(query, (id_equipo_info,))
+    repuestos = cursor.fetchall()
+    cursor.close()
+    return repuestos
+
+
+def actualizar_repuesto(id_repuesto, nombre_repuesto, valor, dibujo_transversal, notas):
+    cursor = db.connection.cursor()
+    query = """
+        UPDATE repuesto
+        SET nombre_repuesto = %s, valor = %s, dibujo_transversal = %s, notas = %s
+        WHERE id = %s
+    """
+    cursor.execute(query, (nombre_repuesto, valor, dibujo_transversal, notas, id_repuesto))
+    db.connection.commit()
+    cursor.close()
+
+
+
+# database.py
+def eliminar_repuesto(id_repuesto):
+    cursor = db.connection.cursor()
+    query = "DELETE FROM repuesto WHERE id = %s"
+    cursor.execute(query, (id_repuesto,))
+    db.connection.commit()
+    cursor.close()
+
 
