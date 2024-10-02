@@ -199,17 +199,27 @@ def insertar_analisis_funcional(verbo, accion, estandar_desempeño, id_equipo_in
 
 #crud repuesto
 
-def insertar_repuesto(id_equipo_info, nombre_repuesto, valor, dibujo_transversal, notas):
+def insertar_repuesto(
+    id_equipo_info, nombre_herramienta, valor,
+        dibujo_seccion, notas, mtbf, codigo_otan
+):
     cursor = db.connection.cursor()
     query = """
-        INSERT INTO repuesto (id_equipo_info, nombre_repuesto, valor, dibujo_transversal, notas)
-        VALUES (%s, %s, %s, %s, %s)
+        INSERT INTO repuesto (
+            id_equipo_info, nombre_repuesto, valor,
+            dibujo_transversal, notas, mtbf, codigo_otan
+        )
+        VALUES (%s, %s, %s, %s, %s, %s, %s)
     """
-    cursor.execute(query, (id_equipo_info, nombre_repuesto, valor, dibujo_transversal, notas))
+    cursor.execute(query, (
+        id_equipo_info, nombre_herramienta, valor,
+        dibujo_seccion, notas, mtbf, codigo_otan
+    ))
     db.connection.commit()
     repuesto_id = cursor.lastrowid
     cursor.close()
     return repuesto_id
+
 
 def obtener_repuestos_por_equipo_info(id_equipo_info):
     cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)

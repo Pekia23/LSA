@@ -8,47 +8,39 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/FMEA.css') }}">
 {% endblock %}
 
-{% block nombre %}LSA | hola mundo - Repuestos{% endblock %}
+{% block nombre %}LSA | Repuestos{% endblock %}
 
 {% block content %}
-      <h2 class="section-title text-center">Repuesto</h2>
-      <table class="table mt-3">
-        <thead>
-          <tr>
-            <th scope="col">Parte número</th>
-            <th scope="col">Nombre del repuesto</th>
-            <th scope="col">Valor</th>
-            <th scope="col">Dibujo de sección transversal</th>
-            <th scope="col">MTBF</th>
-            <th scope="col">Código OTAN</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
-            <td>@fat</td>
-          </tr>
-          <tr>
-            <td>Jacob</td>
-            <td>tdornton</td>
-            <td>@fat</td>
-            <td>@fat</td>
-          </tr>
-          <tr>
-            <td colspan="2">Larry tde Bird</td>
-            <td>@twitter</td>
-            <td>@fat</td>
-          </tr>
-        </tbody>
-      </table>
-      <br>
-      <!-- Botón "Editar análisis funcional" -->
-      <div class="mt-4">
-        <button type="button" class="btn btn-primary"><a href="{{url_for('editar_repuesto')}}">Editar repuesto</a></button>
-      </div>
-    </div>
-  </div>
+<h2 class="section-title text-center">Repuesto</h2>
+<table class="table mt-3">
+  <thead>
+    <tr>
+      <th scope="col">Nombre del repuesto</th>
+      <th scope="col">Valor</th>
+      <th scope="col">Dibujo de sección transversal</th>
+      <th scope="col">MTBF</th>
+      <th scope="col">Código OTAN</th>
+      <th scope="col">Notas</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- Iterar sobre los repuestos -->
+    {% for repuesto in repuestos %}
+    <tr>
+      <td>{{ repuesto.nombre_repuesto }}</td>
+      <td>{{ repuesto.valor }}</td>
+      <td>{{ repuesto.dibujo_transversal }}</td>
+      <td>{{ repuesto.mtbf }}</td>
+      <td>{{ repuesto.codigo_otan }}</td>
+      <td>{{ repuesto.notas }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<br>
+<!-- Botón "Editar repuesto" -->
+<div class="mt-4">
+  <a href="{{ url_for('editar_repuesto') }}" class="btn btn-primary">Editar repuesto</a>
+</div>
 
 {% endblock %}

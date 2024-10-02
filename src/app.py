@@ -319,7 +319,7 @@ def logout():
 
 #Rutas para repuesto
 # app.py
-@app.route('/LSA/repuestos', methods=['GET'])
+@app.route('/LSA/mostrar-repuesto', methods=['GET'])
 def mostrar_repuestos():
     token = g.user_token
     user_data = obtener_info_usuario(token)
@@ -329,7 +329,8 @@ def mostrar_repuestos():
         return redirect(url_for('registro_generalidades'))
 
     repuestos = obtener_repuestos_por_equipo_info(id_equipo_info)
-    return render_template('mostrar_repuestos.html', repuestos=repuestos)
+    return render_template('mostrar_repuesto.html', repuestos=repuestos)
+
 
 
 # app.py
@@ -339,18 +340,52 @@ def agregar_repuesto():
     user_data = obtener_info_usuario(token)
     id_equipo_info = user_data.get('id_equipo_info')
 
-    data = request.get_json()
-    nombre_repuesto = data.get('nombre_repuesto')
-    valor = data.get('valor')
-    dibujo_transversal = data.get('dibujo_transversal')
-    notas = data.get('notas')
+    print(f"id_equipo_info en agregar_repuesto: {id_equipo_info}")
+
+    # Si estás manejando archivos (imágenes), debes usar request.form en lugar de request.get_json()
+    nombre_repuesto = request.form.get('nombre_repuesto')
+    valor = request.form.get('valor')
+    dibujo_transversal = request.files.get('dibujo_transversal')
+    notas = request.form.get('notas')
+    mtbf = request.form.get('mtbf')
+        
+    codigo_otan = request.form.get('codigo_otan')
+
+    
+    print(f"nombre_repuesto: {nombre_repuesto}")
+    print(f"valor: {valor}")
+    print(f"dibujo_transversal: {dibujo_transversal}")
+    print(f"notas: {notas}")
+    print(f"mtbf: {mtbf}")
+    print(f"codigo_otan: {codigo_otan}")
+
+
 
     if not id_equipo_info or not nombre_repuesto:
         return jsonify({'error': 'Faltan datos obligatorios'}), 400
+    
+     # Validar y convertir 'valor' a float
+    try:
+        valor = float(valor) if valor else None
+    except ValueError:
+        return jsonify({'error': 'El valor debe ser un número decimal'}), 400
 
-    repuesto_id = insertar_repuesto(id_equipo_info, nombre_repuesto, valor, dibujo_transversal, notas)
+    # Validar y convertir 'mtbf' a float
+    try:
+        mtbf = float(mtbf) if mtbf else None
+    except ValueError:
+        return jsonify({'error': 'El MTBF debe ser un número decimal'}), 400
+
+    # Leer los datos de la imagen si existe
+
+    # Procesar la imagen 'dibujo_transversal' si existe
+    dibujo_transversal_data = dibujo_transversal.read() if dibujo_transversal else None
+
+    repuesto_id = insertar_repuesto(
+        id_equipo_info, nombre_repuesto, valor,
+        dibujo_transversal_data, notas, mtbf, codigo_otan
+    )
     return jsonify({'message': 'Repuesto agregado correctamente', 'id': repuesto_id}), 200
-
 
 
 # app.py
@@ -367,8 +402,6 @@ def actualizar_repuesto_route(id_repuesto):
 
     actualizar_repuesto(id_repuesto, nombre_repuesto, valor, dibujo_transversal, notas)
     return jsonify({'message': 'Repuesto actualizado correctamente'}), 200
-
-
 
 
 # app.py

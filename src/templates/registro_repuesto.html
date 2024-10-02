@@ -1,6 +1,5 @@
 {% extends 'base_navbar.html' %}
 
-
 {% block title %}Cotecmar || Repuesto{% endblock %}
 
 {% block custom %}
@@ -13,37 +12,43 @@
 
 {% block content %}
 
-        <div class="col">
-            <h2 class="section-title text-center">Repuesto</h2>
+    <div class="col">
+        <h2 class="section-title text-center">Repuesto</h2>
 
-            <form id="repuesto-form">
-                <div class="row">
-                    <!-- Única Columna -->
-                    <div class="col-md-12">
-                        <label for="parte_numero" class="form-label">Parte número</label>
-                        <input type="text" class="form-control" id="parte_numero" name="parte_numero" placeholder="Parte número">
+        <form id="repuesto-form" enctype="multipart/form-data">
+            <div class="row">
+                <!-- Única Columna -->
+                <div class="col-md-12">
+                    
+                    <label for="nombre_repuesto" class="form-label mt-3">Nombre del Repuesto</label>
+                    <input type="text" class="form-control" id="nombre_repuesto" name="nombre_repuesto" placeholder="Nombre del repuesto">                    
 
-                        <label for="nombre_herramienta" class="form-label mt-3">Nombre de la Herramienta</label>
-                        <input type="text" class="form-control" id="nombre_herramienta" name="nombre_herramienta" placeholder="Nombre de la herramienta">
+                    <label for="valor" class="form-label mt-3">Valor</label>
+                    <input type="text" class="form-control" id="valor" name="valor" placeholder="Valor">
 
-                        <label for="valor" class="form-label mt-3">Valor</label>
-                        <input type="text" class="form-control" id="valor" name="valor" placeholder="Valor">
+                    <!-- Campo MTBF -->
+                    <label for="mtbf" class="form-label mt-3">MTBF</label>
+                    <input type="text" class="form-control" id="mtbf" name="mtbf" placeholder="MTBF">
 
-                        <label for="dibujo_seccion" class="form-label mt-3">Dibujo de Sección Transversal</label>
-                        <input type="text" class="form-control" id="dibujo_seccion" name="dibujo_seccion" placeholder="Dibujo de sección transversal">
+                    <!-- Campo Código OTAN -->
+                    <label for="codigo_otan" class="form-label mt-3">Código OTAN</label>
+                    <input type="text" class="form-control" id="codigo_otan" name="codigo_otan" placeholder="Código OTAN">
 
-                        <label for="notas" class="form-label mt-3">Notas</label>
-                        <textarea class="form-control" id="notas" name="notas" placeholder="Notas"></textarea>
-                    </div>
+                    <label for="dibujo_transversal" class="form-label mt-3">Dibujo de Sección Transversal</label>
+                    <input type="file" class="form-control" id="dibujo_transversal" name="dibujo_transversal" accept="image/*">
+
+                    <label for="notas" class="form-label mt-3">Notas</label>
+                    <textarea class="form-control" id="notas" name="notas" placeholder="Notas"></textarea>
                 </div>
+            </div>
 
-                <!-- Botón "Agregar repuesto" -->
-                <div class="text-end mt-4">
-                    <button type="submit" class="btn btn-primary" id="btn-agregar-repuesto">Agregar repuesto</button>
-                </div>
-            </form>
-        </div>
+            <!-- Botón "Agregar repuesto" -->
+            <div class="text-end mt-4">
+                <button type="submit" class="btn btn-primary" id="btn-agregar-repuesto">Agregar repuesto</button>
+            </div>
+        </form>
     </div>
+</div>
 </div>
 
 <script src="{{ url_for('static', filename='js/repuesto.js') }}"></script>

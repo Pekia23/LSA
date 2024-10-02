@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/FMEA.css') }}">
 {% endblock %}
 
-{% block nombre %}LSA | hola mundo - Repuestos{% endblock %}
+{% block nombre %}LSA | Editar Repuesto{% endblock %}
 
 {% block body %}
 <div class="container-fluid">
@@ -18,41 +18,38 @@
       <table class="table mt-3">
         <thead>
           <tr>
-            <th scope="col">Parte número</th>
             <th scope="col">Nombre del repuesto</th>
             <th scope="col">Valor</th>
             <th scope="col">Dibujo de sección transversal</th>
             <th scope="col">MTBF</th>
             <th scope="col">Código OTAN</th>
+            <th scope="col">Notas</th>
             <th></th>
           </tr>
         </thead>
         <tbody>
+          <!-- Iterar sobre los repuestos -->
+          {% for repuesto in repuestos %}
           <tr>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
-            <td colspan="3">@fat</td>
-            <td><button class="btn btn-primary"  data-bs-toggle="tooltip" data-bs-placement="top" title="Editar este registro"><a href = "{{url_for('registro_repuesto')}}"> <i class="bi bi-pen pen" ></i></a></button></td>
+
+            <td>{{ repuesto.nombre_repuesto }}</td>
+            <td>{{ repuesto.valor }}</td>
+            <td>{{ repuesto.dibujo_transversal }}</td>
+            <td>{{ repuesto.mtbf }}</td>
+            <td>{{ repuesto.codigo_otan }}</td>
+            <td>{{ repuesto.notas }}</td>
+            <td>
+              <button class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar este registro">
+                <a href="{{ url_for('editar_repuesto', id_repuesto=repuesto.id) }}"> <i class="bi bi-pen pen"></i></a>
+              </button>
+            </td>
           </tr>
-          <tr>
-            <td>Jacob</td>
-            <td>tdornton</td>
-            <td>@fat</td>
-            <td colspan="3">@fat</td>
-            <td><button class="btn btn-primary"  data-bs-toggle="tooltip" data-bs-placement="top" title="Editar este registro"><a href = "{{url_for('registro_repuesto')}}"> <i class="bi bi-pen pen" ></i></a></button></td>
-          </tr>
-          <tr>
-            <td colspan="2">Larry tde Bird</td>
-            <td>@twitter</td>
-            <td colspan="3">@fat</td>
-            <td><button class="btn btn-primary"  data-bs-toggle="tooltip" data-bs-placement="top" title="Editar este registro"><a href = "{{url_for('registro_repuesto')}}"> <i class="bi bi-pen pen" ></i></a></button></td>
-          </tr>
+          {% endfor %}
         </tbody>
       </table>
-      <!-- Botón "Editar análisis funcional" -->
+      <!-- Botón "Regresar" -->
       <div class="mt-4">
-        <button type="button" class="btn btn-primary"><a href="{{url_for('mostrar_repuesto')}}">Regresar</a></button>
+        <a href="{{ url_for('mostrar_repuesto') }}" class="btn btn-primary">Regresar</a>
       </div>
     </div>
   </div>
