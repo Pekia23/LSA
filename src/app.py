@@ -1,4 +1,6 @@
 from flask import Flask, render_template, request, jsonify, redirect, url_for, make_response, g, send_file
+from markupsafe import Markup
+
 import uuid
 import MySQLdb.cursors
 import uuid  # Para generar un token único
@@ -31,7 +33,8 @@ from database import (
     insertar_repuesto,
     eliminar_repuesto,
     actualizar_repuesto,
-    obtener_repuestos_por_equipo_info
+    obtener_repuestos_por_equipo_info,
+    obtener_repuesto_por_id
 )
 from __init__ import create_app
 
@@ -169,7 +172,7 @@ def obtener_equipos_por_tipo_api(id_tipo_equipo):
     equipospro = obtener_equipos_por_tipo(id_tipo_equipo)
     return jsonify(equipospro)
 
-@app.route('/LSA/registro-analisis-funcional')
+
 @app.route('/LSA/registro-analisis-funcional', methods=['GET', 'POST'])
 def registro_analisis_funcional():
     token = g.user_token
@@ -389,18 +392,30 @@ def agregar_repuesto():
 
 
 # app.py
-@app.route('/api/repuesto/<int:id_repuesto>', methods=['PUT'])
+@app.route('/api/repuesto/<int:id_repuesto>', methods=['POST'])
 def actualizar_repuesto_route(id_repuesto):
-    data = request.get_json()
-    nombre_repuesto = data.get('nombre_repuesto')
-    valor = data.get('valor')
-    dibujo_transversal = data.get('dibujo_transversal')
-    notas = data.get('notas')
+    nombre_repuesto = request.form.get('nombre_repuesto')
+    valor = request.form.get('valor')
+    dibujo_transversal = request.files.get('dibujo_transversal')
+    notas = request.form.get('notas')
+    mtbf = request.form.get('mtbf')
+    codigo_otan = request.form.get('codigo_otan')
 
     if not nombre_repuesto:
         return jsonify({'error': 'Faltan datos obligatorios'}), 400
 
-    actualizar_repuesto(id_repuesto, nombre_repuesto, valor, dibujo_transversal, notas)
+    # Validar y convertir los valores numéricos
+    try:
+        valor = float(valor) if valor else None
+        mtbf = float(mtbf) if mtbf else None
+    except ValueError:
+        return jsonify({'error': 'Valor o MTBF deben ser números válidos'}), 400
+
+    # Leer los datos del archivo si se ha subido uno nuevo
+    dibujo_transversal_data = dibujo_transversal.read() if dibujo_transversal else None
+
+    # Llamar a la función para actualizar el repuesto en la base de datos
+    actualizar_repuesto(id_repuesto, nombre_repuesto, valor, dibujo_transversal_data, notas, mtbf, codigo_otan)
     return jsonify({'message': 'Repuesto actualizado correctamente'}), 200
 
 
@@ -413,8 +428,30 @@ def eliminar_repuesto_route(id_repuesto):
 
 
 
+@app.route('/LSA/editar-repuesto/<int:id_repuesto>', methods=['GET'])
+def editar_repuesto(id_repuesto):
+    token = g.user_token
+    user_data = obtener_info_usuario(token)
+    id_equipo_info = user_data.get('id_equipo_info')
+
+    if id_equipo_info is None:
+        return redirect(url_for('registro_generalidades'))
+
+    # Obtener los datos del repuesto
+    repuesto = obtener_repuesto_por_id(id_repuesto)
+
+    if not repuesto:
+        return 'Repuesto no encontrado', 404
+
+    return render_template('editar_repuesto.html', repuesto=repuesto)
 
 
+@app.template_filter('b64encode')
+def b64encode_filter(data):
+    if data:
+        import base64
+        return Markup(base64.b64encode(data).decode('utf-8'))
+    return ''
 
 
 
@@ -449,9 +486,7 @@ def editar_analisis_herramientas():
 def editar_herramientas_especiales():
     return render_template('editar_herramientas_especiales2.html')
 
-@app.route('/LSA/equipo/editar-repuestos')
-def editar_repuesto():
-    return render_template('editar_repuesto.html')
+
 
 @app.route('/LSA/equipo/editar-RCM')
 def editar_RCM():

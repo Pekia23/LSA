@@ -14,33 +14,76 @@
 <h2 class="section-title text-center">Repuesto</h2>
 <table class="table mt-3">
   <thead>
-    <tr>
-      <th scope="col">Nombre del repuesto</th>
-      <th scope="col">Valor</th>
-      <th scope="col">Dibujo de sección transversal</th>
-      <th scope="col">MTBF</th>
-      <th scope="col">Código OTAN</th>
-      <th scope="col">Notas</th>
-    </tr>
+      <tr>
+        <th scope="col">Nombre del repuesto</th>
+        <th scope="col">Valor</th>
+        <th scope="col">Dibujo de sección transversal</th>
+        <th scope="col">MTBF</th>
+        <th scope="col">Código OTAN</th>
+        <th scope="col">Notas</th>
+        <th scope="col">Acciones</th>
+      </tr>
   </thead>
   <tbody>
-    <!-- Iterar sobre los repuestos -->
-    {% for repuesto in repuestos %}
-    <tr>
-      <td>{{ repuesto.nombre_repuesto }}</td>
-      <td>{{ repuesto.valor }}</td>
-      <td>{{ repuesto.dibujo_transversal }}</td>
-      <td>{{ repuesto.mtbf }}</td>
-      <td>{{ repuesto.codigo_otan }}</td>
-      <td>{{ repuesto.notas }}</td>
-    </tr>
-    {% endfor %}
+      {% for repuesto in repuestos %}
+      <tr>
+        <td>{{ repuesto.nombre_repuesto }}</td>
+        <td>{{ repuesto.valor }}</td>
+        <td>
+          {% if repuesto.dibujo_transversal %}
+              <img src="data:image/png;base64,{{ repuesto.dibujo_transversal|b64encode }}" alt="Dibujo" style="max-width: 100px; max-height: 100px;">
+          {% endif %}
+        </td>
+        <td>{{ repuesto.mtbf }}</td>
+        <td>{{ repuesto.codigo_otan }}</td>
+        <td>{{ repuesto.notas }}</td>
+        <td>
+          <button class="btn btn-primary btn-editar" data-id="{{ repuesto.id }}">Editar</button>
+          <button class="btn btn-danger btn-eliminar" data-id="{{ repuesto.id }}">Eliminar</button>
+        </td>
+      </tr>
+      {% endfor %}
   </tbody>
-</table>
-<br>
-<!-- Botón "Editar repuesto" -->
-<div class="mt-4">
-  <a href="{{ url_for('editar_repuesto') }}" class="btn btn-primary">Editar repuesto</a>
-</div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Manejo del botón Editar
+        const editButtons = document.querySelectorAll('.btn-editar');
+        editButtons.forEach(function(button) {
+            button.addEventListener('click', function() {
+                const repuestoId = this.getAttribute('data-id');
+                window.location.href = '/LSA/editar-repuesto/' + repuestoId;
+            });
+        });
+    
+        // Manejo del botón Eliminar
+        const deleteButtons = document.querySelectorAll('.btn-eliminar');
+        deleteButtons.forEach(function(button) {
+            button.addEventListener('click', function() {
+                const repuestoId = this.getAttribute('data-id');
+    
+                if (confirm('¿Estás seguro de que deseas eliminar este repuesto?')) {
+                    fetch('/api/repuesto/' + repuestoId, {
+                        method: 'DELETE'
+                    })
+                    .then(response => response.json())
+                    .then(result => {
+                        if (result.message) {
+                            alert(result.message);
+                            // Remueve la fila de la tabla
+                            this.closest('tr').remove();
+                        } else {
+                            alert('Error al eliminar repuesto');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error al eliminar repuesto:', error);
+                        alert('Error al eliminar repuesto: ' + error.message);
+                    });
+                }
+            });
+        });
+    });
+    </script>
+    
 
 {% endblock %}

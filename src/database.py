@@ -230,16 +230,27 @@ def obtener_repuestos_por_equipo_info(id_equipo_info):
     return repuestos
 
 
-def actualizar_repuesto(id_repuesto, nombre_repuesto, valor, dibujo_transversal, notas):
+def actualizar_repuesto(id_repuesto, nombre_repuesto, valor, dibujo_transversal, notas, mtbf, codigo_otan):
     cursor = db.connection.cursor()
+
+    # Construimos la consulta SQL dinámicamente
     query = """
         UPDATE repuesto
-        SET nombre_repuesto = %s, valor = %s, dibujo_transversal = %s, notas = %s
-        WHERE id = %s
+        SET nombre_repuesto = %s, valor = %s, notas = %s, mtbf = %s, codigo_otan = %s
     """
-    cursor.execute(query, (nombre_repuesto, valor, dibujo_transversal, notas, id_repuesto))
+    params = [nombre_repuesto, valor, notas, mtbf, codigo_otan]
+
+    if dibujo_transversal is not None:
+        query += ", dibujo_transversal = %s"
+        params.append(dibujo_transversal)
+
+    query += " WHERE id = %s"
+    params.append(id_repuesto)
+
+    cursor.execute(query, params)
     db.connection.commit()
     cursor.close()
+
 
 
 
@@ -250,5 +261,14 @@ def eliminar_repuesto(id_repuesto):
     cursor.execute(query, (id_repuesto,))
     db.connection.commit()
     cursor.close()
+
+
+def obtener_repuesto_por_id(id_repuesto):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = "SELECT * FROM repuesto WHERE id = %s"
+    cursor.execute(query, (id_repuesto,))
+    repuesto = cursor.fetchone()
+    cursor.close()
+    return repuesto
 
 
