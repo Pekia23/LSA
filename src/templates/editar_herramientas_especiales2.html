@@ -1,6 +1,6 @@
 {% extends './base.html' %}
 
-{% block title %}Cotecmar || Herramientas Especiales{% endblock %}
+{% block title %}Cotecmar || Editar Herramienta Especial{% endblock %}
 
 {% block custom %}
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -8,74 +8,79 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/herramientas_especiales.css') }}">
 {% endblock %}
 
-{% block nombre %}LSA | Registro de Modulo de herramientas{% endblock %}
+{% block nombre %}LSA | Editar Herramienta Especial{% endblock %}
 
 {% block body %}
 <div class="container-fluid">
     <div class="row">
-        <div class="col-auto">
-            <button class="navbar-toggler custom-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse navbarvertical" id="navbarContent">
-                <ul class="nav flex-column">
-                    <li class="nav-item"><a class="nav-link" href="{{url_for('registro_generalidades')}}">Información del equipo</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{url_for('registro_analisis_funcional')}}">Análisis funcional</a></li>
-                    <li class="nav-item active"><a class="nav-link" href="{{url_for('registro_herramientas_especiales')}}">Modulo de herramientas</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{url_for('registro_repuesto')}}">Repuesto</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{url_for('registro_FMEA')}}">FMEA</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{url_for('registro_RCM')}}">RCM</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{url_for('registro_MTA')}}">MTA - LORA</a></li>
-                </ul>
-            </div>
-        </div>
+        <!-- Aquí podrías incluir tu navbar lateral si es necesario -->
         <div class="col">
-            <h2 class="section-title text-center">Herramientas Especiales</h2>
+            <h2 class="section-title text-center">Editar Herramienta Especial</h2>
             <br>
-            <form id="herramientas-especiales-form">
+            <form id="editar-herramienta-form" enctype="multipart/form-data" data-herramienta-id="{{ herramienta.id }}">
                 <div class="row">
+                    <!-- Primera columna -->
                     <div class="col-md-4 my-4">
-                        <label for="consumibles" class="form-label ">Equipo</label>
-                        <input type="text" class="form-control" id="equipo" name="consumibles">
+                        <label for="equipo" class="form-label">Equipo</label>
+                        <input type="text" class="form-control" id="equipo" name="equipo" value="{{ herramienta.equipo }}" readonly>
 
-                        <label for="dibujo_transversal" class="form-label mt-3">Dibujo de sección transversal</label>
-                        <input type="file" class="form-control" id="dibujo_transversal" name="dibujo_transversal" accept=".jpg, .jpeg, .png, .pdf">
+                        <label for="dibujo_seccion_transversal" class="form-label mt-3">Dibujo de sección transversal</label>
+                        <input type="file" class="form-control" id="dibujo_seccion_transversal" name="dibujo_seccion_transversal" accept=".jpg, .jpeg, .png, .pdf">
 
-                        <label for="consumibles" class="form-label mt-3">Manual referenciado</label>
-                        <input type="text" class="form-control" id="consumibles" name="consumibles">
-                        
+                        {% if herramienta.dibujo_seccion_transversal %}
+                            <p>Imagen actual:</p>
+                            <img src="data:image/png;base64,{{ herramienta.dibujo_seccion_transversal|b64encode }}" alt="Dibujo actual" style="max-width: 200px; max-height: 200px;">
+                        {% endif %}
+
+                        <label for="manual_referencia" class="form-label mt-3">Manual referenciado</label>
+                        <input type="text" class="form-control" id="manual_referencia" name="manual_referencia" value="{{ herramienta.manual_referencia }}">
                     </div>
 
                     <!-- Segunda columna -->
                     <div class="col-md-4 my-4">
-                        <label for="ambientales" class="form-label">Nombre de la herramienta</label>
-                        <input type="text" class="form-control" id="ambientales" name="ambientales">
-                        
-                        <label for="estado_equipo" class="form-label mt-3">Cantidad</label>
-                        <input type="text" class="form-control" id="estado_equipo" name="estado_equipo">
-                        
+                        <label for="nombre_herramienta" class="form-label">Nombre de la herramienta</label>
+                        <input type="text" class="form-control" id="nombre_herramienta" name="nombre_herramienta" value="{{ herramienta.nombre_herramienta }}">
+
+                        <label for="cantidad" class="form-label mt-3">Cantidad</label>
+                        <input type="number" class="form-control" id="cantidad" name="cantidad" value="{{ herramienta.cantidad }}">
+
+                        <label for="tipo_herramienta" class="form-label mt-3">Tipo de herramienta</label>
+                        <select class="form-control" id="tipo_herramienta" name="tipo_herramienta">
+                            <option value="">Seleccione un tipo</option>
+                            <option value="seguridad" {% if herramienta.tipo_herramienta == 'seguridad' %}selected{% endif %}>Seguridad</option>
+                            <option value="elementos de soporte" {% if herramienta.tipo_herramienta == 'elementos de soporte' %}selected{% endif %}>Elementos de Soporte</option>
+                            <option value="general" {% if herramienta.tipo_herramienta == 'general' %}selected{% endif %}>General</option>
+                            <option value="electronicos" {% if herramienta.tipo_herramienta == 'electronicos' %}selected{% endif %}>Electrónicos</option>
+                            <option value="de limpieza" {% if herramienta.tipo_herramienta == 'de limpieza' %}selected{% endif %}>De Limpieza</option>
+                        </select>
                     </div>
 
                     <!-- Tercera columna -->
                     <div class="col-md-4 my-4">
-                        <label for="horas" class="form-label">Parte numero</label>
-                        <input type="number" class="form-control" id="horas" name="horas">
-                        
-                        <label for="minutos" class="form-label mt-3">Costo</label>
-                        <input type="number" class="form-control" id="minutos" name="minutos">
-                        
+                        <label for="parte_numero" class="form-label">Parte número</label>
+                        <input type="text" class="form-control" id="parte_numero" name="parte_numero" value="{{ herramienta.parte_numero }}">
+
+                        <label for="valor" class="form-label mt-3">Costo</label>
+                        <input type="number" class="form-control" id="valor" name="valor" value="{{ herramienta.valor }}">
+
+                        <label for="mtbf" class="form-label mt-3">MTBF</label>
+                        <input type="number" class="form-control" id="mtbf" name="mtbf" value="{{ herramienta.MTBF }}">
+
+                        <label for="nota" class="form-label mt-3">Nota</label>
+                        <textarea class="form-control" id="nota" name="nota">{{ herramienta.nota }}</textarea>
                     </div>
                 </div>
 
-                <!-- Botón "Agregar herramientas especiales" -->
+                <!-- Botón "Guardar cambios" -->
                 <div class="text-end mt-4">
-                    <button type="submit" class="btn btn-primary" id="btn-agregar-herramientas">Agregar herramientas especiales</button>
+                    <button type="submit" class="btn btn-primary" id="btn-guardar-herramienta">Guardar cambios</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
-<script src="{{ url_for('static', filename='js/herramientas_especiales.js') }}"></script>
+<!-- Incluimos el archivo JavaScript -->
+<script src="{{ url_for('static', filename='js/editar_herramienta_especial.js') }}"></script>
 
 {% endblock %}

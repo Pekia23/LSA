@@ -272,3 +272,75 @@ def obtener_repuesto_por_id(id_repuesto):
     return repuesto
 
 
+
+
+
+def insertar_herramienta_especial(
+    id_equipo_info, nombre_herramienta, valor, parte_numero,
+    mtbf, dibujo_seccion_transversal, nota, manual_referencia
+):
+    cursor = db.connection.cursor()
+    query = """
+        INSERT INTO herramientas_especiales (
+            id_equipo_info, nombre_herramienta, valor, parte_numero,
+            MTBF, dibujo_seccion_transversal, nota, manual_referencia
+        )
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+    """
+    cursor.execute(query, (
+        id_equipo_info, nombre_herramienta, valor, parte_numero,
+        mtbf, dibujo_seccion_transversal, nota, manual_referencia
+    ))
+    db.connection.commit()
+    herramienta_id = cursor.lastrowid
+    cursor.close()
+    return herramienta_id
+
+
+def obtener_herramientas_especiales_por_equipo_info(id_equipo_info):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = "SELECT * FROM herramientas_especiales WHERE id_equipo_info = %s"
+    cursor.execute(query, (id_equipo_info,))
+    herramientas = cursor.fetchall()
+    cursor.close()
+    return herramientas
+
+
+def obtener_herramienta_especial_por_id(id_herramienta):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = "SELECT * FROM herramientas_especiales WHERE id = %s"
+    cursor.execute(query, (id_herramienta,))
+    herramienta = cursor.fetchone()
+    cursor.close()
+    return herramienta
+
+def actualizar_herramienta_especial(
+    id_herramienta, nombre_herramienta, valor, parte_numero,
+    mtbf, dibujo_seccion_transversal, nota, manual_referencia
+):
+    cursor = db.connection.cursor()
+    query = """
+        UPDATE herramientas_especiales
+        SET nombre_herramienta = %s, valor = %s, parte_numero = %s,
+            MTBF = %s, nota = %s, manual_referencia = %s
+    """
+    params = [nombre_herramienta, valor, parte_numero, mtbf, nota, manual_referencia]
+
+    if dibujo_seccion_transversal is not None:
+        query += ", dibujo_seccion_transversal = %s"
+        params.append(dibujo_seccion_transversal)
+
+    query += " WHERE id = %s"
+    params.append(id_herramienta)
+
+    cursor.execute(query, params)
+    db.connection.commit()
+    cursor.close()
+
+
+def eliminar_herramienta_especial_db(id_herramienta):
+    cursor = db.connection.cursor()
+    query = "DELETE FROM herramientas_especiales WHERE id = %s"
+    cursor.execute(query, (id_herramienta,))
+    db.connection.commit()
+    cursor.close()

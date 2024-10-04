@@ -457,6 +457,110 @@ def b64encode_filter(data):
 
 
 
+@app.route('/LSA/mostrar-herramientas-especiales', methods=['GET'])
+def mostrar_herramientas_especiales():
+    token = g.user_token
+    user_data = obtener_info_usuario(token)
+    id_equipo_info = user_data.get('id_equipo_info')
+
+    if id_equipo_info is None:
+        return redirect(url_for('registro_generalidades'))
+
+    herramientas = obtener_herramientas_especiales_por_equipo_info(id_equipo_info)
+    return render_template('mostrar_herramientas_especiales.html', herramientas=herramientas)
+
+
+
+@app.route('/api/herramientas-especiales', methods=['POST'])
+def agregar_herramienta_especial():
+    token = g.user_token
+    user_data = obtener_info_usuario(token)
+    id_equipo_info = user_data.get('id_equipo_info')
+
+    if id_equipo_info is None:
+        return jsonify({'error': 'Faltan datos obligatorios'}), 400
+
+    # Obtener datos del formulario
+    nombre_herramienta = request.form.get('nombre_herramienta')
+    valor = request.form.get('valor')
+    parte_numero = request.form.get('parte_numero')
+    mtbf = request.form.get('mtbf')
+    dibujo_seccion_transversal = request.files.get('dibujo_seccion_transversal')
+    nota = request.form.get('nota')
+    manual_referencia = request.form.get('manual_referencia')
+
+    # Procesar imagen si existe
+    dibujo_data = dibujo_seccion_transversal.read() if dibujo_seccion_transversal else None
+
+    # Insertar en la base de datos
+    herramienta_id = insertar_herramienta_especial(
+        id_equipo_info, nombre_herramienta, valor, parte_numero,
+        mtbf, dibujo_data, nota, manual_referencia
+    )
+
+    return jsonify({'message': 'Herramienta especial agregada', 'id': herramienta_id}), 200
+
+
+
+@app.route('/LSA/editar-herramienta-especial/<int:id_herramienta>', methods=['GET'])
+def editar_herramienta_especial(id_herramienta):
+    token = g.user_token
+    user_data = obtener_info_usuario(token)
+    id_equipo_info = user_data.get('id_equipo_info')
+
+    if id_equipo_info is None:
+        return redirect(url_for('registro_generalidades'))
+
+    herramienta = obtener_herramienta_especial_por_id(id_herramienta)
+
+    if not herramienta:
+        return 'Herramienta no encontrada', 404
+
+    return render_template('editar_herramienta_especial.html', herramienta=herramienta)
+
+
+@app.route('/api/herramientas-especiales/<int:id_herramienta>', methods=['POST'])
+def actualizar_herramienta_especial(id_herramienta):
+    # Obtener datos del formulario
+    nombre_herramienta = request.form.get('nombre_herramienta')
+    valor = request.form.get('valor')
+    parte_numero = request.form.get('parte_numero')
+    mtbf = request.form.get('mtbf')
+    dibujo_seccion_transversal = request.files.get('dibujo_seccion_transversal')
+    nota = request.form.get('nota')
+    manual_referencia = request.form.get('manual_referencia')
+
+    # Procesar imagen si existe
+    dibujo_data = dibujo_seccion_transversal.read() if dibujo_seccion_transversal else None
+
+    # Actualizar en la base de datos
+    actualizar_herramienta_especial(
+        id_herramienta, nombre_herramienta, valor, parte_numero,
+        mtbf, dibujo_data, nota, manual_referencia
+    )
+
+    return jsonify({'message': 'Herramienta especial actualizada correctamente'}), 200
+
+
+
+@app.route('/api/herramientas-especiales/<int:id_herramienta>', methods=['DELETE'])
+def eliminar_herramienta_especial(id_herramienta):
+    eliminar_herramienta_especial_db(id_herramienta)
+    return jsonify({'message': 'Herramienta especial eliminada correctamente'}), 200
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -72,23 +72,25 @@
           </tr>
       </thead>
       <tbody>
+        {% for herramienta in herramientas %}
         <tr>
-          <td>Mark</td>
-          <td>Otto</td>
-          <td>@mdo</td>
-          <td>@fat</td>
+            <td>{{ herramienta.nombre_herramienta }}</td>
+            <td>{{ herramienta.parte_numero }}</td>
+            <td>{{ herramienta.valor }}</td>
+            <td>{{ herramienta.MTBF }}</td>
+            <td>{{ herramienta.nota }}</td>
+            <td>{{ herramienta.manual_referencia }}</td>
+            <td>
+                {% if herramienta.dibujo_seccion_transversal %}
+                    <img src="data:image/png;base64,{{ herramienta.dibujo_seccion_transversal|b64encode }}" alt="Dibujo" style="max-width: 100px; max-height: 100px;">
+                {% endif %}
+            </td>
+            <td>
+                <button class="btn btn-primary btn-editar" data-id="{{ herramienta.id }}">Editar</button>
+                <button class="btn btn-danger btn-eliminar" data-id="{{ herramienta.id }}">Eliminar</button>
+            </td>
         </tr>
-        <tr>
-          <td>Jacob</td>
-          <td>tdornton</td>
-          <td>@fat</td>
-          <td>@fat</td>
-        </tr>
-        <tr>
-          <td colspan="2">Larry tde Bird</td>
-          <td>@twitter</td>
-          <td>@fat</td>
-        </tr>
+        {% endfor %}
       </tbody>
     </table>
   </div>
@@ -97,5 +99,47 @@
 <br>
 <div class="mt-4">
   <button type="button" class="btn btn-primary"><a href="{{ url_for('editar_modulo_herramientas') }}">Editar modulo de herramientas</a></button>
-</div>        
+</div>    
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      // Manejo del botón Editar
+      const editButtons = document.querySelectorAll('.btn-editar');
+      editButtons.forEach(function(button) {
+          button.addEventListener('click', function() {
+              const herramientaId = this.getAttribute('data-id');
+              window.location.href = '/LSA/editar-herramienta-especial/' + herramientaId;
+          });
+      });
+  
+      // Manejo del botón Eliminar
+      const deleteButtons = document.querySelectorAll('.btn-eliminar');
+      deleteButtons.forEach(function(button) {
+          button.addEventListener('click', function() {
+              const herramientaId = this.getAttribute('data-id');
+  
+              if (confirm('¿Estás seguro de que deseas eliminar esta herramienta?')) {
+                  fetch('/api/herramientas-especiales/' + herramientaId, {
+                      method: 'DELETE'
+                  })
+                  .then(response => response.json())
+                  .then(result => {
+                      if (result.message) {
+                          alert(result.message);
+                          // Remueve la fila de la tabla
+                          this.closest('tr').remove();
+                      } else {
+                          alert('Error al eliminar herramienta');
+                      }
+                  })
+                  .catch(error => {
+                      console.error('Error al eliminar herramienta:', error);
+                      alert('Error al eliminar herramienta: ' + error.message);
+                  });
+              }
+          });
+      });
+  });
+  </script>
+  
 {% endblock %}
