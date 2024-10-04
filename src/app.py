@@ -34,7 +34,14 @@ from database import (
     eliminar_repuesto,
     actualizar_repuesto,
     obtener_repuestos_por_equipo_info,
-    obtener_repuesto_por_id
+    obtener_repuesto_por_id,
+    obtener_herramientas_especiales_por_equipo,
+    obtener_tipos_herramientas,
+    insertar_analisis_herramienta,
+    obtener_analisis_herramientas_por_equipo,
+    insertar_herramienta_requerida,
+    insertar_herramienta_especial,
+     
 )
 from __init__ import create_app
 
@@ -457,17 +464,72 @@ def b64encode_filter(data):
 
 
 
-@app.route('/LSA/mostrar-herramientas-especiales', methods=['GET'])
-def mostrar_herramientas_especiales():
+
+
+
+
+
+
+# app.py
+
+@app.route('/LSA/registro-herramientas-especiales', methods=['GET'])
+def registro_herramientas_especiales():
     token = g.user_token
     user_data = obtener_info_usuario(token)
     id_equipo_info = user_data.get('id_equipo_info')
-
     if id_equipo_info is None:
         return redirect(url_for('registro_generalidades'))
 
-    herramientas = obtener_herramientas_especiales_por_equipo_info(id_equipo_info)
-    return render_template('mostrar_herramientas_especiales.html', herramientas=herramientas)
+    tipos_herramientas = obtener_tipos_herramientas()
+
+    # Obtener el nombre del equipo
+    equipo = obtener_equipo_por_id(id_equipo_info)
+
+    return render_template(
+        'registro_herramientas_especiales.html',
+        equipo=equipo,
+        tipos_herramientas=tipos_herramientas
+    )
+
+@app.route('/api/analisis-herramientas', methods=['POST'])
+def agregar_analisis_herramienta():
+    token = g.user_token
+    user_data = obtener_info_usuario(token)
+    id_equipo_info = user_data.get('id_equipo_info')
+    nombre = request.form.get('nombre')
+    valor = request.form.get('valor')
+    parte_numero = request.form.get('parte_numero')
+    Manual = request.form.get('manual')
+    id_tipo_herramienta = request.form.get('tipo_herramienta')
+
+    if not nombre:
+        return jsonify({'error': 'Faltan datos obligatorios'}), 400
+
+    # Convertir 'valor' a float
+    try:
+        valor = float(valor) if valor else None
+    except ValueError:
+        return jsonify({'error': 'El valor debe ser numérico'}), 400
+
+    analisis_id = insertar_analisis_herramienta(
+        nombre, valor, id_equipo_info,
+        parte_numero, Manual
+    )
+
+    # Insertar en herramientas_requeridas
+    insertar_herramienta_requerida(nombre, id_tipo_herramienta)
+
+    return jsonify({'message': 'Análisis de herramienta agregado', 'id': analisis_id}), 200
+
+# Función para obtener el equipo por id_equipo_info
+def obtener_equipo_por_id(id_equipo_info):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = "SELECT nombre_equipo FROM equipo_info WHERE id = %s"
+    cursor.execute(query, (id_equipo_info,))
+    equipo = cursor.fetchone()
+    cursor.close()
+    return equipo
+
 
 
 
@@ -477,33 +539,43 @@ def agregar_herramienta_especial():
     user_data = obtener_info_usuario(token)
     id_equipo_info = user_data.get('id_equipo_info')
 
-    if id_equipo_info is None:
-        return jsonify({'error': 'Faltan datos obligatorios'}), 400
-
-    # Obtener datos del formulario
+    parte_numero = request.form.get('parte_numero')
     nombre_herramienta = request.form.get('nombre_herramienta')
     valor = request.form.get('valor')
-    parte_numero = request.form.get('parte_numero')
-    mtbf = request.form.get('mtbf')
+    MTBF = request.form.get('MTBF')
     dibujo_seccion_transversal = request.files.get('dibujo_seccion_transversal')
     nota = request.form.get('nota')
     manual_referencia = request.form.get('manual_referencia')
+    id_tipo_herramienta = request.form.get('tipo_herramienta')
 
-    # Procesar imagen si existe
+    if not nombre_herramienta:
+        return jsonify({'error': 'Faltan datos obligatorios'}), 400
+
+    # Convertir 'valor' y 'MTBF' a float
+    try:
+        valor = float(valor) if valor else None
+        MTBF = float(MTBF) if MTBF else None
+    except ValueError:
+        return jsonify({'error': 'Valor y MTBF deben ser numéricos'}), 400
+
     dibujo_data = dibujo_seccion_transversal.read() if dibujo_seccion_transversal else None
 
-    # Insertar en la base de datos
     herramienta_id = insertar_herramienta_especial(
-        id_equipo_info, nombre_herramienta, valor, parte_numero,
-        mtbf, dibujo_data, nota, manual_referencia
+        parte_numero, nombre_herramienta, valor, MTBF,
+        dibujo_data, nota, id_equipo_info,
+        manual_referencia, id_tipo_herramienta
     )
+
+    # Insertar en herramientas_requeridas
+    insertar_herramienta_requerida(nombre_herramienta, id_tipo_herramienta)
 
     return jsonify({'message': 'Herramienta especial agregada', 'id': herramienta_id}), 200
 
 
 
-@app.route('/LSA/editar-herramienta-especial/<int:id_herramienta>', methods=['GET'])
-def editar_herramienta_especial(id_herramienta):
+
+@app.route('/LSA/mostrar-herramientas-especiales', methods=['GET'])
+def mostrar_herramientas_especiales():
     token = g.user_token
     user_data = obtener_info_usuario(token)
     id_equipo_info = user_data.get('id_equipo_info')
@@ -511,42 +583,18 @@ def editar_herramienta_especial(id_herramienta):
     if id_equipo_info is None:
         return redirect(url_for('registro_generalidades'))
 
-    herramienta = obtener_herramienta_especial_por_id(id_herramienta)
+    analisis = obtener_analisis_herramientas_por_equipo(id_equipo_info)
+    herramientas = obtener_herramientas_especiales_por_equipo(id_equipo_info)
 
-    if not herramienta:
-        return 'Herramienta no encontrada', 404
-
-    return render_template('editar_herramienta_especial.html', herramienta=herramienta)
-
-
-@app.route('/api/herramientas-especiales/<int:id_herramienta>', methods=['POST'])
-def actualizar_herramienta_especial(id_herramienta):
-    # Obtener datos del formulario
-    nombre_herramienta = request.form.get('nombre_herramienta')
-    valor = request.form.get('valor')
-    parte_numero = request.form.get('parte_numero')
-    mtbf = request.form.get('mtbf')
-    dibujo_seccion_transversal = request.files.get('dibujo_seccion_transversal')
-    nota = request.form.get('nota')
-    manual_referencia = request.form.get('manual_referencia')
-
-    # Procesar imagen si existe
-    dibujo_data = dibujo_seccion_transversal.read() if dibujo_seccion_transversal else None
-
-    # Actualizar en la base de datos
-    actualizar_herramienta_especial(
-        id_herramienta, nombre_herramienta, valor, parte_numero,
-        mtbf, dibujo_data, nota, manual_referencia
+    return render_template(
+        'mostrar_herramientas-especiales.html',
+        analisis=analisis,
+        herramientas=herramientas
     )
 
-    return jsonify({'message': 'Herramienta especial actualizada correctamente'}), 200
 
 
 
-@app.route('/api/herramientas-especiales/<int:id_herramienta>', methods=['DELETE'])
-def eliminar_herramienta_especial(id_herramienta):
-    eliminar_herramienta_especial_db(id_herramienta)
-    return jsonify({'message': 'Herramienta especial eliminada correctamente'}), 200
 
 
 
@@ -620,9 +668,7 @@ def mostrar_RCM():
 def mostrar_analisis_funcional():
     return render_template('mostrar_analisis-funcional.html')
 
-@app.route('/LSA/equipo/mostrar-herramientas-especiales')
-def mostrar_herramientas_especiales():
-    return render_template('mostrar_herramientas-especiales.html')
+
 
 @app.route('/LSA/equipo/mostrar-analisis-herramientas')
 def mostrar_analisis_herramientas():
@@ -658,9 +704,7 @@ def registro_lora():
 def registro_analisis_funcional():
     return render_template('registro_analisis_funcional.html')
 """
-@app.route('/LSA/registro-herramientas-especiales')
-def registro_herramientas_especiales():
-    return render_template('registro_herramientas_especiales.html')
+
 
 
 @app.route('/LSA/registro-repuesto')

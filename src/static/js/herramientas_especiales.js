@@ -1,10 +1,33 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('herramientas-especiales-form');
+    // Manejo del formulario de Análisis de Herramientas
+    const formAnalisis = document.getElementById('analisis-herramientas-form');
 
-    form.addEventListener('submit', function(e) {
+    formAnalisis.addEventListener('submit', function(e) {
         e.preventDefault();
 
-        const formData = new FormData(form);
+        const formData = new FormData(formAnalisis);
+
+        fetch('/api/analisis-herramientas', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(result => {
+            alert(result.message);
+            // Redirigir o actualizar la página si es necesario
+        })
+        .catch(error => {
+            console.error('Error al guardar análisis de herramientas:', error);
+        });
+    });
+
+    // Manejo del formulario de Herramientas Especiales
+    const formEspeciales = document.getElementById('herramientas-especiales-form');
+
+    formEspeciales.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const formData = new FormData(formEspeciales);
 
         fetch('/api/herramientas-especiales', {
             method: 'POST',
@@ -12,12 +35,11 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(response => response.json())
         .then(result => {
-            console.log('Herramienta especial guardada:', result);
-            alert('Herramienta especial agregada correctamente');
-            window.location.href = '/LSA/mostrar-herramientas-especiales';
+            alert(result.message);
+            // Redirigir o actualizar la página si es necesario
         })
         .catch(error => {
-            console.error('Error al guardar herramienta especial:', error);
+            console.error('Error al guardar herramientas especiales:', error);
         });
     });
 });

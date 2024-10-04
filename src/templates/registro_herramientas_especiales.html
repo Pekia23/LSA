@@ -9,96 +9,105 @@
 {% endblock %}
 
 
-{% block nombre %}LSA | Registro de Modulo de herramientas{% endblock %}
+{% block nombre %}LSA | Registro de Módulo de Herramientas{% endblock %}
 
 {% block content %}
 
-        <div class="col">
-            <h2 class="section-title text-center">Analisis de Herramientas</h2>
-            <br>
-            <form id="herramientas-especiales-form">
-                <div class="row">
-                    <div class="col-md-4 my-4">
-                        <label for="consumibles" class="form-label ">Equipo</label>
-                        <input type="text" class="form-control" id="equipo" name="consumibles">
+<div class="col">
+    <h2 class="section-title text-center">Análisis de Herramientas</h2>
+    <br>
+    <form id="analisis-herramientas-form" enctype="multipart/form-data">
+        <div class="row">
+            <!-- Primera columna -->
+            <div class="col-md-4 my-4">
+                <label for="equipo" class="form-label">Equipo</label>
+                <input type="text" class="form-control" id="equipo" name="equipo" value="{{ equipo.nombre_equipo }}" readonly>
 
-                        <label for="dibujo_transversal" class="form-label mt-3">Dibujo de sección transversal</label>
-                        <input type="file" class="form-control" id="dibujo_transversal" name="dibujo_transversal" accept=".jpg, .jpeg, .png, .pdf">
-                        
-                    </div>
+                <label for="dibujo_seccion_transversal" class="form-label mt-3">Dibujo de sección transversal</label>
+                <input type="file" class="form-control" id="dibujo_seccion_transversal" name="dibujo_seccion_transversal" accept=".jpg, .jpeg, .png, .pdf">
+            </div>
 
-                    <!-- Segunda columna -->
-                    <div class="col-md-4 my-4">
-                        <label for="ambientales" class="form-label">Nombre de la herramienta</label>
-                        <input type="text" class="form-control" id="ambientales" name="ambientales">
+            <!-- Segunda columna -->
+            <div class="col-md-4 my-4">
+                <label for="nombre" class="form-label">Nombre de la herramienta</label>
+                <input type="text" class="form-control" id="nombre" name="nombre">
 
-                        <label for="minutos" class="form-label mt-3">Costo</label>
-                        <input type="number" class="form-control" id="minutos" name="minutos">
-                        
-                        
-                    </div>
+                <label for="valor" class="form-label mt-3">Costo</label>
+                <input type="number" class="form-control" id="valor" name="valor">
 
-                    <!-- Tercera columna -->
-                    <div class="col-md-4 my-4">
-                        <label for="horas" class="form-label">Parte numero</label>
-                        <input type="number" class="form-control" id="horas" name="horas">
+                <label for="tipo_herramienta" class="form-label mt-3">Tipo de herramienta</label>
+                <select class="form-control" id="tipo_herramienta" name="tipo_herramienta">
+                    {% for tipo in tipos_herramientas %}
+                    <option value="{{ tipo }}">{{ tipo }}</option>
+                    {% endfor %}
+                </select>
+            </div>
 
-                        <label for="consumibles" class="form-label mt-3">Tipo de herramienta</label>
-                        <input type="text" class="form-control" id="consumibles" name="consumibles">
-                    </div>
-                </div>
-                <!-- Botón "Agregar herramientas especiales" -->
-                <div class="text-end mt-4">
-                    <button type="submit" class="btn btn-primary" id="btn-agregar-herramientas">Agregar herramienta</button>
-                </div>
-            </form>
+            <!-- Tercera columna -->
+            <div class="col-md-4 my-4">
+                <label for="parte_numero" class="form-label">Parte número</label>
+                <input type="text" class="form-control" id="parte_numero" name="parte_numero">
 
-            <h2 class="section-title text-center">Herramientas Especiales</h2>
-            <br>
-            <form id="herramientas-especiales-form">
-                <div class="row">
-                    <div class="col-md-4 my-4">
-                        <label for="consumibles" class="form-label ">Equipo</label>
-                        <input type="text" class="form-control" id="equipo" name="consumibles">
-
-                        <label for="dibujo_transversal" class="form-label mt-3">Dibujo de sección transversal</label>
-                        <input type="file" class="form-control" id="dibujo_transversal" name="dibujo_transversal" accept=".jpg, .jpeg, .png, .pdf">
-
-                        <label for="consumibles" class="form-label mt-3">Manual referenciado</label>
-                        <input type="text" class="form-control" id="consumibles" name="consumibles">
-                        
-                    </div>
-
-                    <!-- Segunda columna -->
-                    <div class="col-md-4 my-4">
-                        <label for="ambientales" class="form-label">Nombre de la herramienta</label>
-                        <input type="text" class="form-control" id="ambientales" name="ambientales">
-                        
-                        <label for="estado_equipo" class="form-label mt-3">Cantidad</label>
-                        <input type="text" class="form-control" id="estado_equipo" name="estado_equipo">
-                        
-                        <label for="consumibles" class="form-label mt-3">Tipo de herramienta</label>
-                        <input type="text" class="form-control" id="consumibles" name="consumibles">
-                    </div>
-
-                    <!-- Tercera columna -->
-                    <div class="col-md-4 my-4">
-                        <label for="horas" class="form-label">Parte numero</label>
-                        <input type="number" class="form-control" id="horas" name="horas">
-                        
-                        <label for="minutos" class="form-label mt-3">Costo</label>
-                        <input type="number" class="form-control" id="minutos" name="minutos">
-                        
-                    </div>
-                </div>
-
-                <!-- Botón "Agregar herramientas especiales" -->
-                <div class="text-end mt-4">
-                    <button type="submit" class="btn btn-primary" id="btn-agregar-herramientas">Agregar herramientas especiales</button>
-                </div>
-            </form>
+                <label for="manual" class="form-label mt-3">Manual</label>
+                <input type="text" class="form-control" id="manual" name="manual">
+            </div>
         </div>
-    </div>
+        <!-- Botón "Agregar herramienta" -->
+        <div class="text-end mt-4">
+            <button type="submit" class="btn btn-primary">Agregar herramienta</button>
+        </div>
+    </form>
+
+    <!-- Formulario de Herramientas Especiales -->
+    <h2 class="section-title text-center">Herramientas Especiales</h2>
+    <br>
+    <form id="herramientas-especiales-form" enctype="multipart/form-data">
+        <div class="row">
+            <!-- Primera columna -->
+            <div class="col-md-4 my-4">
+                <label for="equipo_especial" class="form-label">Equipo</label>
+                <input type="text" class="form-control" id="equipo_especial" name="equipo_especial" value="{{ equipo.nombre_equipo }}" readonly>
+
+                <label for="dibujo_seccion_transversal_especial" class="form-label mt-3">Dibujo de sección transversal</label>
+                <input type="file" class="form-control" id="dibujo_seccion_transversal_especial" name="dibujo_seccion_transversal" accept=".jpg, .jpeg, .png, .pdf">
+
+                <label for="manual_referencia" class="form-label mt-3">Manual referenciado</label>
+                <input type="text" class="form-control" id="manual_referencia" name="manual_referencia">
+            </div>
+
+            <!-- Segunda columna -->
+            <div class="col-md-4 my-4">
+                <label for="nombre_herramienta" class="form-label">Nombre de la herramienta</label>
+                <input type="text" class="form-control" id="nombre_herramienta" name="nombre_herramienta">
+
+                <label for="cantidad" class="form-label mt-3">Cantidad</label>
+                <input type="number" class="form-control" id="cantidad" name="cantidad">
+
+                <label for="tipo_herramienta_especial" class="form-label mt-3">Tipo de herramienta</label>
+                <select class="form-control" id="tipo_herramienta_especial" name="tipo_herramienta">
+                    {% for tipo in tipos_herramientas %}
+                    <option value="{{ tipo }}">{{ tipo }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Tercera columna -->
+            <div class="col-md-4 my-4">
+                <label for="parte_numero_especial" class="form-label">Parte número</label>
+                <input type="text" class="form-control" id="parte_numero_especial" name="parte_numero">
+
+                <label for="valor_especial" class="form-label mt-3">Costo</label>
+                <input type="number" class="form-control" id="valor_especial" name="valor">
+
+                <label for="MTBF" class="form-label mt-3">MTBF</label>
+                <input type="number" class="form-control" id="MTBF" name="MTBF">
+            </div>
+        </div>
+        <!-- Botón "Agregar herramienta especial" -->
+        <div class="text-end mt-4">
+            <button type="submit" class="btn btn-primary">Agregar herramienta especial</button>
+        </div>
+    </form>
 </div>
 
 <script src="{{ url_for('static', filename='js/herramientas_especiales.js') }}"></script>
