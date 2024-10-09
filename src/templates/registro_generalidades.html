@@ -76,6 +76,11 @@
               <label for="equipo" class="form-label">Equipo</label>
               <select class="form-control" id="equipo" name="equipo">
                 <option value="">Seleccione Equipo</option>
+                {% for equipo in equipos %}
+                <option value="{{ equipo.id }}" {% if equipo.id == equipo_seleccionado.id %}selected{% endif %}>
+                    {{ equipo.nombre_equipo }}
+                </option>
+                {% endfor %}
               </select>
             </div>
             <div class="col-md-6">
@@ -220,30 +225,34 @@
     });
 
     // Cuando cambia el sistema
-    $('#sistema').on('change', function() 
-    {
-        var sistemaId = $(this).val();
-        if(sistemaId) {
-            $.ajax({
-                url: '/api/equipos/' + sistemaId,
-                type: 'GET',
-                dataType: 'json',
-                success: function(data) {
-                    $('#equipo').empty();
-                    $('#equipo').append('<option value="">Seleccione Equipo</option>');
-                    $.each(data, function(index, equipo) {
-                        $('#equipo').append('<option value="' + equipo.id + '">' + equipo.nombre_equipo + '</option>');
-                    });
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error al obtener equipos:', error);
-                }
-            });
-        } else {
-            $('#equipo').empty();
-            $('#equipo').append('<option value="">Seleccione Equipo</option>');
-        }
-    });
+
+$('#sistema').on('change', function() 
+{
+    var sistemaId = $(this).val();
+    if(sistemaId) {
+        $.ajax({
+            url: '/api/equipos/' + sistemaId,
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                $('#equipo').empty();
+                $('#equipo').append('<option value="">Seleccione Equipo</option>');
+                $.each(data, function(index, equipo) {
+                    $('#equipo').append('<option value="' + equipo.id + '">' + equipo.nombre + '</option>');
+                });
+            },
+            error: function(xhr, status, error) {
+                console.error('Error al obtener equipos:', error);
+            }
+        });
+    } else {
+        $('#equipo').empty();
+        $('#equipo').append('<option value="">Seleccione Equipo</option>');
+    }
+    $('#equipo').empty().append('<option value="">Seleccione Equipo</option>');
+});
+
+
     // Cuando cambia el tipo de equipo
     $('#tipo_equipo').on('change', function() {
         var tipoEquipoId = $(this).val();

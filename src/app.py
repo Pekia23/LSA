@@ -98,6 +98,7 @@ from database import (
     obtener_tipos_mantenimiento,
     obtener_tareas_mantenimiento,
     obtener_subsistema_por_id
+    
 
 
      
@@ -1105,9 +1106,32 @@ def editar_equipo():
     elif request.method == 'POST':
         # Obtener datos del formulario
         data = request.form.to_dict()
-        data['imagen'] = request.files.get('imagen_equipo').read() if request.files.get('imagen_equipo') else None
+        # Verificar si el archivo de imagen está presente
+        imagen_file = request.files.get('imagen_equipo')
+        if imagen_file and imagen_file.filename != '':
+            data['imagen_equipo'] = imagen_file.read()  # Si hay imagen, la leemos
+        else:
+            data['imagen_equipo'] = None  # Si no hay imagen, asignamos None
+
+         # Manejo de los diagramas
+        diagrama_flujo = request.files.get('diagrama_flujo')
+        diagrama_caja_negra = request.files.get('diagrama_caja_negra')
+        diagrama_caja_transparente = request.files.get('diagrama_caja_transparente')
+
+        # Procedimientos
+        procedimiento_arranque = request.form.get('procedimiento_arranque')
+        procedimiento_parada = request.form.get('procedimiento_parada')
+
+        # Insertar o actualizar los procedimientos y diagramas
+        id_procedimiento = insertar_procedimiento(procedimiento_arranque, procedimiento_parada)
+        data['id_procedimiento'] = id_procedimiento
+
+        id_diagrama = insertar_diagrama(diagrama_flujo, diagrama_caja_negra, diagrama_caja_transparente)
+        data['id_diagrama'] = id_diagrama
+
         # Actualizar la información del equipo
         actualizar_equipo_info(id_equipo_info, data)
+
         return redirect(url_for('mostrar_equipo'))
 
 @app.route('/LSA/eliminar-equipo', methods=['POST'])

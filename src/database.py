@@ -650,11 +650,9 @@ def insertar_procedimiento(arranque, parada):
     cursor.close()
     return procedimiento_id
 
-def insertar_diagrama(diagrama_flujo_file, diagrama_caja_negra_file, diagrama_caja_transparente_file):
+def insertar_diagrama(diagrama_flujo, diagrama_caja_negra, diagrama_caja_transparente):
     cursor = db.connection.cursor()
-    diagrama_flujo = diagrama_flujo_file.read() if diagrama_flujo_file else None
-    diagrama_caja_negra = diagrama_caja_negra_file.read() if diagrama_caja_negra_file else None
-    diagrama_caja_transparente = diagrama_caja_transparente_file.read() if diagrama_caja_transparente_file else None
+    
     query = "INSERT INTO diagramas (diagrama_fijo, diagrama_caja_negra, diagrama_caja_transparente) VALUES (%s, %s, %s)"
     cursor.execute(query, (diagrama_flujo, diagrama_caja_negra, diagrama_caja_transparente))
     db.connection.commit()
@@ -669,7 +667,9 @@ def insertar_equipo_info(nombre_equipo, AOR, fecha, fiabilidad_equipo, MTBF, GRE
                          id_personal, id_diagrama, id_procedimiento, id_sistema, id_equipo
                          ):
     cursor = db.connection.cursor()
+    # Si imagen_equipo_file es un archivo, leerlo, de lo contrario, usarlo como está
     imagen = imagen_equipo_file.read() if imagen_equipo_file else None
+    
     query = """
         INSERT INTO equipo_info (
             nombre_equipo, AOR, fecha, fiabilidad_equipo, MTBF, GRES, criticidad_equipo,
@@ -1077,23 +1077,54 @@ def obtener_equipo_info_por_id(id_equipo_info):
 
 def actualizar_equipo_info(id_equipo_info, data):
     cursor = db.connection.cursor()
-    query = """
-        UPDATE equipo_info
-        SET nombre_equipo = %s, AOR = %s, fecha = %s, fiabilidad_equipo = %s, MTBF = %s, GRES = %s,
-            criticidad_equipo = %s, marca = %s, peso_seco = %s, modelo = %s, dimensiones = %s,
-            descripcion = %s, imagen = %s, id_personal = %s, id_diagrama = %s, id_procedimiento = %s,
-            id_sistema = %s, id_equipo = %s
-        WHERE id = %s
-    """
-    params = (
+
+    # Inicializamos los campos que siempre se actualizarán
+    fields = [
+        "nombre_equipo = %s",
+        "AOR = %s",
+        "fecha = %s",
+        "fiabilidad_equipo = %s",
+        "MTBF = %s",
+        "GRES = %s",
+        "criticidad_equipo = %s",
+        "marca = %s",
+        "peso_seco = %s",
+        "modelo = %s",
+        "dimensiones = %s",
+        "descripcion = %s",
+        "id_personal = %s",
+        "id_diagrama = %s",
+        "id_procedimiento = %s",
+        "sistema_id = %s",
+        "equipo_id = %s"
+    ]
+    
+    params = [
         data['nombre_equipo'], data['aor'], data['fecha'], data['fiabilidad_equipo'], data['mtbf'], data['gres_sistema'],
         data['criticidad_equipo'], data['marca'], data['peso_seco'], data['modelo'], data['dimensiones'],
-        data['descripcion_equipo'], data['imagen_equipo'], data['responsable'], data['id_diagrama'], data['id_procedimiento'],
-        data['sistema'], data['equipo'], id_equipo_info
-    )
+        data['descripcion_equipo'], data['responsable'], data['id_diagrama'], data['id_procedimiento'],
+        data['sistema'], data['equipo']
+    ]
+
+    # Si hay una nueva imagen, agregamos la actualización del campo 'imagen'
+    if data['imagen_equipo'] is not None:
+        fields.append("imagen = %s")
+        params.append(data['imagen_equipo'])
+
+    # Añadimos el ID del equipo a los parámetros
+    params.append(id_equipo_info)
+
+    # Construimos la consulta SQL dinámicamente
+    query = f"""
+        UPDATE equipo_info
+        SET {', '.join(fields)}
+        WHERE id = %s
+    """
+
     cursor.execute(query, params)
     db.connection.commit()
     cursor.close()
+
 
 def eliminar_equipo_info(id_equipo_info):
     cursor = db.connection.cursor()

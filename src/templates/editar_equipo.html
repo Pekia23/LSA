@@ -78,7 +78,11 @@
           <label for="equipo_select" class="form-label">Equipo</label>
           <select class="form-control" id="equipo_select" name="equipo_select">
             <option value="">Seleccione Equipo</option>
-            <!-- Los equipos se cargarán dinámicamente -->
+            {% for equipo in equipos %}
+            <option value="{{ equipo.id }}" {% if equipo.id == equipo_seleccionado.id %}selected{% endif %}>
+                {{ equipo.nombre_equipo }}
+            </option>
+            {% endfor %}
           </select>
         </div>
         <div class="col-md-6">
@@ -246,7 +250,7 @@
             $('#equipo_select').append('<option value="">Seleccione Equipo</option>');
             $.each(data, function(index, equipo) {
               var selected = equipo.id == selectedEquipoId ? 'selected' : '';
-              $('#equipo_select').append('<option value="' + equipo.id + '" ' + selected + '>' + equipo.nombre_equipo + '</option>');
+              $('#equipo_select').append('<option value="' + equipo.id + '" ' + selected + '>' + equipo.nombre + '</option>');
             });
           },
           error: function(xhr, status, error) {
@@ -281,6 +285,7 @@
       var sistemaId = $(this).val();
       cargarEquipos(sistemaId, null);
     });
+    
   });
 </script>
 {% endblock %}
