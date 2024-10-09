@@ -1,6 +1,6 @@
 {% extends './base_navbar_mostrar.html' %}
 
-{% block title %}Cotecmar || Registro - Análisis Funcional{% endblock %}
+{% block title %}Cotecmar || Información del Equipo{% endblock %}
 
 {% block custom %}
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -11,10 +11,19 @@
 {% block nombre %}LSA | Información del equipo {% endblock %}
 
 {% block content %}
+<div class="text-end">
+    <a href="{{ url_for('editar_equipo') }}" class="btn btn-primary">Editar</a>
+    <button id="btn-eliminar-equipo" class="btn btn-danger">Eliminar</button>
+</div>
+
+{% if equipo.imagen %}
+<img src="data:image/png;base64,{{ equipo.imagen|b64encode }}" class="imagen" style="float: right;" >
+{% else %}
 <img src="{{ url_for('static', filename='img/imagen.jpg') }}" class="imagen" style="float: right;" >
+{% endif %}
 
 <div class="imagens">
-  <h2>"NOMBRE DEL EQUIPO"</h2>
+  <h2>{{ equipo.nombre_equipo }}</h2>
 </div>
 <br>
 <h3>Generalidades</h3>
@@ -22,65 +31,65 @@
   <div class="row">
     <div class="col-md-6 section1">
       <div class="mb-3">
-        <label for="fecha"><b>Fecha:</b></label>
-        <span id="fecha">juan@example.com</span>
+        <label><b>Fecha:</b></label>
+        <span>{{ equipo.fecha }}</span>
       </div>
       
       <div class="mb-3">
-        <label for="grupo_construtivo"><b>Grupo constructivo:</b></label>
-        <span id="grupo_construtivo">Juan Pérez</span>
+        <label><b>Grupo constructivo:</b></label>
+        <span>{{ equipo.grupo_constructivo }}</span>
       </div>
       
       <div class="mb-3">
-        <label for="subgrupo_construtivo"><b>Subgrupo constructivo:</b></label>
-        <span id="subgrupo_construtivo">juan@example.com</span>
+        <label><b>Subgrupo constructivo:</b></label>
+        <span>{{ equipo.subgrupo_constructivo }}</span>
       </div>
   
       <div class="mb-3">
-        <label for="sistema"><b>Sistema:</b></label>
-        <span id="sistema">Juan Pérez</span>
+        <label><b>Sistema:</b></label>
+        <span>{{ equipo.sistema }}</span>
       </div>
       
       <div class="mb-3">
-        <label for="tipo_equipo"><b>Tipo de equipo:</b></label>
-        <span id="tipo_equipo">juan@example.com</span>
+        <label><b>Tipo de equipo:</b></label>
+        <span>{{ equipo.tipo_equipo }}</span>
       </div>
       
       <div class="mb-3">
-        <label for="equipo"><b>Equipo:</b></label>
-        <span id="equipo">Juan Pérez</span>
+        <label><b>Equipo:</b></label>
+        <span>{{ equipo.equipo }}</span>
       </div>
     </div>
 
     <div class="col-md-6 section2">
       <div class="mb-3">
-        <label for="nombre"><b>Responsable:</b></label>
-        <span id="nombre">Juan Pérez</span>
+        <label><b>Responsable:</b></label>
+        <span>{{ equipo.responsable }}</span>
       </div>
 
       <div class="mb-3">
-        <label for="criticidad_sistema"><b>Criticidad de sistema:</b></label>
-        <span id="criticidad_sistema">juan@example.com</span>
+        <label><b>Criticidad de sistema:</b></label>
+        <span>{{ equipo.criticidad_equipo }}</span>
       </div>
 
       <div class="mb-3">
-        <label for="fiabilidad_equipo"><b>Fiabilidad del sistema:</b></label>
-        <span id="fiabilidad_equipo">Juan Pérez</span>
+        <label><b>Fiabilidad del sistema:</b></label>
+        <span>{{ equipo.fiabilidad_equipo }}</span>
       </div>
       
       <div class="mb-3">
-        <label for="MTBF"><b>MTBF:</b></label>
-        <span id="MTBF">juan@example.com</span>
+        <label><b>MTBF:</b></label>
+        <span>{{ equipo.MTBF }}</span>
       </div>
       
       <div class="mb-3">
-        <label for="AOR"><b>AOR:</b></label>
-        <span id="AOR">Juan Pérez</span>
+        <label><b>AOR:</b></label>
+        <span>{{ equipo.AOR }}</span>
       </div>
       
       <div class="mb-3">
-        <label for="GRES"><b>GRES:</b></label>
-        <span id="GRES">juan@example.com</span>
+        <label><b>GRES:</b></label>
+        <span>{{ equipo.GRES }}</span>
       </div>
     </div>
   </div>
@@ -91,25 +100,25 @@
   <div class="row">
     <div class="col-md-6 section1">
       <div class="mb-3">
-        <label for="fecha"><b>Peso:</b></label>
-        <span id="fecha">juan@example.com</span>
+        <label><b>Peso:</b></label>
+        <span>{{ equipo.peso_seco }}</span>
       </div>
       
       <div class="mb-3">
-        <label for="grupo_construtivo"><b>Grupo constructivo:</b></label>
-        <span id="grupo_construtivo">Juan Pérez</span>
+        <label><b>Dimensiones:</b></label>
+        <span>{{ equipo.dimensiones }}</span>
       </div>
     </div>
 
     <div class="col-md-6 section2">
       <div class="mb-3">
-        <label for="nombre"><b>Responsable:</b></label>
-        <span id="nombre">Juan Pérez</span>
+        <label><b>Marca:</b></label>
+        <span>{{ equipo.marca }}</span>
       </div>
 
       <div class="mb-3">
-        <label for="criticidad_sistema"><b>Criticidad de sistema:</b></label>
-        <span id="criticidad_sistema">juan@example.com</span>
+        <label><b>Modelo:</b></label>
+        <span>{{ equipo.modelo }}</span>
       </div>
     </div>
   </div>
@@ -117,26 +126,66 @@
 <br>
 <h3>Descripción del Equipo</h3>
 <p>
-  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elementum sapien varius, dapibus justo non, consectetur libero. Nam ac ante nec sapien fermentum semper et eu ante. Proin eget malesuada sapien, auctor consequat est. Nunc id diam non purus luctus porttitor. Aenean suscipit mauris ante, non consequat nibh lobortis ac. Suspendisse a congue arcu. Phasellus gravida gravida gravida. Vivamus suscipit, velit quis ultricies maximus, nisl eros imperdiet velit, a condimentum odio turpis porta nulla. Vestibulum imperdiet elit nec rutrum rutrum. Aliquam eros dui, ultrices eget turpis ac, feugiat faucibus enim. Ut est justo, feugiat non neque nec, finibus molestie elit. Ut sit amet libero purus. Integer a venenatis dui, sit amet elementum enim.
+  {{ equipo.descripcion }}
 </p>
 <br>
 <h3>Diagrama de Flujo del Subsistema Ubicado en el Equipo</h3>
+{% if diagrama.diagrama_fijo %}
+<img src="data:image/png;base64,{{ diagrama.diagrama_fijo|b64encode }}" class="imagend">
+{% else %}
 <img src="{{ url_for('static', filename='img/prueba.jpg') }}" class="imagend">
+{% endif %}
 <br>
 <h3>Diagrama Caja Negra de la Función</h3>
-<img src="{{ url_for('static', filename='img/prueba2.jpg') }}" class="imagend" >
+{% if diagrama.diagrama_caja_negra %}
+<img src="data:image/png;base64,{{ diagrama.diagrama_caja_negra|b64encode }}" class="imagend">
+{% else %}
+<img src="{{ url_for('static', filename='img/prueba2.jpg') }}" class="imagend">
+{% endif %}
 <br>
 <h3>Diagrama de Caja Transparente</h3>
-<img src="{{ url_for('static', filename='img/prueba3.jpg') }}" class="imagend" >
+{% if diagrama.diagrama_caja_transparente %}
+<img src="data:image/png;base64,{{ diagrama.diagrama_caja_transparente|b64encode }}" class="imagend">
+{% else %}
+<img src="{{ url_for('static', filename='img/prueba3.jpg') }}" class="imagend">
+{% endif %}
 <br>
 <h3>Procedimiento de Arranque</h3>
 <p>
-  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elementum sapien varius, dapibus justo non, consectetur libero. Nam ac ante nec sapien fermentum semper et eu ante. Proin eget malesuada sapien, auctor consequat est. Nunc id diam non purus luctus porttitor. Aenean suscipit mauris ante, non consequat nibh lobortis ac. Suspendisse a congue arcu. Phasellus gravida gravida gravida. Vivamus suscipit, velit quis ultricies maximus, nisl eros imperdiet velit, a condimentum odio turpis porta nulla. Vestibulum imperdiet elit nec rutrum rutrum. Aliquam eros dui, ultrices eget turpis ac, feugiat faucibus enim. Ut est justo, feugiat non neque nec, finibus molestie elit. Ut sit amet libero purus. Integer a venenatis dui, sit amet elementum enim.
+  {{ equipo.procedimiento_arranque }}
 </p>
 <br>
 <h3>Procedimiento de Parada</h3>
 <p>
-  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elementum sapien varius, dapibus justo non, consectetur libero. Nam ac ante nec sapien fermentum semper et eu ante. Proin eget malesuada sapien, auctor consequat est. Nunc id diam non purus luctus porttitor. Aenean suscipit mauris ante, non consequat nibh lobortis ac. Suspendisse a congue arcu. Phasellus gravida gravida gravida. Vivamus suscipit, velit quis ultricies maximus, nisl eros imperdiet velit, a condimentum odio turpis porta nulla. Vestibulum imperdiet elit nec rutrum rutrum. Aliquam eros dui, ultrices eget turpis ac, feugiat faucibus enim. Ut est justo, feugiat non neque nec, finibus molestie elit. Ut sit amet libero purus. Integer a venenatis dui, sit amet elementum enim.
+  {{ equipo.procedimiento_parada }}
 </p>
-<br>            
+<br>
+<!-- Script para manejar la eliminación del equipo -->
+<script>
+  document.getElementById('btn-eliminar-equipo').addEventListener('click', function() {
+    if (confirm('¿Estás seguro de que deseas eliminar este equipo?')) {
+      fetch('/LSA/eliminar-equipo', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          
+        },
+        body: JSON.stringify({})
+      })
+      .then(response => response.json())
+      .then(result => {
+        if (result.message) {
+          alert(result.message);
+          window.location.href = '/LSA/registro-generalidades';
+        } else {
+          alert('Error al eliminar equipo');
+        }
+      })
+      .catch(error => {
+        console.error('Error al eliminar equipo:', error);
+        alert('Error al eliminar equipo: ' + error.message);
+      });
+    }
+  });
+</script>
 {% endblock %}

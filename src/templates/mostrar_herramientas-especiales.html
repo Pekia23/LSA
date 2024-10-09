@@ -8,87 +8,81 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/FMEA.css') }}">
 {% endblock %}
 
-
-
-{% block nombre %}LSA | hola mundo - Herramientas especiales{% endblock %}
+{% block nombre %}LSA | Modulo de Herramientas{% endblock %}
 
 {% block content %}
-<h2 class="section-title text-center"> Modulo de Herramientas </h2>
+<h2 class="section-title text-center">Modulo de Herramientas</h2>
 
 <ul class="nav nav-tabs" id="myTab" role="tablist">
   <li class="nav-item" role="presentation">
-    <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Analisis de herramientas</button>
+    <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Análisis de herramientas</button>
   </li>
   <li class="nav-item" role="presentation">
     <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Herramientas especiales</button>
   </li>
 </ul>
+
 <div class="tab-content" id="myTabContent">
+  <!-- Pestaña de "Análisis de herramientas" -->
   <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-    <h3> Analisis de herramientas</h3>
+    <h3>Análisis de herramientas</h3>
     <table class="table">
       <thead>
-          <tr>
-            <th scope="col" >Equipo</th>
-            <th scope="col" >Nombre de la herramienta</th>
-            <th scope="col" >Parte numero</th>
-            <th scope="col" >Dibujo de seccion transversal</th>
-            <th scope="col" >Costo</th>
-          </tr>
+        <tr>
+          <th scope="col">Nombre de la herramienta</th>
+          <th scope="col">Parte número</th>
+          <th scope="col">Costo</th>
+          <th scope="col">Acciones</th>
+        </tr>
       </thead>
       <tbody>
+        {% for analisis in analisis %}
         <tr>
-          <td>Mark</td>
-          <td>Otto</td>
-          <td>@mdo</td>
-          <td>@fat</td>
+          <td>{{ analisis.nombre }}</td>
+          <td>{{ analisis.parte_numero }}</td>
+          <td>{{ analisis.valor }}</td>
+          <td>
+            <button class="btn btn-primary btn-editar-analisis" data-id="{{ analisis.id }}">Editar</button>
+            <button class="btn btn-danger btn-eliminar-analisis" data-id="{{ analisis.id }}">Eliminar</button>
+          </td>
         </tr>
-        <tr>
-          <td>Jacob</td>
-          <td>tdornton</td>
-          <td>@fat</td>
-          <td>@fat</td>
-        </tr>
-        <tr>
-          <td colspan="2">Larry tde Bird</td>
-          <td>@twitter</td>
-          <td>@fat</td>
-        </tr>
+        {% endfor %}
       </tbody>
     </table>
   </div>
+
+  <!-- Pestaña de "Herramientas especiales" -->
   <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-    <h3> Herramientas especiales</h3>
+    <h3>Herramientas especiales</h3>
     <table class="table">
       <thead>
-          <tr>
-            <th scope="col" >Equipo</th>
-            <th scope="col" >Nombre de la herramienta</th>
-            <th scope="col" >Parte numero</th>
-            <th scope="col" >Dibujo de seccion transversal</th>
-            <th scope="col" >Cantidad</th>
-            <th scope="col" >Costo</th>
-            <th scope="col" >Manual referenciado</th>
-          </tr>
+        <tr>
+          <th scope="col">Nombre de la herramienta</th>
+          <th scope="col">Parte número</th>
+          <th scope="col">Dibujo de sección transversal</th>
+          <th scope="col">Cantidad</th>
+          <th scope="col">Costo</th>
+          <th scope="col">Manual referenciado</th>
+          <th scope="col">Acciones</th>
+        </tr>
       </thead>
       <tbody>
         {% for herramienta in herramientas %}
         <tr>
-            <td>{{ herramienta.nombre_herramienta }}</td>
-            <td>{{ herramienta.parte_numero }}</td>
-            <td>{{ herramienta.valor }}</td>
-            <td>{{ herramienta.MTBF }}</td>
-            <td>{{ herramienta.nota }}</td>
-            <td>{{ herramienta.manual_referencia }}</td>
-            <td>
-                {% if herramienta.dibujo_seccion_transversal %}
-                    <img src="data:image/png;base64,{{ herramienta.dibujo_seccion_transversal|b64encode }}" alt="Dibujo" style="max-width: 100px; max-height: 100px;">
-                {% endif %}
-            </td>
-            <td>
-                <button class="btn btn-primary btn-editar" data-id="{{ herramienta.id }}">Editar</button>
-                <button class="btn btn-danger btn-eliminar" data-id="{{ herramienta.id }}">Eliminar</button>
-            </td>
+          <td>{{ herramienta.nombre_herramienta }}</td>
+          <td>{{ herramienta.parte_numero }}</td>
+          <td>
+            {% if herramienta.dibujo_seccion_transversal %}
+            <img src="data:image/png;base64,{{ herramienta.dibujo_seccion_transversal|b64encode }}" alt="Dibujo" style="max-width: 100px; max-height: 100px;">
+            {% endif %}
+          </td>
+          <td>{{ herramienta.cantidad }}</td>
+          <td>{{ herramienta.valor }}</td>
+          <td>{{ herramienta.manual_referencia }}</td>
+          <td>
+            <button class="btn btn-primary btn-editar" data-id="{{ herramienta.id }}">Editar</button>
+            <button class="btn btn-danger btn-eliminar" data-id="{{ herramienta.id }}">Eliminar</button>
+          </td>
         </tr>
         {% endfor %}
       </tbody>
@@ -96,50 +90,6 @@
   </div>
 </div>
 
-<br>
-<div class="mt-4">
-  <button type="button" class="btn btn-primary"><a href="{{ url_for('editar_modulo_herramientas') }}">Editar modulo de herramientas</a></button>
-</div>    
 
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-      // Manejo del botón Editar
-      const editButtons = document.querySelectorAll('.btn-editar');
-      editButtons.forEach(function(button) {
-          button.addEventListener('click', function() {
-              const herramientaId = this.getAttribute('data-id');
-              window.location.href = '/LSA/editar-herramienta-especial/' + herramientaId;
-          });
-      });
-  
-      // Manejo del botón Eliminar
-      const deleteButtons = document.querySelectorAll('.btn-eliminar');
-      deleteButtons.forEach(function(button) {
-          button.addEventListener('click', function() {
-              const herramientaId = this.getAttribute('data-id');
-  
-              if (confirm('¿Estás seguro de que deseas eliminar esta herramienta?')) {
-                  fetch('/api/herramientas-especiales/' + herramientaId, {
-                      method: 'DELETE'
-                  })
-                  .then(response => response.json())
-                  .then(result => {
-                      if (result.message) {
-                          alert(result.message);
-                          // Remueve la fila de la tabla
-                          this.closest('tr').remove();
-                      } else {
-                          alert('Error al eliminar herramienta');
-                      }
-                  })
-                  .catch(error => {
-                      console.error('Error al eliminar herramienta:', error);
-                      alert('Error al eliminar herramienta: ' + error.message);
-                  });
-              }
-          });
-      });
-  });
-  </script>
-  
+<script src="{{ url_for('static', filename='js/mostrar_herramientas.js') }}"></script>
 {% endblock %}
