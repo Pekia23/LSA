@@ -76,11 +76,11 @@
       <div class="row mt-3">
         <div class="col-md-6">
           <label for="equipo_select" class="form-label">Equipo</label>
-          <select class="form-control" id="equipo_select" name="equipo_select">
+          <select class="form-control" id="equipo_select" name="equipo">
             <option value="">Seleccione Equipo</option>
             {% for equipo in equipos %}
             <option value="{{ equipo.id }}" {% if equipo.id == equipo_seleccionado.id %}selected{% endif %}>
-                {{ equipo.nombre_equipo }}
+                {{ equipo.nombre }}
             </option>
             {% endfor %}
           </select>
@@ -239,36 +239,47 @@
       }
     }
 
-    function cargarEquipos(sistemaId, selectedEquipoId) {
-      if(sistemaId) {
+    function cargarEquipos(tipoEquipoId, selectedEquipoId) {
+    if(tipoEquipoId) {
         $.ajax({
-          url: '/api/equipos/' + sistemaId,
-          type: 'GET',
-          dataType: 'json',
-          success: function(data) {
-            $('#equipo_select').empty();
-            $('#equipo_select').append('<option value="">Seleccione Equipo</option>');
-            $.each(data, function(index, equipo) {
-              var selected = equipo.id == selectedEquipoId ? 'selected' : '';
-              $('#equipo_select').append('<option value="' + equipo.id + '" ' + selected + '>' + equipo.nombre + '</option>');
-            });
-          },
-          error: function(xhr, status, error) {
-            console.error('Error al obtener equipos:', error);
-          }
+            url: '/api/equipos_por_tipo/' + tipoEquipoId,
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                $('#equipo_select').empty();
+                $('#equipo_select').append('<option value="">Seleccione Equipo</option>');
+                $.each(data, function(index, equipo) {
+                    var selected = equipo.id == selectedEquipoId ? 'selected' : '';
+                    $('#equipo_select').append('<option value="' + equipo.id + '" ' + selected + '>' + equipo.nombre + '</option>');
+                });
+            },
+            error: function(xhr, status, error) {
+                console.error('Error al obtener equipos:', error);
+            }
         });
-      } else {
+    } else {
         $('#equipo_select').empty().append('<option value="">Seleccione Equipo</option>');
-      }
     }
+}
 
-    // Cargar los dropdowns al cargar la página
+// Al cambiar el Tipo de Equipo
+$('#tipo_equipo').on('change', function() {
+    var tipoEquipoId = $('#tipo_equipo').val();
+    cargarEquipos(tipoEquipoId, null);
+});
+
+
+
+
+    // Al cargar la página
     var grupoId = $('#grupo_constructivo').val();
     var subgrupoId = '{{ equipo.subgrupo_constructivo_id }}';
     var sistemaId = '{{ equipo.sistema_id }}';
+    var tipoEquipoId = $('#tipo_equipo').val();
     var equipoId = '{{ equipo.equipo_id }}';
 
-    cargarSubgrupos(grupoId, subgrupoId);
+    // Después de cargar los sistemas, cargar los equipos
+    cargarEquipos(sistemaId, tipoEquipoId, equipoId);
 
     // Eventos para actualizar los dropdowns dependientes
     $('#grupo_constructivo').on('change', function() {

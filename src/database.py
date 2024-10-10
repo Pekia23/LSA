@@ -667,8 +667,7 @@ def insertar_equipo_info(nombre_equipo, AOR, fecha, fiabilidad_equipo, MTBF, GRE
                          id_personal, id_diagrama, id_procedimiento, id_sistema, id_equipo
                          ):
     cursor = db.connection.cursor()
-    # Si imagen_equipo_file es un archivo, leerlo, de lo contrario, usarlo como está
-    imagen = imagen_equipo_file.read() if imagen_equipo_file else None
+
     
     query = """
         INSERT INTO equipo_info (
@@ -679,7 +678,7 @@ def insertar_equipo_info(nombre_equipo, AOR, fecha, fiabilidad_equipo, MTBF, GRE
     """
     cursor.execute(query, (
         nombre_equipo, AOR, fecha, fiabilidad_equipo, MTBF, GRES, criticidad_equipo,
-        marca, modelo, peso_seco, dimensiones, descripcion, imagen,
+        marca, modelo, peso_seco, dimensiones, descripcion, imagen_equipo_file,
         id_personal, id_diagrama, id_procedimiento, id_sistema, id_equipo
     ))
     db.connection.commit()
@@ -1095,8 +1094,8 @@ def actualizar_equipo_info(id_equipo_info, data):
         "id_personal = %s",
         "id_diagrama = %s",
         "id_procedimiento = %s",
-        "sistema_id = %s",
-        "equipo_id = %s"
+        "id_sistema = %s",
+        "id_equipo = %s"
     ]
     
     params = [
@@ -1149,3 +1148,55 @@ def obtener_responsables():
     responsables = cursor.fetchall()
     cursor.close()
     return responsables
+
+
+def obtener_procedimiento_por_id(id_procedimiento):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = "SELECT * FROM procedimientos WHERE id = %s"
+    cursor.execute(query, (id_procedimiento,))
+    procedimiento = cursor.fetchone()
+    cursor.close()
+    return procedimiento
+
+def obtener_personal_por_id(id_personal):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = "SELECT * FROM personal WHERE id = %s"
+    cursor.execute(query, (id_personal,))
+    responsable = cursor.fetchone()
+    cursor.close()
+    return responsable
+
+
+
+
+
+
+
+def obtener_grupo_constructivo_por_id(id_grupo_constructivo):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = "SELECT * FROM grupo_constructivo WHERE id = %s"
+    cursor.execute(query, (id_grupo_constructivo,))
+    grupo_constructivo = cursor.fetchone()
+    cursor.close()
+    return grupo_constructivo
+
+def obtener_grupo_constructivo_por_id(id_grupo_constructivo):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = """
+    SELECT gc.* FROM grupo_constructivo gc
+    JOIN sistema s ON gc.id = s.id_grupo_constructivo
+    WHERE s.id = %s
+    """
+    cursor.execute(query, (id_grupo_constructivo,))
+    grupo_constructivo = cursor.fetchone()
+    cursor.close()
+    return grupo_constructivo
+
+
+def obtener_equipo_por_id(id_equipo):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = "SELECT * FROM equipo_info WHERE id = %s"
+    cursor.execute(query, (id_equipo,))
+    equipo = cursor.fetchone()
+    cursor.close()
+    return equipo

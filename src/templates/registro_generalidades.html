@@ -76,11 +76,6 @@
               <label for="equipo" class="form-label">Equipo</label>
               <select class="form-control" id="equipo" name="equipo">
                 <option value="">Seleccione Equipo</option>
-                {% for equipo in equipos %}
-                <option value="{{ equipo.id }}" {% if equipo.id == equipo_seleccionado.id %}selected{% endif %}>
-                    {{ equipo.nombre_equipo }}
-                </option>
-                {% endfor %}
               </select>
             </div>
             <div class="col-md-6">
@@ -231,7 +226,7 @@ $('#sistema').on('change', function()
     var sistemaId = $(this).val();
     if(sistemaId) {
         $.ajax({
-            url: '/api/equipos/' + sistemaId,
+          url: '/api/equipos_por_tipo/' + tipoEquipoId,
             type: 'GET',
             dataType: 'json',
             success: function(data) {

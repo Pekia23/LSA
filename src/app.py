@@ -97,7 +97,11 @@ from database import (
     obtener_nombre_componente_por_id,
     obtener_tipos_mantenimiento,
     obtener_tareas_mantenimiento,
-    obtener_subsistema_por_id
+    obtener_subsistema_por_id,
+    obtener_procedimiento_por_id,
+    obtener_personal_por_id,
+    obtener_grupo_constructivo_por_id,
+    obtener_subgrupo_constructivo_por_id
     
 
 
@@ -255,7 +259,19 @@ def registro_generalidades(id_sistema=None, id_equipo=None):
         grupos = obtener_grupos_constructivos()
         responsables = obtener_personal()
         tipos_equipos = obtener_tipos_equipos()
+
         return render_template('registro_generalidades.html', grupos=grupos, responsables=responsables, tipos_equipos=tipos_equipos)
+
+
+
+##################################################################################################################3
+
+
+
+
+
+
+
 
 
 
@@ -1072,14 +1088,44 @@ def mostrar_equipo():
     token = g.user_token
     user_data = obtener_info_usuario(token)
     id_equipo_info = user_data.get('id_equipo_info')
-
     if id_equipo_info is None:
         return redirect(url_for('registro_generalidades'))
 
+
     equipo = obtener_equipo_info_por_id(id_equipo_info)
+    if equipo is None:
+        return "Equipo no encontrado", 404
+    
+     # Obtener el grupo constructivo
+    grupo_constructivo = obtener_grupo_constructivo_por_id()
+
+    # Obtener el subgrupo constructivo
+    subgrupo_constructivo = obtener_subgrupo_constructivo_por_id()
+
     diagrama = obtener_diagramas_por_id(equipo['id_diagrama']) if equipo['id_diagrama'] else None
 
-    return render_template('mostrar_equipo.html', equipo=equipo, diagrama=diagrama)
+     # Obtener procedimiento relacionado si está presente
+    procedimiento = obtener_procedimiento_por_id(equipo['id_procedimiento']) if equipo['id_procedimiento'] else None
+
+    # Opcional: Obtener más detalles relacionados, por ejemplo, personal o sistema
+    responsable = obtener_personal_por_id(equipo['id_personal']) if equipo['id_personal'] else None
+    sistema = obtener_sistema_por_id(equipo['id_sistema']) if equipo['id_sistema'] else None
+    equipospro = obtener_equipos_por_tipo()
+    # Obtener el tipo de equipo
+    tipos_equipos = obtener_tipos_equipos() 
+
+    return render_template('mostrar_equipo.html', 
+                           equipo=equipo, 
+                           diagrama=diagrama, 
+                           procedimiento=procedimiento, 
+                           responsable=responsable,
+                           sistema=sistema,
+                           grupo_constructivo=grupo_constructivo,
+                           subgrupo_constructivo=subgrupo_constructivo,
+                           equipospro=equipospro,
+                           tipos_equipos=tipos_equipos)
+
+
 
 @app.route('/LSA/editar-equipo', methods=['GET', 'POST'])
 def editar_equipo():

@@ -18,8 +18,7 @@
 
 {% if equipo.imagen %}
 <img src="data:image/png;base64,{{ equipo.imagen|b64encode }}" class="imagen" style="float: right;" >
-{% else %}
-<img src="{{ url_for('static', filename='img/imagen.jpg') }}" class="imagen" style="float: right;" >
+
 {% endif %}
 
 <div class="imagens">
@@ -37,34 +36,34 @@
       
       <div class="mb-3">
         <label><b>Grupo constructivo:</b></label>
-        <span>{{ equipo.grupo_constructivo }}</span>
+        <span>{{ grupo_constructivo.nombre }}</span>
       </div>
       
       <div class="mb-3">
         <label><b>Subgrupo constructivo:</b></label>
-        <span>{{ equipo.subgrupo_constructivo }}</span>
+        <span>{{ subgrupo_constructivo.nombre }}</span>
       </div>
   
       <div class="mb-3">
         <label><b>Sistema:</b></label>
-        <span>{{ equipo.sistema }}</span>
+        <span>{{ sistema.nombre }}</span>
       </div>
       
       <div class="mb-3">
         <label><b>Tipo de equipo:</b></label>
-        <span>{{ equipo.tipo_equipo }}</span>
+        <span>{{ tipos_equipos }}</span>
       </div>
       
       <div class="mb-3">
         <label><b>Equipo:</b></label>
-        <span>{{ equipo.equipo }}</span>
+        <span>{{ equipospro }}</span>
       </div>
     </div>
 
     <div class="col-md-6 section2">
       <div class="mb-3">
         <label><b>Responsable:</b></label>
-        <span>{{ equipo.responsable }}</span>
+        <span>{{ responsable.nombre_completo }}</span>
       </div>
 
       <div class="mb-3">
@@ -132,33 +131,23 @@
 <h3>Diagrama de Flujo del Subsistema Ubicado en el Equipo</h3>
 {% if diagrama.diagrama_fijo %}
 <img src="data:image/png;base64,{{ diagrama.diagrama_fijo|b64encode }}" class="imagend">
-{% else %}
-<img src="{{ url_for('static', filename='img/prueba.jpg') }}" class="imagend">
 {% endif %}
 <br>
 <h3>Diagrama Caja Negra de la Función</h3>
 {% if diagrama.diagrama_caja_negra %}
 <img src="data:image/png;base64,{{ diagrama.diagrama_caja_negra|b64encode }}" class="imagend">
-{% else %}
-<img src="{{ url_for('static', filename='img/prueba2.jpg') }}" class="imagend">
 {% endif %}
 <br>
 <h3>Diagrama de Caja Transparente</h3>
 {% if diagrama.diagrama_caja_transparente %}
 <img src="data:image/png;base64,{{ diagrama.diagrama_caja_transparente|b64encode }}" class="imagend">
-{% else %}
-<img src="{{ url_for('static', filename='img/prueba3.jpg') }}" class="imagend">
 {% endif %}
 <br>
 <h3>Procedimiento de Arranque</h3>
-<p>
-  {{ equipo.procedimiento_arranque }}
-</p>
+<p>{{ procedimiento.arranque }}</p>
 <br>
 <h3>Procedimiento de Parada</h3>
-<p>
-  {{ equipo.procedimiento_parada }}
-</p>
+<p>{{ procedimiento.parada }}</p>
 <br>
 <!-- Script para manejar la eliminación del equipo -->
 <script>
