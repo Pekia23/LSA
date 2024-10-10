@@ -26,13 +26,40 @@
 </div>
 <br>
 <h3>Generalidades</h3>
-<form>
-  <div class="row">
-    <div class="col-md-6 section1">
-      <div class="mb-3">
-        <label><b>Fecha:</b></label>
-        <span>{{ equipo.fecha }}</span>
+  <form>
+    <div class="row">
+      <div class="col-md-6 section1">
+        <div class="mb-3">
+          <label><b>Fecha:</b></label>
+          <span>{{ equipo.fecha }}</span>
+        </div>
+        
+        <div class="mb-3">
+          <label><b>Grupo constructivo:</b></label>
+          <span>{{ equipo.grupo_constructivo }}</span>
+        </div>
+        
+        <div class="mb-3">
+          <label><b>Subgrupo constructivo:</b></label>
+          <span>{{ equipo.subgrupo_constructivo }}</span>
+        </div>
+    
+        <div class="mb-3">
+          <label><b>Sistema:</b></label>
+          <span>{{ equipo.sistema }}</span>
+        </div>
+        
+        <div class="mb-3">
+          <label><b>Tipo de equipo:</b></label>
+          <span>{{ equipo.tipo_equipo }}</span>
+        </div>
+        
+        <div class="mb-3">
+          <label><b>Equipo:</b></label>
+          <span>{{ equipo.equipo }}</span>
+        </div>
       </div>
+
       
       <div class="mb-3">
         <label><b>Grupo constructivo:</b></label>
@@ -93,42 +120,44 @@
     </div>
   </div>
 </form>
+
 <br>
 <h3>Contexto Operacional</h3>
-<form>
-  <div class="row">
-    <div class="col-md-6 section1">
-      <div class="mb-3">
-        <label><b>Peso:</b></label>
-        <span>{{ equipo.peso_seco }}</span>
-      </div>
-      
-      <div class="mb-3">
-        <label><b>Dimensiones:</b></label>
-        <span>{{ equipo.dimensiones }}</span>
-      </div>
-    </div>
-
-    <div class="col-md-6 section2">
-      <div class="mb-3">
-        <label><b>Marca:</b></label>
-        <span>{{ equipo.marca }}</span>
+  <form>
+    <div class="row">
+      <div class="col-md-6 section1">
+        <div class="mb-3">
+          <label><b>Peso:</b></label>
+          <span>{{ equipo.peso_seco }}</span>
+        </div>
+        
+        <div class="mb-3">
+          <label><b>Dimensiones:</b></label>
+          <span>{{ equipo.dimensiones }}</span>
+        </div>
       </div>
 
-      <div class="mb-3">
-        <label><b>Modelo:</b></label>
-        <span>{{ equipo.modelo }}</span>
+      <div class="col-md-6 section2">
+        <div class="mb-3">
+          <label><b>Marca:</b></label>
+          <span>{{ equipo.marca }}</span>
+        </div>
+
+        <div class="mb-3">
+          <label><b>Modelo:</b></label>
+          <span>{{ equipo.modelo }}</span>
+        </div>
       </div>
     </div>
-  </div>
-</form>
+  </form>
 <br>
 <h3>Descripción del Equipo</h3>
-<p>
-  {{ equipo.descripcion }}
-</p>
+  <p>
+    {{ equipo.descripcion }}
+  </p>
 <br>
 <h3>Diagrama de Flujo del Subsistema Ubicado en el Equipo</h3>
+
 {% if diagrama.diagrama_fijo %}
 <img src="data:image/png;base64,{{ diagrama.diagrama_fijo|b64encode }}" class="imagend">
 {% endif %}
@@ -148,6 +177,7 @@
 <br>
 <h3>Procedimiento de Parada</h3>
 <p>{{ procedimiento.parada }}</p>
+
 <br>
 <!-- Script para manejar la eliminación del equipo -->
 <script>
