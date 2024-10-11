@@ -36,27 +36,27 @@
         
         <div class="mb-3">
           <label><b>Grupo constructivo:</b></label>
-          <span>{{ equipo.grupo_constructivo }}</span>
+          <span>{{ grupo_constructivo.nombre if grupo_constructivo else 'No disponible' }}</span>
         </div>
         
         <div class="mb-3">
           <label><b>Subgrupo constructivo:</b></label>
-          <span>{{ equipo.subgrupo_constructivo }}</span>
+          <span>{{ subgrupo_constructivo.nombre if subgrupo_constructivo else 'No disponible' }}</span>
         </div>
     
         <div class="mb-3">
           <label><b>Sistema:</b></label>
-          <span>{{ equipo.sistema }}</span>
+          <span>{{ sistema.nombre }}</span>
         </div>
-        
+
         <div class="mb-3">
           <label><b>Tipo de equipo:</b></label>
-          <span>{{ equipo.tipo_equipo }}</span>
+          <span>{{ tipo_equipo.nombre if tipo_equipo else 'No disponible' }}</span>
         </div>
         
         <div class="mb-3">
           <label><b>Equipo:</b></label>
-          <span>{{ equipo.equipo }}</span>
+          <span>{{ datos_equipo.nombre if datos_equipo else 'No disponible' }}</span>
         </div>
       </div>
 
@@ -71,21 +71,6 @@
         <span>{{ subgrupo_constructivo.nombre }}</span>
       </div>
   
-      <div class="mb-3">
-        <label><b>Sistema:</b></label>
-        <span>{{ sistema.nombre }}</span>
-      </div>
-      
-      <div class="mb-3">
-        <label><b>Tipo de equipo:</b></label>
-        <span>{{ tipos_equipos }}</span>
-      </div>
-      
-      <div class="mb-3">
-        <label><b>Equipo:</b></label>
-        <span>{{ equipospro }}</span>
-      </div>
-    </div>
 
     <div class="col-md-6 section2">
       <div class="mb-3">

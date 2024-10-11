@@ -1180,17 +1180,38 @@ def obtener_grupo_constructivo_por_id(id_grupo_constructivo):
     cursor.close()
     return grupo_constructivo
 
-def obtener_grupo_constructivo_por_id(id_grupo_constructivo):
+def obtener_grupo_constructivo_por_sistema_id(id_sistema):
     cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
-    query = """
-    SELECT gc.* FROM grupo_constructivo gc
-    JOIN sistema s ON gc.id = s.id_grupo_constructivo
-    WHERE s.id = %s
-    """
-    cursor.execute(query, (id_grupo_constructivo,))
+    
+    # Obtener id_subgrupo de la tabla sistema
+    query_sistema = "SELECT id_subgrupo FROM sistema WHERE id = %s"
+    cursor.execute(query_sistema, (id_sistema,))
+    sistema = cursor.fetchone()
+    
+    if not sistema:
+        cursor.close()
+        return None  # Si no se encuentra el sistema, retornamos None
+    
+    id_subgrupo = sistema['id_subgrupo']
+    
+    # Obtener id_grupo_constructivo de la tabla subgrupo
+    query_subgrupo = "SELECT id_grupo_constructivo FROM subgrupo WHERE id = %s"
+    cursor.execute(query_subgrupo, (id_subgrupo,))
+    subgrupo = cursor.fetchone()
+    
+    if not subgrupo:
+        cursor.close()
+        return None  # Si no se encuentra el subgrupo, retornamos None
+    
+    id_grupo_constructivo = subgrupo['id_grupo_constructivo']
+    
+    # Obtener el grupo_constructivo de la tabla grupo_constructivo
+    query_grupo = "SELECT * FROM grupo_constructivo WHERE id = %s"
+    cursor.execute(query_grupo, (id_grupo_constructivo,))
     grupo_constructivo = cursor.fetchone()
+    
     cursor.close()
-    return grupo_constructivo
+    return grupo_constructivo  # Retornamos el grupo constructivo obtenido
 
 
 def obtener_equipo_por_id(id_equipo):
@@ -1200,3 +1221,146 @@ def obtener_equipo_por_id(id_equipo):
     equipo = cursor.fetchone()
     cursor.close()
     return equipo
+
+
+
+def obtener_subgrupo_constructivo_por_sistema_id(id_sistema):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    
+    # Obtener id_subgrupo de la tabla sistema
+    query_sistema = "SELECT id_subgrupo FROM sistema WHERE id = %s"
+    cursor.execute(query_sistema, (id_sistema,))
+    sistema = cursor.fetchone()
+    
+    if not sistema:
+        cursor.close()
+        return None  # Si no se encuentra el sistema, retornamos None
+    
+    id_subgrupo = sistema['id_subgrupo']
+    
+    # Obtener el subgrupo_constructivo de la tabla subgrupo
+    query_subgrupo = "SELECT * FROM subgrupo WHERE id = %s"
+    cursor.execute(query_subgrupo, (id_subgrupo,))
+    subgrupo_constructivo = cursor.fetchone()
+    
+    cursor.close()
+    return subgrupo_constructivo  # Retornamos el subgrupo constructivo obtenido
+
+
+def obtener_datos_equipo_por_id(id_equipo):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = "SELECT * FROM equipos WHERE id = %s"
+    cursor.execute(query, (id_equipo,))
+    equipo = cursor.fetchone()
+    cursor.close()
+    return equipo
+
+
+def obtener_tipo_equipo_por_id(id_tipo_equipo):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = "SELECT * FROM tipo_equipos WHERE id = %s"
+    cursor.execute(query, (id_tipo_equipo,))
+    tipo_equipo = cursor.fetchone()
+    cursor.close()
+    return tipo_equipo
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Función para obtener todos los análisis funcionales de un equipo específico
+def obtener_analisis_funcionales_por_equipo_info(id_equipo_info):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = """
+        SELECT af.*, ss.nombre AS subsistema_nombre, s.nombre AS sistema_nombre
+        FROM analisis_funcional af
+        LEFT JOIN subsistemas ss ON af.id_subsistema = ss.id
+        LEFT JOIN sistema s ON ss.id_sistema = s.id
+        WHERE af.id_equipo_info = %s
+    """
+    cursor.execute(query, (id_equipo_info,))
+    analisis_funcionales = cursor.fetchall()
+    cursor.close()
+    return analisis_funcionales
+
+# Función para obtener un análisis funcional por su ID
+def obtener_analisis_funcional_por_id(id_analisis_funcional):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = """
+        SELECT af.*, ss.nombre AS subsistema_nombre, s.nombre AS sistema_nombre
+        FROM analisis_funcional af
+        LEFT JOIN subsistemas ss ON af.id_subsistema = ss.id
+        LEFT JOIN sistema s ON ss.id_sistema = s.id
+        WHERE af.id = %s
+    """
+    cursor.execute(query, (id_analisis_funcional,))
+    analisis_funcional = cursor.fetchone()
+    cursor.close()
+    return analisis_funcional
+
+# Función para actualizar un análisis funcional existente
+def actualizar_analisis_funcional(id_analisis_funcional, verbo, accion, estandar_desempeño, id_subsistema):
+    cursor = db.connection.cursor()
+    query = """
+        UPDATE analisis_funcional
+        SET verbo = %s, accion = %s, estandar_desempeño = %s, id_subsistema = %s
+        WHERE id = %s
+    """
+    cursor.execute(query, (verbo, accion, estandar_desempeño, id_subsistema, id_analisis_funcional))
+    db.connection.commit()
+    cursor.close()
+
+
+# Función para eliminar un análisis funcional
+def eliminar_analisis_funcional(id_analisis_funcional):
+    cursor = db.connection.cursor()
+    query = "DELETE FROM analisis_funcional WHERE id = %s"
+    cursor.execute(query, (id_analisis_funcional,))
+    db.connection.commit()
+    cursor.close()
+
+def obtener_subsistemas_por_equipo_mostrar(id_equipo_info):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+
+    # Obtener el id_equipo desde equipo_info
+    query_equipo = "SELECT id_equipo FROM equipo_info WHERE id = %s"
+    cursor.execute(query_equipo, (id_equipo_info,))
+    equipo_info = cursor.fetchone()
+    if not equipo_info:
+        cursor.close()
+        return []
+
+    id_equipo = equipo_info['id_equipo']
+
+    # Obtener los subsistemas que pertenecen al id_equipo
+    query_subsistemas = "SELECT id, nombre FROM subsistemas WHERE id_equipo = %s"
+    cursor.execute(query_subsistemas, (id_equipo,))
+    subsistemas = cursor.fetchall()
+    cursor.close()
+    return subsistemas
+
+
+def obtener_nombre_sistema_por_id(id_sistema):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = "SELECT nombre FROM sistema WHERE id = %s"
+    cursor.execute(query, (id_sistema,))
+    resultado = cursor.fetchone()
+    cursor.close()
+    return resultado['nombre'] if resultado else None

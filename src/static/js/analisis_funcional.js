@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
             subsistema: document.getElementById('subsistema').value,
             verbo: document.getElementById('verbo').value,
             accion: document.getElementById('accion').value,
-            estandar_desempeño: document.getElementById('estandar_desempeño').value
+            estandar_desempeño: document.getElementById('estandar_desempeño').value,
         };
 
         // Enviar los datos mediante fetch
@@ -26,6 +26,8 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(result => {
             console.log('Análisis funcional guardado:', result);
             alert('Análisis funcional agregado correctamente');
+            // Redirigir a la página de mostrar
+            window.location.href = '/analisis_funcional/mostrar';
         })
         .catch(error => {
             console.error('Error al guardar análisis funcional:', error);

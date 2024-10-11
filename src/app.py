@@ -1,4 +1,4 @@
-from flask import Flask,session, render_template, request, jsonify, redirect, url_for, make_response, g, send_file
+from flask import Flask,session,flash, render_template, request, jsonify, redirect, url_for, make_response, g, send_file
 from markupsafe import Markup
 
 import uuid
@@ -100,10 +100,21 @@ from database import (
     obtener_subsistema_por_id,
     obtener_procedimiento_por_id,
     obtener_personal_por_id,
-    obtener_grupo_constructivo_por_id,
-    obtener_subgrupo_constructivo_por_id
-    
+    obtener_tipo_equipo_por_id,
+    obtener_grupo_constructivo_por_sistema_id,
+    obtener_datos_equipo_por_id,
+    obtener_subgrupo_constructivo_por_sistema_id,
 
+    ##analisis funcional
+
+    obtener_analisis_funcionales_por_equipo_info,
+    obtener_analisis_funcional_por_id,
+    actualizar_analisis_funcional,
+    eliminar_analisis_funcional,
+    insertar_analisis_funcional,
+    obtener_subsistemas_por_equipo,
+    obtener_nombre_sistema_por_id,
+    obtener_subsistemas_por_equipo_mostrar
 
      
 )
@@ -1097,10 +1108,11 @@ def mostrar_equipo():
         return "Equipo no encontrado", 404
     
      # Obtener el grupo constructivo
-    grupo_constructivo = obtener_grupo_constructivo_por_id()
+    grupo_constructivo = obtener_grupo_constructivo_por_sistema_id(equipo['id_sistema']) if equipo.get('id_sistema') else None
 
     # Obtener el subgrupo constructivo
-    subgrupo_constructivo = obtener_subgrupo_constructivo_por_id()
+    subgrupo_constructivo = obtener_subgrupo_constructivo_por_sistema_id(equipo['id_sistema']) if equipo.get('id_sistema') else None
+
 
     diagrama = obtener_diagramas_por_id(equipo['id_diagrama']) if equipo['id_diagrama'] else None
 
@@ -1110,20 +1122,22 @@ def mostrar_equipo():
     # Opcional: Obtener más detalles relacionados, por ejemplo, personal o sistema
     responsable = obtener_personal_por_id(equipo['id_personal']) if equipo['id_personal'] else None
     sistema = obtener_sistema_por_id(equipo['id_sistema']) if equipo['id_sistema'] else None
-    equipospro = obtener_equipos_por_tipo()
+    datos_equipo = obtener_datos_equipo_por_id(equipo['id_equipo']) if equipo.get('id_equipo') else None
     # Obtener el tipo de equipo
-    tipos_equipos = obtener_tipos_equipos() 
+    tipo_equipo = obtener_tipo_equipo_por_id(equipo['id_tipo_equipo']) if equipo.get('id_tipo_equipo') else None
+
 
     return render_template('mostrar_equipo.html', 
-                           equipo=equipo, 
+                           equipo=equipo,
+                           datos_equipo=datos_equipo,
+                           tipo_equipo=tipo_equipo, 
                            diagrama=diagrama, 
                            procedimiento=procedimiento, 
                            responsable=responsable,
                            sistema=sistema,
                            grupo_constructivo=grupo_constructivo,
-                           subgrupo_constructivo=subgrupo_constructivo,
-                           equipospro=equipospro,
-                           tipos_equipos=tipos_equipos)
+                           subgrupo_constructivo=subgrupo_constructivo
+                           )
 
 
 
@@ -1562,3 +1576,77 @@ if __name__ == '__main__':
 
 
 
+#####analisis_funcional:
+
+
+@app.route('/analisis_funcional/mostrar')
+def mostrar_analisis_funcional():
+    id_equipo_info = session.get('id_equipo_info')
+    if not id_equipo_info:
+        flash('No se ha seleccionado un equipo.')
+        return redirect(url_for('ruta_principal'))
+
+    # Obtén el id_sistema desde la tabla equipo_info usando el id_equipo_info
+    equipo_info = obtener_equipo_info_por_id(id_equipo_info)
+    id_sistema = equipo_info['id_sistema']
+    sistema_nombre = obtener_nombre_sistema_por_id(id_sistema)
+
+    # Obtén los análisis funcionales relacionados con el equipo
+    analisis_funcionales = obtener_analisis_funcionales_por_equipo_info(id_equipo_info)
+    
+    # Añadir el nombre del sistema a cada análisis funcional
+    for analisis in analisis_funcionales:
+        analisis['sistema_nombre'] = sistema_nombre
+
+    return render_template('mostrar_analisis_funcional.html', analisis_funcionales=analisis_funcionales)
+
+@app.route('/analisis_funcional/editar/<int:id>', methods=['GET', 'POST'])
+def editar_analisis_funcional(id):
+    analisis_funcional = obtener_analisis_funcional_por_id(id)
+    id_sistema = analisis_funcional['id_sistema']  # Si está en el registro del análisis funcional
+    sistema_nombre = obtener_nombre_sistema_por_id(id_sistema)
+    subsistemas = obtener_subsistemas_por_equipo(analisis_funcional['id_equipo_info'])
+
+    if request.method == 'POST':
+        verbo = request.form['verbo']
+        accion = request.form['accion']
+        estandar_desempeño = request.form['estandar_desempeño']
+        id_subsistema = request.form['subsistema']
+        actualizar_analisis_funcional(id, verbo, accion, estandar_desempeño, id_subsistema)
+        flash('Análisis funcional actualizado correctamente')
+        return redirect(url_for('mostrar_analisis_funcional'))
+    else:
+        return render_template('editar_analisis_funcional.html', 
+                               analisis_funcional=analisis_funcional, 
+                               sistema_nombre=sistema_nombre, 
+                               subsistemas=subsistemas)
+
+# Ruta para eliminar un análisis funcional
+@app.route('/analisis_funcional/eliminar/<int:id>', methods=['POST'])
+def eliminar_analisis_funcional_route(id):
+    eliminar_analisis_funcional(id)
+    flash('Análisis funcional eliminado correctamente')
+    return redirect(url_for('mostrar_analisis_funcional'))
+
+# Ruta API para insertar un nuevo análisis funcional (usado por JavaScript)
+@app.route('/api/analisis-funcional', methods=['POST'])
+def api_insertar_analisis_funcional():
+    data = request.get_json()
+    verbo = data.get('verbo')
+    accion = data.get('accion')
+    estandar_desempeño = data.get('estandar_desempeño')
+    id_equipo_info = session.get('id_equipo_info')
+    id_subsistema = data.get('subsistema')
+    insertar_analisis_funcional(verbo, accion, estandar_desempeño, id_equipo_info, id_subsistema)
+    return jsonify({'status': 'success'})
+
+# Ruta para registrar un nuevo análisis funcional
+@app.route('/registro_analisis_funcional', methods=['GET'])
+def registro_analisis_funcional():
+    id_equipo_info = session.get('id_equipo_info')
+    if not id_equipo_info:
+        flash('No se ha seleccionado un equipo.')
+        return redirect(url_for('ruta_principal'))
+    sistema_nombre = obtener_nombre_sistema_por_id(id_equipo_info)
+    subsistemas = obtener_subsistemas_por_equipo_mostrar(id_equipo_info)
+    return render_template('registro_analisis_funcional.html', sistema_nombre=sistema_nombre, subsistemas=subsistemas)
