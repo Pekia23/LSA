@@ -1285,6 +1285,12 @@ def obtener_tipo_equipo_por_id(id_tipo_equipo):
 
 
 
+
+
+
+
+
+
 # Función para obtener todos los análisis funcionales de un equipo específico
 def obtener_analisis_funcionales_por_equipo_info(id_equipo_info):
     cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)

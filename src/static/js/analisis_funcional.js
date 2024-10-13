@@ -13,6 +13,8 @@ document.addEventListener('DOMContentLoaded', function() {
             accion: document.getElementById('accion').value,
             estandar_desempeño: document.getElementById('estandar_desempeño').value,
         };
+        console.log('Datos enviados:', data);
+
 
         // Enviar los datos mediante fetch
         fetch('/api/analisis-funcional', {
@@ -27,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('Análisis funcional guardado:', result);
             alert('Análisis funcional agregado correctamente');
             // Redirigir a la página de mostrar
-            window.location.href = '/analisis_funcional/mostrar';
+            window.location.href = '/LSA/equipo/mostrar-analisis-funcional';
         })
         .catch(error => {
             console.error('Error al guardar análisis funcional:', error);

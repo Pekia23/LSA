@@ -263,6 +263,7 @@ def registro_generalidades(id_sistema=None, id_equipo=None):
             id_equipo=id_equipo,
             id_equipo_info=equipo_info_id,
             usuario_id=g.usuario_id
+
         )
 
         return redirect(url_for('registro_analisis_funcional'))
@@ -338,23 +339,36 @@ def api_analisis_funcional():
     token = g.user_token
     user_data = obtener_info_usuario(token)
     id_equipo_info = user_data.get('id_equipo_info')
-    
+    subsistema_id = user_data.get('subsistema_id')
+
+
     data = request.get_json()
-    
     sistema_id = data.get('sistema')
     subsistema_id = data.get('subsistema')
     verbo = data.get('verbo')
     accion = data.get('accion')
     estandar_desempeño = data.get('estandar_desempeño')
 
+
+
+    print('Datos recibidos:', data)
+    print('id_equipo_info:', id_equipo_info)
+    print('subsistema_id:', subsistema_id)
+    print('verbo:', verbo)
+    print('accion:', accion)
+    print('estandar_desempeño:', estandar_desempeño)
     # Guardar subsistema_id en la sesión de Flask
-    session['subsistema_id'] = subsistema_id
+    
     
     
     # Validar los datos recibidos (puedes agregar más validaciones)
     if not sistema_id or not subsistema_id or not verbo or not accion or not estandar_desempeño or not id_equipo_info:
         return jsonify({'error': 'Faltan datos obligatorios'}), 400
     
+
+
+    guardar_info_usuario(token, subsistema_id=subsistema_id)
+
     # Insertar en la base de datos
     
     analisis_funcional_id = insertar_analisis_funcional(
@@ -391,7 +405,7 @@ def before_request():
 
 # No es necesario 'after_request' en este caso
 
-def guardar_info_usuario(token, id_sistema=None, id_equipo=None, id_equipo_info=None, usuario_id=None):
+def guardar_info_usuario(token, id_sistema=None, id_equipo=None, id_equipo_info=None, usuario_id=None,subsistema_id=None):
     
     if token in usuario_info_temporal:
         # Actualizar la información existente
@@ -403,13 +417,16 @@ def guardar_info_usuario(token, id_sistema=None, id_equipo=None, id_equipo_info=
             usuario_info_temporal[token]['id_equipo_info'] = id_equipo_info
         if usuario_id is not None:
             usuario_info_temporal[token]['usuario_id'] = usuario_id
+        if subsistema_id is not None:
+            usuario_info_temporal[token]['subsistema_id'] = subsistema_id
     else:
 
         usuario_info_temporal[token] = {
             'id_sistema': id_sistema,
             'id_equipo': id_equipo,
             'id_equipo_info': id_equipo_info,
-            'usuario_id': usuario_id
+            'usuario_id': usuario_id,
+            'subsistema_id': subsistema_id
         }
 
 def obtener_info_usuario(token):
@@ -900,10 +917,6 @@ def registro_FMEA():
 
 
 
-@app.route('/LSA/equipo/editar-analisis-funcional')
-def editar_analisis_funcional():
-    return render_template('editar_analisis_funcional.html')
-
 
 
 
@@ -1241,10 +1254,6 @@ def mostrar_MTA():
 def mostrar_RCM():
     return render_template('mostrar_RCM.html')
 
-@app.route('/LSA/equipo/mostrar-analisis-funcional')
-def mostrar_analisis_funcional():
-    return render_template('mostrar_analisis-funcional.html')
-
 
 
 @app.route('/LSA/equipo/mostrar-analisis-herramientas')
@@ -1576,12 +1585,31 @@ if __name__ == '__main__':
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #####analisis_funcional:
 
 
-@app.route('/analisis_funcional/mostrar')
+@app.route('/LSA/equipo/mostrar-analisis-funcional', methods=['GET'])
 def mostrar_analisis_funcional():
-    id_equipo_info = session.get('id_equipo_info')
+    token = g.user_token
+    user_data = obtener_info_usuario(token)
+    id_equipo_info = user_data.get('id_equipo_info')
     if not id_equipo_info:
         flash('No se ha seleccionado un equipo.')
         return redirect(url_for('ruta_principal'))
@@ -1640,13 +1668,15 @@ def api_insertar_analisis_funcional():
     insertar_analisis_funcional(verbo, accion, estandar_desempeño, id_equipo_info, id_subsistema)
     return jsonify({'status': 'success'})
 
+
+""""
 # Ruta para registrar un nuevo análisis funcional
 @app.route('/registro_analisis_funcional', methods=['GET'])
 def registro_analisis_funcional():
-    id_equipo_info = session.get('id_equipo_info')
-    if not id_equipo_info:
-        flash('No se ha seleccionado un equipo.')
-        return redirect(url_for('ruta_principal'))
+    token = g.user_token
+    user_data = obtener_info_usuario(token)
+    id_equipo_info = user_data.get('id_equipo_info')
     sistema_nombre = obtener_nombre_sistema_por_id(id_equipo_info)
     subsistemas = obtener_subsistemas_por_equipo_mostrar(id_equipo_info)
     return render_template('registro_analisis_funcional.html', sistema_nombre=sistema_nombre, subsistemas=subsistemas)
+    """
