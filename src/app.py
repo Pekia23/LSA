@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 from flask import Flask,session,flash, render_template, request, jsonify, redirect, url_for, make_response, g, send_file
+=======
+from flask import Flask,session, render_template, request, jsonify, redirect, url_for, make_response, g, send_file
+>>>>>>> angelo
 from markupsafe import Markup
 
 import uuid
@@ -48,6 +52,7 @@ from database import (
 
 
     insertar_fmea,
+<<<<<<< HEAD
     #insertar_componente,
     insertar_consecutivo_modo_falla,
     insertar_falla_funcional,
@@ -57,6 +62,14 @@ from database import (
     insertar_causa,
     #insertar_mecanismo_falla,
     #insertar_detalle_falla,
+=======
+    obtener_subsistema_por_id,
+    insertar_falla_funcional,
+    insertar_descripcion_modo_falla,
+    insertar_descripcion_modo_falla,
+    insertar_causa,
+
+>>>>>>> angelo
     #Obtener para desplegables FMEA
     obtener_componentes_por_subsistema,
     obtener_mecanismos_falla,
@@ -70,6 +83,10 @@ from database import (
     obtener_flexibilidad_operacional,
     obtener_Ocurrencia,
     obtener_probablilidad_deteccion,
+<<<<<<< HEAD
+=======
+    
+>>>>>>> angelo
     obtener_fmeas,
     obtener_fmea_por_id,
     actualizar_fmea,
@@ -78,6 +95,7 @@ from database import (
     obtener_id_subsistema_por_componente_id,
     obtener_id_componente_por_fmea_id,
     obtener_ID_FMEA,
+<<<<<<< HEAD
     eliminar_herramienta_especial,
     actualizar_herramienta_especial,
     obtener_herramienta_especial_por_id,
@@ -92,11 +110,16 @@ from database import (
     obtener_responsables,
     eliminar_equipo_info,
 
+=======
+    obtener_lista_riesgos,
+    
+>>>>>>> angelo
     #MTA
     insertar_mta,
     obtener_nombre_componente_por_id,
     obtener_tipos_mantenimiento,
     obtener_tareas_mantenimiento,
+<<<<<<< HEAD
     obtener_subsistema_por_id,
     obtener_procedimiento_por_id,
     obtener_personal_por_id,
@@ -117,6 +140,8 @@ from database import (
     obtener_subsistemas_por_equipo_mostrar
 
      
+=======
+>>>>>>> angelo
 )
 
 from __init__ import create_app
@@ -349,6 +374,7 @@ def api_analisis_funcional():
     accion = data.get('accion')
     estandar_desempeño = data.get('estandar_desempeño')
 
+<<<<<<< HEAD
 
 
     print('Datos recibidos:', data)
@@ -359,6 +385,10 @@ def api_analisis_funcional():
     print('estandar_desempeño:', estandar_desempeño)
     # Guardar subsistema_id en la sesión de Flask
     
+=======
+    # Guardar subsistema_id en la sesión de Flask
+    session['subsistema_id'] = subsistema_id
+>>>>>>> angelo
     
     
     # Validar los datos recibidos (puedes agregar más validaciones)
@@ -634,6 +664,7 @@ def agregar_analisis_herramienta():
     except ValueError:
         return jsonify({'error': 'El valor debe ser numérico'}), 400
 
+<<<<<<< HEAD
     # Leer el archivo si existe
     dibujo_data = dibujo_seccion_transversal.read() if dibujo_seccion_transversal else None
 
@@ -643,6 +674,14 @@ def agregar_analisis_herramienta():
     # Insertar en la tabla herramientas_generales, incluyendo el archivo si está disponible
     analisis_id = insertar_analisis_herramienta(
         nombre, valor, id_equipo_info, parte_numero, id_herramienta_requerida, id_tipo_herramienta, dibujo_data
+=======
+    # Insertar en la tabla herramientas_requeridas y obtener el ID
+    id_herramienta_requerida = insertar_herramienta_requerida(nombre, id_tipo_herramienta)
+
+    # Insertar en la tabla herramientas_generales, incluyendo el id_herramienta_requerida
+    analisis_id = insertar_analisis_herramienta(
+        nombre, valor, id_equipo_info, parte_numero, id_herramienta_requerida, id_tipo_herramienta
+>>>>>>> angelo
     )
 
     return jsonify({'message': 'Análisis de herramienta agregado', 'id': analisis_id}), 200
@@ -650,6 +689,7 @@ def agregar_analisis_herramienta():
 
 
 
+<<<<<<< HEAD
 @app.route('/LSA/editar-analisis-herramienta/<int:id_analisis>', methods=['GET'])
 def editar_analisis_herramienta(id_analisis):
     token = g.user_token
@@ -698,6 +738,9 @@ def eliminar_analisis_herramienta_route(id_analisis):
 
 
 
+=======
+
+>>>>>>> angelo
 
 
 
@@ -904,6 +947,81 @@ def registro_FMEA():
 
 
 
+@app.route('/LSA/registro-herramientas-especiales', methods=['GET'])
+def registro_herramientas_especiales():
+    token = g.user_token
+    user_data = obtener_info_usuario(token)
+    id_equipo_info = user_data.get('id_equipo_info')
+
+    if id_equipo_info is None:
+        return redirect(url_for('registro_generalidades'))
+
+    tipos_herramientas = obtener_tipos_herramientas()
+
+    # Obtener el nombre del equipo
+    equipo = obtener_equipo_por_id(id_equipo_info)
+
+    return render_template(
+        'registro_herramientas_especiales.html',
+        equipo=equipo,
+        tipos_herramientas=tipos_herramientas
+    )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"""
+
+@app.route('/LSA/fmea', methods=['GET'])
+def registro_FMEA():
+    token = g.user_token  # Obtener el token del usuario desde la sesión
+    user_data = obtener_info_usuario(token)  # Obtener la información del usuario desde el token
+    id_sistema = user_data.get('id_sistema')  # Recuperar el ID del sistema asociado al usuario
+
+    # Obtener la información del sistema desde la base de datos
+    if id_sistema:
+        sistema = obtener_sistema_por_id(id_sistema)  # Llamar a la función en `database.py`
+    else:
+        sistema = None
+
+    # Pasar la información del sistema a la plantilla HTML
+    return render_template('registro_FMEA.html', sistema=sistema)
+"""
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -926,7 +1044,11 @@ def registro_FMEA():
 @app.route('/LSA/equipo/editar-FMEA')
 def editar_FMEA_lista():
     fmeas = obtener_fmeas()#Estoy llamando los fmeas para que salgan en la lista
+<<<<<<< HEAD
     print(f'Para la lista{fmeas}') 
+=======
+    #print(f'Para la lista{fmeas}') 
+>>>>>>> angelo
     return render_template('editar_FMEA.html', fmeas=fmeas)
 
 @app.route('/LSA/editar-FMEA/<int:fmea_id>')
@@ -934,6 +1056,7 @@ def editar_FMEA(fmea_id):
     # Obtener los datos del FMEA a partir del ID
     fmea = obtener_fmea_por_id(fmea_id)
     fmea_id = obtener_ID_FMEA(fmea_id)
+<<<<<<< HEAD
     print(f'\n\n\n\n{fmea_id}\n\n\n\n')
     # Cargar la información del sistema
     sistema = fmea.get('sistema')
@@ -941,6 +1064,16 @@ def editar_FMEA(fmea_id):
     subsistema_id = obtener_id_subsistema_por_componente_id(componente_id_aux)
     #Obtener datos para desplegables
     componentes = obtener_componentes_por_subsistema(subsistema_id)
+=======
+    print(f'\n\n\n\n{fmea}\n\n\n\n') 
+    # Cargar la información del sistema
+    sistema = fmea.get('sistema')
+    sistema_id = fmea_id.get('id_sistema')
+    print(f'\n\n\n\n{sistema_id}\n\n\n\n')
+    #Obtener datos para desplegables
+    componentes = obtener_componentes_por_subsistema(sistema_id)
+    print(f'\n\n\n\nlos componentes son: {componentes}\n\n\n\n')
+>>>>>>> angelo
     mecanismos_falla = obtener_mecanismos_falla()
     codigos_modo_falla = obtener_codigos_modo_falla()
     metodos_deteccion_falla = obtener_metodos_deteccion_falla() 
@@ -952,6 +1085,11 @@ def editar_FMEA(fmea_id):
     flexibilidad_operacional_datos= obtener_flexibilidad_operacional()
     ocurrencia_datos = obtener_Ocurrencia()
     probabilidad_deteccion_datos = obtener_probablilidad_deteccion()
+<<<<<<< HEAD
+=======
+    lista_riesgos = obtener_lista_riesgos() or []
+
+>>>>>>> angelo
 
     # Renderizar formularios
     return render_template('registro_FMEA.html',fmea=fmea, fmea_id=fmea_id, editar=True,
@@ -967,6 +1105,7 @@ def editar_FMEA(fmea_id):
                            costos_reparacion_datos=costos_reparacion_datos,
                            flexibilidad_operacional_datos=flexibilidad_operacional_datos,
                            ocurrencia_datos = ocurrencia_datos,
+<<<<<<< HEAD
                            probabilidad_deteccion_datos = probabilidad_deteccion_datos)
 
 @app.route('/LSA/guardar-FMEA/<int:fmea_id>', methods=['POST'])
@@ -974,6 +1113,13 @@ def guardar_cambios_fmea(fmea_id):
     # Obtener el FMEA existente a partir del ID
     fmea_filtrado = obtener_fmea_por_id(fmea_id)
 
+=======
+                           probabilidad_deteccion_datos = probabilidad_deteccion_datos,
+                           lista_riesgos= lista_riesgos)
+
+@app.route('/LSA/guardar-FMEA/<int:fmea_id>', methods=['POST'])
+def guardar_cambios_fmea(fmea_id):
+>>>>>>> angelo
     # Los siguientes campos no cambian
     id_equipo_info = obtener_id_equipo_info_por_fmea(fmea_id)
     sistema_id = obtener_id_sistema_por_fmea_id(fmea_id)
@@ -991,7 +1137,10 @@ def guardar_cambios_fmea(fmea_id):
     id_detalle_falla = request.form.get('detalle_falla')
     id_codigo_modo_falla = request.form.get('codigo_modo_falla')
     id_consecutivo_modo_falla = request.form.get('id_consecutivo_modo_falla')
+<<<<<<< HEAD
     print(f"\n\n\nid_consecutivo: {id_consecutivo_modo_falla}\n\n\n")
+=======
+>>>>>>> angelo
     id_metodo_deteccion_falla = request.form.get('metodo_detecion_falla')
     id_fallo_oculto = request.form.get('fallo_oculto')
     id_seguridad_fisica = request.form.get('seguridad_fisica')
@@ -999,23 +1148,46 @@ def guardar_cambios_fmea(fmea_id):
     id_impacto_operacional = request.form.get('impacto_operacional')
     id_costos_reparacion = request.form.get('costos_reparacion')
     id_flexibilidad_operacional = request.form.get('flexibilidad_operacional')
+<<<<<<< HEAD
     id_ocurrencia = request.form.get('ocurrencia')
     id_probabilidad_deteccion = request.form.get('probabilidad_deteccion')
+=======
+    calculo_severidad = request.form.get('severidad')
+    id_ocurrencia = request.form.get('ocurrencia')
+    ocurrencia_mate = request.form.get('ocurrencia_matematica')
+    id_probabilidad_deteccion = request.form.get('probabilidad_deteccion') 
+    rpn = request.form.get('rpn')
+    id_riesgo = request.form.get('id_riesgo')
+>>>>>>> angelo
     
     id_falla_funcional = insertar_falla_funcional(falla_funcional)
     id_descripcion_modo_falla = insertar_descripcion_modo_falla(descripcion_modo_falla)
     id_causa = insertar_causa(causas)
+<<<<<<< HEAD
+=======
+    
+    print(f'\n\n\nValue: {id_probabilidad_deteccion}\n\n')
+>>>>>>> angelo
 
     # Actualizar el registro FMEA con los nuevos datos
     actualizar_fmea(
         fmea_id, id_equipo_info, sistema_id, id_falla_funcional, id_componente, 
         id_codigo_modo_falla, id_consecutivo_modo_falla, id_descripcion_modo_falla, 
         id_causa, id_mecanismo_falla, id_detalle_falla, mtbf, mttr, id_fallo_oculto, 
+<<<<<<< HEAD
         id_seguridad_fisica, id_medio_ambiente, id_impacto_operacional, 
         id_costos_reparacion, id_flexibilidad_operacional, id_ocurrencia, 
         id_probabilidad_deteccion, id_metodo_deteccion_falla
     )
 
+=======
+        id_seguridad_fisica, id_medio_ambiente, id_impacto_operacional, id_costos_reparacion, 
+        id_flexibilidad_operacional, calculo_severidad, id_ocurrencia, ocurrencia_mate,
+        id_probabilidad_deteccion, id_metodo_deteccion_falla, rpn, id_riesgo
+    )
+
+
+>>>>>>> angelo
     # Redireccionar después de guardar los cambios
     return redirect(url_for('mostrar_FMEA'))
 
@@ -1025,9 +1197,42 @@ def guardar_cambios_fmea(fmea_id):
 @app.route('/LSA/eliminar-FMEA/<int:fmea_id>', methods=['POST'])
 def eliminar_FMEA(fmea_id):
     cursor = db.connection.cursor()
+<<<<<<< HEAD
     query = "DELETE FROM fmea WHERE id = %s"
     cursor.execute(query, (fmea_id,))
     db.connection.commit()
+=======
+    
+    #Obtener el id_consecutivo_modo_falla del registro a eliminar desde la tabla fmea
+    cursor.execute("SELECT id_consecutivo_modo_falla FROM fmea WHERE id = %s", (fmea_id,))
+    result = cursor.fetchone()
+    
+    if result and 'id_consecutivo_modo_falla' in result:
+        id_consecutivo_modo_falla = result['id_consecutivo_modo_falla']
+        
+        #Contar cuántas veces aparece id_consecutivo_modo_falla en la tabla fmea
+        count_query = "SELECT COUNT(*) as count FROM fmea WHERE id_consecutivo_modo_falla = %s"
+        cursor.execute(count_query, (id_consecutivo_modo_falla,))
+        count_result = cursor.fetchone()
+        ocurrencias = (count_result['count'])-1 if count_result else 0
+        
+        
+        #Actualizar la numeración en la tabla consecutivo_modo_falla con el número de ocurrencias
+        update_query = """
+            UPDATE consecutivo_modo_falla
+            SET numeracion = %s
+            WHERE id = %s
+        """
+        cursor.execute(update_query, (ocurrencias, id_consecutivo_modo_falla))
+        
+        #Eliminar el registro de FMEA
+        delete_query = "DELETE FROM fmea WHERE id = %s"
+        cursor.execute(delete_query, (fmea_id,))
+        
+        # Confirmar los cambios en la base de datos
+        db.connection.commit()
+    
+>>>>>>> angelo
     cursor.close()
 
     # Redireccionar a la vista de la tabla después de eliminar
@@ -1268,7 +1473,10 @@ def mostrar_repuesto():
 def mostrar_informe():
     return render_template('mostrar_informe.html')
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> angelo
 @app.route('/LSA/registro-MTA/<int:fmea_id>')
 def registro_MTA(fmea_id):
     if fmea_id:
@@ -1333,16 +1541,20 @@ def guardar_MTA(fmea_id):
 
     
     return redirect(url_for('mostrar_MTA')) 
+<<<<<<< HEAD
 
 
 
 
+=======
+>>>>>>> angelo
 
 @app.route('/LSA/registro-RCM')
 def registro_RCM():
     return render_template('registro_RCM.html')
 
 
+<<<<<<< HEAD
 
 
 
@@ -1361,6 +1573,8 @@ def registro_RCM():
 
 
 
+=======
+>>>>>>> angelo
 @app.route('/LSA/registro-FMEA')
 def registro_FMEA():
     subsistema_id = session.get('subsistema_id')  # Obtener el id del subsistema asociado
@@ -1378,6 +1592,11 @@ def registro_FMEA():
     flexibilidad_operacional_datos= obtener_flexibilidad_operacional()
     ocurrencia_datos = obtener_Ocurrencia()
     probabilidad_deteccion_datos = obtener_probablilidad_deteccion()
+<<<<<<< HEAD
+=======
+    lista_riesgos = obtener_lista_riesgos() or []
+    
+>>>>>>> angelo
     # Renderizar la plantilla y pasar datos
     return render_template('registro_FMEA.html',fmea=None, fmea_id=None, editar=False,
                            sistema=sistema,
@@ -1392,7 +1611,12 @@ def registro_FMEA():
                            costos_reparacion_datos=costos_reparacion_datos,
                            flexibilidad_operacional_datos=flexibilidad_operacional_datos,
                            ocurrencia_datos = ocurrencia_datos,
+<<<<<<< HEAD
                            probabilidad_deteccion_datos = probabilidad_deteccion_datos)
+=======
+                           probabilidad_deteccion_datos = probabilidad_deteccion_datos,
+                           lista_riesgos= lista_riesgos)
+>>>>>>> angelo
 
 @app.route('/LSA/registro-FMEA', methods=['POST'])
 def guardar_fmea():
@@ -1429,7 +1653,12 @@ def guardar_fmea():
     ocurrencia_mate= request.form.get('ocurrencia_matematica')
     rpn = request.form.get('rpn')
     id_probabilidad_deteccion = request.form.get('probabilidad_deteccion')
+<<<<<<< HEAD
 
+=======
+    id_riesgo = request.form.get('id_riesgo')
+    
+>>>>>>> angelo
     # Insertar los datos relacionados en las tablas correspondientes y obtener los IDs
     id_falla_funcional = insertar_falla_funcional(falla_funcional)
     id_descripcion_modo_falla = insertar_descripcion_modo_falla(descripcion_modo_falla)
@@ -1441,7 +1670,11 @@ def guardar_fmea():
         id_consecutivo_modo_falla, id_descripcion_modo_falla, id_causa, id_mecanismo_falla, 
         id_detalle_falla, mtbf, mttr,id_metodo_deteccion_falla, id_fallo_oculto, id_seguridad_fisica, id_medio_ambiente, 
         id_impacto_operacional, id_costos_reparacion, id_flexibilidad_operacional,calculo_severidad, id_ocurrencia, ocurrencia_mate,
+<<<<<<< HEAD
         id_probabilidad_deteccion, rpn
+=======
+        id_probabilidad_deteccion, rpn, id_riesgo
+>>>>>>> angelo
     )
 
     # Redireccionar o devolver respuesta exitosa
@@ -1466,7 +1699,10 @@ def obtener_detalles_falla(mecanismo_id):
 def obtener_nombre_falla(codigo_id):
     cursor = db.connection.cursor()
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> angelo
     # Obtener el nombre del modo de falla
     query_nombre = """
         SELECT nombre, codigo, id
@@ -1483,7 +1719,11 @@ def obtener_nombre_falla(codigo_id):
 
         # Obtener el consecutivo de modo de falla
         query_consecutivo = """
+<<<<<<< HEAD
             SELECT id, numeracion
+=======
+            SELECT id
+>>>>>>> angelo
             FROM consecutivo_modo_falla 
             WHERE nombre = %s
         """
@@ -1492,10 +1732,28 @@ def obtener_nombre_falla(codigo_id):
 
         if consecutivo_result:
             id_consecutivo_modo_falla = consecutivo_result['id']
+<<<<<<< HEAD
             numeracion = consecutivo_result['numeracion'] or 0  # Si es NULL, lo tratamos como 0
             nueva_numeracion = numeracion + 1
 
             # Actualizar la numeración
+=======
+
+            # Contar cuántas veces se usa el id_consecutivo_modo_falla en la tabla fmea
+            count_query = """
+                SELECT COUNT(*) as count
+                FROM fmea
+                WHERE id_consecutivo_modo_falla = %s
+            """
+            cursor.execute(count_query, (id_consecutivo_modo_falla,))
+            count_result = cursor.fetchone()
+            ocurrencias = count_result['count'] if count_result else 0
+
+            # Calcular la nueva numeración
+            nueva_numeracion = ocurrencias + 1
+
+            # Actualizar la numeración en la tabla consecutivo_modo_falla
+>>>>>>> angelo
             query_update = """
                 UPDATE consecutivo_modo_falla
                 SET numeracion = %s
@@ -1518,7 +1776,13 @@ def obtener_nombre_falla(codigo_id):
         cursor.close()
         return jsonify({'nombre': 'No encontrado', 'consecutivo': None}), 404
 
+<<<<<<< HEAD
 ############################################################################################################
+=======
+
+############################################################################################################
+
+>>>>>>> angelo
 
 
 

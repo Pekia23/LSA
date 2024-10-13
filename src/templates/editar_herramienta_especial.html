@@ -59,6 +59,7 @@
                             {% for tipo in tipos_herramientas %}
                             <option value="{{ tipo.id_tipo_herramienta }}" {% if herramienta.id_tipo_herramienta == tipo.id_tipo_herramienta %}selected{% endif %}>{{ tipo.nombre_tipo }}</option>
                             {% endfor %}
+
                         </select>
                     </div>
                 </div>

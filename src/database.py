@@ -109,8 +109,6 @@ def obtener_tipos_equipos():
 
 
 
-
-
 #Funciones para FMEA
 
 #Obtener datos desplegables
@@ -196,10 +194,18 @@ def obtener_probablilidad_deteccion():
 
 def obtener_componentes_por_subsistema(subsistema_id):
     cursor = db.connection.cursor()
-    query = "SELECT id, nombre FROM componentes WHERE id_subsistemas = %s"
+
+    query = """
+        SELECT id, nombre 
+        FROM componentes 
+        WHERE id_subsistemas = %s
+    """
     cursor.execute(query, (subsistema_id,))
     componentes = cursor.fetchall()
     cursor.close()
+    
+    # Convertir los resultados en una lista de diccionarios
+
     return [{'id': c['id'], 'nombre': c['nombre']} for c in componentes]
 
 
@@ -240,6 +246,23 @@ def obtener_metodos_deteccion_falla():
     cursor.close()
 
     return [{'id': fila['id'], 'nombre': fila['nombre']} for fila in metodos_deteccion_falla]
+
+
+#Esta no es para un desplegable pero retorna una lista de la misma manera
+def obtener_lista_riesgos():
+    cursor = db.connection.cursor()
+    query = "SELECT id, nombre FROM riesgo ORDER BY id"
+    cursor.execute(query)
+    riesgos = cursor.fetchall()
+    cursor.close()
+
+    # Verificar la lista obtenida antes de retornarla
+    print("Lista de riesgos obtenida:", riesgos)
+
+    return [{'id': riesgo['id'], 'nombre': riesgo['nombre']} for riesgo in riesgos]
+
+
+
 
 #Obtener id para FMEA
 def obtener_id_equipo_info_por_fmea(fmea_id):
@@ -330,20 +353,8 @@ def insertar_falla_funcional(falla_funcional_nombre):
     return falla_funcional_id
 
 
-def insertar_consecutivo_modo_falla(nombre, numeracion = None):
-    query_existencia = "SELECT id FROM consecutivo_modo_falla WHERE nombre = %s AND numeracion = %s"
-    consecutivo_modo_falla_id = obtener_id_si_existe(query_existencia, (nombre, numeracion))
-    
-    if consecutivo_modo_falla_id:
-        return consecutivo_modo_falla_id
-    
-    cursor = db.connection.cursor()
-    query = "INSERT INTO consecutivo_modo_falla (nombre, numeracion) VALUES (%s, %s)"
-    cursor.execute(query, (nombre, numeracion))
-    db.connection.commit()
-    consecutivo_modo_falla_id = cursor.lastrowid  
-    cursor.close()
-    return consecutivo_modo_falla_id
+
+
 
 
 def insertar_descripcion_modo_falla(descripcion_modo_falla):
@@ -384,7 +395,9 @@ def insertar_fmea(id_equipo_info, id_sistema, id_falla_funcional, id_componente,
         id_consecutivo_modo_falla, id_descripcion_modo_falla, id_causa, id_mecanismo_falla, 
         id_detalle_falla, MTBF, MTTR,id_metodo_deteccion_falla, id_fallo_oculto, id_seguridad_fisica, id_medio_ambiente, 
         id_impacto_operacional, id_costos_reparacion, id_flexibilidad_operacional,calculo_severidad, id_ocurrencia, ocurrencia_mate,
-        id_probabilidad_deteccion, rpn):
+
+        id_probabilidad_deteccion, rpn, id_riesgo):
+
     cursor = db.connection.cursor()
     query = """
         INSERT INTO fmea (
@@ -392,15 +405,19 @@ def insertar_fmea(id_equipo_info, id_sistema, id_falla_funcional, id_componente,
             id_consecutivo_modo_falla, id_descripcion_modo_falla, id_causa, id_mecanismo_falla, 
             id_detalle_falla, MTBF, MTTR,id_metodo_deteccion_falla, id_fallo_oculto, id_seguridad_fisica, id_medio_ambiente, 
             id_impacto_operacional, id_costos_reparacion, id_flexibilidad_operacional,calculo_severidad, id_ocurrencia, ocurrencia_mate,
-            id_probabilidad_deteccion, RPN
-        ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+
+            id_probabilidad_deteccion, RPN, id_riesgo
+        ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+
     """
     cursor.execute(query, (
         id_equipo_info, id_sistema, id_falla_funcional, id_componente, id_codigo_modo_falla, 
         id_consecutivo_modo_falla, id_descripcion_modo_falla, id_causa, id_mecanismo_falla, 
         id_detalle_falla, MTBF, MTTR,id_metodo_deteccion_falla, id_fallo_oculto, id_seguridad_fisica, id_medio_ambiente, 
         id_impacto_operacional, id_costos_reparacion, id_flexibilidad_operacional,calculo_severidad, id_ocurrencia,
-        ocurrencia_mate, id_probabilidad_deteccion, rpn
+
+        ocurrencia_mate, id_probabilidad_deteccion, rpn, id_riesgo
+
     ))
     db.connection.commit()
     fmea_id = cursor.lastrowid  
@@ -464,7 +481,7 @@ def obtener_fmeas():
         c.nombre as componente, 
         f.id_codigo_modo_falla, 
         cmf.nombre as codigo_modo_falla, 
-        cmf.codigo as codigo, 
+
         f.id_consecutivo_modo_falla, 
         cf.nombre as consecutivo_modo_falla, 
         f.id_descripcion_modo_falla, 
@@ -475,23 +492,39 @@ def obtener_fmeas():
         mf.nombre as mecanismo_falla, 
         f.id_detalle_falla, 
         df.nombre as detalle_falla, 
-        f.MTBF, f.MTTR, 
+
+        f.MTBF, 
+        f.MTTR, 
+        f.id_metodo_deteccion_falla,
+        f.id_fallo_oculto,
         fo.valor as fallo_oculto_valor, 
         fo.nombre as fallo_oculto_descripcion, 
+        f.id_seguridad_fisica, 
         sf.valor as seguridad_fisica_valor, 
         sf.nombre as seguridad_fisica_descripcion, 
+        f.id_medio_ambiente, 
         ma.valor as medio_ambiente_valor, 
         ma.nombre as medio_ambiente_descripcion, 
+        f.id_impacto_operacional, 
         io.valor as impacto_operacional_valor, 
         io.nombre as impacto_operacional_descripcion, 
+        f.id_costos_reparacion, 
         cr.valor as costos_reparacion_valor, 
         cr.nombre as costos_reparacion_descripcion, 
+        f.id_flexibilidad_operacional, 
         flex.valor as flexibilidad_operacional_valor, 
         flex.nombre as flexibilidad_operacional_descripcion, 
+        f.calculo_severidad,
+        f.id_ocurrencia, 
         o.valor as ocurrencia_valor, 
         o.nombre as ocurrencia_descripcion, 
+        f.ocurrencia_mate, 
+        f.id_probabilidad_deteccion, 
         pd.valor as probabilidad_deteccion_valor, 
-        pd.descripcion as probabilidad_deteccion_descripcion
+        pd.descripcion as probabilidad_deteccion_descripcion,
+        f.RPN,
+        f.id_riesgo
+
     FROM fmea f
     LEFT JOIN sistema s ON f.id_sistema = s.id
     LEFT JOIN falla_funcional ff ON f.id_falla_funcional = ff.id
@@ -524,8 +557,10 @@ def obtener_fmeas():
         # Verificar si alguna columna no tiene nombre o descripción
         # Y buscar el nombre/valor por ID si es necesario
         
-        # Ejemplo de cómo se verificaría cada campo:
-        sistema_nombre = fmea['sistema'] if fmea['sistema'] else obtener_nombre_por_id('sistema', fmea['id_sistema'])
+
+        #verificaría cada campo:
+        sistema_nombre = fmea['sistema'] if fmea['sistema'] else obtener_nombre_por_id('subsistemas', fmea['id_sistema'])
+
         falla_funcional_nombre = fmea['falla_funcional'] if fmea['falla_funcional'] else obtener_nombre_por_id('falla_funcional', fmea['id_falla_funcional'])
         componente_nombre = fmea['componente'] if fmea['componente'] else obtener_nombre_por_id('componentes', fmea['id_componente'])
         codigo_modo_falla_nombre = fmea['codigo_modo_falla'] if fmea['codigo_modo_falla'] else obtener_nombre_por_id('codigo_modo_falla', fmea['id_codigo_modo_falla'])
@@ -564,7 +599,10 @@ def obtener_fmeas():
             'ocurrencia_valor': fmea['ocurrencia_valor'],
             'ocurrencia_descripcion': fmea['ocurrencia_descripcion'],
             'probabilidad_deteccion_valor': fmea['probabilidad_deteccion_valor'],
-            'probabilidad_deteccion_descripcion': fmea['probabilidad_deteccion_descripcion']
+            'probabilidad_deteccion_descripcion': fmea['probabilidad_deteccion_descripcion'],
+            'RPN': fmea['RPN'],
+            'id_riesgo': fmea['id_riesgo']
+
         })
 
     return fmeas_completos
@@ -604,8 +642,9 @@ def actualizar_fmea(
     id_codigo_modo_falla, id_consecutivo_modo_falla, id_descripcion_modo_falla, 
     id_causa, id_mecanismo_falla, id_detalle_falla, mtbf, mttr, id_fallo_oculto, 
     id_seguridad_fisica, id_medio_ambiente, id_impacto_operacional, 
-    id_costos_reparacion, id_flexibilidad_operacional, id_ocurrencia, 
-    id_probabilidad_deteccion, id_metodo_deteccion_falla
+    id_costos_reparacion, id_flexibilidad_operacional,calculo_severidad, id_ocurrencia, 
+    ocurrencia_mate,id_probabilidad_deteccion, id_metodo_deteccion_falla, rpn, id_riesgo
+
 ):
     cursor = db.connection.cursor()
     query = """
@@ -615,16 +654,22 @@ def actualizar_fmea(
             id_descripcion_modo_falla = %s, id_causa = %s, id_mecanismo_falla = %s, 
             id_detalle_falla = %s, MTBF = %s, MTTR = %s, id_fallo_oculto = %s, 
             id_seguridad_fisica = %s, id_medio_ambiente = %s, id_impacto_operacional = %s, 
-            id_costos_reparacion = %s, id_flexibilidad_operacional = %s, id_ocurrencia = %s, 
-            id_probabilidad_deteccion = %s, id_metodo_deteccion_falla = %s 
+
+            id_costos_reparacion = %s, id_flexibilidad_operacional = %s, calculo_severidad = %s, id_ocurrencia = %s, 
+            ocurrencia_mate = %s, id_probabilidad_deteccion = %s, id_metodo_deteccion_falla = %s, RPN = %s, id_riesgo = %s
+
         WHERE id = %s
     """
     cursor.execute(query, (
         id_equipo_info, sistema_id, id_falla_funcional, id_componente, id_codigo_modo_falla, 
         id_consecutivo_modo_falla, id_descripcion_modo_falla, id_causa, id_mecanismo_falla, 
         id_detalle_falla, mtbf, mttr, id_fallo_oculto, id_seguridad_fisica, id_medio_ambiente, 
-        id_impacto_operacional, id_costos_reparacion, id_flexibilidad_operacional, 
-        id_ocurrencia, id_probabilidad_deteccion, id_metodo_deteccion_falla, fmea_id  
+
+        id_impacto_operacional, id_costos_reparacion, id_flexibilidad_operacional,calculo_severidad,
+        id_ocurrencia, ocurrencia_mate,id_probabilidad_deteccion, id_metodo_deteccion_falla,rpn, id_riesgo,
+        
+        fmea_id  
+
     ))
     db.connection.commit()
     cursor.close()
@@ -741,10 +786,6 @@ def insertar_analisis_funcional(verbo, accion, estandar_desempeño, id_equipo_in
         analisis_funcional_id = cursor.lastrowid
         cursor.close()
         return analisis_funcional_id
-
-
-
-
 
 
 
@@ -875,30 +916,25 @@ def obtener_repuesto_por_id(id_repuesto):
 
 
 
-
-
-
-
-
-
-
-
-
 # database.py
 
-def insertar_analisis_herramienta(nombre, valor, id_equipo_info, parte_numero, id_herramienta_requerida, id_tipo_herramienta, dibujo_seccion_transversal):
+def insertar_analisis_herramienta(nombre, valor, id_equipo_info, parte_numero, id_herramienta_requerida, id_tipo_herramienta):
     cursor = db.connection.cursor()
     query = """
         INSERT INTO herramientas_generales (
-            nombre, valor, id_equipo_info, parte_numero, id_herramienta_requerida, id_tipo_herramienta, dibujo_seccion_transversal
+            nombre, valor, id_equipo_info, parte_numero, id_herramienta_requerida, id_tipo_herramienta
+
         )
-        VALUES (%s, %s, %s, %s, %s, %s, %s)
+        VALUES (%s, %s, %s, %s, %s, %s)
     """
-    cursor.execute(query, (nombre, valor, id_equipo_info, parte_numero, id_herramienta_requerida, id_tipo_herramienta, dibujo_seccion_transversal))
+
+    cursor.execute(query, (nombre, valor, id_equipo_info, parte_numero, id_herramienta_requerida, id_tipo_herramienta))
+
     db.connection.commit()
     analisis_id = cursor.lastrowid
     cursor.close()
     return analisis_id
+
 
 def obtener_analisis_herramienta_por_id(id_analisis):
     cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -916,16 +952,20 @@ def obtener_analisis_herramientas_por_equipo(id_equipo_info):
     cursor.close()
     return analisis
 
-def actualizar_analisis_herramienta(id_analisis, nombre, valor, parte_numero, dibujo_seccion_transversal):
+
+
+def actualizar_analisis_herramienta(id_analisis, nombre, valor, parte_numero):
     cursor = db.connection.cursor()
     query = """
         UPDATE herramientas_generales
-        SET nombre = %s, valor = %s, parte_numero = %s, dibujo_seccion_transversal = %s
+        SET nombre = %s, valor = %s, parte_numero = %s
         WHERE id = %s
     """
-    cursor.execute(query, (nombre, valor, parte_numero, dibujo_seccion_transversal, id_analisis))
+    cursor.execute(query, (nombre, valor, parte_numero, id_analisis))
+
     db.connection.commit()
     cursor.close()
+
 
 def eliminar_analisis_herramienta(id_analisis):
     cursor = db.connection.cursor()
@@ -949,7 +989,9 @@ def insertar_herramienta_especial(
     parte_numero, nombre_herramienta, valor,
     dibujo_seccion_transversal, nota, id_equipo_info,
     manual_referencia, id_tipo_herramienta, cantidad,
-    id_herramienta_requerida
+
+    id_herramienta_requerida  # Aseguramos que se recibe este parámetro
+
 ):
     cursor = db.connection.cursor()
     query = """
@@ -971,6 +1013,7 @@ def insertar_herramienta_especial(
     return herramienta_id
 
 
+
 def obtener_herramienta_especial_por_id(id_herramienta):
     cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
     query = "SELECT * FROM herramientas_especiales WHERE id = %s"
@@ -978,8 +1021,6 @@ def obtener_herramienta_especial_por_id(id_herramienta):
     herramienta = cursor.fetchone()
     cursor.close()
     return herramienta
-
-
 
 
 def obtener_herramientas_especiales_por_equipo(id_equipo_info):
@@ -1037,6 +1078,7 @@ def insertar_herramienta_requerida(nombre, id_tipo_herramienta):
     herramienta_requerida_id = cursor.lastrowid
     cursor.close()
     return herramienta_requerida_id
+
 
 
 def obtener_tipos_herramientas():
@@ -1370,3 +1412,4 @@ def obtener_nombre_sistema_por_id(id_sistema):
     resultado = cursor.fetchone()
     cursor.close()
     return resultado['nombre'] if resultado else None
+
