@@ -17,80 +17,78 @@
   <div class="scroll-container-horizontal">
     <table class="table">
       <thead>
-          <tr>
-              <th colspan="12"></td>
-              <th scope="col" colspan="2">Consecuencia de severidad FO - Fallos Ocultos</th>
-              <th scope="col"  colspan="2">SF - Seguridad Física</th>
-              <th scope="col"  colspan="2">MA - Medio Ambiente</th>
-              <th scope="col"  colspan="2">IO - Impacto Operacional</th>
-              <th scope="col"  colspan="2">OR - Costos de Reparación</th>
-              <th scope="col"  colspan="2">FO - Flexibilidad Operacional</th>
-              <th></th>
-              <th scope="col"  colspan="2">Ocurrencia</th>
-              <th scope="col" >AOR/MTBF</th>
-              <th scope="col"  colspan="2">Probabilidad de Detección</th>
-              <th colspan="4"></th>
-          </tr>
-      </thead>  
-      <tbody>  
-        <tr style="font-weight:bold;">
-          <td>#</td>
-          <td>Sistema</td>
-          <td>Falla Funcional</td>
-          <td>Item o componente</td>
-          <td>Codigo Modo de Falla</td>
-          <td>Consecutivo de Modo de Falla</td>
-          <td>Descripción Modo de Falla</td>
-          <td>Causas</td>
-          <td>Mecancismo de Falla</td>
-          <td>Detalle del Mecancismo de Falla</td>
-          <td>MTBF</td>
-          <td>MTTR</td>
-          <td>Valor</td>
-          <td>Descripción</td>
-          <td>Valor</td>
-          <td>Descripción</td>
-          <td>Valor</td>
-          <td>Descripción</td>
-          <td>Valor</td>
-          <td>Descripción</td>
-          <td>Valor</td>
-          <td>Descripción</td>
-          <td>Valor</td>
-          <td>Descripción</td>
-          <td>Calculo de Severidad </td>
-          <td>Valor</td>
-          <td>Descripción</td>
-          <td>Ocurrencia Matematica</td>
-          <td>Valor</td>
-          <td>Descripción</td>
-          <td>RPN Valor Total de Riesgo</td>
-          <td>Riesgo</td>
-          <td>Accion recomendada FMEA</td>
-          <td>Frecuencia inicial</td>
-        </tr>
         <tr>
-          <td scope="row">1</td>
-          <td>Mark</td>
-          <td>Otto</td>
-          <td>@mdo</td>
+          <th>#</th>
+          <th>Sistema</th>
+          <th>Falla Funcional</th>
+          <th>Componente</th>
+          <th>Código de Modo de Falla</th>
+          <th>Consecutivo Modo de Falla</th>
+          <th>Descripción Modo de Falla</th>
+          <th>Causa</th>
+          <th>Mecanismo de Falla</th>
+          <th>Detalle del Mecanismo</th>
+          <th>MTBF</th>
+          <th>MTTR</th>
+          <th>FO - Fallo Oculto (Valor)</th>
+          <th>FO - Fallo Oculto (Descripción)</th>
+          <th>SF - Seguridad Física (Valor)</th>
+          <th>SF - Seguridad Física (Descripción)</th>
+          <th>MA - Medio Ambiente (Valor)</th>
+          <th>MA - Medio Ambiente (Descripción)</th>
+          <th>IO - Impacto Operacional (Valor)</th>
+          <th>IO - Impacto Operacional (Descripción)</th>
+          <th>OR - Costos de Reparación (Valor)</th>
+          <th>OR - Costos de Reparación (Descripción)</th>
+          <th>FO - Flexibilidad Operacional (Valor)</th>
+          <th>FO - Flexibilidad Operacional (Descripción)</th>
+          <th>Ocurrencia (Valor)</th>
+          <th>Ocurrencia (Descripción)</th>
+          <th>Probabilidad de Detección (Valor)</th>
+          <th>Probabilidad de Detección (Descripción)</th>
         </tr>
+      </thead>
+      <tbody>
+        {% for fmea in fmeas %}
         <tr>
-          <td scope="row">2</td>
-          <td>Jacob</td>
-          <td>tdornton</td>
-          <td>@fat</td>
+          <td>{{ loop.index }}</td>
+          <td>{{ fmea['sistema'] }}</td>
+          <td>{{ fmea['falla_funcional'] }}</td>
+          <td>{{ fmea['componente'] }}</td>
+          <td>{{ fmea['codigo_modo_falla'] }}</td>
+          <td>{{ fmea['consecutivo_modo_falla'] }}</td>
+          <td>{{ fmea['descripcion_modo_falla'] }}</td>
+          <td>{{ fmea['causa'] }}</td>
+          <td>{{ fmea['mecanismo_falla'] }}</td>
+          <td>{{ fmea['detalle_falla'] }}</td>
+          <td>{{ fmea['MTBF'] }}</td>
+          <td>{{ fmea['MTTR'] }}</td>
+          <td>{{ fmea['fallo_oculto_valor'] }}</td>
+          <td>{{ fmea['fallo_oculto_descripcion'] }}</td>
+          <td>{{ fmea['seguridad_fisica_valor'] }}</td>
+          <td>{{ fmea['seguridad_fisica_descripcion'] }}</td>
+          <td>{{ fmea['medio_ambiente_valor'] }}</td>
+          <td>{{ fmea['medio_ambiente_descripcion'] }}</td>
+          <td>{{ fmea['impacto_operacional_valor'] }}</td>
+          <td>{{ fmea['impacto_operacional_descripcion'] }}</td>
+          <td>{{ fmea['costos_reparacion_valor'] }}</td>
+          <td>{{ fmea['costos_reparacion_descripcion'] }}</td>
+          <td>{{ fmea['flexibilidad_operacional_valor'] }}</td>
+          <td>{{ fmea['flexibilidad_operacional_descripcion'] }}</td>
+          <td>{{ fmea['ocurrencia_valor'] }}</td>
+          <td>{{ fmea['ocurrencia_descripcion'] }}</td>
+          <td>{{ fmea['probabilidad_deteccion_valor'] }}</td>
+          <td>{{ fmea['probabilidad_deteccion_descripcion'] }}</td>
         </tr>
-        <tr>
-          <td scope="row">3</td>
-          <td colspan="2">Larry tde Bird</td>
-          <td>@twitter</td>
-        </tr>
+        {% endfor %}
       </tbody>
     </table>
+    
+    
+    
   </div>
 <div class="mt-4">
-  <button type="button" class="btn btn-primary"><a href="{{url_for('editar_FMEA')}}">Editar FMEA</a></button>
+  <button type="button" class="btn btn-primary"><a href="{{url_for('editar_FMEA_lista')}}">Editar FMEA</a></button>
 </div>    
 
 {% endblock %}

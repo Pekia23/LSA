@@ -8,7 +8,6 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/herramientas_especiales.css') }}">
 {% endblock %}
 
-
 {% block nombre %}LSA | Registro de Módulo de Herramientas{% endblock %}
 
 {% block content %}
@@ -19,16 +18,7 @@
     <form id="analisis-herramientas-form" enctype="multipart/form-data">
         <div class="row">
             <!-- Primera columna -->
-            <div class="col-md-4 my-4">
-                <label for="equipo" class="form-label">Equipo</label>
-                <input type="text" class="form-control" id="equipo" name="equipo" value="{{ equipo.nombre_equipo }}" readonly>
-
-                <label for="dibujo_seccion_transversal" class="form-label mt-3">Dibujo de sección transversal</label>
-                <input type="file" class="form-control" id="dibujo_seccion_transversal" name="dibujo_seccion_transversal" accept=".jpg, .jpeg, .png, .pdf">
-            </div>
-
-            <!-- Segunda columna -->
-            <div class="col-md-4 my-4">
+            <div class="col-md-6 my-4">
                 <label for="nombre" class="form-label">Nombre de la herramienta</label>
                 <input type="text" class="form-control" id="nombre" name="nombre">
 
@@ -38,18 +28,18 @@
                 <label for="tipo_herramienta" class="form-label mt-3">Tipo de herramienta</label>
                 <select class="form-control" id="tipo_herramienta" name="tipo_herramienta">
                     {% for tipo in tipos_herramientas %}
-                    <option value="{{ tipo }}">{{ tipo }}</option>
+                    <option value="{{ tipo.id_tipo_herramienta }}">{{ tipo.nombre_tipo }}</option>
                     {% endfor %}
                 </select>
             </div>
 
-            <!-- Tercera columna -->
-            <div class="col-md-4 my-4">
+            <!-- Segunda columna -->
+            <div class="col-md-6 my-4">
                 <label for="parte_numero" class="form-label">Parte número</label>
                 <input type="text" class="form-control" id="parte_numero" name="parte_numero">
 
-                <label for="manual" class="form-label mt-3">Manual</label>
-                <input type="text" class="form-control" id="manual" name="manual">
+                <label for="dibujo_seccion_transversal" class="form-label mt-3">Dibujo de sección transversal</label>
+                <input type="file" class="form-control" id="dibujo_seccion_transversal" name="dibujo_seccion_transversal" accept=".jpg, .jpeg, .png, .pdf">
             </div>
         </div>
         <!-- Botón "Agregar herramienta" -->
@@ -83,10 +73,11 @@
                 <label for="cantidad" class="form-label mt-3">Cantidad</label>
                 <input type="number" class="form-control" id="cantidad" name="cantidad">
 
-                <label for="tipo_herramienta_especial" class="form-label mt-3">Tipo de herramienta</label>
-                <select class="form-control" id="tipo_herramienta_especial" name="tipo_herramienta">
+                <label for="tipo_herramienta" class="form-label mt-3">Tipo de herramienta</label>
+                <select class="form-control" id="tipo_herramienta" name="tipo_herramienta">
+                    <option value="">Seleccione un tipo</option>
                     {% for tipo in tipos_herramientas %}
-                    <option value="{{ tipo }}">{{ tipo }}</option>
+                        <option value="{{ tipo.id_tipo_herramienta }}">{{ tipo.nombre_tipo }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -98,9 +89,6 @@
 
                 <label for="valor_especial" class="form-label mt-3">Costo</label>
                 <input type="number" class="form-control" id="valor_especial" name="valor">
-
-                <label for="MTBF" class="form-label mt-3">MTBF</label>
-                <input type="number" class="form-control" id="MTBF" name="MTBF">
             </div>
         </div>
         <!-- Botón "Agregar herramienta especial" -->

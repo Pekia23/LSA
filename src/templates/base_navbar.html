@@ -41,7 +41,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if request.endpoint == 'registro_MTA' %}active{% endif %}" href="{{ url_for('registro_MTA') }}">
+                        <a class="nav-link {% if request.endpoint == 'registro_MTA' %}active{% endif %}" href="{{ url_for('registro_MTA', fmea_id=0) }}">
                             MTA - LORA
                         </a>
                     </li>

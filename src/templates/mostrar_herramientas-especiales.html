@@ -24,77 +24,73 @@
   </li>
 </ul>
 <div class="tab-content" id="myTabContent">
-  <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-    <h3> Analisis de herramientas</h3>
-    <table class="table">
+  <!-- Pestaña de "Análisis de herramientas" -->
+<div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+  <h3> Análisis de herramientas</h3>
+  <table class="table">
       <thead>
           <tr>
-            <th scope="col" >Equipo</th>
-            <th scope="col" >Nombre de la herramienta</th>
-            <th scope="col" >Parte numero</th>
-            <th scope="col" >Dibujo de seccion transversal</th>
-            <th scope="col" >Costo</th>
+              <th scope="col">Nombre de la herramienta</th>
+              <th scope="col">Parte número</th>
+              <th scope="col">Costo</th>
+              <th scope="col">Acciones</th>
           </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>Mark</td>
-          <td>Otto</td>
-          <td>@mdo</td>
-          <td>@fat</td>
-        </tr>
-        <tr>
-          <td>Jacob</td>
-          <td>tdornton</td>
-          <td>@fat</td>
-          <td>@fat</td>
-        </tr>
-        <tr>
-          <td colspan="2">Larry tde Bird</td>
-          <td>@twitter</td>
-          <td>@fat</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-    <h3> Herramientas especiales</h3>
-    <table class="table">
-      <thead>
+          {% for analisis in analisis %}
           <tr>
-            <th scope="col" >Equipo</th>
-            <th scope="col" >Nombre de la herramienta</th>
-            <th scope="col" >Parte numero</th>
-            <th scope="col" >Dibujo de seccion transversal</th>
-            <th scope="col" >Cantidad</th>
-            <th scope="col" >Costo</th>
-            <th scope="col" >Manual referenciado</th>
+              <td>{{ analisis.nombre }}</td>
+              <td>{{ analisis.parte_numero }}</td>
+              <td>{{ analisis.valor }}</td>
+              <td>
+                  <button class="btn btn-primary btn-editar-analisis" data-id="{{ analisis.id }}">Editar</button>
+                  <button class="btn btn-danger btn-eliminar-analisis" data-id="{{ analisis.id }}">Eliminar</button>
+              </td>
           </tr>
-      </thead>
-      <tbody>
-        {% for herramienta in herramientas %}
-        <tr>
-            <td>{{ herramienta.nombre_herramienta }}</td>
-            <td>{{ herramienta.parte_numero }}</td>
-            <td>{{ herramienta.valor }}</td>
-            <td>{{ herramienta.MTBF }}</td>
-            <td>{{ herramienta.nota }}</td>
-            <td>{{ herramienta.manual_referencia }}</td>
-            <td>
-                {% if herramienta.dibujo_seccion_transversal %}
-                    <img src="data:image/png;base64,{{ herramienta.dibujo_seccion_transversal|b64encode }}" alt="Dibujo" style="max-width: 100px; max-height: 100px;">
-                {% endif %}
-            </td>
-            <td>
-                <button class="btn btn-primary btn-editar" data-id="{{ herramienta.id }}">Editar</button>
-                <button class="btn btn-danger btn-eliminar" data-id="{{ herramienta.id }}">Eliminar</button>
-            </td>
-        </tr>
-        {% endfor %}
+          {% endfor %}
       </tbody>
-    </table>
-  </div>
+  </table>
 </div>
+
+  <!-- Pestaña de "Herramientas especiales" -->
+<div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+  <h3> Herramientas especiales</h3>
+  <table class="table">
+      <thead>
+          <tr>
+              <th scope="col">Nombre de la herramienta</th>
+              <th scope="col">Parte número</th>
+              <th scope="col">Dibujo de sección transversal</th>
+              <th scope="col">Cantidad</th>
+              <th scope="col">Costo</th>
+              <th scope="col">Manual referenciado</th>
+              <th scope="col">Acciones</th>
+          </tr>
+      </thead>
+      <tbody>
+          {% for herramienta in herramientas %}
+          <tr>
+              <td>{{ herramienta.nombre_herramienta }}</td>
+              <td>{{ herramienta.parte_numero }}</td>
+              <td>
+                  {% if herramienta.dibujo_seccion_transversal %}
+                  <img src="data:image/png;base64,{{ herramienta.dibujo_seccion_transversal|b64encode }}" alt="Dibujo" style="max-width: 100px; max-height: 100px;">
+                  {% endif %}
+              </td>
+              <td>{{ herramienta.cantidad }}</td>
+              <td>{{ herramienta.valor }}</td>
+              <td>{{ herramienta.manual_referencia }}</td>
+              <td>
+                  <button class="btn btn-primary btn-editar" data-id="{{ herramienta.id }}">Editar</button>
+                  <button class="btn btn-danger btn-eliminar" data-id="{{ herramienta.id }}">Eliminar</button>
+              </td>
+          </tr>
+          {% endfor %}
+      </tbody>
+  </table>
+</div>
+
+
 
 <br>
 <div class="mt-4">

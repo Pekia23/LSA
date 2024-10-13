@@ -21,15 +21,15 @@
                 <div class="row">
                     <!-- Primera columna -->
                     <div class="col-md-4 my-4">
-                        <label for="equipo" class="form-label">Equipo</label>
-                        <input type="text" class="form-control" id="equipo" name="equipo" value="{{ herramienta.equipo }}" readonly>
+                        <label for="nombre_herramienta" class="form-label">Nombre de la herramienta</label>
+                        <input type="text" class="form-control" id="nombre_herramienta" name="nombre_herramienta" value="{{ herramienta.nombre_herramienta }}">
 
                         <label for="dibujo_seccion_transversal" class="form-label mt-3">Dibujo de sección transversal</label>
                         <input type="file" class="form-control" id="dibujo_seccion_transversal" name="dibujo_seccion_transversal" accept=".jpg, .jpeg, .png, .pdf">
 
                         {% if herramienta.dibujo_seccion_transversal %}
-                            <p>Imagen actual:</p>
-                            <img src="data:image/png;base64,{{ herramienta.dibujo_seccion_transversal|b64encode }}" alt="Dibujo actual" style="max-width: 200px; max-height: 200px;">
+                        <p>Imagen actual:</p>
+                        <img src="data:image/png;base64,{{ herramienta.dibujo_seccion_transversal|b64encode }}" alt="Dibujo actual" style="max-width: 200px; max-height: 200px;">
                         {% endif %}
 
                         <label for="manual_referencia" class="form-label mt-3">Manual referenciado</label>
@@ -38,14 +38,23 @@
 
                     <!-- Segunda columna -->
                     <div class="col-md-4 my-4">
-                        <label for="nombre_herramienta" class="form-label">Nombre de la herramienta</label>
-                        <input type="text" class="form-control" id="nombre_herramienta" name="nombre_herramienta" value="{{ herramienta.nombre_herramienta }}">
+                        <label for="parte_numero" class="form-label">Parte número</label>
+                        <input type="text" class="form-control" id="parte_numero" name="parte_numero" value="{{ herramienta.parte_numero }}">
+
+                        <label for="valor" class="form-label mt-3">Costo</label>
+                        <input type="number" class="form-control" id="valor" name="valor" value="{{ herramienta.valor }}">
 
                         <label for="cantidad" class="form-label mt-3">Cantidad</label>
                         <input type="number" class="form-control" id="cantidad" name="cantidad" value="{{ herramienta.cantidad }}">
 
+                        <label for="nota" class="form-label mt-3">Nota</label>
+                        <textarea class="form-control" id="nota" name="nota">{{ herramienta.nota }}</textarea>
+                    </div>
+
+                    <!-- Tercera columna -->
+                    <div class="col-md-4 my-4">
                         <!-- Campo "Tipo de herramienta" -->
-                        <label for="tipo_herramienta" class="form-label mt-3">Tipo de herramienta</label>
+                        <label for="tipo_herramienta" class="form-label">Tipo de herramienta</label>
                         <select class="form-control" id="tipo_herramienta" name="tipo_herramienta">
                             <option value="">Seleccione un tipo</option>
                             <option value="seguridad" {% if herramienta.tipo_herramienta == 'seguridad' %}selected{% endif %}>Seguridad</option>
@@ -54,21 +63,6 @@
                             <option value="electronicos" {% if herramienta.tipo_herramienta == 'electronicos' %}selected{% endif %}>Electrónicos</option>
                             <option value="de limpieza" {% if herramienta.tipo_herramienta == 'de limpieza' %}selected{% endif %}>De Limpieza</option>
                         </select>
-                    </div>
-
-                    <!-- Tercera columna -->
-                    <div class="col-md-4 my-4">
-                        <label for="parte_numero" class="form-label">Parte número</label>
-                        <input type="text" class="form-control" id="parte_numero" name="parte_numero" value="{{ herramienta.parte_numero }}">
-
-                        <label for="valor" class="form-label mt-3">Costo</label>
-                        <input type="number" class="form-control" id="valor" name="valor" value="{{ herramienta.valor }}">
-
-                        <label for="mtbf" class="form-label mt-3">MTBF</label>
-                        <input type="number" class="form-control" id="mtbf" name="mtbf" value="{{ herramienta.MTBF }}">
-
-                        <label for="nota" class="form-label mt-3">Nota</label>
-                        <textarea class="form-control" id="nota" name="nota">{{ herramienta.nota }}</textarea>
                     </div>
                 </div>
 
