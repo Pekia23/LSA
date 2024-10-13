@@ -1669,7 +1669,10 @@ def api_insertar_analisis_funcional():
     return jsonify({'status': 'success'})
 
 
+
+
 """"
+ciber
 # Ruta para registrar un nuevo análisis funcional
 @app.route('/registro_analisis_funcional', methods=['GET'])
 def registro_analisis_funcional():
