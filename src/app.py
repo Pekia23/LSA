@@ -7,7 +7,6 @@ import uuid
 import MySQLdb.cursors
 import uuid  # Para generar un token único
 from __init__ import db
-from flask_wtf.csrf import CSRFProtect
 from config import config
 from io import BytesIO
 from reportlab.lib.pagesizes import letter
@@ -143,7 +142,6 @@ from __init__ import create_app
 
 app = Flask(__name__)
 app = create_app()
-csrf = CSRFProtect(app)
 app.config.from_object(config['development'])
 app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
@@ -466,7 +464,7 @@ def login():
             # Guardar la información del usuario en el diccionario temporal
             guardar_info_usuario(token, usuario_id=usuario['id'])
             # Crear la respuesta y configurar la cookie
-            response = make_response(redirect(url_for('registro_generalidades')))
+            response = make_response(redirect(url_for('index')))
             response.set_cookie('user_token', token, httponly=True, secure=True, samesite='Lax')  # Establecer la cookie con el token
             return response
         else:
