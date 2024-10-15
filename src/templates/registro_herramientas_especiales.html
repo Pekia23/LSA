@@ -38,6 +38,9 @@
                 <label for="parte_numero" class="form-label">Parte número</label>
                 <input type="text" class="form-control" id="parte_numero" name="parte_numero">
 
+                <label for="cantidad" class="form-label mt-3">Cantidad</label>
+                <input type="number" class="form-control" id="cantidad" name="cantidad">
+
                 <label for="dibujo_seccion_transversal" class="form-label mt-3">Dibujo de sección transversal</label>
                 <input type="file" class="form-control" id="dibujo_seccion_transversal" name="dibujo_seccion_transversal" accept=".jpg, .jpeg, .png, .pdf">
             </div>
@@ -96,6 +99,9 @@
             <button type="submit" class="btn btn-primary">Agregar herramienta especial</button>
         </div>
     </form>
+    <div class="mt-4">
+        <a href="{{ url_for('mostrar_herramientas_especiales') }}" class="btn btn-primary">Visualizar Herramientas</a>
+    </div>
 </div>
 
 <script src="{{ url_for('static', filename='js/herramientas_especiales.js') }}"></script>

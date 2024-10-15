@@ -42,8 +42,8 @@
           <td>{{ analisis.parte_numero }}</td>
           <td>{{ analisis.valor }}</td>
           <td>
-            <button class="btn btn-primary btn-editar-analisis" data-id="{{ analisis.id }}">Editar</button>
-            <button class="btn btn-danger btn-eliminar-analisis" data-id="{{ analisis.id }}">Eliminar</button>
+            <button class="boton btn-editar-analisis" data-id="{{ analisis.id }}"><i class="bi bi-pen"></button>
+            <button class="btn btn-danger btn-eliminar-analisis" data-id="{{ analisis.id }}"><i class="bi bi-trash"></button>
           </td>
         </tr>
         {% endfor %}
@@ -80,16 +80,18 @@
           <td>{{ herramienta.valor }}</td>
           <td>{{ herramienta.manual_referencia }}</td>
           <td>
-            <button class="btn btn-primary btn-editar" data-id="{{ herramienta.id }}">Editar</button>
-            <button class="btn btn-danger btn-eliminar" data-id="{{ herramienta.id }}">Eliminar</button>
+            <button class="btn btn-primary btn-editar" data-id="{{ herramienta.id }}"><i class="bi bi-pen"></button>
+            <button class="btn btn-danger btn-eliminar" data-id="{{ herramienta.id }}"><i class="bi bi-trash"></button>
           </td>
         </tr>
         {% endfor %}
-
       </tbody>
   </table>
 </div>
-
+<div class="mt-4">
+  <a href="{{ url_for('registro_repuesto') }}" class="btn btn-primary">Terminar Modulo de Herramientas</a>
+</div>
+<a href="{{ url_for('registro_repuesto') }}"><i class="bi bi-arrow-left-circle-fill"></i></a>
 
 <script src="{{ url_for('static', filename='js/mostrar_herramientas.js') }}"></script>
 {% endblock %}

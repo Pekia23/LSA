@@ -661,10 +661,7 @@ def agregar_analisis_herramienta():
 
     # Insertar en la tabla herramientas_generales, incluyendo el archivo si está disponible
     analisis_id = insertar_analisis_herramienta(
-        nombre, valor, id_equipo_info, parte_numero, id_herramienta_requerida, id_tipo_herramienta
-        
-        
-        #,dibujo_data
+        nombre, valor, id_equipo_info, parte_numero, id_herramienta_requerida, id_tipo_herramienta,dibujo_data
         
     )
 
@@ -1162,18 +1159,13 @@ def eliminar_FMEA(fmea_id):
 
 @app.route('/LSA/equipo/editar-modulo-herramientas')
 def editar_modulo_herramientas():
-    return render_template('editar_herramientas-especiales.html')
+    return render_template('editar_herramientas_especial.html')
 
 """
 @app.route('/LSA/equipo/editar-analisis-herramientas')
 def editar_analisis_herramientas():
     return render_template('editar_analisis_herramientas.html')
 """
-
-@app.route('/LSA/equipo/editar-herramientas-especiales')
-def editar_herramientas_especiales():
-    return render_template('editar_herramientas_especiales2.html')
-
 
 @app.route('/LSA/equipo/editar_RCM/<int:fmea_id>')
 def editar_RCM(fmea_id):
@@ -1638,13 +1630,6 @@ def obtener_nombre_falla(codigo_id):
 
 ############################################################################################################
 
-
-
-
-
-@app.route('/LSA/equipo/registro-LORA')
-def registro_lora():
-    return render_template('registro_lora.html')
 """
 @app.route('/LSA/registro-analisis-funcional')
 def registro_analisis_funcional():

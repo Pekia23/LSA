@@ -127,7 +127,30 @@ h3 {
     margin: 0 auto; /* Centra la tabla horizontalmente */
     display: table;
 }
+i{
+    color:white;
+}
 
+.boton {
+    background-color: rgb(33, 33, 99);
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    text-decoration: none; /* Evita subrayado en el enlace si lo hubiera */
+}
 
-  
+.boton {
+    background-color:rgb(13, 2, 63) ;
+    color: inherit; /* Esto asegura que el link no cambie de color */
+    text-decoration: none; /* Evita subrayado en el enlace si lo hubiera */
+    color: white;
+}
+
+.bi-arrow-left-circle-fill{
+    color:#052647;
+    font-size: 40px;
+}
    
