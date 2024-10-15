@@ -393,9 +393,10 @@ def insertar_causa(nombre_causa):
 #Fmea Registro
 def insertar_fmea(id_equipo_info, id_sistema, id_falla_funcional, id_componente, id_codigo_modo_falla, 
         id_consecutivo_modo_falla, id_descripcion_modo_falla, id_causa, id_mecanismo_falla, 
-        id_detalle_falla, MTBF, MTTR,id_metodo_deteccion_falla, id_fallo_oculto, id_seguridad_fisica, id_medio_ambiente, 
-        id_impacto_operacional, id_costos_reparacion, id_flexibilidad_operacional,calculo_severidad, id_ocurrencia, ocurrencia_mate,
-
+        id_detalle_falla, MTBF, MTTR,id_metodo_deteccion_falla, id_fallo_oculto, id_seguridad_fisica, 
+        id_medio_ambiente, 
+        id_impacto_operacional, id_costos_reparacion, id_flexibilidad_operacional,calculo_severidad, 
+        id_ocurrencia, ocurrencia_mate,
         id_probabilidad_deteccion, rpn, id_riesgo):
 
     cursor = db.connection.cursor()
@@ -405,7 +406,6 @@ def insertar_fmea(id_equipo_info, id_sistema, id_falla_funcional, id_componente,
             id_consecutivo_modo_falla, id_descripcion_modo_falla, id_causa, id_mecanismo_falla, 
             id_detalle_falla, MTBF, MTTR,id_metodo_deteccion_falla, id_fallo_oculto, id_seguridad_fisica, id_medio_ambiente, 
             id_impacto_operacional, id_costos_reparacion, id_flexibilidad_operacional,calculo_severidad, id_ocurrencia, ocurrencia_mate,
-
             id_probabilidad_deteccion, RPN, id_riesgo
         ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
 
@@ -524,7 +524,6 @@ def obtener_fmeas():
         pd.descripcion as probabilidad_deteccion_descripcion,
         f.RPN,
         f.id_riesgo
-
     FROM fmea f
     LEFT JOIN sistema s ON f.id_sistema = s.id
     LEFT JOIN falla_funcional ff ON f.id_falla_funcional = ff.id
@@ -552,6 +551,9 @@ def obtener_fmeas():
     # Lista para almacenar los FMEAs procesados
     fmeas_completos = []
 
+    # Diccionario para contar las ocurrencias de cada consecutivo_modo_falla
+    consecutivo_modo_falla_counter = {}
+
     # Procesar cada fila de la consulta
     for fmea in fmeas:
         # Verificar si alguna columna no tiene nombre o descripción
@@ -562,6 +564,7 @@ def obtener_fmeas():
         sistema_nombre = fmea['sistema'] if fmea['sistema'] else obtener_nombre_por_id('subsistemas', fmea['id_sistema'])
 
         falla_funcional_nombre = fmea['falla_funcional'] if fmea['falla_funcional'] else obtener_nombre_por_id('falla_funcional', fmea['id_falla_funcional'])
+
         componente_nombre = fmea['componente'] if fmea['componente'] else obtener_nombre_por_id('componentes', fmea['id_componente'])
         codigo_modo_falla_nombre = fmea['codigo_modo_falla'] if fmea['codigo_modo_falla'] else obtener_nombre_por_id('codigo_modo_falla', fmea['id_codigo_modo_falla'])
         consecutivo_modo_falla_nombre = fmea['consecutivo_modo_falla'] if fmea['consecutivo_modo_falla'] else obtener_nombre_por_id('consecutivo_modo_falla', fmea['id_consecutivo_modo_falla'])
@@ -569,6 +572,16 @@ def obtener_fmeas():
         causa_nombre = fmea['causa'] if fmea['causa'] else obtener_nombre_por_id('causa', fmea['id_causa'])
         mecanismo_falla_nombre = fmea['mecanismo_falla'] if fmea['mecanismo_falla'] else obtener_nombre_por_id('mecanismo_falla', fmea['id_mecanismo_falla'])
         detalle_falla_nombre = fmea['detalle_falla'] if fmea['detalle_falla'] else obtener_nombre_por_id('detalle_falla', fmea['id_detalle_falla'])
+
+
+
+        # Contar las ocurrencias de consecutivo_modo_falla
+        if consecutivo_modo_falla_nombre not in consecutivo_modo_falla_counter:
+            consecutivo_modo_falla_counter[consecutivo_modo_falla_nombre] = 0
+        consecutivo_modo_falla_counter[consecutivo_modo_falla_nombre] += 1
+
+        # Concatenar la numeración al consecutivo_modo_falla
+        consecutivo_modo_falla_numerado = f"{consecutivo_modo_falla_nombre}-{consecutivo_modo_falla_counter[consecutivo_modo_falla_nombre]}"
 
         # Añadir el FMEA procesado a la lista
         fmeas_completos.append({
@@ -654,7 +667,6 @@ def actualizar_fmea(
             id_descripcion_modo_falla = %s, id_causa = %s, id_mecanismo_falla = %s, 
             id_detalle_falla = %s, MTBF = %s, MTTR = %s, id_fallo_oculto = %s, 
             id_seguridad_fisica = %s, id_medio_ambiente = %s, id_impacto_operacional = %s, 
-
             id_costos_reparacion = %s, id_flexibilidad_operacional = %s, calculo_severidad = %s, id_ocurrencia = %s, 
             ocurrencia_mate = %s, id_probabilidad_deteccion = %s, id_metodo_deteccion_falla = %s, RPN = %s, id_riesgo = %s
 
@@ -664,7 +676,6 @@ def actualizar_fmea(
         id_equipo_info, sistema_id, id_falla_funcional, id_componente, id_codigo_modo_falla, 
         id_consecutivo_modo_falla, id_descripcion_modo_falla, id_causa, id_mecanismo_falla, 
         id_detalle_falla, mtbf, mttr, id_fallo_oculto, id_seguridad_fisica, id_medio_ambiente, 
-
         id_impacto_operacional, id_costos_reparacion, id_flexibilidad_operacional,calculo_severidad,
         id_ocurrencia, ocurrencia_mate,id_probabilidad_deteccion, id_metodo_deteccion_falla,rpn, id_riesgo,
         
@@ -675,15 +686,6 @@ def actualizar_fmea(
     cursor.close()
 
 ##################################################################################################################
-
-
-
-
-
-
-
-
-
 
 
 def insertar_procedimiento(arranque, parada):
@@ -1090,15 +1092,145 @@ def obtener_tipos_herramientas():
     return tipos
 
 
+############################RCMMMMM
+def obtener_rcm_por_fmea(id_fmea):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = """
+        SELECT
+            r.id,
+            r.id_fmea,
+            s.nombre as sistema, 
+            ff.nombre as falla_funcional, 
+            c.nombre as componente, 
+            cmf.nombre as codigo_modo_falla, 
+            cf.nombre as consecutivo_modo_falla, 
+            dmf.nombre as descripcion_modo_falla, 
+            causa.nombre as causa, 
+            r.hidden_failures,
+            r.safety,
+            r.environment,
+            r.operation,
+            r.h1_s1_n1_o1,
+            r.h2_s2_n2_o2,
+            r.h3_s3_n3_o3,
+            r.h4_s4,
+            r.h5,
+            r.tarea,
+            r.id_accion_recomendada,
+            r.intervalo_inicial_horas
+        FROM rcm r
+        LEFT JOIN fmea f ON r.id_fmea = f.id
+        LEFT JOIN sistema s ON f.id_sistema = s.id
+        LEFT JOIN falla_funcional ff ON f.id_falla_funcional = ff.id
+        LEFT JOIN componentes c ON f.id_componente = c.id
+        LEFT JOIN codigo_modo_falla cmf ON f.id_codigo_modo_falla = cmf.id
+        LEFT JOIN consecutivo_modo_falla cf ON f.id_consecutivo_modo_falla = cf.id
+        LEFT JOIN descripcion_modo_falla dmf ON f.id_descripcion_modo_falla = dmf.id
+        LEFT JOIN causa ON f.id_causa = causa.id
+        WHERE r.id_fmea = %s
+    """
+    cursor.execute(query, (id_fmea,))
+    context = cursor.fetchall()
+    rcm = context[0]
+    print(rcm)
+    cursor.close()
+    return rcm
+
+def obtener_rcms_completos():
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = """
+        SELECT
+            r.id,
+            r.id_fmea,
+            s.nombre as sistema, 
+            ff.nombre as falla_funcional, 
+            c.nombre as componente, 
+            cmf.nombre as codigo_modo_falla, 
+            cf.nombre as consecutivo_modo_falla, 
+            dmf.nombre as descripcion_modo_falla, 
+            causa.nombre as causa, 
+            r.hidden_failures,
+            r.safety,
+            r.environment,
+            r.operation,
+            r.h1_s1_n1_o1,
+            r.h2_s2_n2_o2,
+            r.h3_s3_n3_o3,
+            r.h4_s4,
+            r.h5,
+            r.tarea,
+            r.id_accion_recomendada,
+            r.intervalo_inicial_horas
+        FROM rcm r
+        LEFT JOIN fmea f ON r.id_fmea = f.id
+        LEFT JOIN sistema s ON f.id_sistema = s.id
+        LEFT JOIN falla_funcional ff ON f.id_falla_funcional = ff.id
+        LEFT JOIN componentes c ON f.id_componente = c.id
+        LEFT JOIN codigo_modo_falla cmf ON f.id_codigo_modo_falla = cmf.id
+        LEFT JOIN consecutivo_modo_falla cf ON f.id_consecutivo_modo_falla = cf.id
+        LEFT JOIN descripcion_modo_falla dmf ON f.id_descripcion_modo_falla = dmf.id
+        LEFT JOIN causa ON f.id_causa = causa.id
+    """
+    cursor.execute(query)
+    rcms_completos = cursor.fetchall()
+    cursor.close()
+    return rcms_completos
+
+def obtener_fmeas_con_rcm():
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = "SELECT id_fmea FROM rcm"
+    cursor.execute(query)
+    fmeas_con_rcm = cursor.fetchall()
+    cursor.close()
+
+    # Extraer solo los id_fmea de los resultados
+    id_fmeas = [fmea['id_fmea'] for fmea in fmeas_con_rcm]
+    return id_fmeas
+
+def eliminar_rcm(id_fmea):
+    cursor = db.connection.cursor()
+    query = "DELETE FROM rcm WHERE id_fmea = %s"
+    cursor.execute(query, (id_fmea,))
+    db.connection.commit()
+    cursor.close()
+
+
+def actualizar_rcm(rcm):
+    cursor = db.connection.cursor()
+    query = """
+        UPDATE rcm
+        SET hidden_failures = %s, safety = %s, environment = %s, operation = %s, h1_s1_n1_o1 = %s, h2_s2_n2_o2 = %s, h3_s3_n3_o3 = %s, h4_s4 = %s, h5 = %s, tarea = %s, intervalo_inicial_horas = %s, id_accion_recomendada = %s
+        WHERE id_fmea = %s
+    """
+    cursor.execute(query, (
+        rcm['hidden_failures'], rcm['safety'], rcm['environment'], rcm['operation'], rcm['h1_s1_n1_o1'], rcm['h2_s2_n2_o2'], rcm['h3_s3_n3_o3'], rcm['h4_s4'], rcm['h5'], rcm['tarea'], rcm['intervalo_inicial_horas'], rcm['id_accion_recomendada'], rcm['id_fmea']
+    ))
+    db.connection.commit()
+    cursor.close()
+
+
+def obtener_lista_acciones_recomendadas():
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = "SELECT * FROM accion_recomendada"
+    cursor.execute(query)
+    accion_recomendada = cursor.fetchall()
+    cursor.close()
+    return accion_recomendada
 
 
 
-
-
-
-
-
-
+def insertar_rcm(rcm):
+    cursor = db.connection.cursor()
+    query = """
+        INSERT INTO rcm (
+            id_fmea, hidden_failures, safety, environment, operation, h1_s1_n1_o1, h2_s2_n2_o2, h3_s3_n3_o3, h4_s4, h5, tarea, intervalo_inicial_horas, id_accion_recomendada
+        ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+    """
+    cursor.execute(query, (
+        rcm['id_fmea'], rcm['hidden_failures'], rcm['safety'], rcm['environment'], rcm['operation'], rcm['h1_s1_n1_o1'], rcm['h2_s2_n2_o2'], rcm['h3_s3_n3_o3'], rcm['h4_s4'], rcm['h5'], rcm['tarea'], rcm['intervalo_inicial_horas'], rcm['id_accion_recomendada']
+    ))
+    db.connection.commit()
+    cursor.close()
 
 
 
@@ -1336,32 +1468,34 @@ def obtener_tipo_equipo_por_id(id_tipo_equipo):
 # Función para obtener todos los análisis funcionales de un equipo específico
 def obtener_analisis_funcionales_por_equipo_info(id_equipo_info):
     cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+
     query = """
-        SELECT af.*, ss.nombre AS subsistema_nombre, s.nombre AS sistema_nombre
-        FROM analisis_funcional af
-        LEFT JOIN subsistemas ss ON af.id_subsistema = ss.id
-        LEFT JOIN sistema s ON ss.id_sistema = s.id
-        WHERE af.id_equipo_info = %s
+    SELECT af.id, af.verbo, af.accion, af.estandar_desempeño, ss.nombre AS subsistema_nombre
+    FROM analisis_funcional af
+    JOIN subsistemas ss ON af.id_subsistema = ss.id
+    WHERE af.id_equipo_info = %s
     """
+
     cursor.execute(query, (id_equipo_info,))
     analisis_funcionales = cursor.fetchall()
     cursor.close()
+    
     return analisis_funcionales
+
 
 # Función para obtener un análisis funcional por su ID
 def obtener_analisis_funcional_por_id(id_analisis_funcional):
     cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
     query = """
-        SELECT af.*, ss.nombre AS subsistema_nombre, s.nombre AS sistema_nombre
+        SELECT af.*
         FROM analisis_funcional af
-        LEFT JOIN subsistemas ss ON af.id_subsistema = ss.id
-        LEFT JOIN sistema s ON ss.id_sistema = s.id
         WHERE af.id = %s
     """
     cursor.execute(query, (id_analisis_funcional,))
     analisis_funcional = cursor.fetchone()
     cursor.close()
     return analisis_funcional
+
 
 # Función para actualizar un análisis funcional existente
 def actualizar_analisis_funcional(id_analisis_funcional, verbo, accion, estandar_desempeño, id_subsistema):
@@ -1405,11 +1539,22 @@ def obtener_subsistemas_por_equipo_mostrar(id_equipo_info):
     return subsistemas
 
 
-def obtener_nombre_sistema_por_id(id_sistema):
+def obtener_nombre_sistema_por_id(subsistema_id):
     cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
-    query = "SELECT nombre FROM sistema WHERE id = %s"
-    cursor.execute(query, (id_sistema,))
+    
+    # Si subsistema_id se refiere directamente al sistema
+    query = """
+    SELECT s.nombre 
+    FROM subsistemas s
+    WHERE s.id = %s
+    """
+    
+    cursor.execute(query, (subsistema_id,))
     resultado = cursor.fetchone()
     cursor.close()
-    return resultado['nombre'] if resultado else None
+
+    if resultado:
+        return resultado['nombre']
+    else:
+        return None
 

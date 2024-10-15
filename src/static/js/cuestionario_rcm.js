@@ -194,6 +194,10 @@ function mostrarPregunta(nodeId) {
         return;
     }
 
+    if (["R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8"].includes(currentNode)) {
+        guardarPreguntaEnCuestionarioRCM10(nodo.pregunta);
+    }
+
     // Mostrar los botones "Sí" y "No" solo si el nodo tiene respuestas disponibles
     if (nodo.respuestas["Sí"] && nodo.respuestas["No"]) {
         document.getElementById("yesBtn").style.display = "inline-block";
@@ -208,6 +212,8 @@ function mostrarPregunta(nodeId) {
     } else {
         document.getElementById("backBtn").style.display = "none";
     }
+
+
 
     // Actualizamos los eventos de los botones según la lógica del nodo
     document.getElementById("yesBtn").onclick = function() {
@@ -241,6 +247,13 @@ function mostrarPregunta(nodeId) {
     };
 }
 
+function guardarPreguntaEnCuestionarioRCM10(pregunta) {
+    const inputElement = document.getElementById("cuestionario_rcm10");
+    if (inputElement) {
+        inputElement.value = pregunta;
+    }
+}
+
 // Función para ocultar todos los botones
 function ocultarBotones() {
     document.getElementById("yesBtn").style.display = "none";
@@ -248,14 +261,17 @@ function ocultarBotones() {
     document.getElementById("backBtn").style.display = "none";
 }
 
+
 // Función para guardar la respuesta
 function guardarRespuesta(preguntaId, respuesta) {
     // Si ya respondimos esta pregunta antes, actualizamos su input
+
     if (respuestas[preguntaId]) {
         const inputId = respuestas[preguntaId]; // Obtenemos el id del input correspondiente
         const inputElement = document.getElementById(inputId);
         if (inputElement) {
             inputElement.value = respuesta; // Actualizamos la respuesta
+
         }
     } else {
         // Si es una nueva respuesta, llenamos el siguiente input secuencial

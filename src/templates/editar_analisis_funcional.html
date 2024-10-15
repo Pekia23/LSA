@@ -16,10 +16,12 @@
     <br>
     <form method="POST">
         <div class="row">
-            <div class="col-md-6">
-                <label class="form-label">Sistema</label>
-                <p>{{ sistema_nombre }}</p>
-            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label class="form-label">Sistema</label>
+                    <p>{{ sistema.nombre if sistema else 'No hay sistema seleccionado' }}</p>
+                    <input type="hidden" id="sistema" name="sistema" value="{{ sistema.id if sistema else '' }}">
+                </div>
             <div class="col-md-6">
                 <label for="subsistema" class="form-label">Subsistema</label>
                 <select class="form-control" id="subsistema" name="subsistema">

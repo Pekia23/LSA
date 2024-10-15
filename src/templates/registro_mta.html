@@ -477,7 +477,12 @@
                         <input type="text" class="form-control" id="ambientales" name="ambientales">
                         
                         <label for="estado_equipo" class="form-label">Condiciones Requeridas (Estado del equipo)</label>
-                        <input type="text" class="form-control" id="estado_equipo" name="estado_equipo">
+                        <select class="form-control" id="estado_equipo" name="estado_equipo">
+                            <option value="" disabled selected>---- Selecciona ----</option>
+                            <option value="Apagado">Apagado</option>
+                            <option value="Apagado sin alimentacion">Apagado sin alimentación</option>
+                            <option value="Funcionando">Funcionando</option>
+                        </select>
                         
                         <label for="especiales" class="form-label">Condiciones Requeridas (Especiales)</label>
                         <input type="text" class="form-control" id="especiales" name="especiales">

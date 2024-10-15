@@ -92,6 +92,17 @@
                     <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
                   </form>
                 </td>
+                <td>
+                  {% if fmea['id'] in fmeas_con_rcm %}
+                    <button class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar RCM">
+                      <a href="{{url_for('editar_RCM', fmea_id=fmea['id'])}}">Editar RCM <i class="bi bi-pencil"></i></a>
+                    </button>
+                  {% else %}
+                    <button class="btn btn-success" data-bs-toggle="tooltip" data-bs-placement="top" title="Crear RCM">
+                      <a href="{{url_for('crear_RCM', fmea_id=fmea['id'])}}">Crear RCM <i class="bi bi-plus-circle"></i></a>
+                    </button>
+                  {% endif %}
+                </td>
               </tr>
               {% endfor %}
             </tbody>          

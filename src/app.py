@@ -1,8 +1,6 @@
-<<<<<<< HEAD
+
 from flask import Flask,session,flash, render_template, request, jsonify, redirect, url_for, make_response, g, send_file
-=======
-from flask import Flask,session, render_template, request, jsonify, redirect, url_for, make_response, g, send_file
->>>>>>> angelo
+
 from markupsafe import Markup
 
 import uuid
@@ -52,24 +50,12 @@ from database import (
 
 
     insertar_fmea,
-<<<<<<< HEAD
-    #insertar_componente,
-    insertar_consecutivo_modo_falla,
-    insertar_falla_funcional,
-    #insertar_codigo_modo_falla,
-    insertar_descripcion_modo_falla,
-    insertar_descripcion_modo_falla,
-    insertar_causa,
-    #insertar_mecanismo_falla,
-    #insertar_detalle_falla,
-=======
     obtener_subsistema_por_id,
     insertar_falla_funcional,
     insertar_descripcion_modo_falla,
-    insertar_descripcion_modo_falla,
     insertar_causa,
+    
 
->>>>>>> angelo
     #Obtener para desplegables FMEA
     obtener_componentes_por_subsistema,
     obtener_mecanismos_falla,
@@ -83,10 +69,7 @@ from database import (
     obtener_flexibilidad_operacional,
     obtener_Ocurrencia,
     obtener_probablilidad_deteccion,
-<<<<<<< HEAD
-=======
-    
->>>>>>> angelo
+
     obtener_fmeas,
     obtener_fmea_por_id,
     actualizar_fmea,
@@ -95,7 +78,8 @@ from database import (
     obtener_id_subsistema_por_componente_id,
     obtener_id_componente_por_fmea_id,
     obtener_ID_FMEA,
-<<<<<<< HEAD
+    obtener_lista_riesgos,
+
     eliminar_herramienta_especial,
     actualizar_herramienta_especial,
     obtener_herramienta_especial_por_id,
@@ -110,16 +94,15 @@ from database import (
     obtener_responsables,
     eliminar_equipo_info,
 
-=======
-    obtener_lista_riesgos,
+
     
->>>>>>> angelo
+
     #MTA
     insertar_mta,
     obtener_nombre_componente_por_id,
     obtener_tipos_mantenimiento,
     obtener_tareas_mantenimiento,
-<<<<<<< HEAD
+
     obtener_subsistema_por_id,
     obtener_procedimiento_por_id,
     obtener_personal_por_id,
@@ -137,11 +120,22 @@ from database import (
     insertar_analisis_funcional,
     obtener_subsistemas_por_equipo,
     obtener_nombre_sistema_por_id,
-    obtener_subsistemas_por_equipo_mostrar
+    obtener_subsistemas_por_equipo_mostrar,
 
-     
-=======
->>>>>>> angelo
+
+
+
+
+    #RCM
+    insertar_rcm,
+    obtener_rcm_por_fmea,
+    obtener_rcms_completos,
+    obtener_fmeas_con_rcm,
+    eliminar_rcm,
+    actualizar_rcm,
+
+    obtener_lista_acciones_recomendadas
+
 )
 
 from __init__ import create_app
@@ -317,7 +311,7 @@ def registro_generalidades(id_sistema=None, id_equipo=None):
 
 
 
-
+###########################################################################################################
 
 @app.route('/api/equipos_por_tipo/<int:id_tipo_equipo>', methods=['GET'])
 def obtener_equipos_por_tipo_api(id_tipo_equipo):
@@ -374,7 +368,6 @@ def api_analisis_funcional():
     accion = data.get('accion')
     estandar_desempeño = data.get('estandar_desempeño')
 
-<<<<<<< HEAD
 
 
     print('Datos recibidos:', data)
@@ -384,12 +377,8 @@ def api_analisis_funcional():
     print('accion:', accion)
     print('estandar_desempeño:', estandar_desempeño)
     # Guardar subsistema_id en la sesión de Flask
-    
-=======
-    # Guardar subsistema_id en la sesión de Flask
     session['subsistema_id'] = subsistema_id
->>>>>>> angelo
-    
+
     
     # Validar los datos recibidos (puedes agregar más validaciones)
     if not sistema_id or not subsistema_id or not verbo or not accion or not estandar_desempeño or not id_equipo_info:
@@ -664,7 +653,7 @@ def agregar_analisis_herramienta():
     except ValueError:
         return jsonify({'error': 'El valor debe ser numérico'}), 400
 
-<<<<<<< HEAD
+
     # Leer el archivo si existe
     dibujo_data = dibujo_seccion_transversal.read() if dibujo_seccion_transversal else None
 
@@ -674,14 +663,7 @@ def agregar_analisis_herramienta():
     # Insertar en la tabla herramientas_generales, incluyendo el archivo si está disponible
     analisis_id = insertar_analisis_herramienta(
         nombre, valor, id_equipo_info, parte_numero, id_herramienta_requerida, id_tipo_herramienta, dibujo_data
-=======
-    # Insertar en la tabla herramientas_requeridas y obtener el ID
-    id_herramienta_requerida = insertar_herramienta_requerida(nombre, id_tipo_herramienta)
 
-    # Insertar en la tabla herramientas_generales, incluyendo el id_herramienta_requerida
-    analisis_id = insertar_analisis_herramienta(
-        nombre, valor, id_equipo_info, parte_numero, id_herramienta_requerida, id_tipo_herramienta
->>>>>>> angelo
     )
 
     return jsonify({'message': 'Análisis de herramienta agregado', 'id': analisis_id}), 200
@@ -689,7 +671,6 @@ def agregar_analisis_herramienta():
 
 
 
-<<<<<<< HEAD
 @app.route('/LSA/editar-analisis-herramienta/<int:id_analisis>', methods=['GET'])
 def editar_analisis_herramienta(id_analisis):
     token = g.user_token
@@ -736,11 +717,6 @@ def eliminar_analisis_herramienta_route(id_analisis):
     eliminar_analisis_herramienta(id_analisis)
     return jsonify({'message': 'Análisis de herramienta eliminado'}), 200
 
-
-
-=======
-
->>>>>>> angelo
 
 
 
@@ -947,25 +923,7 @@ def registro_FMEA():
 
 
 
-@app.route('/LSA/registro-herramientas-especiales', methods=['GET'])
-def registro_herramientas_especiales():
-    token = g.user_token
-    user_data = obtener_info_usuario(token)
-    id_equipo_info = user_data.get('id_equipo_info')
 
-    if id_equipo_info is None:
-        return redirect(url_for('registro_generalidades'))
-
-    tipos_herramientas = obtener_tipos_herramientas()
-
-    # Obtener el nombre del equipo
-    equipo = obtener_equipo_por_id(id_equipo_info)
-
-    return render_template(
-        'registro_herramientas_especiales.html',
-        equipo=equipo,
-        tipos_herramientas=tipos_herramientas
-    )
 
 
 
@@ -1040,31 +998,19 @@ def registro_FMEA():
 
 
 
-
 @app.route('/LSA/equipo/editar-FMEA')
 def editar_FMEA_lista():
-    fmeas = obtener_fmeas()#Estoy llamando los fmeas para que salgan en la lista
-<<<<<<< HEAD
-    print(f'Para la lista{fmeas}') 
-=======
-    #print(f'Para la lista{fmeas}') 
->>>>>>> angelo
-    return render_template('editar_FMEA.html', fmeas=fmeas)
+    fmeas = obtener_fmeas()  #Estoy llamando los fmeas para que salgan en la lista
+    #print(f'Para la lista{fmeas}')
+    fmeas_con_rcm = obtener_fmeas_con_rcm()
+    return render_template('editar_FMEA.html', fmeas=fmeas, fmeas_con_rcm=fmeas_con_rcm)
+
 
 @app.route('/LSA/editar-FMEA/<int:fmea_id>')
 def editar_FMEA(fmea_id):
     # Obtener los datos del FMEA a partir del ID
     fmea = obtener_fmea_por_id(fmea_id)
     fmea_id = obtener_ID_FMEA(fmea_id)
-<<<<<<< HEAD
-    print(f'\n\n\n\n{fmea_id}\n\n\n\n')
-    # Cargar la información del sistema
-    sistema = fmea.get('sistema')
-    componente_id_aux = obtener_id_componente_por_fmea_id(fmea_id)
-    subsistema_id = obtener_id_subsistema_por_componente_id(componente_id_aux)
-    #Obtener datos para desplegables
-    componentes = obtener_componentes_por_subsistema(subsistema_id)
-=======
     print(f'\n\n\n\n{fmea}\n\n\n\n') 
     # Cargar la información del sistema
     sistema = fmea.get('sistema')
@@ -1073,7 +1019,6 @@ def editar_FMEA(fmea_id):
     #Obtener datos para desplegables
     componentes = obtener_componentes_por_subsistema(sistema_id)
     print(f'\n\n\n\nlos componentes son: {componentes}\n\n\n\n')
->>>>>>> angelo
     mecanismos_falla = obtener_mecanismos_falla()
     codigos_modo_falla = obtener_codigos_modo_falla()
     metodos_deteccion_falla = obtener_metodos_deteccion_falla() 
@@ -1085,11 +1030,8 @@ def editar_FMEA(fmea_id):
     flexibilidad_operacional_datos= obtener_flexibilidad_operacional()
     ocurrencia_datos = obtener_Ocurrencia()
     probabilidad_deteccion_datos = obtener_probablilidad_deteccion()
-<<<<<<< HEAD
-=======
     lista_riesgos = obtener_lista_riesgos() or []
 
->>>>>>> angelo
 
     # Renderizar formularios
     return render_template('registro_FMEA.html',fmea=fmea, fmea_id=fmea_id, editar=True,
@@ -1105,21 +1047,13 @@ def editar_FMEA(fmea_id):
                            costos_reparacion_datos=costos_reparacion_datos,
                            flexibilidad_operacional_datos=flexibilidad_operacional_datos,
                            ocurrencia_datos = ocurrencia_datos,
-<<<<<<< HEAD
-                           probabilidad_deteccion_datos = probabilidad_deteccion_datos)
 
-@app.route('/LSA/guardar-FMEA/<int:fmea_id>', methods=['POST'])
-def guardar_cambios_fmea(fmea_id):
-    # Obtener el FMEA existente a partir del ID
-    fmea_filtrado = obtener_fmea_por_id(fmea_id)
-
-=======
                            probabilidad_deteccion_datos = probabilidad_deteccion_datos,
                            lista_riesgos= lista_riesgos)
 
 @app.route('/LSA/guardar-FMEA/<int:fmea_id>', methods=['POST'])
 def guardar_cambios_fmea(fmea_id):
->>>>>>> angelo
+
     # Los siguientes campos no cambian
     id_equipo_info = obtener_id_equipo_info_por_fmea(fmea_id)
     sistema_id = obtener_id_sistema_por_fmea_id(fmea_id)
@@ -1137,10 +1071,8 @@ def guardar_cambios_fmea(fmea_id):
     id_detalle_falla = request.form.get('detalle_falla')
     id_codigo_modo_falla = request.form.get('codigo_modo_falla')
     id_consecutivo_modo_falla = request.form.get('id_consecutivo_modo_falla')
-<<<<<<< HEAD
-    print(f"\n\n\nid_consecutivo: {id_consecutivo_modo_falla}\n\n\n")
-=======
->>>>>>> angelo
+
+
     id_metodo_deteccion_falla = request.form.get('metodo_detecion_falla')
     id_fallo_oculto = request.form.get('fallo_oculto')
     id_seguridad_fisica = request.form.get('seguridad_fisica')
@@ -1148,46 +1080,34 @@ def guardar_cambios_fmea(fmea_id):
     id_impacto_operacional = request.form.get('impacto_operacional')
     id_costos_reparacion = request.form.get('costos_reparacion')
     id_flexibilidad_operacional = request.form.get('flexibilidad_operacional')
-<<<<<<< HEAD
-    id_ocurrencia = request.form.get('ocurrencia')
-    id_probabilidad_deteccion = request.form.get('probabilidad_deteccion')
-=======
+
     calculo_severidad = request.form.get('severidad')
     id_ocurrencia = request.form.get('ocurrencia')
     ocurrencia_mate = request.form.get('ocurrencia_matematica')
     id_probabilidad_deteccion = request.form.get('probabilidad_deteccion') 
     rpn = request.form.get('rpn')
     id_riesgo = request.form.get('id_riesgo')
->>>>>>> angelo
+
     
     id_falla_funcional = insertar_falla_funcional(falla_funcional)
     id_descripcion_modo_falla = insertar_descripcion_modo_falla(descripcion_modo_falla)
     id_causa = insertar_causa(causas)
-<<<<<<< HEAD
-=======
-    
+
     print(f'\n\n\nValue: {id_probabilidad_deteccion}\n\n')
->>>>>>> angelo
+
 
     # Actualizar el registro FMEA con los nuevos datos
     actualizar_fmea(
         fmea_id, id_equipo_info, sistema_id, id_falla_funcional, id_componente, 
         id_codigo_modo_falla, id_consecutivo_modo_falla, id_descripcion_modo_falla, 
         id_causa, id_mecanismo_falla, id_detalle_falla, mtbf, mttr, id_fallo_oculto, 
-<<<<<<< HEAD
-        id_seguridad_fisica, id_medio_ambiente, id_impacto_operacional, 
-        id_costos_reparacion, id_flexibilidad_operacional, id_ocurrencia, 
-        id_probabilidad_deteccion, id_metodo_deteccion_falla
-    )
-
-=======
         id_seguridad_fisica, id_medio_ambiente, id_impacto_operacional, id_costos_reparacion, 
         id_flexibilidad_operacional, calculo_severidad, id_ocurrencia, ocurrencia_mate,
         id_probabilidad_deteccion, id_metodo_deteccion_falla, rpn, id_riesgo
     )
 
 
->>>>>>> angelo
+
     # Redireccionar después de guardar los cambios
     return redirect(url_for('mostrar_FMEA'))
 
@@ -1197,11 +1117,7 @@ def guardar_cambios_fmea(fmea_id):
 @app.route('/LSA/eliminar-FMEA/<int:fmea_id>', methods=['POST'])
 def eliminar_FMEA(fmea_id):
     cursor = db.connection.cursor()
-<<<<<<< HEAD
-    query = "DELETE FROM fmea WHERE id = %s"
-    cursor.execute(query, (fmea_id,))
-    db.connection.commit()
-=======
+
     
     #Obtener el id_consecutivo_modo_falla del registro a eliminar desde la tabla fmea
     cursor.execute("SELECT id_consecutivo_modo_falla FROM fmea WHERE id = %s", (fmea_id,))
@@ -1231,26 +1147,11 @@ def eliminar_FMEA(fmea_id):
         
         # Confirmar los cambios en la base de datos
         db.connection.commit()
-    
->>>>>>> angelo
+
     cursor.close()
 
     # Redireccionar a la vista de la tabla después de eliminar
     return redirect(url_for('mostrar_FMEA'))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1270,10 +1171,16 @@ def editar_herramientas_especiales():
     return render_template('editar_herramientas_especiales2.html')
 
 
+@app.route('/LSA/equipo/editar_RCM/<int:fmea_id>')
+def editar_RCM(fmea_id):
+    rcm = obtener_rcm_por_fmea(fmea_id)
+    acciones = obtener_lista_acciones_recomendadas()
+    return render_template('registro_rcm.html', rcm=rcm, editar=True, acciones = acciones)
+@app.route('/LSA/equipo/editar_RCM')
+def editar_RCM_lista():
+    rcms = obtener_rcms_completos()  # Obtener todos los registros de RCM desde la base de datos
+    return render_template('editar_RCM.html', rcms=rcms)
 
-@app.route('/LSA/equipo/editar-RCM')
-def editar_RCM():
-    return render_template('editar_RCM.html')
 
 @app.route('/LSA/equipo/editar-MTA')
 def editar_MTA():
@@ -1473,10 +1380,7 @@ def mostrar_repuesto():
 def mostrar_informe():
     return render_template('mostrar_informe.html')
 
-<<<<<<< HEAD
 
-=======
->>>>>>> angelo
 @app.route('/LSA/registro-MTA/<int:fmea_id>')
 def registro_MTA(fmea_id):
     if fmea_id:
@@ -1532,49 +1436,19 @@ def guardar_MTA(fmea_id):
     detalle_tarea = request.form.get('detalle_tarea')
     #aca viene la logica pa añadir los datos a sus tablas y devolver el id que sera pasado a insertar_mta
     
-    
-    
-    
-    
     # Guardar en la base de datos
     id_mta = insertar_mta(fmea_id, id_sistema, id_componente, id_falla_funcional)
 
     
     return redirect(url_for('mostrar_MTA')) 
-<<<<<<< HEAD
 
-
-
-
-=======
->>>>>>> angelo
 
 @app.route('/LSA/registro-RCM')
 def registro_RCM():
     return render_template('registro_RCM.html')
 
 
-<<<<<<< HEAD
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-=======
->>>>>>> angelo
 @app.route('/LSA/registro-FMEA')
 def registro_FMEA():
     subsistema_id = session.get('subsistema_id')  # Obtener el id del subsistema asociado
@@ -1592,11 +1466,9 @@ def registro_FMEA():
     flexibilidad_operacional_datos= obtener_flexibilidad_operacional()
     ocurrencia_datos = obtener_Ocurrencia()
     probabilidad_deteccion_datos = obtener_probablilidad_deteccion()
-<<<<<<< HEAD
-=======
     lista_riesgos = obtener_lista_riesgos() or []
     
->>>>>>> angelo
+
     # Renderizar la plantilla y pasar datos
     return render_template('registro_FMEA.html',fmea=None, fmea_id=None, editar=False,
                            sistema=sistema,
@@ -1611,12 +1483,10 @@ def registro_FMEA():
                            costos_reparacion_datos=costos_reparacion_datos,
                            flexibilidad_operacional_datos=flexibilidad_operacional_datos,
                            ocurrencia_datos = ocurrencia_datos,
-<<<<<<< HEAD
-                           probabilidad_deteccion_datos = probabilidad_deteccion_datos)
-=======
+
                            probabilidad_deteccion_datos = probabilidad_deteccion_datos,
                            lista_riesgos= lista_riesgos)
->>>>>>> angelo
+
 
 @app.route('/LSA/registro-FMEA', methods=['POST'])
 def guardar_fmea():
@@ -1653,12 +1523,9 @@ def guardar_fmea():
     ocurrencia_mate= request.form.get('ocurrencia_matematica')
     rpn = request.form.get('rpn')
     id_probabilidad_deteccion = request.form.get('probabilidad_deteccion')
-<<<<<<< HEAD
-
-=======
     id_riesgo = request.form.get('id_riesgo')
     
->>>>>>> angelo
+
     # Insertar los datos relacionados en las tablas correspondientes y obtener los IDs
     id_falla_funcional = insertar_falla_funcional(falla_funcional)
     id_descripcion_modo_falla = insertar_descripcion_modo_falla(descripcion_modo_falla)
@@ -1668,13 +1535,12 @@ def guardar_fmea():
     id_fmea = insertar_fmea(
         id_equipo_info, id_sistema, id_falla_funcional, id_componente, id_codigo_modo_falla, 
         id_consecutivo_modo_falla, id_descripcion_modo_falla, id_causa, id_mecanismo_falla, 
-        id_detalle_falla, mtbf, mttr,id_metodo_deteccion_falla, id_fallo_oculto, id_seguridad_fisica, id_medio_ambiente, 
-        id_impacto_operacional, id_costos_reparacion, id_flexibilidad_operacional,calculo_severidad, id_ocurrencia, ocurrencia_mate,
-<<<<<<< HEAD
-        id_probabilidad_deteccion, rpn
-=======
+        id_detalle_falla, mtbf, mttr,id_metodo_deteccion_falla, id_fallo_oculto, id_seguridad_fisica, 
+        id_medio_ambiente, 
+        id_impacto_operacional, id_costos_reparacion, id_flexibilidad_operacional,calculo_severidad, id_ocurrencia, 
+        ocurrencia_mate,
         id_probabilidad_deteccion, rpn, id_riesgo
->>>>>>> angelo
+
     )
 
     # Redireccionar o devolver respuesta exitosa
@@ -1699,10 +1565,6 @@ def obtener_detalles_falla(mecanismo_id):
 def obtener_nombre_falla(codigo_id):
     cursor = db.connection.cursor()
 
-<<<<<<< HEAD
-
-=======
->>>>>>> angelo
     # Obtener el nombre del modo de falla
     query_nombre = """
         SELECT nombre, codigo, id
@@ -1719,11 +1581,9 @@ def obtener_nombre_falla(codigo_id):
 
         # Obtener el consecutivo de modo de falla
         query_consecutivo = """
-<<<<<<< HEAD
-            SELECT id, numeracion
-=======
+
             SELECT id
->>>>>>> angelo
+
             FROM consecutivo_modo_falla 
             WHERE nombre = %s
         """
@@ -1732,12 +1592,7 @@ def obtener_nombre_falla(codigo_id):
 
         if consecutivo_result:
             id_consecutivo_modo_falla = consecutivo_result['id']
-<<<<<<< HEAD
-            numeracion = consecutivo_result['numeracion'] or 0  # Si es NULL, lo tratamos como 0
-            nueva_numeracion = numeracion + 1
 
-            # Actualizar la numeración
-=======
 
             # Contar cuántas veces se usa el id_consecutivo_modo_falla en la tabla fmea
             count_query = """
@@ -1753,7 +1608,7 @@ def obtener_nombre_falla(codigo_id):
             nueva_numeracion = ocurrencias + 1
 
             # Actualizar la numeración en la tabla consecutivo_modo_falla
->>>>>>> angelo
+
             query_update = """
                 UPDATE consecutivo_modo_falla
                 SET numeracion = %s
@@ -1776,13 +1631,10 @@ def obtener_nombre_falla(codigo_id):
         cursor.close()
         return jsonify({'nombre': 'No encontrado', 'consecutivo': None}), 404
 
-<<<<<<< HEAD
-############################################################################################################
-=======
 
 ############################################################################################################
 
->>>>>>> angelo
+
 
 
 
@@ -1840,25 +1692,93 @@ def download_pdf_1():
     return send_file(pdf_buffer, as_attachment=True, download_name="pdf_1.pdf", mimetype='application/pdf')
 
 
-if __name__ == '__main__':
-    app.run()
+
+
+
+#new functions
+@app.route('/LSA/crear_RCM/<int:fmea_id>')
+def crear_RCM(fmea_id):
+    fmea = obtener_fmea_por_id(fmea_id)
+    acciones = obtener_lista_acciones_recomendadas()
+    if fmea:
+        print(fmea)
+        return render_template('registro_RCM.html', fmea=fmea, acciones=acciones)
+    else:
+        return "FMEA no encontrado", 404
+
+
+#funcion para guardar el RCM
+@app.route('/LSA/guardar_RCM/<int:fmea_id>', methods=['POST'])
+def guardar_RCM(fmea_id):
+    rcm = {
+        'id_fmea': fmea_id,
+        'sistema': request.form.get('sistema'),
+        'codigo_modo_falla': request.form.get('codigo_modo_falla'),
+        'causas': request.form.get('causas'),
+        'falla_funcional': request.form.get('falla_funcional'),
+        'consecutivo_modo_falla': request.form.get('consecutivo_modo_falla'),
+        'item_componente': request.form.get('item_componente'),
+        'descripcion_modo_falla': request.form.get('descripcion_modo_falla'),
+        'hidden_failures': request.form.get('hidden_failures'),
+        'safety': request.form.get('safety'),
+        'environment': request.form.get('environment'),
+        'operation': request.form.get('operation'),
+        'h1_s1_n1_o1': request.form.get('h1s1'),
+        'h2_s2_n2_o2': request.form.get('h2s2'),
+        'h3_s3_n3_o3': request.form.get('h3s3'),
+        'h4_s4': request.form.get('h4s4'),
+        'h5': request.form.get('h5'),
+        'tarea': request.form.get('tarea'),
+        'intervalo_inicial_horas': request.form.get('intervalo_inicial'),
+        'id_accion_recomendada': request.form.get('accion_recomendada')
+    }
+    # Insertar los datos en la tabla RCM
+    insertar_rcm(rcm)
+
+    # Redireccionar después de guardar los cambios
+    return redirect(url_for('editar_FMEA_lista'))
 
 
 
 
+#actualizar rcm
+@app.route('/LSA/equipos/actualizar_RCM/<int:fmea_id>', methods=['POST'])
+def actualizar_RCM(fmea_id):
+    # Obtener los datos del formulario
+    rcm = {
+        'id_fmea': fmea_id,
+        'sistema': request.form.get('sistema'),
+        'codigo_modo_falla': request.form.get('codigo_modo_falla'),
+        'causas': request.form.get('causas'),
+        'falla_funcional': request.form.get('falla_funcional'),
+        'consecutivo_modo_falla': request.form.get('consecutivo_modo_falla'),
+        'item_componente': request.form.get('item_componente'),
+        'descripcion_modo_falla': request.form.get('descripcion_modo_falla'),
+        'hidden_failures': request.form.get('hidden_failures'),
+        'safety': request.form.get('safety'),
+        'environment': request.form.get('environment'),
+        'operation': request.form.get('operation'),
+        'h1_s1_n1_o1': request.form.get('h1s1'),
+        'h2_s2_n2_o2': request.form.get('h2s2'),
+        'h3_s3_n3_o3': request.form.get('h3s3'),
+        'h4_s4': request.form.get('h4s4'),
+        'h5': request.form.get('h5'),
+        'tarea': request.form.get('tarea'),
+        'intervalo_inicial_horas': request.form.get('intervalo_inicial'),
+        'id_accion_recomendada': request.form.get('accion_recomendada')
+    }
 
+    # Actualizar el registro RCM con los nuevos datos
+    actualizar_rcm(rcm)
 
+    # Redireccionar después de guardar los cambios
+    return redirect(url_for('editar_RCM_lista'))
 
-
-
-
-
-
-
-
-
-
-
+#eliminar rcm
+@app.route('/LSA/eliminar_RCM/<int:fmea_id>')
+def eliminar_RCM(fmea_id):
+    eliminar_rcm(fmea_id)
+    return redirect(url_for('editar_RCM_lista'))
 
 
 
@@ -1874,15 +1794,33 @@ def mostrar_analisis_funcional():
     token = g.user_token
     user_data = obtener_info_usuario(token)
     id_equipo_info = user_data.get('id_equipo_info')
+    id_equipo = user_data.get('id_equipo')
+    
     if not id_equipo_info:
         flash('No se ha seleccionado un equipo.')
         return redirect(url_for('ruta_principal'))
 
     # Obtén el id_sistema desde la tabla equipo_info usando el id_equipo_info
-    equipo_info = obtener_equipo_info_por_id(id_equipo_info)
-    id_sistema = equipo_info['id_sistema']
+    
+    id_sistema = user_data.get('id_sistema')
     sistema_nombre = obtener_nombre_sistema_por_id(id_sistema)
 
+    # Si no se proporciona id_sistema, el sistema es None
+    if id_sistema is None:
+        sistema = None
+        subsistemas = []
+    else:
+        # Obtener el sistema usando el id_sistema
+        sistema = obtener_sistema_por_id(id_sistema)
+        """
+        # Verificar si el sistema existe
+        if sistema:
+            # Obtener los subsistemas asociados al equipo
+            subsistemas = obtener_subsistemas_por_equipo(id_equipo)
+        else:
+            # Si el sistema no existe, no hay subsistemas
+            subsistemas = []
+        """
     # Obtén los análisis funcionales relacionados con el equipo
     analisis_funcionales = obtener_analisis_funcionales_por_equipo_info(id_equipo_info)
     
@@ -1890,27 +1828,57 @@ def mostrar_analisis_funcional():
     for analisis in analisis_funcionales:
         analisis['sistema_nombre'] = sistema_nombre
 
-    return render_template('mostrar_analisis_funcional.html', analisis_funcionales=analisis_funcionales)
+    return render_template('mostrar_analisis_funcional.html', analisis_funcionales=analisis_funcionales,sistema=sistema)
 
-@app.route('/analisis_funcional/editar/<int:id>', methods=['GET', 'POST'])
+@app.route('/LSA/equipo/analisis_funcional/editar/<int:id>', methods=['GET', 'POST'])
 def editar_analisis_funcional(id):
+
+    token = g.user_token
+    user_data = obtener_info_usuario(token)
+    id_sistema = user_data.get('id_sistema')
+    id_equipo = user_data.get('id_equipo')
+    id_equipo_info = user_data.get('id_equipo_info')
+
+
+    print(f"Token: {token}")
+    print(f"id_sistema: {id_sistema}")
+    print(f"id_equipo: {id_equipo}")
+    print(f"id_equipo_info: {id_equipo_info}")
+
+    # Si no se proporciona id_sistema, el sistema es None
+    if id_sistema is None:
+        sistema = None
+        subsistemas = []
+    else:
+        # Obtener el sistema usando el id_sistema
+        sistema = obtener_sistema_por_id(id_sistema)
+        
+        # Verificar si el sistema existe
+        if sistema:
+            # Obtener los subsistemas asociados al equipo
+            subsistemas = obtener_subsistemas_por_equipo(id_equipo)
+        else:
+            # Si el sistema no existe, no hay subsistemas
+            subsistemas = []
+
     analisis_funcional = obtener_analisis_funcional_por_id(id)
-    id_sistema = analisis_funcional['id_sistema']  # Si está en el registro del análisis funcional
-    sistema_nombre = obtener_nombre_sistema_por_id(id_sistema)
-    subsistemas = obtener_subsistemas_por_equipo(analisis_funcional['id_equipo_info'])
+    
 
     if request.method == 'POST':
         verbo = request.form['verbo']
         accion = request.form['accion']
         estandar_desempeño = request.form['estandar_desempeño']
         id_subsistema = request.form['subsistema']
+
+        
+        # Actualizar el análisis funcional
         actualizar_analisis_funcional(id, verbo, accion, estandar_desempeño, id_subsistema)
         flash('Análisis funcional actualizado correctamente')
         return redirect(url_for('mostrar_analisis_funcional'))
-    else:
-        return render_template('editar_analisis_funcional.html', 
+    
+    return render_template('editar_analisis_funcional.html', 
                                analisis_funcional=analisis_funcional, 
-                               sistema_nombre=sistema_nombre, 
+                               sistema=sistema, 
                                subsistemas=subsistemas)
 
 # Ruta para eliminar un análisis funcional
@@ -1947,3 +1915,10 @@ def registro_analisis_funcional():
     subsistemas = obtener_subsistemas_por_equipo_mostrar(id_equipo_info)
     return render_template('registro_analisis_funcional.html', sistema_nombre=sistema_nombre, subsistemas=subsistemas)
     """
+
+
+
+
+
+if __name__ == '__main__':
+    app.run()

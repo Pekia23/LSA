@@ -45,29 +45,45 @@
                   </tr>
               </thead>
               <tbody>
+                {% for rcm in rcms %}
                 <tr>
-            
+                  <td>{{ loop.index }}</td>
+                  <td>{{ rcm['sistema'] }}</td>
+                  <td>{{ rcm['falla_funcional'] }}</td>
+                  <td>{{ rcm['item_componente'] }}</td>
+                  <td>{{ rcm['codigo_modo_falla'] }}</td>
+                  <td>{{ rcm['consecutivo_modo_falla'] }}</td>
+                  <td>{{ rcm['descripcion_modo_falla'] }}</td>
+                  <td>{{ rcm['causas'] }}</td>
+                  <td>{{ rcm['hidden_failures'] }}</td>
+                  <td>{{ rcm['safety'] }}</td>
+                  <td>{{ rcm['environment'] }}</td>
+                  <td>{{ rcm['operation'] }}</td>
+                  <td>{{ rcm['h1_s1_n1_o1'] }}</td>
+                  <td>{{ rcm['h2_s2_n2_o2'] }}</td>
+                  <td>{{ rcm['h3_s3_n3_o'] }}</td>
+                  <td>{{ rcm['h4_s4'] }}</td>
+                  <td>{{ rcm['h5'] }}</td>
+                  <td>{{ rcm['tarea'] }}</td>
+                  <td>{{ rcm['id_accion_recomendada'] }}</td>
+                  <td>{{ rcm['intervalo_inicial_horas'] }}</td>
+                    <td>
+                        <button class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar RCM">
+                          <a href="{{url_for('editar_RCM', fmea_id=rcm['id_fmea'])}}">Editar RCM <i class="bi bi-pencil"></i></a>
+                        </button>
+                    </td>
+
+                    <td>
+                        <button class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar RCM">
+                          <a href="{{url_for('eliminar_RCM', fmea_id=rcm['id_fmea'])}}">Eliminar RCM <i class="bi bi-pencil"></i></a>
+                        </button>
+                    </td>
+
+                    <td>
+                        <button type="button" class="btn btn-primary"><a href="{{url_for('registro_MTA', fmea_id=rcm['id_fmea'])}}">Crear MTA</a></button>
+                    </td>
                 </tr>
-                <tr>
-                  <td scope="row">1</td>
-                  <td>Mark</td>
-                  <td>Otto</td>
-                  <td colspan="17">@mdo</td>
-                  <td><button class="btn btn-primary"  data-bs-toggle="tooltip" data-bs-placement="top" title="Editar este registro"><a href = "{{url_for('registro_RCM')}}"> <i class="bi bi-pen pen" ></i></a></button></td>
-                </tr>
-                <tr>
-                  <td scope="row">2</td>
-                  <td>Jacob</td>
-                  <td>tdornton</td>
-                  <td colspan="17">@fat</td>
-                  <td><button class="btn btn-primary"  data-bs-toggle="tooltip" data-bs-placement="top" title="Editar este registro"><a href = "{{url_for('registro_RCM')}}"> <i class="bi bi-pen pen" ></i></a></button></td>
-                </tr>
-                <tr>
-                  <td scope="row">3</td>
-                  <td colspan="2">Larry tde Bird</td>
-                  <td colspan="17">@twitter</td>
-                  <td><button class="btn btn-primary"  data-bs-toggle="tooltip" data-bs-placement="top" title="Editar este registro"><a href = "{{url_for('registro_RCM')}}"> <i class="bi bi-pen pen" ></i></a></button></td>
-                </tr>
+                {% endfor %}
               </tbody>
           </table>
         </div>

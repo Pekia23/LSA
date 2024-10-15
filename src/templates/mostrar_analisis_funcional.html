@@ -26,7 +26,7 @@
     <tbody>
     {% for analisis in analisis_funcionales %}
         <tr>
-            <td>{{ analisis.sistema_nombre }}</td>
+            <td>{{ sistema.nombre if sistema else 'No hay sistema seleccionado'}}</td>
             <td>{{ analisis.subsistema_nombre }}</td>
             <td>{{ analisis.verbo }}</td>
             <td>{{ analisis.accion }}</td>
