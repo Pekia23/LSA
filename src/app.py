@@ -662,8 +662,11 @@ def agregar_analisis_herramienta():
 
     # Insertar en la tabla herramientas_generales, incluyendo el archivo si está disponible
     analisis_id = insertar_analisis_herramienta(
-        nombre, valor, id_equipo_info, parte_numero, id_herramienta_requerida, id_tipo_herramienta, dibujo_data
-
+        nombre, valor, id_equipo_info, parte_numero, id_herramienta_requerida, id_tipo_herramienta
+        
+        
+        #,dibujo_data
+        
     )
 
     return jsonify({'message': 'Análisis de herramienta agregado', 'id': analisis_id}), 200
