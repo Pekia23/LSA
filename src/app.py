@@ -1165,9 +1165,11 @@ def eliminar_FMEA(fmea_id):
 def editar_modulo_herramientas():
     return render_template('editar_herramientas-especiales.html')
 
+"""
 @app.route('/LSA/equipo/editar-analisis-herramientas')
 def editar_analisis_herramientas():
     return render_template('editar_analisis_herramientas.html')
+"""
 
 @app.route('/LSA/equipo/editar-herramientas-especiales')
 def editar_herramientas_especiales():
