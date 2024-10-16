@@ -415,7 +415,6 @@ def insertar_fmea(id_equipo_info, id_sistema, id_falla_funcional, id_componente,
         id_consecutivo_modo_falla, id_descripcion_modo_falla, id_causa, id_mecanismo_falla, 
         id_detalle_falla, MTBF, MTTR,id_metodo_deteccion_falla, id_fallo_oculto, id_seguridad_fisica, id_medio_ambiente, 
         id_impacto_operacional, id_costos_reparacion, id_flexibilidad_operacional,calculo_severidad, id_ocurrencia,
-
         ocurrencia_mate, id_probabilidad_deteccion, rpn, id_riesgo
 
     ))

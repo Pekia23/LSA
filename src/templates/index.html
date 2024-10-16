@@ -12,7 +12,8 @@
     <div id="resultados" class="grid-container">
         {% for grupo in grupos %}
         <div class="card" data-id="{{ grupo.id }}" data-type="grupo">
-            <p>{{ grupo.numeracion }} - {{ grupo.nombre }}</p>
+            <h1>{{ grupo.numeracion }}</h1>
+            <p>{{ grupo.nombre }}</p>
         </div>
         {% endfor %}
     </div>

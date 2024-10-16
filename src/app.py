@@ -661,7 +661,7 @@ def agregar_analisis_herramienta():
 
     # Insertar en la tabla herramientas_generales, incluyendo el archivo si está disponible
     analisis_id = insertar_analisis_herramienta(
-        nombre, valor, id_equipo_info, parte_numero, id_herramienta_requerida, id_tipo_herramienta,dibujo_data
+        nombre, valor, id_equipo_info, parte_numero, id_herramienta_requerida, id_tipo_herramienta,#dibujo_data
         
     )
 
@@ -1540,7 +1540,7 @@ def guardar_fmea():
     )
 
     # Redireccionar o devolver respuesta exitosa
-    return redirect(url_for('mostrar_FMEA'))  
+    return redirect(url_for('editar_FMEA_lista'))  
 
 #rutas para funcionesFMEA.js
 @app.route('/LSA/obtener-detalles-falla/<int:mecanismo_id>', methods=['GET'])
@@ -1725,7 +1725,7 @@ def guardar_RCM(fmea_id):
     insertar_rcm(rcm)
 
     # Redireccionar después de guardar los cambios
-    return redirect(url_for('editar_FMEA_lista'))
+    return redirect(url_for('mostrar_fmea'))
 
 
 
