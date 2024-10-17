@@ -28,12 +28,17 @@
         </div>
         <div class="col-md-4">
           <label for="responsable" class="form-label">Responsable</label>
-          <select class="form-control" id="responsable" name="responsable">
-            {% for persona in responsables %}
-            <option value="{{ persona.id }}" {% if equipo.id_personal == persona.id %}selected{% endif %}>{{ persona.nombre_completo }}</option>
-            {% endfor %}
-          </select>
+          <div class="input-group">
+            <select class="form-control" id="responsable" name="responsable">
+              {% for persona in responsables %}
+              <option value="{{ persona.id }}">{{ persona.nombre_completo }}</option>
+              {% endfor %}
+            </select>
+            <button type="button" class="btn btn-outline-secondary" id="add_personal">Agregar</button>
+            <button type="button" class="btn btn-outline-danger" id="delete_personal">Eliminar</button>
+          </div>
         </div>
+        
       </div>
 
       <h2 class="section-title text-center">Generalidades</h2>
@@ -298,5 +303,59 @@ $('#tipo_equipo').on('change', function() {
     });
     
   });
+
+  $(document).ready(function() {
+    // Manejar agregar personal
+    $('#add_personal').on('click', function() {
+        var nombreCompleto = prompt('Ingrese el nombre completo del nuevo personal:');
+        if (nombreCompleto) {
+            $.ajax({
+                url: '/api/crear_personal',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ 'nombre_completo': nombreCompleto }),
+                success: function(data) {
+                    // Agregar la nueva opción al select
+                    $('#responsable').append('<option value="' + data.id + '">' + data.nombre_completo + '</option>');
+                    // Seleccionar la nueva opción
+                    $('#responsable').val(data.id);
+                },
+                error: function(xhr, status, error) {
+                    alert('Error al crear personal: ' + xhr.responseJSON.error);
+                }
+            });
+        }
+    });
+
+    // Manejar eliminar personal
+    $('#delete_personal').on('click', function() {
+        var id_personal = $('#responsable').val();
+        var nombre_personal = $('#responsable option:selected').text();
+        if (id_personal) {
+            if (confirm('¿Está seguro que desea eliminar a ' + nombre_personal + '?')) {
+                $.ajax({
+                    url: '/api/eliminar_personal',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ 'id_personal': id_personal }),
+                    success: function(data) {
+                        // Eliminar la opción del select
+                        $('#responsable option[value="' + id_personal + '"]').remove();
+                        // Resetear el select
+                        $('#responsable').val('');
+                        alert('Personal eliminado');
+                    },
+                    error: function(xhr, status, error) {
+                        alert('Error al eliminar personal: ' + xhr.responseJSON.error);
+                    }
+                });
+            }
+        } else {
+            alert('Por favor, seleccione un personal para eliminar');
+        }
+    });
+  });
+
+
 </script>
 {% endblock %}

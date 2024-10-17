@@ -133,7 +133,26 @@ from database import (
     eliminar_rcm,
     actualizar_rcm,
 
-    obtener_lista_acciones_recomendadas
+    obtener_lista_acciones_recomendadas,
+    crear_personal,
+    eliminar_personal,
+
+
+
+    ##########pdf
+
+    obtener_analisis_funcional_por_usuario,
+    obtener_informacion_equipo,
+    obtener_fmeas_por_usuario,
+    #obtener_herramientas_especiales,
+    #obtener_mta_por_usuario,
+    obtener_rcm_por_usuario,
+    #obtener_repuesto_por_usuario,
+    obtener_herramientas_requeridas_por_tipo
+
+
+
+
 
 )
 
@@ -642,6 +661,7 @@ def agregar_analisis_herramienta():
     
     # Aquí se captura el archivo de dibujo seccion transversal
     dibujo_seccion_transversal = request.files.get('dibujo_seccion_transversal')
+    id_clase_herramienta = 1
 
     if not nombre:
         return jsonify({'error': 'Faltan datos obligatorios'}), 400
@@ -657,11 +677,11 @@ def agregar_analisis_herramienta():
     dibujo_data = dibujo_seccion_transversal.read() if dibujo_seccion_transversal else None
 
     # Insertar en la tabla herramientas_requeridas y obtener el ID
-    id_herramienta_requerida = insertar_herramienta_requerida(nombre, id_tipo_herramienta)
+    id_herramienta_requerida = insertar_herramienta_requerida(nombre, id_tipo_herramienta,id_clase_herramienta)
 
     # Insertar en la tabla herramientas_generales, incluyendo el archivo si está disponible
     analisis_id = insertar_analisis_herramienta(
-        nombre, valor, id_equipo_info, parte_numero, id_herramienta_requerida, id_tipo_herramienta
+        nombre, valor, id_equipo_info, parte_numero, id_herramienta_requerida, id_tipo_herramienta,id_clase_herramienta
         
         
         #,dibujo_data
@@ -746,6 +766,10 @@ def agregar_herramienta_especial():
     id_tipo_herramienta = request.form.get('tipo_herramienta')
     cantidad = request.form.get('cantidad')
 
+
+
+    id_clase_herramienta = 2
+
     if not nombre_herramienta or not id_tipo_herramienta:
         return jsonify({'error': 'Faltan datos obligatorios'}), 400
 
@@ -758,14 +782,14 @@ def agregar_herramienta_especial():
     dibujo_data = dibujo_seccion_transversal.read() if dibujo_seccion_transversal else None
 
     # Insertar en la tabla herramientas_requeridas y obtener el ID
-    id_herramienta_requerida = insertar_herramienta_requerida(nombre_herramienta, id_tipo_herramienta)
+    id_herramienta_requerida = insertar_herramienta_requerida(nombre_herramienta, id_tipo_herramienta,id_clase_herramienta)
 
     # Insertar en la tabla herramientas_especiales, incluyendo el id_herramienta_requerida
     herramienta_id = insertar_herramienta_especial(
         parte_numero, nombre_herramienta, valor,
         dibujo_data, nota, id_equipo_info,
         manual_referencia, id_tipo_herramienta, cantidad,
-        id_herramienta_requerida  # Asegurarse de pasar el id_herramienta_requerida aquí
+        id_herramienta_requerida,id_clase_herramienta  # Asegurarse de pasar el id_herramienta_requerida aquí
     )
 
     return jsonify({'message': 'Herramienta especial agregada', 'id': herramienta_id}), 200
@@ -1385,6 +1409,13 @@ def mostrar_informe():
     return render_template('mostrar_informe.html')
 
 
+
+
+
+
+
+#########################################################################################################
+
 @app.route('/LSA/registro-MTA/<int:fmea_id>')
 def registro_MTA(fmea_id):
     if fmea_id:
@@ -1407,14 +1438,17 @@ def registro_MTA(fmea_id):
     tipo_de_manteniemto = obtener_tipos_mantenimiento()
     tarea_mantenimento = obtener_tareas_mantenimiento()
     herramientas = 0
+    dict_herramientas_por_tipo = obtener_herramientas_requeridas_por_tipo()
     return render_template('registro_MTA.html',fmea = fmea, editar = False,
                            sistema=sistema,
                            falla_funcional = falla_funcional,
                            componente = componente,
                            tipo_de_manteniemto = tipo_de_manteniemto,
                            tarea_mantenimento = tarea_mantenimento,
-                           herramientas = herramientas
+                           herramientas = herramientas,
+                           herramientas_por_tipo = dict_herramientas_por_tipo
                            )
+
 @app.route('/LSA/registro-MTA/<int:fmea_id>', methods=['POST'])
 def guardar_MTA(fmea_id):
      # Obtener los datos del formulario
@@ -1446,6 +1480,10 @@ def guardar_MTA(fmea_id):
     
     return redirect(url_for('mostrar_MTA')) 
 
+
+
+
+##############################################################################################################
 
 @app.route('/LSA/registro-RCM')
 def registro_RCM():
@@ -1699,6 +1737,120 @@ def download_pdf_1():
 
 
 
+
+#######Descargar todo el pdf de equipos
+
+@app.route('/download_pdf_all')
+def download_pdf_all():
+    # Obtener el token de la sesión o del contexto de usuario (g)
+    token = g.user_token
+    user_data = obtener_info_usuario(token)
+    id_equipo_info = user_data.get('id_equipo_info')  # Obtener el ID del equipo desde la información del usuario
+    
+    buffer = BytesIO()
+    p = canvas.Canvas(buffer, pagesize=letter)
+    
+    # Incluir la tabla de Información del equipo (por ahora vacío)
+    p.setFont("Helvetica-Bold", 14)
+    p.drawString(100, 750, "Informe sobre la Información del equipo")
+    # Aquí puedes añadir la lógica cuando sea necesario
+    p.showPage()
+
+    # Incluir la tabla de Análisis Funcional
+    p.setFont("Helvetica-Bold", 14)
+    p.drawString(100, 750, "Informe sobre el Análisis Funcional")
+    incluir_analisis_funcional(p, id_equipo_info)
+
+    p.showPage()
+    # Otras tablas como Herramientas, FMEA, RCM, etc., se agregarán aquí
+    #
+    #
+    #
+
+    p.save()
+    buffer.seek(0)
+    return send_file(buffer, as_attachment=True, download_name="informe_completo.pdf")
+
+# Función para incluir la tabla de Análisis Funcional
+def incluir_analisis_funcional(p, id_equipo_info):
+    x_start = 50
+    y_start = 700
+
+    # Títulos de las columnas (similar a los <th> del HTML)
+    columnas = ["Sistema", "Subsistema", "Verbo", "Acción", "Estandar de desempeño"]
+    p.setFont("Helvetica-Bold", 10)
+    
+    # Dibujar los títulos de las columnas
+    for i, columna in enumerate(columnas):
+        p.drawString(x_start + i * 100, y_start, columna)
+
+    y_start -= 20  # Bajamos la posición Y para la siguiente fila
+
+    # Reutilizamos la función existente para obtener los datos basados en el id_equipo_info
+    analisis_funcionales = obtener_analisis_funcional_por_usuario(id_equipo_info)
+
+    p.setFont("Helvetica", 10)  # Usamos una fuente más pequeña para los datos
+
+    # Dibujar cada fila de la tabla con los datos
+    for analisis in analisis_funcionales:
+        p.drawString(x_start, y_start, analisis['sistema_nombre'] if analisis['sistema_nombre'] else "No hay sistema seleccionado")
+        p.drawString(x_start + 100, y_start, analisis['subsistema_nombre'])
+        p.drawString(x_start + 200, y_start, analisis['verbo'])
+        p.drawString(x_start + 300, y_start, analisis['accion'])
+        p.drawString(x_start + 400, y_start, analisis['estandar_desempeño'])
+        
+        y_start -= 20  # Bajamos la posición Y para la siguiente fila
+
+        # Verificamos si estamos fuera del área imprimible
+        if y_start < 50:
+            p.showPage()  # Si estamos al final de la página, comenzamos una nueva
+            y_start = 750  # Restablecemos la posición en la nueva página
+            
+###########################################################################
+
+
+
+
+
+
+
+
+
+
+#######################################33333333
+
+@app.route('/mostrar_general')
+def mostrar_general():
+    token = g.user_token
+    user_data = obtener_info_usuario(token)
+    id_equipo_info = user_data.get('id_equipo_info')
+
+    analisis_funcionales = obtener_analisis_funcional_por_usuario(id_equipo_info)
+    equipo = obtener_informacion_equipo(id_equipo_info)
+    fmea = obtener_fmeas_por_usuario(id_equipo_info)
+    #herramientas = obtener_herramientas_especiales(id_equipo_info)
+    #mta = obtener_mta_por_usuario(id_equipo_info)
+    rcm = obtener_rcm_por_usuario(id_equipo_info)
+    #repuesto = obtener_repuesto_por_usuario(id_equipo_info)
+    analisis = obtener_analisis_herramientas_por_equipo(id_equipo_info)
+    herramientas = obtener_herramientas_especiales_por_equipo(id_equipo_info)
+
+    return render_template('mostrar_general.html', 
+                           analisis_funcionales=analisis_funcionales,
+                           equipo=equipo,
+                           fmea=fmea,
+                           herramientas=herramientas,
+                           mta=mta,
+                           rcm=rcm,
+                           repuesto=repuesto,
+                           analisis=analisis
+                           )
+
+###########################################33
+
+
+
+
 #new functions
 @app.route('/LSA/crear_RCM/<int:fmea_id>')
 def crear_RCM(fmea_id):
@@ -1922,7 +2074,52 @@ def registro_analisis_funcional():
 
 
 
+@app.route('/api/crear_personal', methods=['POST'])
+def crear_personal_route():
+    data = request.get_json()
+    nombre_completo = data.get('nombre_completo')
+    if nombre_completo:
+        new_id = crear_personal(nombre_completo)
+        return jsonify({'id': new_id, 'nombre_completo': nombre_completo}), 200
+    else:
+        return jsonify({'error': 'Nombre completo es requerido'}), 400
+
+@app.route('/api/eliminar_personal', methods=['POST'])
+def eliminar_personal_route():
+    data = request.get_json()
+    id_personal = data.get('id_personal')
+    if id_personal:
+        eliminar_personal(id_personal)
+        return jsonify({'message': 'Personal eliminado'}), 200
+    else:
+        return jsonify({'error': 'ID de personal es requerido'}), 400
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 if __name__ == '__main__':
     app.run()
+
+
+

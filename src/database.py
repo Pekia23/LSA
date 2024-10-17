@@ -621,7 +621,338 @@ def obtener_fmeas():
     return fmeas_completos
 
 
-#########################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+###############################funcion para mostrarPDF
+
+#fmea editar y eliminar
+def obtener_fmeas_por_usuario(id_equipo_info):
+    cursor = db.connection.cursor()
+
+    # Ajustar la consulta para filtrar por id_equipo_info
+    query = """
+    SELECT 
+        f.id, 
+        f.id_equipo_info, 
+        f.id_sistema, 
+        s.nombre as sistema, 
+        f.id_falla_funcional, 
+        ff.nombre as falla_funcional, 
+        f.id_componente, 
+        c.nombre as componente, 
+        f.id_codigo_modo_falla, 
+        cmf.nombre as codigo_modo_falla, 
+
+        f.id_consecutivo_modo_falla, 
+        cf.nombre as consecutivo_modo_falla, 
+        f.id_descripcion_modo_falla, 
+        dmf.nombre as descripcion_modo_falla, 
+        f.id_causa, 
+        causa.nombre as causa, 
+        f.id_mecanismo_falla, 
+        mf.nombre as mecanismo_falla, 
+        f.id_detalle_falla, 
+        df.nombre as detalle_falla, 
+
+        f.MTBF, 
+        f.MTTR, 
+        f.id_metodo_deteccion_falla,
+        f.id_fallo_oculto,
+        fo.valor as fallo_oculto_valor, 
+        fo.nombre as fallo_oculto_descripcion, 
+        f.id_seguridad_fisica, 
+        sf.valor as seguridad_fisica_valor, 
+        sf.nombre as seguridad_fisica_descripcion, 
+        f.id_medio_ambiente, 
+        ma.valor as medio_ambiente_valor, 
+        ma.nombre as medio_ambiente_descripcion, 
+        f.id_impacto_operacional, 
+        io.valor as impacto_operacional_valor, 
+        io.nombre as impacto_operacional_descripcion, 
+        f.id_costos_reparacion, 
+        cr.valor as costos_reparacion_valor, 
+        cr.nombre as costos_reparacion_descripcion, 
+        f.id_flexibilidad_operacional, 
+        flex.valor as flexibilidad_operacional_valor, 
+        flex.nombre as flexibilidad_operacional_descripcion, 
+        f.calculo_severidad,
+        f.id_ocurrencia, 
+        o.valor as ocurrencia_valor, 
+        o.nombre as ocurrencia_descripcion, 
+        f.ocurrencia_mate, 
+        f.id_probabilidad_deteccion, 
+        pd.valor as probabilidad_deteccion_valor, 
+        pd.descripcion as probabilidad_deteccion_descripcion,
+        f.RPN,
+        f.id_riesgo
+    FROM fmea f
+    LEFT JOIN sistema s ON f.id_sistema = s.id
+    LEFT JOIN falla_funcional ff ON f.id_falla_funcional = ff.id
+    LEFT JOIN componentes c ON f.id_componente = c.id
+    LEFT JOIN codigo_modo_falla cmf ON f.id_codigo_modo_falla = cmf.id
+    LEFT JOIN consecutivo_modo_falla cf ON f.id_consecutivo_modo_falla = cf.id
+    LEFT JOIN descripcion_modo_falla dmf ON f.id_descripcion_modo_falla = dmf.id
+    LEFT JOIN causa ON f.id_causa = causa.id
+    LEFT JOIN mecanismo_falla mf ON f.id_mecanismo_falla = mf.id
+    LEFT JOIN detalle_falla df ON f.id_detalle_falla = df.id
+    LEFT JOIN fallo_oculto fo ON f.id_fallo_oculto = fo.id
+    LEFT JOIN seguridad_fisica sf ON f.id_seguridad_fisica = sf.id
+    LEFT JOIN medio_ambiente ma ON f.id_medio_ambiente = ma.id
+    LEFT JOIN impacto_operacional io ON f.id_impacto_operacional = io.id
+    LEFT JOIN costos_reparacion cr ON f.id_costos_reparacion = cr.id
+    LEFT JOIN flexibilidad_operacional flex ON f.id_flexibilidad_operacional = flex.id
+    LEFT JOIN ocurrencia o ON f.id_ocurrencia = o.id
+    LEFT JOIN probabilidad_deteccion pd ON f.id_probabilidad_deteccion = pd.id
+    WHERE f.id_equipo_info = %s
+    """
+    
+    cursor.execute(query, (id_equipo_info,))
+    fmeas = cursor.fetchall()
+    cursor.close()
+
+    # Procesar los FMEAs como lo haces actualmente
+    fmeas_completos = []
+    consecutivo_modo_falla_counter = {}
+
+    for fmea in fmeas:
+        sistema_nombre = fmea['sistema'] if fmea['sistema'] else obtener_nombre_por_id('subsistemas', fmea['id_sistema'])
+        falla_funcional_nombre = fmea['falla_funcional'] if fmea['falla_funcional'] else obtener_nombre_por_id('falla_funcional', fmea['id_falla_funcional'])
+        componente_nombre = fmea['componente'] if fmea['componente'] else obtener_nombre_por_id('componentes', fmea['id_componente'])
+        codigo_modo_falla_nombre = fmea['codigo_modo_falla'] if fmea['codigo_modo_falla'] else obtener_nombre_por_id('codigo_modo_falla', fmea['id_codigo_modo_falla'])
+        consecutivo_modo_falla_nombre = fmea['consecutivo_modo_falla'] if fmea['consecutivo_modo_falla'] else obtener_nombre_por_id('consecutivo_modo_falla', fmea['id_consecutivo_modo_falla'])
+        descripcion_modo_falla_nombre = fmea['descripcion_modo_falla'] if fmea['descripcion_modo_falla'] else obtener_nombre_por_id('descripcion_modo_falla', fmea['id_descripcion_modo_falla'])
+        causa_nombre = fmea['causa'] if fmea['causa'] else obtener_nombre_por_id('causa', fmea['id_causa'])
+        mecanismo_falla_nombre = fmea['mecanismo_falla'] if fmea['mecanismo_falla'] else obtener_nombre_por_id('mecanismo_falla', fmea['id_mecanismo_falla'])
+        detalle_falla_nombre = fmea['detalle_falla'] if fmea['detalle_falla'] else obtener_nombre_por_id('detalle_falla', fmea['id_detalle_falla'])
+
+        if consecutivo_modo_falla_nombre not in consecutivo_modo_falla_counter:
+            consecutivo_modo_falla_counter[consecutivo_modo_falla_nombre] = 0
+        consecutivo_modo_falla_counter[consecutivo_modo_falla_nombre] += 1
+
+        consecutivo_modo_falla_numerado = f"{consecutivo_modo_falla_nombre}-{consecutivo_modo_falla_counter[consecutivo_modo_falla_nombre]}"
+
+        fmeas_completos.append({
+            'id': fmea['id'],
+            'sistema': sistema_nombre,
+            'falla_funcional': falla_funcional_nombre,
+            'componente': componente_nombre,
+            'codigo_modo_falla': codigo_modo_falla_nombre,
+            'consecutivo_modo_falla': consecutivo_modo_falla_numerado,
+            'descripcion_modo_falla': descripcion_modo_falla_nombre,
+            'causa': causa_nombre,
+            'mecanismo_falla': mecanismo_falla_nombre,
+            'detalle_falla': detalle_falla_nombre,
+            'MTBF': fmea['MTBF'],
+            'MTTR': fmea['MTTR'],
+            'fallo_oculto_valor': fmea['fallo_oculto_valor'],
+            'fallo_oculto_descripcion': fmea['fallo_oculto_descripcion'],
+            'seguridad_fisica_valor': fmea['seguridad_fisica_valor'],
+            'seguridad_fisica_descripcion': fmea['seguridad_fisica_descripcion'],
+            'medio_ambiente_valor': fmea['medio_ambiente_valor'],
+            'medio_ambiente_descripcion': fmea['medio_ambiente_descripcion'],
+            'impacto_operacional_valor': fmea['impacto_operacional_valor'],
+            'impacto_operacional_descripcion': fmea['impacto_operacional_descripcion'],
+            'costos_reparacion_valor': fmea['costos_reparacion_valor'],
+            'costos_reparacion_descripcion': fmea['costos_reparacion_descripcion'],
+            'flexibilidad_operacional_valor': fmea['flexibilidad_operacional_valor'],
+            'flexibilidad_operacional_descripcion': fmea['flexibilidad_operacional_descripcion'],
+            'ocurrencia_valor': fmea['ocurrencia_valor'],
+            'ocurrencia_descripcion': fmea['ocurrencia_descripcion'],
+            'probabilidad_deteccion_valor': fmea['probabilidad_deteccion_valor'],
+            'probabilidad_deteccion_descripcion': fmea['probabilidad_deteccion_descripcion'],
+            'RPN': fmea['RPN'],
+            'id_riesgo': fmea['id_riesgo']
+        })
+
+    return fmeas_completos
+
+
+
+
+###############################funcion para mostrarPDF
+###############################funcion para mostrarPDF
+###############################funcion para mostrarPDF
+
+
+
+def obtener_analisis_funcional_por_usuario(id_equipo_info, sistema_nombre):
+    cursor = db.connection.cursor()
+
+    # Consulta SQL ajustada con el nombre correcto de la tabla 'subsistemas'
+    query = """
+    SELECT
+        subsistemas.nombre as subsistema_nombre,
+        analisis.verbo,
+        analisis.accion,
+        analisis.estandar_desempeño
+    FROM analisis_funcional analisis
+    JOIN subsistemas ON subsistemas.id = analisis.id_subsistema
+    WHERE analisis.id_equipo_info = %s
+    """
+    
+    # Ejecutar la consulta pasando el id_equipo_info como parámetro
+    cursor.execute(query, (id_equipo_info,))
+    analisis_funcionales = cursor.fetchall()
+    
+    cursor.close()
+
+    # Agregar el sistema a cada registro de la consulta
+    for analisis in analisis_funcionales:
+        analisis['sistema_nombre'] = sistema_nombre
+    
+    # Devolver los resultados como una lista de diccionarios
+    return analisis_funcionales
+
+
+
+
+
+
+
+
+
+
+# database.py
+
+def obtener_informacion_equipo(id_equipo_info):
+    cursor = db.connection.cursor()
+
+    # Consulta SQL para obtener la información del equipo y sus relaciones
+    query = """
+    SELECT 
+        equipo_info.*, 
+        personal.nombre_completo AS responsable_nombre,
+        sistema.nombre AS sistema_nombre,
+        grupo_constructivo.nombre AS grupo_constructivo_nombre,
+        subgrupo_constructivo.nombre AS subgrupo_constructivo_nombre,
+        datos_equipo.nombre AS datos_equipo_nombre,
+        tipo_equipo.nombre AS tipo_equipo_nombre,
+        procedimiento.arranque AS procedimiento_arranque,
+        procedimiento.parada AS procedimiento_parada,
+        diagrama.diagrama_fijo,
+        diagrama.diagrama_caja_negra,
+        diagrama.diagrama_caja_transparente
+    FROM equipo_info
+    LEFT JOIN personal ON equipo_info.id_personal = personal.id
+    LEFT JOIN sistema ON equipo_info.id_sistema = sistema.id
+    LEFT JOIN grupo_constructivo ON sistema.id_grupo_constructivo = grupo_constructivo.id
+    LEFT JOIN subgrupo_constructivo ON sistema.id_subgrupo_constructivo = subgrupo_constructivo.id
+    LEFT JOIN datos_equipo ON equipo_info.id_equipo = datos_equipo.id
+    LEFT JOIN tipo_equipo ON equipo_info.id_tipo_equipo = tipo_equipo.id
+    LEFT JOIN procedimiento ON equipo_info.id_procedimiento = procedimiento.id
+    LEFT JOIN diagrama ON equipo_info.id_diagrama = diagrama.id
+    WHERE equipo_info.id = %s
+    """
+    cursor.execute(query, (id_equipo_info,))
+    equipo_info = cursor.fetchone()
+    cursor.close()
+    return equipo_info
+
+
+
+
+###############################funciones para PDFFF
+
+
+
+
+def obtener_analisis_herramientas_por_equipo(id_equipo_info):
+    cursor = db.connection.cursor()
+    query = """
+    SELECT ah.*
+    FROM analisis_herramientas ah
+    WHERE ah.id_equipo_info = %s
+    """
+    cursor.execute(query, (id_equipo_info,))
+    analisis = cursor.fetchall()
+    cursor.close()
+    return analisis
+
+
+
+
+
+# database.py
+
+def obtener_rcm_por_usuario(id_equipo_info):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+
+    query = """
+    SELECT
+        r.id,
+        r.id_fmea,
+        s.nombre as sistema,
+        ff.nombre as falla_funcional,
+        c.nombre as componente,
+        cmf.nombre as codigo_modo_falla,
+        cf.nombre as consecutivo_modo_falla,
+        dmf.nombre as descripcion_modo_falla,
+        causa.nombre as causa,
+        r.hidden_failures,
+        r.safety,
+        r.environment,
+        r.operation,
+        r.h1_s1_n1_o1,
+        r.h2_s2_n2_o2,
+        r.h3_s3_n3_o3,
+        r.h4_s4,
+        r.h5,
+        r.tarea,
+        ar.nombre as accion_recomendada,
+        r.intervalo_inicial_horas
+    FROM rcm r
+    LEFT JOIN fmea f ON r.id_fmea = f.id
+    LEFT JOIN sistema s ON f.id_sistema = s.id
+    LEFT JOIN falla_funcional ff ON f.id_falla_funcional = ff.id
+    LEFT JOIN componentes c ON f.id_componente = c.id
+    LEFT JOIN codigo_modo_falla cmf ON f.id_codigo_modo_falla = cmf.id
+    LEFT JOIN consecutivo_modo_falla cf ON f.id_consecutivo_modo_falla = cf.id
+    LEFT JOIN descripcion_modo_falla dmf ON f.id_descripcion_modo_falla = dmf.id
+    LEFT JOIN causa ON f.id_causa = causa.id
+    LEFT JOIN accion_recomendada ar ON r.id_accion_recomendada = ar.id
+    WHERE f.id_equipo_info = %s
+    """
+    cursor.execute(query, (id_equipo_info,))
+    rcms = cursor.fetchall()
+    cursor.close()
+    return rcms
+##################################funcionespdf
+
+
+
+
+
+
+
+
+
+
+
+###################################################################Funcines para MTA#############################
+
+
 
 #fmea editar y eliminar
 def obtener_fmea_por_id(fmea_id):
@@ -791,7 +1122,11 @@ def insertar_analisis_funcional(verbo, accion, estandar_desempeño, id_equipo_in
 
 
 
-#####Funcines para MTA
+###################################################################Funcines para MTA#############################
+
+
+
+
 def insertar_mta():
     pass
 def obtener_nombre_componente_por_id(componente_id):
@@ -830,6 +1165,13 @@ def obtener_tareas_mantenimiento():
 
 
 
+
+
+
+
+
+
+#########################################################################################
 
 
 
@@ -920,17 +1262,17 @@ def obtener_repuesto_por_id(id_repuesto):
 
 # database.py
 
-def insertar_analisis_herramienta(nombre, valor, id_equipo_info, parte_numero, id_herramienta_requerida, id_tipo_herramienta):
+def insertar_analisis_herramienta(nombre, valor, id_equipo_info, parte_numero, id_herramienta_requerida, id_tipo_herramienta, id_clase_herramienta):
     cursor = db.connection.cursor()
     query = """
         INSERT INTO herramientas_generales (
-            nombre, valor, id_equipo_info, parte_numero, id_herramienta_requerida, id_tipo_herramienta
+            nombre, valor, id_equipo_info, parte_numero, id_herramienta_requerida, id_tipo_herramienta,id_clase_herramienta
 
         )
-        VALUES (%s, %s, %s, %s, %s, %s)
+        VALUES (%s, %s, %s, %s, %s, %s, %s)
     """
 
-    cursor.execute(query, (nombre, valor, id_equipo_info, parte_numero, id_herramienta_requerida, id_tipo_herramienta))
+    cursor.execute(query, (nombre, valor, id_equipo_info, parte_numero, id_herramienta_requerida, id_tipo_herramienta, id_clase_herramienta))
 
     db.connection.commit()
     analisis_id = cursor.lastrowid
@@ -991,8 +1333,7 @@ def insertar_herramienta_especial(
     parte_numero, nombre_herramienta, valor,
     dibujo_seccion_transversal, nota, id_equipo_info,
     manual_referencia, id_tipo_herramienta, cantidad,
-
-    id_herramienta_requerida  # Aseguramos que se recibe este parámetro
+    id_herramienta_requerida, id_clase_herramienta  # Aseguramos que se recibe este parámetro
 
 ):
     cursor = db.connection.cursor()
@@ -1000,14 +1341,14 @@ def insertar_herramienta_especial(
         INSERT INTO herramientas_especiales (
             parte_numero, nombre_herramienta, valor,
             dibujo_seccion_transversal, nota, id_equipo_info,
-            manual_referencia, id_tipo_herramienta, cantidad, id_herramienta_requerida
+            manual_referencia, id_tipo_herramienta, cantidad, id_herramienta_requerida,id_clase_herramienta
         )
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s)
     """
     cursor.execute(query, (
         parte_numero, nombre_herramienta, valor,
         dibujo_seccion_transversal, nota, id_equipo_info,
-        manual_referencia, id_tipo_herramienta, cantidad, id_herramienta_requerida
+        manual_referencia, id_tipo_herramienta, cantidad, id_herramienta_requerida,id_clase_herramienta
     ))
     db.connection.commit()
     herramienta_id = cursor.lastrowid
@@ -1069,13 +1410,13 @@ def eliminar_herramienta_especial(id_herramienta):
 
 
 
-def insertar_herramienta_requerida(nombre, id_tipo_herramienta):
+def insertar_herramienta_requerida(nombre, id_tipo_herramienta,id_clase_herramienta):
     cursor = db.connection.cursor()
     query = """
-        INSERT INTO herramientas_requeridas (nombre, id_tipo_herramienta)
-        VALUES (%s, %s)
+        INSERT INTO herramientas_requeridas (nombre, id_tipo_herramienta,id_clase_herramienta)
+        VALUES (%s, %s, %s)
     """
-    cursor.execute(query, (nombre, id_tipo_herramienta))
+    cursor.execute(query, (nombre, id_tipo_herramienta,id_clase_herramienta))
     db.connection.commit()
     herramienta_requerida_id = cursor.lastrowid
     cursor.close()
@@ -1558,3 +1899,40 @@ def obtener_nombre_sistema_por_id(subsistema_id):
     else:
         return None
 
+
+
+
+
+def eliminar_personal(id_personal):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    sql = "DELETE FROM personal WHERE id = %s"
+    cursor.execute(sql, (id_personal,))
+    db.connection.commit()
+    cursor.close()
+
+def crear_personal(nombre_completo):
+    correo = 'correo1@example.com'
+    password = 'password1'
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    sql = "INSERT INTO personal (correo, password, nombre_completo) VALUES (%s, %s, %s)"
+    cursor.execute(sql, (correo, password, nombre_completo))
+    db.connection.commit()
+    new_id = cursor.lastrowid
+    cursor.close()
+    return new_id
+
+
+def obtener_herramientas_requeridas_por_tipo():
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    dict_herramientas = {}
+    tipos = obtener_tipos_herramientas()
+    for tipo in tipos:
+        query = '''SELECT * FROM herramientas_requeridas hr 
+                join tipo_herramientas th on hr.id_tipo_herramienta = th.id_tipo_herramienta 
+                WHERE nombre_tipo = %s'''
+        cursor.execute(query, (tipo['nombre_tipo'],))
+        herramientas = cursor.fetchall()
+        dict_herramientas[tipo['nombre_tipo']] = herramientas
+    cursor.close()
+    print(dict_herramientas)
+    return dict_herramientas

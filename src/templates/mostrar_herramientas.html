@@ -1,0 +1,54 @@
+<!-- mostrar_herramientas.html -->
+<h2 class="section-title text-center">Módulo de Herramientas</h2>
+
+<!-- Análisis de herramientas -->
+<h3>Análisis de herramientas</h3>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Nombre de la herramienta</th>
+      <th scope="col">Parte número</th>
+      <th scope="col">Costo</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in analisis %}
+    <tr>
+      <td>{{ item.nombre }}</td>
+      <td>{{ item.parte_numero }}</td>
+      <td>{{ item.valor }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<!-- Herramientas especiales -->
+<h3>Herramientas especiales</h3>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Nombre de la herramienta</th>
+      <th scope="col">Parte número</th>
+      <th scope="col">Dibujo de sección transversal</th>
+      <th scope="col">Cantidad</th>
+      <th scope="col">Costo</th>
+      <th scope="col">Manual referenciado</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for herramienta in herramientas %}
+    <tr>
+      <td>{{ herramienta.nombre_herramienta }}</td>
+      <td>{{ herramienta.parte_numero }}</td>
+      <td>
+        {% if herramienta.dibujo_seccion_transversal %}
+        <img src="data:image/png;base64,{{ herramienta.dibujo_seccion_transversal|b64encode }}" alt="Dibujo" style="max-width: 100px; max-height: 100px;">
+        {% endif %}
+      </td>
+      <td>{{ herramienta.cantidad }}</td>
+      <td>{{ herramienta.valor }}</td>
+      <td>{{ herramienta.manual_referencia }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
