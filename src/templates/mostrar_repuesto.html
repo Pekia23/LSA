@@ -84,6 +84,11 @@
         });
     });
     </script>
-    
-
+</table>
+<div class="mt-4">
+    <a href="{{ url_for('registro_repuesto', token=session['token']) }}" class="btn btn-primary">Agregar Repuesto</a>
+</div>
+<!-- <div class="mt-4">
+    <a href="{{ url_for('registro_FMEA', token=session['token']) }}" class="btn btn-primary">Terminar Repuesto</a>
+</div> -->
 {% endblock %}

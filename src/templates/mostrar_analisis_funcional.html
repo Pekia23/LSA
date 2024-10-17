@@ -32,7 +32,7 @@
             <td>{{ analisis.accion }}</td>
             <td>{{ analisis.estandar_desempeño }}</td>
             <td>
-                <a href="{{ url_for('editar_analisis_funcional', id=analisis.id) }}" class="btn btn-primary"><i class="bi bi-pen"></i></a>
+                <a href="{{ url_for('editar_analisis_funcional', id=analisis.id) }}" class="boton"><i class="bi bi-pen"></i></a>
                 <form action="{{ url_for('eliminar_analisis_funcional_route', id=analisis.id) }}" method="post" style="display:inline;">
                     <button type="submit" class="btn btn-danger" onclick="return confirm('¿Está seguro de eliminar este análisis funcional?');"><i class="bi bi-trash"></i></button>
                 </form>
@@ -44,4 +44,10 @@
 <div class="mt-4">
     <a href="{{ url_for('registro_analisis_funcional') }}" class="btn btn-primary">Agregar análisis funcional</a>
 </div>
+
+<!-- <div class="mt-4">
+    <a href="{{ url_for('registro_herramientas_especiales', token=session['token']) }}" class="btn btn-primary">Terminar Análisis funcional</a>
+</div> -->
+
+
 {% endblock %}
