@@ -1540,7 +1540,7 @@ def guardar_fmea():
     )
 
     # Redireccionar o devolver respuesta exitosa
-    return redirect(url_for('editar_FMEA_lista'))  
+    return redirect(url_for('mostrar_FMEA'))  
 
 #rutas para funcionesFMEA.js
 @app.route('/LSA/obtener-detalles-falla/<int:mecanismo_id>', methods=['GET'])
