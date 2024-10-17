@@ -13,6 +13,7 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 
 from database import (
+    obtener_sistemas_por_equipo,
     verificar_conexion,
     obtener_grupos_constructivos,
     obtener_subgrupos,
@@ -1815,26 +1816,30 @@ def mostrar_general():
     user_data = obtener_info_usuario(token)
     id_equipo_info = user_data.get('id_equipo_info')
 
-    analisis_funcionales = obtener_analisis_funcional_por_usuario(id_equipo_info)
+    # Obtener los sistemas asociados con el equipo
+    sistemas = obtener_sistemas_por_equipo(id_equipo_info)  # Debe devolver una lista de nombres de sistemas
+
+    # Pasar todos los sistemas para el análisis funcional
+    analisis_funcionales = []
+    for sistema_nombre in sistemas:
+        analisis = obtener_analisis_funcional_por_usuario(id_equipo_info, sistemas)
+        analisis_funcionales.append(analisis)
+
+    # Obtener el resto de la información
     equipo = obtener_informacion_equipo(id_equipo_info)
     fmea = obtener_fmeas_por_usuario(id_equipo_info)
-    #herramientas = obtener_herramientas_especiales(id_equipo_info)
-    #mta = obtener_mta_por_usuario(id_equipo_info)
     rcm = obtener_rcm_por_usuario(id_equipo_info)
-    #repuesto = obtener_repuesto_por_usuario(id_equipo_info)
     analisis = obtener_analisis_herramientas_por_equipo(id_equipo_info)
     herramientas = obtener_herramientas_especiales_por_equipo(id_equipo_info)
 
+    # Renderizar la página con toda la información
     return render_template('mostrar_general.html', 
                            analisis_funcionales=analisis_funcionales,
                            equipo=equipo,
                            fmea=fmea,
                            herramientas=herramientas,
-                           #mta=mta,
                            rcm=rcm,
-                           #repuesto=repuesto,
-                           analisis=analisis
-                           )
+                           analisis=analisis)
 
 ###########################################33
 

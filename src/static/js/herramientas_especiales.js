@@ -1,9 +1,14 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Función para limpiar el formulario
+    function limpiarFormulario(form) {
+        form.reset();  // Limpiar todos los campos del formulario
+    }
+
     // Manejo del formulario de Análisis de Herramientas
     const formAnalisis = document.getElementById('analisis-herramientas-form');
 
     formAnalisis.addEventListener('submit', function(e) {
-        e.preventDefault();
+        e.preventDefault();  // Prevenir comportamiento predeterminado del formulario
 
         const formData = new FormData(formAnalisis);
 
@@ -13,8 +18,13 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(response => response.json())
         .then(result => {
-            alert(result.message);
+            alert(result.message);  // Mostrar mensaje del resultado
+
+            // Limpiar el formulario después de enviar la información
+            limpiarFormulario(formAnalisis);
+
             // Redirigir o actualizar la página si es necesario
+            // window.location.reload();  // Descomentar si se desea recargar la página
         })
         .catch(error => {
             console.error('Error al guardar análisis de herramientas:', error);
@@ -25,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const formEspeciales = document.getElementById('herramientas-especiales-form');
 
     formEspeciales.addEventListener('submit', function(e) {
-        e.preventDefault();
+        e.preventDefault();  // Prevenir comportamiento predeterminado del formulario
 
         const formData = new FormData(formEspeciales);
 
@@ -35,8 +45,13 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(response => response.json())
         .then(result => {
-            alert(result.message);
+            alert(result.message);  // Mostrar mensaje del resultado
+
+            // Limpiar el formulario después de enviar la información
+            limpiarFormulario(formEspeciales);
+
             // Redirigir o actualizar la página si es necesario
+            // window.location.reload();  // Descomentar si se desea recargar la página
         })
         .catch(error => {
             console.error('Error al guardar herramientas especiales:', error);

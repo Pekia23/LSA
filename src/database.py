@@ -1096,6 +1096,28 @@ def obtener_subsistemas_por_equipo(id_equipo):
     cursor.close()
     return subsistemas
 
+def obtener_sistemas_por_equipo(id_equipo_info):
+    # Crear un cursor con formato de diccionario
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    
+    # Consulta SQL
+    query = """
+    SELECT sistema.nombre, sistema.id
+    FROM sistema 
+    JOIN equipo_info ON sistema.id = equipo_info.id_sistema
+    WHERE equipo_info.id = %s
+    """
+    
+    # Ejecutar la consulta
+    cursor.execute(query, (id_equipo_info,))
+    
+    # Obtener los resultados con fetchall()
+    result = cursor.fetchall()
+    
+    # Retornar los IDs de los sistemas
+    return [row['id'] for row in result]
+
+
 
 # ... otras funciones ...
 
