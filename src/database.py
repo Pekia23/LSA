@@ -845,7 +845,7 @@ def obtener_informacion_equipo(id_equipo_info):
         personal.nombre_completo AS responsable_nombre,
         sistema.nombre AS sistema_nombre,
         grupo_constructivo.nombre AS grupo_constructivo_nombre,
-        subgrupo_constructivo.nombre AS subgrupo_constructivo_nombre,
+        subgrupo.nombre AS subgrupo_constructivo_nombre,
         datos_equipo.nombre AS datos_equipo_nombre,
         tipo_equipo.nombre AS tipo_equipo_nombre,
         procedimiento.arranque AS procedimiento_arranque,
@@ -857,7 +857,7 @@ def obtener_informacion_equipo(id_equipo_info):
     LEFT JOIN personal ON equipo_info.id_personal = personal.id
     LEFT JOIN sistema ON equipo_info.id_sistema = sistema.id
     LEFT JOIN grupo_constructivo ON sistema.id_grupo_constructivo = grupo_constructivo.id
-    LEFT JOIN subgrupo_constructivo ON sistema.id_subgrupo_constructivo = subgrupo_constructivo.id
+    LEFT JOIN subgrupo ON sistema.id_subgrupo_constructivo = subgrupo.id
     LEFT JOIN datos_equipo ON equipo_info.id_equipo = datos_equipo.id
     LEFT JOIN tipo_equipo ON equipo_info.id_tipo_equipo = tipo_equipo.id
     LEFT JOIN procedimiento ON equipo_info.id_procedimiento = procedimiento.id
@@ -1095,29 +1095,6 @@ def obtener_subsistemas_por_equipo(id_equipo):
     subsistemas = cursor.fetchall()
     cursor.close()
     return subsistemas
-
-def obtener_sistemas_por_equipo(id_equipo_info):
-    # Crear un cursor con formato de diccionario
-    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
-    
-    # Consulta SQL
-    query = """
-    SELECT sistema.nombre, sistema.id
-    FROM sistema 
-    JOIN equipo_info ON sistema.id = equipo_info.id_sistema
-    WHERE equipo_info.id = %s
-    """
-    
-    # Ejecutar la consulta
-    cursor.execute(query, (id_equipo_info,))
-    
-    # Obtener los resultados con fetchall()
-    result = cursor.fetchall()
-    
-    # Retornar los IDs de los sistemas
-    return [row['id'] for row in result]
-
-
 
 # ... otras funciones ...
 

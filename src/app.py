@@ -13,7 +13,6 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 
 from database import (
-    obtener_sistemas_por_equipo,
     verificar_conexion,
     obtener_grupos_constructivos,
     obtener_subgrupos,
@@ -1808,40 +1807,50 @@ def incluir_analisis_funcional(p, id_equipo_info):
 
 
 
-#######################################33333333
+#######################################
+@app.route('/mostrar_general/<int:id_equipo_info>')
+def mostrar_general(id_equipo_info):
+    # Obtener la información general del equipo
+    info_completa = obtener_informacion_completa(id_equipo_info)
+    
+    if not info_completa:
+        return "Información no disponible", 404
 
-@app.route('/mostrar_general')
-def mostrar_general():
-    token = g.user_token
-    user_data = obtener_info_usuario(token)
-    id_equipo_info = user_data.get('id_equipo_info')
-
-    # Obtener los sistemas asociados con el equipo
-    sistemas = obtener_sistemas_por_equipo(id_equipo_info)  # Debe devolver una lista de nombres de sistemas
-
-    # Pasar todos los sistemas para el análisis funcional
-    analisis_funcionales = []
-    for sistema_nombre in sistemas:
-        analisis = obtener_analisis_funcional_por_usuario(id_equipo_info, sistemas)
-        analisis_funcionales.append(analisis)
-
-    # Obtener el resto de la información
-    equipo = obtener_informacion_equipo(id_equipo_info)
-    fmea = obtener_fmeas_por_usuario(id_equipo_info)
-    rcm = obtener_rcm_por_usuario(id_equipo_info)
-    analisis = obtener_analisis_herramientas_por_equipo(id_equipo_info)
-    herramientas = obtener_herramientas_especiales_por_equipo(id_equipo_info)
-
-    # Renderizar la página con toda la información
-    return render_template('mostrar_general.html', 
-                           analisis_funcionales=analisis_funcionales,
-                           equipo=equipo,
-                           fmea=fmea,
-                           herramientas=herramientas,
-                           rcm=rcm,
-                           analisis=analisis)
-
+    # Asegúrate de que devuelves una plantilla renderizada
+    return render_template('mostrar_general.html', info=info_completa)
 ###########################################33
+
+def obtener_informacion_completa(id_equipo_info):
+    # Crear un diccionario para almacenar toda la información del equipo
+    info_completa = {}
+
+    # 1. Obtener generalidades del equipo
+    info_completa['generalidades'] = obtener_informacion_equipo(id_equipo_info)
+
+    # 2. Obtener módulo de herramientas (herramientas generales y especiales)
+    info_completa['modulo_herramientas'] = {
+        'herramientas_generales': obtener_analisis_herramientas_por_equipo(id_equipo_info),
+        'herramientas_especiales': obtener_herramientas_especiales_por_equipo(id_equipo_info)
+    }
+
+    # 3. Obtener repuestos relacionados al equipo
+    info_completa['repuestos'] = obtener_repuestos_por_equipo_info(id_equipo_info)
+
+    # 4. Obtener análisis funcional relacionado al equipo
+    info_completa['analisis_funcional'] = obtener_analisis_funcionales_por_equipo_info(id_equipo_info)
+
+    # 5. Obtener FMEA relacionado al equipo
+    info_completa['fmea'] = obtener_fmeas_por_usuario(id_equipo_info)
+
+    # 6. Obtener información de MTA-LORA relacionada al equipo (basada en la implementación)
+    # Aquí suponemos que existe una función que obtenga datos de MTA-LORA
+    #info_completa['mta_lora'] = obtener_mta_lora_por_equipo(id_equipo_info)
+
+    # 7. Obtener información de RCM relacionada al equipo
+    info_completa['rcm'] = obtener_rcm_por_usuario(id_equipo_info)
+
+    # Devolver toda la información consolidada
+    return info_completa
 
 
 
