@@ -1807,7 +1807,7 @@ def incluir_analisis_funcional(p, id_equipo_info):
 
 
 
-#######################################
+""" #######################################
 @app.route('/mostrar_general/<int:id_equipo_info>')
 def mostrar_general(id_equipo_info):
     # Obtener la información general del equipo
@@ -1850,7 +1850,7 @@ def obtener_informacion_completa(id_equipo_info):
     info_completa['rcm'] = obtener_rcm_por_usuario(id_equipo_info)
 
     # Devolver toda la información consolidada
-    return info_completa
+    return info_completa """
 
 
 

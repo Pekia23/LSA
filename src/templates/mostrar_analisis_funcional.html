@@ -20,7 +20,7 @@
             <th scope="col">Verbo</th>
             <th scope="col">Acción</th>
             <th scope="col">Estandar de desempeño</th>
-            <th scope="col">Acciones</th>
+            <th scope="col" colspan="2">Acciones</th>
         </tr>
     </thead>
     <tbody>
@@ -32,7 +32,9 @@
             <td>{{ analisis.accion }}</td>
             <td>{{ analisis.estandar_desempeño }}</td>
             <td>
-                <a href="{{ url_for('editar_analisis_funcional', id=analisis.id) }}" class="boton"><i class="bi bi-pen"></i></a>
+                <button class="boton"><a href="{{ url_for('editar_analisis_funcional', id=analisis.id) }}" ><i class="bi bi-pen"></i></a></button>
+            </td>
+            <td>    
                 <form action="{{ url_for('eliminar_analisis_funcional_route', id=analisis.id) }}" method="post" style="display:inline;">
                     <button type="submit" class="btn btn-danger" onclick="return confirm('¿Está seguro de eliminar este análisis funcional?');"><i class="bi bi-trash"></i></button>
                 </form>

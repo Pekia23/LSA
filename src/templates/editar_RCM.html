@@ -41,8 +41,7 @@
                     <th scope="col" >Tarea</th>
                     <th scope="col">Accion Recomendada</th>
                     <th scope="col" >Intervalo Inicial</th>
-                    <th colspan="2"></th>
-                    <td> </td>
+                    <th colspan="3">Acciones</th>
                   </tr>
               </thead>
               <tbody>
@@ -70,18 +69,18 @@
                   <td>{{ rcm['intervalo_inicial_horas'] }}</td>
                     <td>
                         <button class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar RCM">
-                          <a href="{{url_for('editar_RCM', fmea_id=rcm['id_fmea'])}}"><i class="bi bi-pencil"></i>RCM</a>
+                          <a href="{{url_for('editar_RCM', fmea_id=rcm['id_fmea'])}}"> RCM<i class="bi bi-pencil FMEA-edit"></i></a>
                         </button>
                     </td>
 
                     <td>
-                        <button class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar RCM">
-                          <a href="{{url_for('eliminar_RCM', fmea_id=rcm['id_fmea'])}}"><i class="bi bi-trash"></i>RCM</a>
+                        <button class="btn btn-danger mta" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar RCM">
+                          <a href="{{url_for('eliminar_RCM', fmea_id=rcm['id_fmea'])}}">RCM<i class="bi bi-trash FMEA-edit"></i></a>
                         </button>
                     </td>
 
                     <td>
-                        <button type="button" class="btn btn-primary"><a href="{{url_for('registro_MTA', fmea_id=rcm['id_fmea'])}}"><i class="bi bi-plus-circle"></i> MTA</a></button>
+                        <button type="button" class="btn btn-primary mta"><a href="{{url_for('registro_MTA', fmea_id=rcm['id_fmea'])}}"> MTA <i class="bi bi-plus-circle FMEA-edit"></i> </a></button>
                     </td>
                 </tr>
                 {% endfor %}

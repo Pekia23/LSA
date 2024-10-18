@@ -32,7 +32,7 @@
           <th scope="col">Nombre de la herramienta</th>
           <th scope="col">Parte número</th>
           <th scope="col">Costo</th>
-          <th scope="col">Acciones</th>
+          <th scope="col" colspan="2">Acciones</th>
         </tr>
       </thead>
       <tbody>
@@ -43,6 +43,8 @@
           <td>{{ analisis.valor }}</td>
           <td>
             <button class="boton btn-editar-analisis" data-id="{{ analisis.id }}"><i class="bi bi-pen"></button>
+          </td>
+          <td>    
             <button class="btn btn-danger btn-eliminar-analisis" data-id="{{ analisis.id }}"><i class="bi bi-trash"></button>
           </td>
         </tr>
@@ -63,7 +65,7 @@
           <th scope="col">Cantidad</th>
           <th scope="col">Costo</th>
           <th scope="col">Manual referenciado</th>
-          <th scope="col">Acciones</th>
+          <th scope="col" colspan="2">Acciones</th>
         </tr>
       </thead>
       <tbody>
@@ -80,7 +82,9 @@
           <td>{{ herramienta.valor }}</td>
           <td>{{ herramienta.manual_referencia }}</td>
           <td>
-            <button class="btn btn-primary btn-editar" data-id="{{ herramienta.id }}"><i class="bi bi-pen"></button>
+            <button class="boton btn btn-primary btn-editar" data-id="{{ herramienta.id }}"><i class="bi bi-pen"></button>
+          </td>
+          <td>
             <button class="btn btn-danger btn-eliminar" data-id="{{ herramienta.id }}"><i class="bi bi-trash"></button>
           </td>
         </tr>
