@@ -12,9 +12,24 @@ document.addEventListener('DOMContentLoaded', function() {
             verbo: document.getElementById('verbo').value,
             accion: document.getElementById('accion').value,
             estandar_desempeño: document.getElementById('estandar_desempeño').value,
+            componentes: [] // Array para capturar los componentes
         };
-        console.log('Datos enviados:', data);
 
+        // Capturar los componentes dinámicos del formulario
+        document.querySelectorAll('.componente-item').forEach(function(item) {
+            const idComponente = item.querySelector('p').textContent; // Obtener el nombre del componente
+            const verboComponente = item.querySelector(`[input[name^="verbo_"]`).value;
+            const accionComponente = item.querySelector(`[input[name^="accion_"]`).value;
+
+            // Agregar cada componente al array de componentes
+            data.componentes.push({
+                nombre_componente: idComponente,
+                verbo: verboComponente,
+                accion: accionComponente
+            });
+        });
+
+        console.log('Datos enviados:', data);
 
         // Enviar los datos mediante fetch
         fetch('/api/analisis-funcional', {

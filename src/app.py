@@ -13,6 +13,7 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 
 from database import (
+    insertar_componente_analisis_funcional,
     verificar_conexion,
     obtener_grupos_constructivos,
     obtener_subgrupos,
@@ -336,6 +337,13 @@ def obtener_equipos_por_tipo_api(id_tipo_equipo):
     equipospro = obtener_equipos_por_tipo(id_tipo_equipo)
     return jsonify(equipospro)
 
+@app.route('/api/componentes/<int:subsistema_id>', methods=['GET'])
+def obtener_componentes(subsistema_id):
+    # Usar la función para obtener los componentes del subsistema
+    componentes = obtener_componentes_por_subsistema(subsistema_id)
+
+    # Devolver los componentes como un JSON
+    return jsonify({'componentes': componentes})
 
 @app.route('/LSA/registro-analisis-funcional', methods=['GET', 'POST'])
 def registro_analisis_funcional():
@@ -378,15 +386,17 @@ def api_analisis_funcional():
     id_equipo_info = user_data.get('id_equipo_info')
     subsistema_id = user_data.get('subsistema_id')
 
-
     data = request.get_json()
+
+    # Obtener los datos principales del análisis funcional
     sistema_id = data.get('sistema')
     subsistema_id = data.get('subsistema')
     verbo = data.get('verbo')
     accion = data.get('accion')
     estandar_desempeño = data.get('estandar_desempeño')
 
-
+    # Obtener los componentes enviados (debería ser una lista de componentes)
+    componentes = data.get('componentes')  # Esto se espera como una lista [{id_componente, verbo, accion}, ...]
 
     print('Datos recibidos:', data)
     print('id_equipo_info:', id_equipo_info)
@@ -397,25 +407,41 @@ def api_analisis_funcional():
     # Guardar subsistema_id en la sesión de Flask
     session['subsistema_id'] = subsistema_id
 
-    
     # Validar los datos recibidos (puedes agregar más validaciones)
     if not sistema_id or not subsistema_id or not verbo or not accion or not estandar_desempeño or not id_equipo_info:
         return jsonify({'error': 'Faltan datos obligatorios'}), 400
-    
-
 
     guardar_info_usuario(token, subsistema_id=subsistema_id)
 
-    # Insertar en la base de datos
-    
+    # Insertar en la base de datos el análisis funcional principal
     analisis_funcional_id = insertar_analisis_funcional(
-    verbo,
-    accion,
-    estandar_desempeño,
-    id_equipo_info,
-    subsistema_id
+        verbo,
+        accion,
+        estandar_desempeño,
+        id_equipo_info,
+        subsistema_id
     )
+
+    # Verificar si hay componentes y guardar cada componente en la tabla relacionada
+    if componentes:
+        for componente in componentes:
+            id_componente = componente.get('id_componente')
+            verbo_componente = componente.get('verbo')
+            accion_componente = componente.get('accion')
+
+            if not id_componente or not verbo_componente or not accion_componente:
+                return jsonify({'error': 'Faltan datos en los componentes'}), 400
+
+            # Insertar cada componente en la tabla `componente_analisis_funcional`
+            componenete_analisis_funcional=insertar_componente_analisis_funcional(
+                id_componente,
+                verbo_componente,
+                accion_componente,
+                analisis_funcional_id
+            )
+
     return jsonify({'message': 'Análisis funcional agregado', 'id': analisis_funcional_id}), 200
+
 
 
 

@@ -1,6 +1,32 @@
 from __init__ import db
 import MySQLdb.cursors
 
+def obtener_componentes_por_subsistema(subsistema_id):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = "SELECT * FROM componentes WHERE subsistema_id = %s"
+    cursor.execute(query, (subsistema_id,))
+    componentes = cursor.fetchall()
+    cursor.close()
+    return componentes
+
+def insertar_componente_analisis_funcional(id_analisis_funcional, id_componente, verbo, accion):
+    # Conexión a la base de datos
+    cursor = db.connection.cursor()
+    
+    # Insertar los datos del componente relacionado con el análisis funcional
+    query = """
+    INSERT INTO `componente_analisis_funcional`(`id_componente`, `verbo`, `accion`, `id_analisis_funcional`)
+    VALUES (%s, %s, %s, %s)
+    """
+    print(f"Query: {query}")
+    print(f"Valores: id_componente={id_componente}, verbo={verbo}, accion={accion}, id_analisis_funcional={id_analisis_funcional}")
+    
+    cursor.execute(query, (id_componente, verbo, accion, id_analisis_funcional))
+    db.connection.commit()
+
+    cursor.close()
+
+
 
 def verificar_conexion():
     try:
