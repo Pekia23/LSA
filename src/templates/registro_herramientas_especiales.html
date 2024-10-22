@@ -23,7 +23,7 @@
                 <input type="text" class="form-control" id="nombre" name="nombre">
 
                 <label for="valor" class="form-label mt-3">Costo</label>
-                <input type="number" class="form-control" id="valor" name="valor">
+                <input type="number" class="form-control" id="valor" name="valor"  step="0.01">
 
                 <label for="tipo_herramienta" class="form-label mt-3">Tipo de herramienta</label>
                 <select class="form-control" id="tipo_herramienta" name="tipo_herramienta">
@@ -37,6 +37,9 @@
             <div class="col-md-6 my-4">
                 <label for="parte_numero" class="form-label">Parte número</label>
                 <input type="text" class="form-control" id="parte_numero" name="parte_numero">
+
+                <label for="cantidad" class="form-label mt-3">Cantidad</label>
+                <input type="number" class="form-control" id="cantidad" name="cantidad">
 
                 <label for="dibujo_seccion_transversal" class="form-label mt-3">Dibujo de sección transversal</label>
                 <input type="file" class="form-control" id="dibujo_seccion_transversal" name="dibujo_seccion_transversal" accept=".jpg, .jpeg, .png, .pdf">
@@ -88,7 +91,7 @@
                 <input type="text" class="form-control" id="parte_numero_especial" name="parte_numero">
 
                 <label for="valor_especial" class="form-label mt-3">Costo</label>
-                <input type="number" class="form-control" id="valor_especial" name="valor">
+                <input type="number" class="form-control" id="valor_especial" name="valor" step="0.01">
             </div>
         </div>
         <!-- Botón "Agregar herramienta especial" -->
@@ -96,6 +99,9 @@
             <button type="submit" class="btn btn-primary">Agregar herramienta especial</button>
         </div>
     </form>
+    <div class="mt-4">
+        <a href="{{ url_for('mostrar_herramientas_especiales') }}" class="btn btn-primary">Visualizar Herramientas</a>
+    </div>
 </div>
 
 <script src="{{ url_for('static', filename='js/herramientas_especiales.js') }}"></script>

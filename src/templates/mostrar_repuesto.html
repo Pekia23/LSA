@@ -21,7 +21,7 @@
         <th scope="col">MTBF</th>
         <th scope="col">Código OTAN</th>
         <th scope="col">Notas</th>
-        <th scope="col">Acciones</th>
+        <th scope="col" colspan="2">Acciones</th>
       </tr>
   </thead>
   <tbody>
@@ -38,8 +38,10 @@
         <td>{{ repuesto.codigo_otan }}</td>
         <td>{{ repuesto.notas }}</td>
         <td>
-          <button class="btn btn-primary btn-editar" data-id="{{ repuesto.id }}">Editar</button>
-          <button class="btn btn-danger btn-eliminar" data-id="{{ repuesto.id }}">Eliminar</button>
+          <button class="btn boton btn-editar " data-id="{{ repuesto.id }}"><i class="bi bi-pen pen" ></i></button>
+        </td>
+        <td>
+          <button class="btn btn-danger btn-eliminar" data-id="{{ repuesto.id }}"><i class="bi bi-trash-fill"></i></button>
         </td>
       </tr>
       {% endfor %}
@@ -84,6 +86,11 @@
         });
     });
     </script>
-    
-
+</table>
+<div class="mt-4">
+    <a href="{{ url_for('registro_repuesto', token=session['token']) }}" class="btn btn-primary">Agregar Repuesto</a>
+</div>
+<!-- <div class="mt-4">
+    <a href="{{ url_for('registro_FMEA', token=session['token']) }}" class="btn btn-primary">Terminar Repuesto</a>
+</div> -->
 {% endblock %}

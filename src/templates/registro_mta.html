@@ -18,6 +18,7 @@
             <br>
             {% if editar %}
                 <form id="mta-form" method="POST" action="{{ url_for('actualizar_MTA', mta_id=mta['id']) }}">
+
                 <div class="row">
                     <div class="col-md-4">
                         <label for="sistema" class="form-label">Sistema</label>
@@ -76,6 +77,7 @@
                                     <input type="checkbox" class="form-check-input herramienta-checkbox" id="{{ herramienta.id_herramienta_requerida }}" value="{{ herramienta.id_herramienta_requerida  }}"
                                     {% if herramienta['id_herramienta_requerida'] in herramientas_mta | map(attribute='id_herramienta_requerida') %}checked{% endif %}>
                                     <label for="{{ herramienta.id_herramienta_requerida }}" class="form-check-label">{{ herramienta.nombre }}</label>
+
                                 </div>
                                 {% if loop.index0 % 3 == 2 or loop.last %}
                                     </div>
@@ -84,8 +86,8 @@
                         </div>
                         {% endfor %}
                     </div>
-
                     </div>
+
                     <!-- Fin Herramientas / Equipos Requeridos -->
                     
                     <!-- Primera columna -->
@@ -212,6 +214,7 @@
                     <!-- Botón siguiente -->
                     <div class="text-end mt-4">
                         <button type="submit" class="btn btn-siguiente" id="btn-siguiente">Actualizar MTA</button>
+
                     </div>
                 </form>
             {% else %}
@@ -413,6 +416,21 @@
             {% endif %}
         </div>
 
+<!--
+    </div>
+</div>
+<script>
+document.getElementById('mta-form').addEventListener('submit', function(event) {
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+    const selectedValues = Array.from(checkboxes).map(cb => cb.value);
+    const hiddenField = document.createElement('input');
+    hiddenField.type = 'hidden';
+    hiddenField.name = 'selected_herramientas';
+    hiddenField.value = JSON.stringify(selectedValues);
+    this.appendChild(hiddenField);
+});
+</script>
+-->
 
 <script src="{{ url_for('static', filename='js/cuestionario_lora.js') }}"></script>
 <script src="{{ url_for('static', filename='js/registro_mta.js') }}"></script>

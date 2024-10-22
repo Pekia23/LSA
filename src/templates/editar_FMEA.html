@@ -20,7 +20,7 @@
         <div class="scroll-container-horizontal">
           <table class="table">
             <thead>
-              <tr>
+              <tr >
                 <th>#</th>
                 <th>Sistema</th>
                 <th>Falla Funcional</th>
@@ -49,7 +49,8 @@
                 <th>Ocurrencia (Descripción)</th>
                 <th>Probabilidad de Detección (Valor)</th>
                 <th>Probabilidad de Detección (Descripción)</th>
-                <th>Acciones</th> <!-- columna para los botones -->
+                <th colspan="4">Acciones</th> <!-- columna para los botones -->
+
               </tr>
             </thead>
             <tbody>
@@ -85,21 +86,22 @@
                 <td>{{ fmea['probabilidad_deteccion_descripcion'] }}</td>
                 <td>
                   <!-- Botón de Editar -->
-                  <a href="{{ url_for('editar_FMEA', fmea_id=fmea['id']) }}" class="btn btn-primary btn-sm">Editar</a>
-                  
+                  <a href="{{ url_for('editar_FMEA', fmea_id=fmea['id']) }}" class="btn  btn-sm boton"><i class="bi bi-pen pen" ></i></a>
+                </td>
+                <td>
                   <!-- Botón de Eliminar -->
                   <form action="{{ url_for('eliminar_FMEA', fmea_id=fmea['id']) }}" method="POST" style="display:inline-block;">
-                    <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                    <button type="submit" class="btn btn-danger btn-sm"><i class="bi bi-trash fs-5"></i></button>
                   </form>
                 </td>
                 <td>
                   {% if fmea['id'] in fmeas_con_rcm %}
                     <button class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar RCM">
-                      <a href="{{url_for('editar_RCM', fmea_id=fmea['id'])}}">Editar RCM <i class="bi bi-pencil"></i></a>
+                      <a href="{{url_for('editar_RCM', fmea_id=fmea['id'])}}">RCM  <i class="bi bi-pencil FMEA-edit"></i></a>
                     </button>
                   {% else %}
                     <button class="btn btn-success" data-bs-toggle="tooltip" data-bs-placement="top" title="Crear RCM">
-                      <a href="{{url_for('crear_RCM', fmea_id=fmea['id'])}}">Crear RCM <i class="bi bi-plus-circle"></i></a>
+                      <a href="{{url_for('crear_RCM', fmea_id=fmea['id'])}}">RCM  <i class="bi bi-plus-circle FMEA-edit"></i></a>
                     </button>
                   {% endif %}
                 </td>
@@ -109,8 +111,8 @@
           </table>
         </div>
       <div class="mt-4">
-        <button type="button" class="btn btn-primary"><a href="{{url_for('mostrar_FMEA')}}">Regresar</a></button>
-      </div>     
+        <button type="button" class="btn btn-primary"><a href="{{url_for('registro_FMEA')}}">Agregar modo de falla</a></button>
+      </div>   
     </div>
   </div>
 </div>

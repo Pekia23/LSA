@@ -118,16 +118,70 @@ h3 {
 
 
 .icon-size {
-    font-size: 24px; /* Puedes ajustar el tamaño aquí */
+    font-size: 30px; /* Puedes ajustar el tamaño aquí */
   }
 
-.tablas{
-    width: 60%;
-    align-content: center !important;
+.tablas {
+    width: 60%; /* Ajusta el ancho de la tabla al 60% del contenedor */
     margin: 0 auto; /* Centra la tabla horizontalmente */
-    display: table;
+    border-collapse: collapse; /* Elimina los espacios entre bordes de celdas */
+    text-align: left; /* Alinea el texto dentro de las celdas a la izquierda */
 }
 
+i{
+    color:white;
+}
 
-  
-   
+.boton{
+    background-color: rgb(33, 33, 99);
+    color: white;
+    padding: 7px 12px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    text-decoration: none; /* Evita subrayado en el enlace si lo hubiera */
+}
+
+.bi-arrow-left-circle-fill{
+    color:#052647;
+    font-size: 40px;
+}
+
+tr{
+    text-align: center;
+}
+
+.bi-eye, .bi-arrow-down-circle, .bi-file-earmark{
+    color:#052647
+}
+
+.btn-warning, .btn-success{
+    padding: 2px 30px; /* Ajusta el padding según tus preferencias */
+    font-size: 16px; /* Tamaño de fuente */
+    cursor: pointer; /* Cambia el cursor a pointer */
+    color: white; 
+}
+
+.btn-warning a, .btn-success a{
+    display: inline-flex; /* Para adaptar el tamaño al contenido */
+    align-items: center; /* Alinea el contenido del botón (texto e íconos) verticalmente */
+    justify-content: center;
+}
+
+.FMEA-edit{
+    margin: 5px;
+}
+
+.mta{
+    padding: 2px 30px; /* Ajusta el padding según tus preferencias */
+    font-size: 16px; /* Tamaño de fuente */
+    cursor: pointer; /* Cambia el cursor a pointer */
+    color: white; 
+}
+
+.mta a{
+    display: inline-flex; /* Para adaptar el tamaño al contenido */
+    align-items: center; /* Alinea el contenido del botón (texto e íconos) verticalmente */
+    justify-content: center;
+}

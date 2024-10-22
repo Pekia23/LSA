@@ -1,6 +1,32 @@
 from __init__ import db
 import MySQLdb.cursors
 
+def obtener_componentes_por_subsistema(subsistema_id):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = "SELECT * FROM componentes WHERE subsistema_id = %s"
+    cursor.execute(query, (subsistema_id,))
+    componentes = cursor.fetchall()
+    cursor.close()
+    return componentes
+
+def insertar_componente_analisis_funcional(id_analisis_funcional, id_componente, verbo, accion):
+    # Conexión a la base de datos
+    cursor = db.connection.cursor()
+    
+    # Insertar los datos del componente relacionado con el análisis funcional
+    query = """
+    INSERT INTO `componente_analisis_funcional`(`id_componente`, `verbo`, `accion`, `id_analisis_funcional`)
+    VALUES (%s, %s, %s, %s)
+    """
+    print(f"Query: {query}")
+    print(f"Valores: id_componente={id_componente}, verbo={verbo}, accion={accion}, id_analisis_funcional={id_analisis_funcional}")
+    
+    cursor.execute(query, (id_componente, verbo, accion, id_analisis_funcional))
+    db.connection.commit()
+
+    cursor.close()
+
+
 
 def verificar_conexion():
     try:
@@ -426,6 +452,7 @@ def insertar_fmea(id_equipo_info, id_sistema, id_falla_funcional, id_componente,
         id_detalle_falla, MTBF, MTTR, id_metodo_deteccion_falla, id_fallo_oculto, id_seguridad_fisica,
         id_medio_ambiente,
         id_impacto_operacional, id_costos_reparacion, id_flexibilidad_operacional, calculo_severidad, id_ocurrencia,
+
 
         ocurrencia_mate, id_probabilidad_deteccion, rpn, id_riesgo
 
@@ -2066,4 +2093,23 @@ def obtener_mta_por_equipo_info(id_equipo_info):
     cursor.execute(query, (id_equipo_info,))
     mta = cursor.fetchall()
     cursor.close()
+
     return mta
+
+def eliminar_personal(id_personal):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    sql = "DELETE FROM personal WHERE id = %s"
+    cursor.execute(sql, (id_personal,))
+    db.connection.commit()
+    cursor.close()
+
+def crear_personal(nombre_completo):
+    correo = 'correo1@example.com'
+    password = 'password1'
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    sql = "INSERT INTO personal (correo, password, nombre_completo) VALUES (%s, %s, %s)"
+    cursor.execute(sql, (correo, password, nombre_completo))
+    db.connection.commit()
+    new_id = cursor.lastrowid
+    cursor.close()
+    return new_id

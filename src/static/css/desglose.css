@@ -19,6 +19,7 @@ body {
     gap: 30px; /* Espacio mayor entre tarjetas */
     justify-content: center;
     margin-top: 30px;
+    
 }
 
 /* Estilos para las tarjetas de los grupos, subgrupos, sistemas y equipos */
