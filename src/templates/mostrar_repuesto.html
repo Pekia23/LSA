@@ -1,6 +1,6 @@
-{#{% extends './base_navbar_mostrar.html' %}#}
-{##}
-{#{% block title %}Cotecmar || Equipo - Repuestos{% endblock %}#}
+{% extends './base_navbar_mostrar.html' %}
+
+{% block title %}Cotecmar || Equipo - Repuestos{% endblock %}
 
 {% block custom %}
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/FMEA.css') }}">
 {% endblock %}
 
-{#{% block nombre %}LSA | Repuestos{% endblock %}#}
+{% block nombre %}LSA | Repuestos{% endblock %}
 
 {% block content %}
 <h2 class="section-title text-center">Repuesto</h2>
