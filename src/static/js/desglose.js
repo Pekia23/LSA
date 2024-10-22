@@ -108,6 +108,25 @@ document.addEventListener('DOMContentLoaded', function () {
                     .then(response => response.json())
                     .then(data => mostrarTarjetas(data, 'equipo'))
                     .catch(error => console.error('Error:', error));
+            } else if (type === 'equipo') {
+                const nombre_equipo = card.querySelector('p').textContent.trim(); // Obtener el nombre del equipo desde la tarjeta
+                
+                // Hacer una petición POST al backend para mostrar la información del equipo
+                fetch('/LSA/mostrar-general', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ nombre_equipo: nombre_equipo }) // Enviar nombre_equipo al backend
+                })
+                .then(response => {
+                    if (response.redirected) {
+                        window.location.href = response.url; // Seguir la redirección del backend
+                    } else {
+                        console.error('Error en la redirección');
+                    }
+                })
+                .catch(error => console.error('Error en la petición POST:', error));
             }
         }
     });

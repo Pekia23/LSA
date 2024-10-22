@@ -1,0 +1,53 @@
+{% extends '/base_navbar_mostrar.html' %}
+
+{% block content %}
+    <div class="container">
+        <h1>Vista General</h1>
+        
+        <!-- Incluir Información del Equipo -->
+        <div class="section">
+            {% include 'mostrar_equipo.html' %}
+        </div>
+
+        <!-- Incluir Análisis Funcional -->
+        <div class="section">
+            {% include 'mostrar_analisis_funcional.html' %}
+        </div>
+
+
+
+        <!-- Incluir Herramientas Especiales -->
+        <div class="section">
+            {% include 'mostrar_herramientas-especiales.html' %}
+        </div>
+
+        
+
+        <!-- Incluir Repuesto -->
+        <div class="section">
+            {% include 'mostrar_repuesto.html' %}
+        </div>
+
+
+
+
+        <!-- Incluir FMEA -->
+        <div class="section">
+            {% include 'mostrar_FMEA.html' %}
+        </div>
+
+        
+        <!-- Incluir RCM -->
+        <div class="section">
+            {% include 'mostrar_RCM.html' %}
+        </div>
+
+        <!-- Incluir MTA -->
+        <div class="section">
+            {% include 'mostrar_MTA.html' %}
+        </div>
+
+        
+
+    </div>
+{% endblock %}

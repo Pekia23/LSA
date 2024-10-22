@@ -777,11 +777,21 @@ function mostrarPregunta(nodeId) {
     // Actualizamos el texto de la pregunta
     questionText.textContent = nodo.pregunta;
 
+    if (nodo.respuestas["Fin"] === "fin") {
+        const labelElement = document.getElementById("actividades");
+        if (labelElement) {
+            labelElement.value = nodo.pregunta; // Set the text content of the label
+        }
+    }
+
     // Si es el nodo de fin, ocultamos todos los botones
     if (nodeId === "fin") {
         ocultarBotones(); // Aseguramos que todos los botones estén ocultos
         return;
     }
+
+
+
 
     // Mostrar los botones "Sí" y "No" solo si el nodo tiene respuestas disponibles
     if (nodo.respuestas["Sí"] && nodo.respuestas["No"]) {
