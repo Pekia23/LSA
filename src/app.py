@@ -1709,13 +1709,18 @@ def registro_FMEA():
                            lista_riesgos= lista_riesgos)
 
 
+#elproblema
 @app.route('/LSA/registro-FMEA', methods=['POST'])
 def guardar_fmea():
     # Obtener el token del usuario y la información relacionada
     token = g.user_token
     user_data = obtener_info_usuario(token)
     id_equipo_info = user_data.get('id_equipo_info')
-    id_sistema = session.get('subsistema_id')
+    #id_sistema = session.get('subsistema_id')
+
+    # Obtener id_sistema usando obtener_equipo_info
+    equipo_info = obtener_equipo_info(id_equipo_info)
+    id_sistema = equipo_info.get('id_sistema')
     
     
     # Obtener los datos del formulario
