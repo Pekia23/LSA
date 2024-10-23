@@ -60,7 +60,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 } else {
                     data.forEach(item => {
                         let card = document.createElement('div');
-                        card.classList.add('card');
+                        card.classList.add('card', 'dynamic-card');  // Añadir las clases 'card' y 'dynamic-card'
+
                         card.setAttribute('data-id', item.id);
                         card.setAttribute('data-type', type);
 
@@ -136,7 +137,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         data.forEach(item => {
             let card = document.createElement('div');
-            card.classList.add('card');
+            card.classList.add('card', 'dynamic-card'); // Añadir la clase 'dynamic-card' a todas las tarjetas
+
             card.setAttribute('data-id', item.id);
             card.setAttribute('data-type', type);
 
