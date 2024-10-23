@@ -1,0 +1,27 @@
+.imagens h2{
+    color: #0c377f !important;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.imagens{
+    padding: 5px;
+    background-color: rgba(211, 211, 211, 0.534);
+}
+
+.imagen{
+    max-width: 600px;
+    max-width: 400px;
+}
+
+h3 {
+    color: #0c377f !important;
+    font-weight: bold !important;
+    margin-top: 25px;  /* Espaciado superior */
+}
+
+.volver{
+    font-size: 25px;
+    padding-bottom: 50px;
+}

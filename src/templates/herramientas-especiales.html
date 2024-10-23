@@ -24,6 +24,7 @@
     <div class="tab-content" id="myTabContent">
       <!-- Pestaña de "Análisis de herramientas" -->
       <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+        <br>
         <h3>Análisis de herramientas</h3>
         <table class="table">
           <thead>
@@ -47,6 +48,7 @@
 
       <!-- Pestaña de "Herramientas especiales" -->
       <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+        <br>
         <h3>Herramientas especiales</h3>
         <table class="table">
           <thead>
@@ -76,11 +78,9 @@
           </tbody>
       </table>
     </div>
-    <!-- <div class="mt-4">
-      <a href="{{ url_for('registro_repuesto', token=session['token']) }}" class="btn btn-primary">Terminar Modulo de Herramientas</a>
+    <div class="mt-4">
+      <a href="{{ url_for('mostrar_herramientas_especiales') }}" class="btn btn-primary">Editar Modulo de herramientas</a>
     </div>
-    <a href="{{ url_for('registro_herramientas_especiales') }}"><i class="bi bi-arrow-left-circle-fill"></i></a> -->
-
     <script src="{{ url_for('static', filename='js/mostrar_herramientas.js') }}"></script>
   </main>
 </body>  
