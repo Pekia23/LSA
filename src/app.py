@@ -561,6 +561,8 @@ def mostrar_repuestos():
     user_data = obtener_info_usuario(token)
     id_equipo_info = user_data.get('id_equipo_info')
 
+    ##estasaqui
+
     if id_equipo_info is None:
         return redirect(url_for('registro_generalidades'))
 
@@ -1718,6 +1720,7 @@ def guardar_fmea():
     user_data = obtener_info_usuario(token)
     id_equipo_info = user_data.get('id_equipo_info')
     #id_sistema = session.get('subsistema_id')
+    
 
     # Obtener id_sistema usando obtener_equipo_info
     equipo_info = obtener_equipo_info(id_equipo_info)
@@ -1771,7 +1774,7 @@ def guardar_fmea():
     )
 
     # Redireccionar o devolver respuesta exitosa
-    return redirect(url_for('mostrar_FMEA'))  
+    return redirect(url_for('editar_FMEA_lista'))  
 
 #rutas para funcionesFMEA.js
 @app.route('/LSA/obtener-detalles-falla/<int:mecanismo_id>', methods=['GET'])
@@ -1962,7 +1965,7 @@ def guardar_RCM(fmea_id):
     insertar_rcm(rcm)
 
     # Redireccionar después de guardar los cambios
-    return redirect(url_for('mostrar_fmea'))
+    return redirect(url_for('editar_FMEA_lista'))
 
 
 
