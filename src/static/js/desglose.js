@@ -17,7 +17,12 @@ document.addEventListener('DOMContentLoaded', function () {
     buscarBtn.addEventListener('click', function () {
         let query = searchbox.value.trim();
         if (query === '') {
-            alert('Por favor, ingrese un término de búsqueda.');
+            Swal.fire({
+                icon: 'warning',
+                title: 'Campo vacío',
+                text: 'Por favor, ingrese un término de búsqueda.',
+                confirmButtonText: 'OK'
+            });
             return;
         }
 
@@ -30,21 +35,36 @@ document.addEventListener('DOMContentLoaded', function () {
             type = 'equipo';
         } else if (currentView === 'subgrupo') {
             if (!currentGroupId) {
-                alert('Por favor, seleccione un grupo constructivo.');
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Sin grupo seleccionado',
+                    text: 'Por favor, seleccione un grupo constructivo.',
+                    confirmButtonText: 'OK'
+                });
                 return;
             }
             apiUrl = `/api/buscar_subgrupos?busqueda=${encodeURIComponent(query)}&id_grupo=${currentGroupId}`;
             type = 'subgrupo';
         } else if (currentView === 'sistema') {
             if (!currentSubgroupId) {
-                alert('Por favor, seleccione un subgrupo.');
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Sin subgrupo seleccionado',
+                    text: 'Por favor, seleccione un subgrupo.',
+                    confirmButtonText: 'OK'
+                });
                 return;
             }
             apiUrl = `/api/buscar_sistemas?busqueda=${encodeURIComponent(query)}&id_subgrupo=${currentSubgroupId}`;
             type = 'sistema';
         } else if (currentView === 'equipo') {
             if (!currentSystemId) {
-                alert('Por favor, seleccione un sistema.');
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Sin sistema seleccionado',
+                    text: 'Por favor, seleccione un sistema.',
+                    confirmButtonText: 'OK'
+                });
                 return;
             }
             apiUrl = `/api/buscar_equipos?busqueda=${encodeURIComponent(query)}&id_sistema=${currentSystemId}`;
@@ -75,7 +95,15 @@ document.addEventListener('DOMContentLoaded', function () {
                     });
                 }
             })
-            .catch(error => console.error('Error en la búsqueda:', error));
+            .catch(error => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error en la búsqueda',
+                    text: 'Hubo un error al realizar la búsqueda. Inténtalo de nuevo más tarde.',
+                    confirmButtonText: 'OK'
+                });
+                console.error('Error en la búsqueda:', error);
+            });
     });
 
     // Lógica para manejar el click en los cuadros
@@ -127,7 +155,15 @@ document.addEventListener('DOMContentLoaded', function () {
                         console.error('Error en la redirección');
                     }
                 })
-                .catch(error => console.error('Error en la petición POST:', error));
+                .catch(error => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error en la redirección',
+                        text: 'Hubo un error al procesar la redirección. Inténtalo de nuevo más tarde.',
+                        confirmButtonText: 'OK'
+                    });
+                    console.error('Error en la petición POST:', error);
+                });
             }
         }
     });

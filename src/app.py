@@ -1591,7 +1591,7 @@ def guardar_MTA(fmea_id):
     if(nivel and actividades and operario):
         insertar_mta_lora(nivel, actividades, operario, id_mta)
 
-    return redirect(url_for('editar_RCM_lista'))
+    return redirect(url_for('editar_MTA_lista'))
 
 
 #actualizar mta
@@ -1965,7 +1965,7 @@ def guardar_RCM(fmea_id):
     insertar_rcm(rcm)
 
     # Redireccionar después de guardar los cambios
-    return redirect(url_for('editar_FMEA_lista'))
+    return redirect(url_for('editar_RCM_lista'))
 
 
 
