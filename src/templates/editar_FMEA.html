@@ -10,7 +10,7 @@
 
 
 
-{% block nombre %}LSA | hola mundo - FMEA{% endblock %}
+{% block nombre %}LSA | FMEA{% endblock %}
 
 {% block body %}
 <div class="container-fluid">
@@ -112,6 +112,7 @@
         </div>
       <div class="mt-4">
         <button type="button" class="btn btn-primary"><a href="{{url_for('registro_FMEA')}}">Agregar modo de falla</a></button>
+        <button type="button" class="btn btn-primary"><a href="{{url_for('editar_RCM_lista')}}">Ver RCM</a></button>
       </div>   
     </div>
   </div>

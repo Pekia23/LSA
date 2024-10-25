@@ -11,7 +11,7 @@
 
 
 
-{% block nombre %}LSA | hola mundo - MTA{% endblock %}
+{% block nombre %}LSA |  MTA{% endblock %}
 
 {% block body %}
 <div class="container-fluid">
@@ -76,17 +76,16 @@
                 <td>{{ mta['actividades'] }}</td>
                 <td>{{ mta['operario'] }}</td>
                 <td>
-                    <button class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar RCM">
-                        <a href="{{ url_for('editar_MTA', rcm_id=mta['id_rcm']) }}">Editar MTA <i
-                                class="bi bi-pencil"></i></a>
+                    <button class="btn btn-warning " data-bs-toggle="tooltip" data-bs-placement="top" title="Editar RCM">
+                        <a href="{{ url_for('editar_MTA', rcm_id=mta['id_rcm']) }}">MTA <i
+                                class="bi bi-pencil FMEA-edit"></i></a>
                     </button>
                 </td>
 
                 <td>
-                    <button class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="top"
+                    <button class="btn btn-danger mta" data-bs-toggle="tooltip" data-bs-placement="top"
                             title="Eliminar RCM">
-                        <a href="{{ url_for('eliminar_MTA', mta_id=mta['id']) }}">Eliminar MTA <i
-                                class="bi bi-pencil"></i></a>
+                        <a href="{{ url_for('eliminar_MTA', mta_id=mta['id']) }}">MTA<i class="bi bi-trash FMEA-edit"></i></a>
                     </button>
                 </td>
             </tr>
@@ -94,9 +93,39 @@
         </tbody>
       </table>
     </div>
-    <div class="mt-5">
-      <button type="button" class="btn btn-primary"><a href="{{url_for('mostrar_MTA')}}">Regresar</a></button>
-    </div>  
+    <div class="mt-4">
+      <button type="button" class="btn btn-primary"><a href="{{url_for('editar_RCM_lista')}}">Regresar</a></button>
+      <button type="button" class="btn btn-primary" onclick="confirmarFinalizarRegistro()">Finalizar registro del equipo</button>
+  
+      <script>
+        function confirmarFinalizarRegistro(nombreEquipo) {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "¿Deseas finalizar el registro del equipo?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, finalizar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Redirige y muestra mensaje de éxito
+                    Swal.fire({
+                        title: '¡Registro Exitoso!',
+                        text: `${nombreEquipo} se ha registrado exitosamente.`,
+                        icon: 'success',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'Aceptar'
+                    }).then(() => {
+                        // Redirige al index después de mostrar el mensaje de éxito
+                        window.location.href = "{{ url_for('index') }}";
+                    });
+                }
+            });
+        }
+    </script>
+   
   </div>
 </div>
 {% endblock %}

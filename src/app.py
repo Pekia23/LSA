@@ -1933,6 +1933,7 @@ def crear_RCM(fmea_id):
         print(fmea)
         return render_template('registro_RCM.html', fmea=fmea, acciones=acciones)
     else:
+        print("no tiene")
         return "FMEA no encontrado", 404
 
 
@@ -1963,6 +1964,7 @@ def guardar_RCM(fmea_id):
     }
     # Insertar los datos en la tabla RCM
     insertar_rcm(rcm)
+
 
     # Redireccionar después de guardar los cambios
     return redirect(url_for('editar_RCM_lista'))
@@ -2299,6 +2301,8 @@ def mostrar_general_page(id_equipo_info):
         # return jsonify(equipo_info)  # Enviar los detalles del equipo como respuesta
         # return render_template('mostrar_general.html')
 
+def status404(error):
+    return '<h1>La pagina no se encuentra, buscalo por otro lado</h1>',404
 
 
 
@@ -2307,6 +2311,7 @@ def mostrar_general_page(id_equipo_info):
 
 
 if __name__ == '__main__':
+    app.register_error_handler(404, status404)
     app.run()
 
 

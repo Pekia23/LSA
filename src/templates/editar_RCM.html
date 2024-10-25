@@ -82,11 +82,11 @@
 
                       {% if rcm['id'] in rcms_con_mta %}
                         <button class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar RCM">
-                          <a href="{{url_for('editar_MTA', rcm_id=rcm['id'])}}">Editar MTA <i class="bi bi-pencil"></i></a>
+                          <a href="{{url_for('editar_MTA', rcm_id=rcm['id'])}}"> MTA <i class="bi bi-pencil FMEA-edit"></i></a>
                         </button>
                       {% else %}
                         <button class="btn btn-success" data-bs-toggle="tooltip" data-bs-placement="top" title="Crear RCM">
-                          <a href="{{url_for('registro_MTA', fmea_id=rcm['id_fmea'])}}">Crear MTA <i class="bi bi-plus-circle"></i></a>
+                          <a href="{{url_for('registro_MTA', fmea_id=rcm['id_fmea'])}}"> MTA <i class="bi bi-plus-circle FMEA-edit"></i></a>
                         </button>
                       {% endif %}
 
@@ -97,7 +97,11 @@
           </table>
         </div>
       <div class=" mt-4">
-        <button type="button" class="btn btn-primary"><a href="{{url_for('mostrar_RCM')}}">Regresar</a></button>
+        <button type="button" class="btn btn-primary"><a href="{{url_for('editar_FMEA_lista')}}">Regresar</a></button>
+        <button type="button" class="btn btn-primary"><a href="{{url_for('editar_MTA_lista')}}">Ver MTA</a></button>
+      </div>
+      <div class=" mt-4">
+        
       </div>    
     </div>
   </div>

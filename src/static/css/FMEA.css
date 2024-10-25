@@ -150,6 +150,7 @@ i{
 
 tr{
     text-align: center;
+    vertical-align: middle; 
 }
 
 .bi-eye, .bi-arrow-down-circle, .bi-file-earmark{

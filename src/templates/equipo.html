@@ -23,7 +23,7 @@
         <div class="row">
           <div class="col-md-6 section1">
             <div class="mb-3">
-              <label><b>Fecha:</b></label>
+              <label><b>Fecha de Creación:</b></label>
               <span>{{ equipo.fecha }}</span>
             </div>
             
@@ -121,7 +121,7 @@
           {{ equipo.descripcion }}
         </p>
       <br>
-      <h3>Diagrama de Flujo del Subsistema Ubicado en el Equipo</h3>
+      <h3>Diagrama de Flujo del Subsistema Donde se encuentra Ubicado el Equipo</h3>
       
       {% if diagrama.diagrama_fijo %}
       <img src="data:image/png;base64,{{ diagrama.diagrama_fijo|b64encode }}" class="imagend">
