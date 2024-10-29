@@ -124,17 +124,17 @@
       <h3>Diagrama de Flujo del Subsistema Donde se encuentra Ubicado el Equipo</h3>
       
       {% if diagrama.diagrama_fijo %}
-      <img src="data:image/png;base64,{{ diagrama.diagrama_fijo|b64encode }}" class="imagend">
+      <img src="data:image/png;base64,{{ diagrama.diagrama_fijo|b64encode }}" class="imagend" style="width: 1000px; height: auto;">
       {% endif %}
       <br>
       <h3>Diagrama Caja Negra de la Función</h3>
       {% if diagrama.diagrama_caja_negra %}
-      <img src="data:image/png;base64,{{ diagrama.diagrama_caja_negra|b64encode }}" class="imagend">
+      <img src="data:image/png;base64,{{ diagrama.diagrama_caja_negra|b64encode }}" class="imagend" style="width: 1000px; height: auto;">
       {% endif %}
       <br>
       <h3>Diagrama de Caja Transparente</h3>
       {% if diagrama.diagrama_caja_transparente %}
-      <img src="data:image/png;base64,{{ diagrama.diagrama_caja_transparente|b64encode }}" class="imagend">
+      <img src="data:image/png;base64,{{ diagrama.diagrama_caja_transparente|b64encode }}" class="imagend" style="width: 1000px; height: auto;">
       {% endif %}
       <br>
       <h3>Procedimiento de Arranque</h3>
