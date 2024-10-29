@@ -137,8 +137,8 @@ function actualizarCalculos() {
     var costosReparacion = parseFloat(document.getElementById('costos_reparacion_valor').value) || 0;
     var flexibilidadOperacional = parseFloat(document.getElementById('flexibilidad_operacional_valor').value) || 0;
 
-
-    var Severidad = consecuenciaSeveridad + seguridadFisica + medioAmbiente + impactoOperacional + costosReparacion + flexibilidadOperacional;
+    //calculo original
+    var Severidad = consecuenciaSeveridad * 0.05 + seguridadFisica * 0.2 + medioAmbiente * 0.1 + impactoOperacional * 0.3 + costosReparacion * 0.3+ flexibilidadOperacional * 0.05;
     document.getElementById('calculo_severidad').value = Severidad;
 
     var ocurrencia = parseFloat(document.getElementById('ocurrencia_valor').value) || 0;
@@ -147,7 +147,7 @@ function actualizarCalculos() {
     var ocurrencia_matematica = ocurrencia * 2;
     document.getElementById('ocurrencia_matematica').value = ocurrencia_matematica;
 
-    var rpn = Severidad * ocurrencia * deteccion;
+    var rpn = (Severidad * ocurrencia * deteccion)/100;
     document.getElementById('rpn').value = rpn;
 
     // Leer la lista de riesgos desde el atributo data-riesgos
