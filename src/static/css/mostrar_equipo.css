@@ -66,6 +66,7 @@ body {
 
 img{
     max-width: 900px;
+    border: #cccccc;
 }
 
 h2 {

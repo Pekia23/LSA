@@ -9,7 +9,9 @@
     <link rel="stylesheet" href="static/css/FMEA.css">
 </head>
 <body>
-  <main>
+
+  <main id="reporte">
+
     <h2 class="section-title text-center">Modulo de Herramientas</h2>
 
     <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -79,7 +81,11 @@
       </table>
     </div>
     <div class="mt-4">
+<<<<<<< HEAD
       <a href="{{ url_for('mostrar_herramientas_especiales') }}" class="btn btn-primary">Editar Herramientas</a>
+=======
+      <a href="{{ url_for('mostrar_herramientas_especiales') }}" class="btn btn-primary no-print">Editar Herramientas</a>
+>>>>>>> 484f3c66a2ce8ecd0c3fc5800aac82de83116d75
     </div>
     <script src="{{ url_for('static', filename='js/mostrar_herramientas.js') }}"></script>
   </main>

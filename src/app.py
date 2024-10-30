@@ -13,6 +13,13 @@ from config import config
 from io import BytesIO
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
+from flask import Flask, send_file
+from io import BytesIO
+from reportlab.lib.pagesizes import letter, landscape, portrait
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib import colors
+
 
 from database import (
     insertar_componente_analisis_funcional,
@@ -173,6 +180,7 @@ from database import (
 
     obtener_mta_por_equipo_info,
     crear_personal,
+
     eliminar_personal,
 
     obtener_fmeas_con_rcm_por_equipo_info,
@@ -183,6 +191,7 @@ from database import (
     actualizar_procedimiento,
     obtener_sistemas_por_grupo,
     obtener_subgrupos_por_sistema
+
 
 
 
@@ -202,6 +211,12 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 app.secret_key = 'tu_clave_secreta'
 app.config['SECRET_KEY'] = 'tu_clave_secreta_aquí'
 
+
+
+
+@app.errorhandler(Exception)
+def handle_all_errors(error):
+    return render_template('error.html'), 500 
 
 
 @app.route('/check', methods=['GET'])
@@ -1284,11 +1299,13 @@ def editar_RCM(fmea_id):
     rcm = obtener_rcm_por_fmea(fmea_id)
     acciones = obtener_lista_acciones_recomendadas()
     return render_template('registro_rcm.html', rcm=rcm, editar=True, acciones=acciones)
+
 @app.route('/LSA/equipo/editar_RCM_lista/<int:id_equipo_info>')
 def editar_RCM_lista(id_equipo_info):
     rcms = obtener_rcm_por_equipo_info(id_equipo_info)  # Obtener todos los registros de RCM desde la base de datos
     rcms_con_mta = obtener_rcms_con_mta_por_equipo_info(id_equipo_info)
     return render_template('editar_RCM.html', rcms=rcms, rcms_con_mta=rcms_con_mta, id_equipo_info=id_equipo_info)
+
 
 
 
@@ -1555,6 +1572,7 @@ def mostrar_FMEA(id_equipo_info):
 
 
 
+
 @app.route('/LSA/equipo/mostrar-RCM')
 def mostrar_RCM():
     rcms = obtener_rcms_completos()
@@ -1651,6 +1669,7 @@ def editar_MTA(rcm_id):
 
 @app.route('/LSA/eliminar-MTA/<int:mta_id>')
 def eliminar_MTA(mta_id):
+
     token = g.user_token
     user_data = obtener_info_usuario(token)
     id_equipo_info = user_data.get('id_equipo_info')
@@ -1666,6 +1685,7 @@ def editar_MTA_lista(id_equipo_info):
     herramientas = obtener_herramientas_especiales_por_equipo(id_equipo_info)
     repuestos = obtener_repuestos_por_equipo_info(id_equipo_info)
     return render_template('editar_MTA.html', mtas=mtas, herramientas=herramientas, repuestos=repuestos, id_equipo_info=id_equipo_info)
+
 
 
 @app.route('/LSA/registro-MTA/<int:fmea_id>', methods=['POST'])
@@ -1721,15 +1741,19 @@ def guardar_MTA(fmea_id):
     if(nivel and actividades and operario):
         insertar_mta_lora(nivel, actividades, operario, id_mta)
 
+
     return redirect(url_for('editar_MTA_lista',id_equipo_info=id_equipo_info))
+
 
 
 #actualizar mta
 @app.route('/LSA/actualizar-MTA/<int:mta_id>', methods=['POST'])
 def actualizar_MTA(mta_id):
+
     token = g.user_token
     user_data = obtener_info_usuario(token)
     id_equipo_info = user_data.get('id_equipo_info')
+
     # Obtener los datos del formulario
     id_tipo_mantenimiento = request.form.get('tipo_mantenimiento')
     id_tarea_mantenimiento = request.form.get('tarea_mantenimiento')
@@ -1782,7 +1806,9 @@ def actualizar_MTA(mta_id):
     # Actualizar la información de LORA
     actualizar_mta_lora(nivel, actividades, operario, mta_id)
 
+
     return redirect(url_for('editar_RCM_lista',id_equipo_info=id_equipo_info))
+
 
 @app.route('/LSA/equipo/mostrar-MTA')
 def mostrar_MTA():
@@ -1792,11 +1818,13 @@ def mostrar_MTA():
     return render_template('mostrar_MTA.html', mtas=mtas, herramientas=herramientas, repuestos=repuestos)
 
 
+
 # def editar_MTA_lista():
 #     mtas = obtener_mtas_completos()
 #     herramientas = obtener_herramientas_mta()
 #     repuestos = obtener_repuestos_mta()
 #     return render_template('editar_MTA.html', mtas=mtas, herramientas=herramientas, repuestos=repuestos)
+
 
 ##############################################################################################################
 
@@ -1907,7 +1935,9 @@ def guardar_fmea():
     )
 
     # Redireccionar o devolver respuesta exitosa
+
     return redirect(url_for('editar_FMEA_lista', id_equipo_info=id_equipo_info))  
+
 
 #rutas para funcionesFMEA.js
 @app.route('/LSA/obtener-detalles-falla/<int:mecanismo_id>', methods=['GET'])
@@ -2039,7 +2069,14 @@ def view_pdf_1():
 # Ruta para descargar el primer PDF
 @app.route('/download_pdf_1')
 def download_pdf_1():
+    ancho_contenido = 600  # Ajusta este valor según tus necesidades para la orientación
+    page_size = landscape(letter) if ancho_contenido > 550 else portrait(letter)
+
+    # Crear un buffer en memoria para el PDF
     pdf_buffer = BytesIO()
+    doc = SimpleDocTemplate(pdf_buffer, pagesize=page_size)
+    styles = getSampleStyleSheet()
+    story = []
 
     # Crear un PDF usando reportlab
     p = canvas.Canvas(pdf_buffer, pagesize=letter)
@@ -2051,7 +2088,7 @@ def download_pdf_1():
     pdf_buffer.seek(0)
 
     # Enviar el PDF para su descarga
-    return send_file(pdf_buffer, as_attachment=True, download_name="pdf_1.pdf", mimetype='application/pdf')
+    return send_file(pdf_buffer, as_attachment=True, download_name=f"Informe_LSA_nombre_equipo.pdf", mimetype='application/pdf')
 
 
 
@@ -2107,7 +2144,9 @@ def guardar_RCM(fmea_id):
 
 
     # Redireccionar después de guardar los cambios
+
     return redirect(url_for('editar_RCM_lista',id_equipo_info=id_equipo_info))
+
 
 
 
@@ -2424,8 +2463,10 @@ def mostrar_general_page(id_equipo_info):
         datos_equipo = obtener_datos_equipo_por_id(equipo['id_equipo']) if equipo.get('id_equipo') else None
         # Obtener el tipo de equipo
         tipo_equipo = obtener_tipo_equipo_por_id(equipo['id_tipos_equipos']) if equipo.get('id_tipos_equipos') else None
+
         print("id_equipo_info")
         print(id_equipo_info)
+
         return render_template('mostrar_general.html',
                                analisis_funcionales=analisis_funcionales,
                                equipo=equipo,
@@ -2447,6 +2488,8 @@ def mostrar_general_page(id_equipo_info):
                                repuestos=repuestos,
 
                                id_equipo_info=id_equipo_info
+
+
                                )
         # return jsonify(equipo_info)  # Enviar los detalles del equipo como respuesta
         # return render_template('mostrar_general.html')

@@ -19,8 +19,6 @@
       </div>
       <br>
 
-     
-
       <h3>Generalidades</h3>
         <div class="row">
           <div class="col-md-6 section1">
@@ -126,17 +124,23 @@
       <h3>Diagrama de Flujo del Subsistema Donde se encuentra Ubicado el Equipo</h3>
       
       {% if diagrama.diagrama_fijo %}
-      <img src="data:image/png;base64,{{ diagrama.diagrama_fijo|b64encode }}" class="imagend">
+
+      <img src="data:image/png;base64,{{ diagrama.diagrama_fijo|b64encode }}" class="imagend" style="width: 1000px; height: auto;">
+
       {% endif %}
       <br>
       <h3>Diagrama Caja Negra de la Función</h3>
       {% if diagrama.diagrama_caja_negra %}
-      <img src="data:image/png;base64,{{ diagrama.diagrama_caja_negra|b64encode }}" class="imagend">
+
+      <img src="data:image/png;base64,{{ diagrama.diagrama_caja_negra|b64encode }}" class="imagend" style="width: 1000px; height: auto;">
+
       {% endif %}
       <br>
       <h3>Diagrama de Caja Transparente</h3>
       {% if diagrama.diagrama_caja_transparente %}
-      <img src="data:image/png;base64,{{ diagrama.diagrama_caja_transparente|b64encode }}" class="imagend">
+
+      <img src="data:image/png;base64,{{ diagrama.diagrama_caja_transparente|b64encode }}" class="imagend" style="width: 1000px; height: auto;">
+
       {% endif %}
       <br>
       <h3>Procedimiento de Arranque</h3>
@@ -146,6 +150,7 @@
       <p>{{ procedimiento.parada }}</p>
       
       <br>
+
       <div>
         <a href="{{ url_for('editar_equipo', id_equipo_info=id_equipo_info) }}" class="btn btn-primary">
           <i class="bi bi-pen" style="color: whitesmoke;"></i>
@@ -195,3 +200,4 @@ document.getElementById('btn-eliminar-equipo').addEventListener('click', functio
 });
 
 </script>
+

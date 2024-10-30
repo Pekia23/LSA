@@ -86,7 +86,9 @@
                 <td>{{ fmea['probabilidad_deteccion_descripcion'] }}</td>
                 <td>
                   <!-- Botón de Editar -->
+
                   <a href="{{ url_for('editar_FMEA', id_equipo_info=id_equipo_info,fmea_id=fmea['id']) }}" class="btn  btn-sm boton"><i class="bi bi-pen pen" ></i></a>
+
                 </td>
                 <td>
                   <!-- Botón de Eliminar -->
@@ -101,7 +103,9 @@
                     </button>
                   {% else %}
                     <button class="btn btn-success" data-bs-toggle="tooltip" data-bs-placement="top" title="Crear RCM">
+
                       <a href="{{url_for('crear_RCM',id_equipo_info=id_equipo_info, fmea_id=fmea['id'])}}">RCM  <i class="bi bi-plus-circle FMEA-edit"></i></a>
+
                     </button>
                   {% endif %}
                 </td>
@@ -112,7 +116,9 @@
         </div>
       <div class="mt-4">
         <button type="button" class="btn btn-primary"><a href="{{url_for('registro_FMEA')}}">Agregar modo de falla</a></button>
+
         <button type="button" class="btn btn-primary"><a href="{{url_for('editar_RCM_lista', id_equipo_info=id_equipo_info)}}">Ver RCM</a></button>
+
       </div>   
     </div>
   </div>

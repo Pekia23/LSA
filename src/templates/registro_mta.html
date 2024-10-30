@@ -200,13 +200,29 @@
                         <tr>
                           <td>
                             <select class="form-select" id="nivel" name="nivel">
-                              <option value="1" {% if lora_mta['nivel'] == "1" %}selected{% endif %}>Nivel 1</option>
-                              <option value="2" {% if lora_mta['nivel'] == "2" %}selected{% endif %}>Nivel 2</option>
-                              <option value="3" {% if lora_mta['nivel'] == "3" %}selected{% endif %}>Nivel 3</option>
+
+                              <option value="1" {% if lora_mta['nivel'] == "1" %}selected{% endif %}>I</option>
+                              <option value="2" {% if lora_mta['nivel'] == "2" %}selected{% endif %}>II</option>
+                              <option value="3" {% if lora_mta['nivel'] == "3" %}selected{% endif %}>III</option>
+                              <option value="2" {% if lora_mta['nivel'] == "4" %}selected{% endif %}>IV</option>
+                              <option value="3" {% if lora_mta['nivel'] == "5" %}selected{% endif %}>V</option>
                             </select>
                           </td>
                           <td><input type="text" class="form-control gray-input" id="actividades" name="actividades" readonly value="{{ lora_mta['actividades'] }}"></td>
-                          <td><input type="text" class="form-control gray-input" id="operario" name="operario" value="{{ lora_mta['operario'] }}" readonly></td>
+                          <td>
+                            <select class="form-select" id="operario" name="operario">
+                                <option value="operario_1" {% if lora_mta['operario'] == "operario_1" %}selected{% endif %}>Nivel operador</option>
+                                <option value="operario_2" {% if lora_mta['operario'] == "operario_2" %}selected{% endif %}>Técnicas de nivel aprendiz</option>
+                                <option value="operario_3" {% if lora_mta['operario'] == "operario_3" %}selected{% endif %}>Técnico intermedio con curso básico del equipo</option>
+                                <option value="operario_4" {% if lora_mta['operario'] == "operario_4" %}selected{% endif %}>Técnicos del más alto nivel en la empresa, con varios años de experiencia y cursosavanzados sobre el equipo</option>
+                                <option value="operario_5" {% if lora_mta['operario'] == "operario_5" %}selected{% endif %}>Grupo de trabajo con experiencia previa</option>
+                                <option value="operario_2" {% if lora_mta['operario'] == "operario_6" %}selected{% endif %}>Conformado por técnicos en varias disciplinas bajo la dirección de un ingeniero de campo</option>
+                                <option value="operario_3" {% if lora_mta['operario'] == "operario_7" %}selected{% endif %}>Las labores de planeación corresponden a otro nivel dentro de la misma organización</option>
+                                <option value="operario_4" {% if lora_mta['operario'] == "operario_8" %}selected{% endif %}>Apoyo permanente del fabricante</option>
+                                <option value="operario_5" {% if lora_mta['operario'] == "operario_9" %}selected{% endif %}>Apoyo permanente de talleres especializados</option>
+                            </select>
+                        </td>
+
                         </tr>
                       </tbody>
                     </table>

@@ -9,7 +9,9 @@
     <link rel="stylesheet" href="static/css/FMEA.css">
 </head>
 <body>
-    <main>
+
+    <main >
+
         <h2 class="section-title text-center">Repuesto</h2>
         <table class="table mt-3">
         <thead>
@@ -41,7 +43,11 @@
         
         </table>
         <div class="mt-4">
+<<<<<<< HEAD
             <a href="{{ url_for('mostrar_repuestos', token=session['token']) }}" class="btn btn-primary">Editar Repuesto</a>
+=======
+            <a href="{{ url_for('mostrar_repuestos', token=session['token']) }}" class="btn btn-primary no-print">Editar Repuesto</a>
+>>>>>>> 484f3c66a2ce8ecd0c3fc5800aac82de83116d75
         </div> 
     </main>
 </body>       
