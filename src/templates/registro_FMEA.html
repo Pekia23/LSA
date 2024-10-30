@@ -79,12 +79,13 @@
                 <label for="consecutivo_modo_falla" class="form-label">Consecutivo de Modo de Falla</label>
                 <input type="text" class="form-control" id="consecutivo_modo_falla" name="consecutivo_modo_falla" readonly>
                 <input type="hidden" id="id_consecutivo_modo_falla" name="id_consecutivo_modo_falla">
-            </div>    
-            <div class="col-md-4">
-                <label for="causas" class="form-label">Descripcion de Modo de Falla</label>
-                <input type="text" class="form-control" id="causas" name="causas"
-                    value="{% if editar %}{{ fmea['causa'] }}{% endif %}">
             </div>
+            <div class="col-md-4">
+                <label for="descripcion_modo_falla" class="form-label">Descripcion de Modo de Falla</label>
+                <input type="text" class="form-control" id="descripcion_modo_falla" name="descripcion_modo_falla"
+                    value="{% if editar %}{{ fmea['causa'] }}{% endif %}">
+            </div>    
+
         </div>
 
         <div class="row mt-3">

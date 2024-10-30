@@ -213,13 +213,13 @@ app.config['SECRET_KEY'] = 'tu_clave_secreta_aquí'
 
 
 
-
+"""
 @app.errorhandler(Exception)
 def handle_all_errors(error):
     return render_template('error.html'), 500 
 
-
-@app.route('/check', methods=['GET'])
+"""
+@app.route('/check', methods=['GET', 'POST'])
 def check_db_connection():
     result, status_code = verificar_conexion()
     return jsonify(result), status_code
@@ -228,22 +228,22 @@ def check_db_connection():
 def obtener_datos_popup():
     return render_template('pop.html')
 
-@app.route('/LSA')
+@app.route('/LSA', methods=['GET', 'POST'])
 def index():
     grupos = obtener_grupos_constructivos()
     return render_template('index.html', grupos=grupos)
 
-@app.route('/api/grupos', methods=['GET'])
+@app.route('/api/grupos', methods=['GET', 'POST'])
 def obtener_grupos_api():
     grupos = obtener_grupos_constructivos()
     return jsonify(grupos)
 
-@app.route('/api/subgrupos/<int:id_grupo>', methods=['GET'])
+@app.route('/api/subgrupos/<int:id_grupo>', methods=['GET', 'POST'])
 def obtener_subgrupos_api(id_grupo):
     subgrupos = obtener_subgrupos(id_grupo)
     return jsonify(subgrupos)
 
-@app.route('/api/sistemas/<int:id_subgrupo>', methods=['GET'])
+@app.route('/api/sistemas/<int:id_subgrupo>', methods=['GET', 'POST'])
 def obtener_sistemas_api(id_subgrupo):
     sistemas = obtener_sistemas(id_subgrupo)
     return jsonify(sistemas)
@@ -2462,7 +2462,7 @@ def mostrar_general_page(id_equipo_info):
         sistema = obtener_sistema_por_id(equipo['id_sistema']) if equipo['id_sistema'] else None
         datos_equipo = obtener_datos_equipo_por_id(equipo['id_equipo']) if equipo.get('id_equipo') else None
         # Obtener el tipo de equipo
-        tipo_equipo = obtener_tipo_equipo_por_id(equipo['id_tipos_equipos']) if equipo.get('id_tipos_equipos') else None
+        tipo_equipo = obtener_tipo_equipo_por_id(datos_equipo['id_tipos_equipos']) if datos_equipo.get('id_tipos_equipos') else None
 
         print("id_equipo_info")
         print(id_equipo_info)

@@ -454,6 +454,7 @@ document.getElementById('mta-form').addEventListener('submit', function(event) {
 document.getElementById('mta-form').addEventListener('submit', function(event) {
     const herramientaCheckboxes = document.querySelectorAll('.herramienta-checkbox:checked');
     const selectedHerramientas = Array.from(herramientaCheckboxes).map(cb => cb.value);
+
     const hiddenHerramientasField = document.createElement('input');
     hiddenHerramientasField.type = 'hidden';
     hiddenHerramientasField.name = 'selected_herramientas';
@@ -468,5 +469,33 @@ document.getElementById('mta-form').addEventListener('submit', function(event) {
     hiddenRepuestosField.value = JSON.stringify(selectedRepuestos);
     this.appendChild(hiddenRepuestosField);
 });
+</script>
+
+<script>
+    const selectedHerramientas = [];
+
+    // Función para actualizar la lista de herramientas seleccionadas
+    function updateSelectedHerramientas() {
+        const checkboxes = document.querySelectorAll('.herramienta-checkbox');
+        selectedHerramientas.length = 0; // Limpiar el array
+
+        checkboxes.forEach(function(checkbox) {
+            if (checkbox.checked) {
+                selectedHerramientas.push(checkbox.value);
+            }
+        });
+
+        // Mostrar en consola las herramientas seleccionadas
+        console.log('Herramientas seleccionadas:', selectedHerramientas);
+        document.getElementById('selected_herramientas').value = JSON.stringify(selectedHerramientas);
+    }
+
+    // Agregar evento change a los checkboxes
+    document.querySelectorAll('.herramienta-checkbox').forEach(function(checkbox) {
+        checkbox.addEventListener('change', updateSelectedHerramientas);
+    });
+
+    // Actualizar la lista al cargar la página
+    updateSelectedHerramientas();
 </script>
 {% endblock %}

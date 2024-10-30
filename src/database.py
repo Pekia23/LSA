@@ -2106,20 +2106,7 @@ def obtener_fmeas_por_equipo_info(id_equipo_info):
 
 #########################
 
-#fmea editar y eliminar
-def obtener_fmea_por_id(fmea_id):
-    # Obtener la lista completa de FMEAs con nombres procesados
-    fmeas_completos = obtener_fmeas()
 
-    # Buscar el FMEA por el ID en la lista completa
-    fmea_filtrado = next((fmea for fmea in fmeas_completos if fmea['id'] == fmea_id), None)
-
-    # Si se encuentra el FMEA, lo devolvemos, si no, devolvemos None
-    if fmea_filtrado:
-        print(fmea_filtrado)
-        return fmea_filtrado
-    else:
-        return None
 
 
 def obtener_ID_FMEA(fmea_id):
@@ -3515,7 +3502,6 @@ def obtener_mta_por_equipo_info(id_equipo_info):
         LEFT JOIN tipo_mantenimiento tm ON m.id_tipo_mantenimiento = tm.id
         LEFT JOIN tarea_mantenimiento tmr ON m.id_tarea_mantenimiento = tmr.id
         LEFT JOIN lora_mta l ON m.id = l.id_mta
-<<<<<<< HEAD
         WHERE m.id_equipo_info = %s AND m.estado = 'activo'
         """
     cursor.execute(query, (id_equipo_info,))
