@@ -14,6 +14,25 @@ if (editar == 'True') {
     }
 }
 
+function cargarComponentes() {
+    const subsistemaId = document.getElementById('subsistema').value;
+    
+    fetch(`/api/componentes/${subsistemaId}`)
+        .then(response => response.json())
+        .then(data => {
+            const itemComponenteSelect = document.getElementById('item_componente');
+            itemComponenteSelect.innerHTML = '<option value="" disabled selected>---- Selecciona el componente ----</option>';
+            
+            data.componentes.forEach(componente => {
+                const option = document.createElement('option');
+                option.value = componente.id;
+                option.textContent = componente.nombre;
+                itemComponenteSelect.appendChild(option);
+            });
+        })
+        .catch(error => console.error('Error al cargar componentes:', error));
+}
+
 function obtenerRiesgo(frecuencia, consecuencia) {
     // Definición de la matriz de riesgo textual
     const matrizTexto = {
@@ -188,6 +207,9 @@ function actualizarCalculos() {
 
     if (mtbfValue !== 0) {
         ocurrencia_matematica = aorValue / mtbfValue;
+    }
+    else{
+        console.log("errores")
     }
 
     // Limitar el resultado a 2 decimales (opcional)

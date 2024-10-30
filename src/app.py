@@ -1839,58 +1839,73 @@ def registro_RCM():
 
 @app.route('/LSA/registro-FMEA')
 def registro_FMEA():
-    subsistema_id = session.get('subsistema_id')  # Obtener el id del subsistema asociado
-    sistema = obtener_subsistema_por_id(subsistema_id)  #el sistema de fmea es el subsistema de analisis funcional
-    #Obtener datos para desplegables
-    componentes = obtener_componentes_por_subsistema(subsistema_id)
+    # Obtener el token y datos del usuario
+    token = g.user_token
+    user_data = obtener_info_usuario(token)
+    
+    # Obtener el id_equipo desde los datos del usuario o la sesión
+    id_equipo = user_data.get('id_equipo') or session.get('id_equipo')
+
+    # Si el id_equipo no está en la sesión, lo añadimos
+    if id_equipo:
+        session['id_equipo'] = id_equipo
+    
+    # Obtener subsistemas relacionados al equipo
+    subsistemas = obtener_subsistemas_por_equipo(id_equipo) if id_equipo else []
+
+    # Obtener datos adicionales para desplegables
+    subsistema_id = session.get('subsistema_id')
+    componentes = obtener_componentes_por_subsistema(subsistema_id) if subsistema_id else []
     mecanismos_falla = obtener_mecanismos_falla()
     codigos_modo_falla = obtener_codigos_modo_falla()
-    metodos_deteccion_falla = obtener_metodos_deteccion_falla() 
+    metodos_deteccion_falla = obtener_metodos_deteccion_falla()
     fallos_ocultos = obtener_fallos_ocultos()
     seguridad_fisica = obtener_seguridad_fisica()
     medio_ambiente_datos = obtener_medio_ambiente()
     impacto_operacional_datos = obtener_impacto_operacional()
     costos_reparacion_datos = obtener_costos_reparacion()
-    flexibilidad_operacional_datos= obtener_flexibilidad_operacional()
+    flexibilidad_operacional_datos = obtener_flexibilidad_operacional()
     ocurrencia_datos = obtener_Ocurrencia()
     probabilidad_deteccion_datos = obtener_probablilidad_deteccion()
     lista_riesgos = obtener_lista_riesgos() or []
-    AOR=session.get('AOR')
+    AOR = session.get('AOR')
 
-    # Renderizar la plantilla y pasar datos
-    return render_template('registro_FMEA.html',fmea=None, fmea_id=None, editar=False,
-                           sistema=sistema,
-                           componentes=componentes,
-                           mecanismos_falla = mecanismos_falla,
-                           codigos_modo_falla = codigos_modo_falla,
-                           metodos_deteccion_falla = metodos_deteccion_falla,
-                           fallos_ocultos=fallos_ocultos,
-                           seguridad_fisica=seguridad_fisica,
-                           medio_ambiente_datos=medio_ambiente_datos,
-                           impacto_operacional_datos=impacto_operacional_datos,
-                           costos_reparacion_datos=costos_reparacion_datos,
-                           flexibilidad_operacional_datos=flexibilidad_operacional_datos,
-                           ocurrencia_datos = ocurrencia_datos,
-                           AOR=AOR,
-                           probabilidad_deteccion_datos = probabilidad_deteccion_datos,
-                           lista_riesgos= lista_riesgos)
+    # Renderizar la plantilla con los datos
+    return render_template(
+        'registro_FMEA.html',
+        fmea=None,
+        fmea_id=None,
+        editar=False,
+        sistema=subsistemas,
+        subsistemas=subsistemas,
+        componentes=componentes,
+        mecanismos_falla=mecanismos_falla,
+        codigos_modo_falla=codigos_modo_falla,
+        metodos_deteccion_falla=metodos_deteccion_falla,
+        fallos_ocultos=fallos_ocultos,
+        seguridad_fisica=seguridad_fisica,
+        medio_ambiente_datos=medio_ambiente_datos,
+        impacto_operacional_datos=impacto_operacional_datos,
+        costos_reparacion_datos=costos_reparacion_datos,
+        flexibilidad_operacional_datos=flexibilidad_operacional_datos,
+        ocurrencia_datos=ocurrencia_datos,
+        AOR=AOR,
+        probabilidad_deteccion_datos=probabilidad_deteccion_datos,
+        lista_riesgos=lista_riesgos
+    )
 
-
-#elproblema
 @app.route('/LSA/registro-FMEA', methods=['POST'])
 def guardar_fmea():
     # Obtener el token del usuario y la información relacionada
     token = g.user_token
     user_data = obtener_info_usuario(token)
     id_equipo_info = user_data.get('id_equipo_info')
-    #id_sistema = session.get('subsistema_id')
-    
+    id_equipo = user_data.get('id_equipo') or session.get('id_equipo')
 
     # Obtener id_sistema usando obtener_equipo_info
     equipo_info = obtener_equipo_info(id_equipo_info)
     id_sistema = equipo_info.get('id_sistema')
-    
-    
+
     # Obtener los datos del formulario
     falla_funcional = request.form.get('falla_funcional')
     descripcion_modo_falla = request.form.get('descripcion_modo_falla')
@@ -1898,7 +1913,7 @@ def guardar_fmea():
     mtbf = request.form.get('mtbf')
     mttr = request.form.get('mttr')
 
-    #campos de los menús desplegables
+    # Campos de los menús desplegables
     id_componente = request.form.get('item_componente')
     session['id_componente'] = id_componente
     id_mecanismo_falla = request.form.get('mecanismo_falla')
@@ -1914,11 +1929,10 @@ def guardar_fmea():
     id_flexibilidad_operacional = request.form.get('flexibilidad_operacional')
     calculo_severidad = request.form.get('calculo_severidad')
     id_ocurrencia = request.form.get('ocurrencia')
-    ocurrencia_mate= request.form.get('ocurrencia_matematica')
+    ocurrencia_mate = request.form.get('ocurrencia_matematica')
     rpn = request.form.get('rpn')
     id_probabilidad_deteccion = request.form.get('probabilidad_deteccion')
     id_riesgo = request.form.get('id_riesgo')
-    
 
     # Insertar los datos relacionados en las tablas correspondientes y obtener los IDs
     id_falla_funcional = insertar_falla_funcional(falla_funcional)
@@ -1927,19 +1941,16 @@ def guardar_fmea():
 
     # Insertar todos estos IDs en la tabla FMEA junto con los nuevos campos
     id_fmea = insertar_fmea(
-        id_equipo_info, id_sistema, id_falla_funcional, id_componente, id_codigo_modo_falla, 
-        id_consecutivo_modo_falla, id_descripcion_modo_falla, id_causa, id_mecanismo_falla, 
-        id_detalle_falla, mtbf, mttr,id_metodo_deteccion_falla, id_fallo_oculto, id_seguridad_fisica, 
-        id_medio_ambiente, 
-        id_impacto_operacional, id_costos_reparacion, id_flexibilidad_operacional,calculo_severidad, id_ocurrencia, 
-        ocurrencia_mate,
-        id_probabilidad_deteccion, rpn, id_riesgo
-
+        id_equipo_info, id_sistema, id_falla_funcional, id_componente, id_codigo_modo_falla,
+        id_consecutivo_modo_falla, id_descripcion_modo_falla, id_causa, id_mecanismo_falla,
+        id_detalle_falla, mtbf, mttr, id_metodo_deteccion_falla, id_fallo_oculto, id_seguridad_fisica,
+        id_medio_ambiente, id_impacto_operacional, id_costos_reparacion, id_flexibilidad_operacional,
+        calculo_severidad, id_ocurrencia, ocurrencia_mate, id_probabilidad_deteccion, rpn, id_riesgo
     )
 
-    # Redireccionar o devolver respuesta exitosa
-
-    return redirect(url_for('editar_FMEA_lista', id_equipo_info=id_equipo_info))  
+    # Redireccionar a la lista de FMEA con id_equipo_info como parámetro
+    return redirect(url_for('editar_FMEA_lista', id_equipo_info=id_equipo_info))
+ 
 
 
 #rutas para funcionesFMEA.js
