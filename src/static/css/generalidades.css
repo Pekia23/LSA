@@ -80,3 +80,26 @@
     background-color: #0c367f17;
     border-radius: 10px;
 }
+
+.btn-secondary, .btn-danger{
+    margin:0;
+    padding: 0;
+    border:none;
+    width: 40px; /* Ajusta el tamaño del botón según lo que necesites */
+    height: 40px;
+    background-color: transparent;
+}
+
+.btn-secondary:hover, .btn-danger:hover{
+    margin:0;
+    padding: 0;
+    border:none;
+    width: 40px; /* Ajusta el tamaño del botón según lo que necesites */
+    height: 40px;
+    background-color: transparent;
+}
+
+.bi-plus-circle, .bi-trash-fill{
+    font-size: 20px;
+    margin-bottom: none;
+}

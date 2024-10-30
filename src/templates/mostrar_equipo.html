@@ -1,4 +1,4 @@
-{% extends './base_navbar_mostrar.html' %}
+{% extends './base_navbar.html' %}
 
 {% block title %}Cotecmar || Información del Equipo{% endblock %}
 
@@ -11,10 +11,6 @@
 {% block nombre %}LSA | Información del equipo {% endblock %}
 
 {% block content %}
-<div class="text-end">
-    <a href="{{ url_for('editar_equipo') }}" class="btn btn-primary">Editar</a>
-    <button id="btn-eliminar-equipo" class="btn btn-danger">Eliminar</button>
-</div>
 
 {% if equipo.imagen %}
 <img src="data:image/png;base64,{{ equipo.imagen|b64encode }}" class="imagen" style="float: right;" >
@@ -25,6 +21,14 @@
   <h2>{{ equipo.nombre_equipo }}</h2>
 </div>
 <br>
+
+<div>
+  <a href="{{ url_for('editar_equipo') }}" class="btn btn-primary"><i class="bi bi-pen" style="color: whitesmoke;"></i></a>
+  <button id="btn-eliminar-equipo" class="btn btn-danger" data-equipo-id="{{ id_equipo_info }}">
+    <i class="bi bi-trash-fill" style="color: whitesmoke;"></i>
+</button>
+</div>
+
 <h3>Generalidades</h3>
   <form>
     <div class="row">
@@ -60,49 +64,37 @@
         </div>
       </div>
 
-      
-      <div class="mb-3">
-        <label><b>Grupo constructivo:</b></label>
-        <span>{{ grupo_constructivo.nombre }}</span>
-      </div>
-      
-      <div class="mb-3">
-        <label><b>Subgrupo constructivo:</b></label>
-        <span>{{ subgrupo_constructivo.nombre }}</span>
-      </div>
-  
+      <div class="col-md-6 section2">
+        <div class="mb-3">
+          <label><b>Responsable:</b></label>
+          <span>{{ responsable.nombre_completo }}</span>
+        </div>
 
-    <div class="col-md-6 section2">
-      <div class="mb-3">
-        <label><b>Responsable:</b></label>
-        <span>{{ responsable.nombre_completo }}</span>
-      </div>
+        <div class="mb-3">
+          <label><b>Criticidad de sistema:</b></label>
+          <span>{{ equipo.criticidad_equipo }}</span>
+        </div>
 
-      <div class="mb-3">
-        <label><b>Criticidad de sistema:</b></label>
-        <span>{{ equipo.criticidad_equipo }}</span>
+        <div class="mb-3">
+          <label><b>Fiabilidad del sistema:</b></label>
+          <span>{{ equipo.fiabilidad_equipo }}</span>
+        </div>
+        
+        <div class="mb-3">
+          <label><b>MTBF:</b></label>
+          <span>{{ equipo.MTBF }}</span>
+        </div>
+        
+        <div class="mb-3">
+          <label><b>AOR:</b></label>
+          <span>{{ equipo.AOR }}</span>
+        </div>
+        
+        <div class="mb-3">
+          <label><b>GRES:</b></label>
+          <span>{{ equipo.GRES }}</span>
+        </div>
       </div>
-
-      <div class="mb-3">
-        <label><b>Fiabilidad del sistema:</b></label>
-        <span>{{ equipo.fiabilidad_equipo }}</span>
-      </div>
-      
-      <div class="mb-3">
-        <label><b>MTBF:</b></label>
-        <span>{{ equipo.MTBF }}</span>
-      </div>
-      
-      <div class="mb-3">
-        <label><b>AOR:</b></label>
-        <span>{{ equipo.AOR }}</span>
-      </div>
-      
-      <div class="mb-3">
-        <label><b>GRES:</b></label>
-        <span>{{ equipo.GRES }}</span>
-      </div>
-    </div>
   </div>
 </form>
 
@@ -167,22 +159,29 @@
 <!-- Script para manejar la eliminación del equipo -->
 <script>
   document.getElementById('btn-eliminar-equipo').addEventListener('click', function() {
+    const equipoId = this.getAttribute('data-equipo-id');
+
     if (confirm('¿Estás seguro de que deseas eliminar este equipo?')) {
       fetch('/LSA/eliminar-equipo', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({})
+        body: JSON.stringify({ id_equipo_info: equipoId })
       })
-      .then(response => response.json())
+      .then(response => {
+        if (response.headers.get('content-type')?.includes('application/json')) {
+          return response.json();
+        } else {
+          throw new Error("La respuesta no es JSON");
+        }
+      })
       .then(result => {
         if (result.message) {
           alert(result.message);
           window.location.href = '/LSA/registro-generalidades';
-        } else {
-          alert('Error al eliminar equipo');
+        } else if (result.error) {
+          alert(result.error);
         }
       })
       .catch(error => {
@@ -192,4 +191,5 @@
     }
   });
 </script>
+
 {% endblock %}

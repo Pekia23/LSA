@@ -16,490 +16,145 @@
         <div class="col">
             <h2 class="section-title text-center">Maintenance Task Analysis (MTA)</h2>
             <br>
-            <form id="mta-form">
+            {% if editar %}
+                <form id="mta-form" method="POST" action="{{ url_for('actualizar_MTA', mta_id=mta['id']) }}">
+
                 <div class="row">
                     <div class="col-md-4">
                         <label for="sistema" class="form-label">Sistema</label>
-                        <input type="text" id="sistema" class="form-control" name="sistema" value="{{ fmea['sistema'] | default('') }}" readonly>
+                        <input type="text" id="sistema" class="form-control" name="sistema" value="{{ rcm['sistema'] | default('') }}" readonly>
 
                         <label for="tipo_mantenimiento" class="form-label">Tipo de mantenimiento</label>
                         <select class="form-control" id="tipo_mantenimiento" name="tipo_mantenimiento">
                             <option value="" disabled selected>---- Selecciona ----</option>
                             {% for tipo in tipo_de_manteniemto %}
-                                <option value="{{ tipo['id'] }}">{{ tipo['nombre'] }}</option>
+                                <option value="{{ tipo['id'] }}" {% if mta['id_tipo_mantenimiento'] == tipo.id %}selected{% endif %}>{{ tipo['nombre'] }}</option>
                             {% endfor %}
                         </select>
 
                     </div>    
                     <div class="col-md-4">
                         <label for="componente" class="form-label">Componente</label>
-                        <input type="text" id="componente" class="form-control" name="componente" value="{{ fmea['componente'] | default('') }}" readonly>
+                        <input type="text" id="componente" class="form-control" name="componente" value="{{ rcm['componente'] | default('') }}" readonly>
 
                         <label for="tarea_mantenimiento" class="form-label">Tarea de mantenimiento</label>
                         <select class="form-control" id="tarea_mantenimiento" name="tarea_mantenimiento">
                             <option value="" disabled selected>---- Selecciona ----</option>
                             {% for tarea in tarea_mantenimento %}
-                                <option value="{{ tarea['id'] }}">{{ tarea['nombre'] }}</option>
+                                <option value="{{ tarea['id'] }}" {% if mta['id_tarea_mantenimiento'] == tarea.id %}selected{% endif %}>{{ tarea['nombre'] }}</option>
                             {% endfor %}
                         </select>  
                     </div>
                     <div class="col-md-4">
                         <label for="falla_funcional" class="form-label">Falla Funcional</label>
-                        <input type="text" id="falla_funcional" class="form-control" name="falla_funcional" value="{{ fmea['falla_funcional'] }}" readonly>
+                        <input type="text" id="falla_funcional" class="form-control" name="falla_funcional" value="{{ rcm['falla_funcional'] }}" readonly>
 
                         <label for="personal_requerido" class="form-label">Cantidad de personal requerido</label>
-                        <input type="number" id="personal_requerido" class="form-control">
+                        <input type="number" id="personal_requerido" name="personal_requerido" class="form-control" value="{{ mta['cantidad_personal'] }}">
                     </div>
                     
                     
                     <!-- Herramientas / Equipos Requeridos -->
                     <h4 class="section-title text-center my-4">HERRAMIENTAS / EQUIPOS REQUERIDOS</h4>
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        {% for key in herramientas_por_tipo %}
+                        {% set key_sin_espacios = key.replace(' ', '') %}
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="seguridad-tab" data-bs-toggle="tab" data-bs-target="#seguridad" type="button" role="tab" aria-controls="seguridad" aria-selected="true">Seguridad</button>
+                            <button class="nav-link" id="{{ key_sin_espacios + '-tab' }}" data-bs-toggle="tab" data-bs-target="#{{ key_sin_espacios }}" type="button" role="tab" aria-controls="{{ key_sin_espacios }}" aria-selected="true">{{ key }}</button>
                         </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="soporte-tab" data-bs-toggle="tab" data-bs-target="#soporte" type="button" role="tab" aria-controls="soporte" aria-selected="false">Elemento de soporte</button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="generales-tab" data-bs-toggle="tab" data-bs-target="#generales" type="button" role="tab" aria-controls="generales" aria-selected="false">Generales</button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="electronicos-tab" data-bs-toggle="tab" data-bs-target="#electronicos" type="button" role="tab" aria-controls="electronicos" aria-selected="false">Electrónicos</button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="limpieza-tab" data-bs-toggle="tab" data-bs-target="#limpieza" type="button" role="tab" aria-controls="limpieza" aria-selected="false">De limpieza</button>
-                        </li>
-                        </ul>
-                        <div class="tab-content" id="myTabContent">
-                            <div class="tab-pane fade show active" id="seguridad" role="tabpanel" aria-labelledby="seguridad-tab">
-                                <br>
-                                <div class="row">
-                                    <!-- Primera fila de tres elementos -->
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="casco">
-                                        <label for="casco" class="form-check-label">Casco</label>
-                                    </div>
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="botas">
-                                        <label for="botas" class="form-check-label">Botas de seguridad</label>
-                                    </div>
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="guantes">
-                                        <label for="guantes" class="form-check-label">Guantes de seguridad</label>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <!-- Segunda fila de tres elementos -->
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="camisa">
-                                        <label for="camisa" class="form-check-label">Camisa overol</label>
-                                    </div>
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="mascarilla">
-                                        <label for="mascarilla" class="form-check-label">Mascarilla</label>
-                                    </div>
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="tapaoidos">
-                                        <label for="tapaoidos" class="form-check-label">Tapaoídos</label>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <!-- Tercera fila de tres elementos -->
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="gafas_seguridad">
-                                        <label for="gafas_seguridad" class="form-check-label">Gafas de seguridad</label>
-                                    </div>
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="pantalon_overol">
-                                        <label for="pantalon_overol" class="form-check-label">Pantalón overol</label>
-                                    </div>
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="mascara_gas">
-                                        <label for="mascara_gas" class="form-check-label">Mascara de gas</label>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <!-- Fila para 'Seleccionar todo' -->
-                                    <div class="col-12 form-check">
-                                        <input type="checkbox" class="form-check-input" id="select-all-seguridad">
-                                        <label for="select-all-seguridad" class="form-check-label">Seleccionar todo</label>
-                                    </div>
-                                </div>
-                            </div>
+                        {% endfor %}
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                        {% for key in herramientas_por_tipo %}
+                        {% set key_sin_espacios = key.replace(' ', '') %}
+                        <div class="tab-pane fade show" id="{{ key_sin_espacios }}" role="tabpanel" aria-labelledby="{{ key_sin_espacios }}-tab">
+                            <br>
+                            {% for herramienta in herramientas_por_tipo[key] %}
+                                {% if loop.index0 % 3 == 0 %}
+                                    <div class="row">
+                                {% endif %}
+                                <div class="col-md-4 form-check">
+                                    <input type="checkbox" class="form-check-input herramienta-checkbox" id="{{ herramienta.id_herramienta_requerida }}" value="{{ herramienta.id_herramienta_requerida  }}"
+                                    {% if herramienta['id_herramienta_requerida'] in herramientas_mta | map(attribute='id_herramienta_requerida') %}checked{% endif %}>
+                                    <label for="{{ herramienta.id_herramienta_requerida }}" class="form-check-label">{{ herramienta.nombre }}</label>
 
-                            <div class="tab-pane fade" id="soporte" role="tabpanel" aria-labelledby="soporte-tab">
-                                <br>
-                                <div class="row">
-                                    <!-- Primera fila de tres elementos -->
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="linterna">
-                                        <label for="linterna" class="form-check-label">Linterna</label>
-                                    </div>
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="embudo">
-                                        <label for="embudo" class="form-check-label">Embudo</label>
-                                    </div>
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="cinta">
-                                        <label for="cinta" class="form-check-label">Cinta</label>
-                                    </div>
                                 </div>
-                                
-                                <div class="row">
-                                    <!-- Segunda fila de tres elementos -->
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="bisturi">
-                                        <label for="bisturi" class="form-check-label">Bisturí</label>
+                                {% if loop.index0 % 3 == 2 or loop.last %}
                                     </div>
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="escuadra">
-                                        <label for="escuadra" class="form-check-label">Escuadra</label>
-                                    </div>
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="polea">
-                                        <label for="polea" class="form-check-label">Polea</label>
-                                    </div>
-                                </div>
-                                
-                                <div class="row">
-                                    <!-- Tercera fila de tres elementos -->
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="flexometro">
-                                        <label for="flexometro" class="form-check-label">Flexometro</label>
-                                    </div>
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="cinta_aislante">
-                                        <label for="cinta_aislante" class="form-check-label">Cinta aislante</label>
-                                    </div>
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="atomizador">
-                                        <label for="atomizador" class="form-check-label">Atomizador</label>
-                                    </div>
-                                </div>
-                                
-                                <div class="row">
-                                    <!-- Cuarta fila de tres elementos -->
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="bridas">
-                                        <label for="bridas" class="form-check-label">Bridas</label>
-                                    </div>
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="tensor_correas">
-                                        <label for="tensor_correas" class="form-check-label">Tensores de correas</label>
-                                    </div>
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="calibrador">
-                                        <label for="calibrador" class="form-check-label">Calibrador</label>
-                                    </div>
-                                </div>
-                                
-                                <div class="row">
-                                    <!-- Fila para 'Seleccionar todo' -->
-                                    <div class="col-12 form-check">
-                                        <input type="checkbox" class="form-check-input" id="select-all-soporte">
-                                        <label for="select-all-soporte" class="form-check-label">Seleccionar todo</label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="tab-pane fade" id="generales" role="tabpanel" aria-labelledby="generales-tab">
-                                <br>
-                                <div class="row">
-                                    <!-- Primera fila de tres elementos -->
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="martillo">
-                                        <label for="martillo" class="form-check-label">Martillo</label>
-                                    </div>
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="segueta">
-                                        <label for="segueta" class="form-check-label">Segueta</label>
-                                    </div>
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="taladro">
-                                        <label for="taladro" class="form-check-label">Taladro</label>
-                                    </div>
-                                </div>
-                                
-                                <div class="row">
-                                    <!-- Segunda fila de tres elementos -->
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="machosolo">
-                                        <label for="machosolo" class="form-check-label">Machosolo</label>
-                                    </div>
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="cortatubo">
-                                        <label for="cortatubo" class="form-check-label">Cortatubo</label>
-                                    </div>
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="remachadora">
-                                        <label for="remachadora" class="form-check-label">Remachadora</label>
-                                    </div>
-                                </div>
-                                
-                                <div class="row">
-                                    <!-- Tercera fila de tres elementos -->
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="juego_destornilladores">
-                                        <label for="juego_destornilladores" class="form-check-label">Juego de destornilladores</label>
-                                    </div>
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="prensas">
-                                        <label for="prensas" class="form-check-label">Prensas</label>
-                                    </div>
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="pulidora">
-                                        <label for="pulidora" class="form-check-label">Pulidora</label>
-                                    </div>
-                                </div>
-                            
-                                <div class="row">
-                                    <!-- Cuarta fila de tres elementos -->
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="maquina_soldadura">
-                                        <label for="maquina_soldadura" class="form-check-label">Maquina de soldadura</label>
-                                    </div>
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="mazo">
-                                        <label for="mazo" class="form-check-label">Mazo</label>
-                                    </div>
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="engrasador">
-                                        <label for="engrasador" class="form-check-label">Engrasador</label>
-                                    </div>
-                                </div>
-                            
-                                <div class="row">
-                                    <!-- Quinta fila de tres elementos -->
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="tiza">
-                                        <label for="tiza" class="form-check-label">Tiza</label>
-                                    </div>
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="juego_llave">
-                                        <label for="juego_llave" class="form-check-label">Juego de llaves</label>
-                                    </div>
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="alicate">
-                                        <label for="alicate" class="form-check-label">Alicate</label>
-                                    </div>
-                                </div>
-                            
-                                <div class="row">
-                                    <!-- Sexta fila de tres elementos -->
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="sierra">
-                                        <label for="sierra" class="form-check-label">Sierra</label>
-                                    </div>
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="llave_dinamometrica">
-                                        <label for="llave_dinamometrica" class="form-check-label">Llave de dinamometrica</label>
-                                    </div>
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="cincel">
-                                        <label for="cincel" class="form-check-label">Cincel</label>
-                                    </div>
-                                </div>
-                            
-                                <div class="row">
-                                    <!-- Séptima fila de dos elementos -->
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="nivel">
-                                        <label for="nivel" class="form-check-label">Nivel</label>
-                                    </div>
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="marcador">
-                                        <label for="marcador" class="form-check-label">Marcador</label>
-                                    </div>
-                                </div>
-                            
-                                <div class="row">
-                                    <!-- Fila para 'Seleccionar todo' -->
-                                    <div class="col-12 form-check">
-                                        <input type="checkbox" class="form-check-input" id="select-all-generales">
-                                        <label for="select-all-generales" class="form-check-label">Seleccionar todo</label>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="tab-pane fade" id="electronicos" role="tabpanel" aria-labelledby="electronicos-tab">
-                                <br>
-                                <div class="row">
-                                    <!-- Primera fila de tres elementos -->
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="cautin">
-                                        <label for="cautin" class="form-check-label">Cautín</label>
-                                    </div>
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="estano">
-                                        <label for="estano" class="form-check-label">Estaño</label>
-                                    </div>
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="desoldador">
-                                        <label for="desoldador" class="form-check-label">Desoldador</label>
-                                    </div>
-                                </div>
-                                
-                                <div class="row">
-                                    <!-- Segunda fila de tres elementos -->
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="multimetro">
-                                        <label for="multimetro" class="form-check-label">Multímetro</label>
-                                    </div>
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="pinza_voltiamperimetrica">
-                                        <label for="pinza_voltiamperimetrica" class="form-check-label">Pinza voltiamperimétrica</label>
-                                    </div>
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="lupa">
-                                        <label for="lupa" class="form-check-label">Lupa</label>
-                                    </div>
-                                </div>
-                                
-                                <div class="row">
-                                    <!-- Tercera fila de tres elementos -->
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="pasta_soldar">
-                                        <label for="pasta_soldar" class="form-check-label">Pasta de soldar</label>
-                                    </div>
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="malla_desoldadora">
-                                        <label for="malla_desoldadora" class="form-check-label">Malla desoldadora</label>
-                                    </div>
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="pelacables">
-                                        <label for="pelacables" class="form-check-label">Pelacables</label>
-                                    </div>
-                                </div>
-                            
-                                <div class="row">
-                                    <!-- Cuarta fila de tres elementos -->
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="probador_analogico">
-                                        <label for="probador_analogico" class="form-check-label">Probador analógico</label>
-                                    </div>
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="bomba_vacio">
-                                        <label for="bomba_vacio" class="form-check-label">Bomba de vacío</label>
-                                    </div>
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="medidor_aislamiento">
-                                        <label for="medidor_aislamiento" class="form-check-label">Medidor de aislamiento</label>
-                                    </div>
-                                </div>
-                            
-                                <div class="row">
-                                    <!-- Fila para 'Seleccionar todo' -->
-                                    <div class="col-12 form-check">
-                                        <input type="checkbox" class="form-check-input" id="select-all-generales">
-                                        <label for="select-all-generales" class="form-check-label">Seleccionar todo</label>
-                                    </div>
-                                </div>
-                                
-                            </div>
-
-                            <div class="tab-pane fade" id="limpieza" role="tabpanel" aria-labelledby="limpieza-tab">
-                                <br>
-                                <div class="row">
-                                    <!-- Primera fila de tres elementos -->
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="toalla">
-                                        <label for="toalla" class="form-check-label">Toalla</label>
-                                    </div>
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="jabon">
-                                        <label for="jabon" class="form-check-label">Jabón</label>
-                                    </div>
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="alcohol">
-                                        <label for="alcohol" class="form-check-label">Alcohol</label>
-                                    </div>
-                                </div>
-                            
-                                <div class="row">
-                                    <!-- Segunda fila de tres elementos -->
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="cepillo_brocha">
-                                        <label for="cepillo_brocha" class="form-check-label">Cepillo tipo brocha</label>
-                                    </div>
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="cepillo_acero">
-                                        <label for="cepillo_acero" class="form-check-label">Cepillo cerdas de acero</label>
-                                    </div>
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="escoba">
-                                        <label for="escoba" class="form-check-label">Escoba</label>
-                                    </div>
-                                </div>
-                            
-                                <div class="row">
-                                    <!-- Tercera fila de tres elementos -->
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="trapero">
-                                        <label for="trapero" class="form-check-label">Trapero</label>
-                                    </div>
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="balde">
-                                        <label for="balde" class="form-check-label">Balde</label>
-                                    </div>
-                                    <div class="col-md-4 form-check">
-                                        <input type="checkbox" class="form-check-input" id="recogedor">
-                                        <label for="recogedor" class="form-check-label">Recogedor</label>
-                                    </div>
-                                </div>
-                            
-                                <div class="row">
-                                    <!-- Fila para 'Seleccionar todo' -->
-                                    <div class="col-12 form-check">
-                                        <input type="checkbox" class="form-check-input" id="select-all-generales">
-                                        <label for="select-all-generales" class="form-check-label">Seleccionar todo</label>
-                                    </div>
-                                </div>
-                            </div>
+                                {% endif %}
+                            {% endfor %}
                         </div>
-                    </ul> 
+                        {% endfor %}
+                    </div>
+                    </div>
+
+                    <!-- Fin Herramientas / Equipos Requeridos -->
                     
                     <!-- Primera columna -->
-                    <div class="col-md-4 my-4">
-                        <label for="consumibles" class="form-label">Consumibles requeridos</label>
-                        <input type="text" class="form-control" id="consumibles" name="consumibles">
-                        
-                        <label for="repuestos" class="form-label">Repuestos requeridos (referenciado del manual)</label>
-                        <input type="text" class="form-control" id="repuestos" name="repuestos">
-                        
-                        <label for="requeridos_tarea" class="form-label">Requeridos por Tarea</label>
-                        <input type="text" class="form-control" id="requeridos_tarea" name="requeridos_tarea">
+                    <div class="row my-4">
+                        <div class="col-md-6">
+                            <label for="consumibles_requeridos" class="form-label">Consumibles requeridos</label>
+                            <input type="text" class="form-control" id="consumibles_requeridos" name="consumibles_requeridos" value="{{ mta['consumibles_requeridos'] }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="requeridos_tarea" class="form-label">Requeridos por Tarea</label>
+                            <input type="text" class="form-control" id="requeridos_tarea" name="requeridos_tarea" value="{{ mta['requeridos_tarea'] }}">
+                        </div>
                     </div>
 
                     <!-- Segunda columna -->
-                    <div class="col-md-4 my-4">
-                        <label for="ambientales" class="form-label">Condiciones Requeridas (Ambientales)</label>
-                        <input type="text" class="form-control" id="ambientales" name="ambientales">
-                        
-                        <label for="estado_equipo" class="form-label">Condiciones Requeridas (Estado del equipo)</label>
-                        <select class="form-control" id="estado_equipo" name="estado_equipo">
-                            <option value="" disabled selected>---- Selecciona ----</option>
-                            <option value="Apagado">Apagado</option>
-                            <option value="Apagado sin alimentacion">Apagado sin alimentación</option>
-                            <option value="Funcionando">Funcionando</option>
-                        </select>
-                        
-                        <label for="especiales" class="form-label">Condiciones Requeridas (Especiales)</label>
-                        <input type="text" class="form-control" id="especiales" name="especiales">
+                    <div class="row my-4">
+                        <div class="col-md-4">
+                            <label for="condiciones_requeridas_ambientales" class="form-label">Condiciones Requeridas (Ambientales)</label>
+                            <input type="text" class="form-control" id="condiciones_requeridas_ambientales" name="condiciones_requeridas_ambientales" value="{{ mta['condiciones_ambientales'] }}">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="condiciones_requeridas_estado_equipo" class="form-label">Condiciones Requeridas (Estado del equipo)</label>
+                            <select class="form-control" id="condiciones_requeridas_estado_equipo" name="condiciones_requeridas_estado_equipo">
+                                <option value="" disabled selected>---- Selecciona ----</option>
+                                <option value="Apagado" {% if mta['condiciones_estado_equipo'] == "Apagado" %}selected{% endif %}>Apagado</option>
+                                <option value="Apagado sin alimentacion" {% if mta['condiciones_estado_equipo'] == "Apagado sin alimentacion" %}selected{% endif %}>Apagado sin alimentación</option>
+                                <option value="Funcionando" {% if mta['condiciones_estado_equipo'] == "Funcionando" %}selected{% endif %}>Funcionando</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="condiciones_requeridas_especiales" class="form-label">Condiciones Requeridas (Especiales)</label>
+                            <input type="text" class="form-control" id="condiciones_requeridas_especiales" name="condiciones_requeridas_especiales" value="{{ mta['condiciones_especiales'] }}">
+                        </div>
                     </div>
 
                     <!-- Tercera columna -->
-                    <div class="col-md-4 my-4">
-                        <label for="horas" class="form-label">Duración de la Tarea (Horas)</label>
-                        <input type="number" class="form-control" id="horas" name="horas">
-                        
-                        <label for="minutos" class="form-label">Duración de la Tarea (Minutos)</label>
-                        <input type="number" class="form-control" id="minutos" name="minutos">
-                        
-                        <label for="detalle_tarea" class="form-label">Detalle de tarea</label>
-                        <input type="text" class="form-control" id="detalle_tarea" name="detalle_tarea">
+                    <div class="row my-4">
+                        <div class="col-md-4">
+                            <label for="duracion_tarea_horas" class="form-label">Duración de la Tarea (Horas)</label>
+                            <input type="number" class="form-control" id="duracion_tarea_horas" name="duracion_tarea_horas" value="{{ mta['horas'] }}">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="duracion_tarea_minutos" class="form-label">Duración de la Tarea (Minutos)</label>
+                            <input type="number" class="form-control" id="duracion_tarea_minutos" name="duracion_tarea_minutos" value="{{ mta['minutos'] }}">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="detalle_tarea" class="form-label">Detalle de tarea</label>
+                            <input type="text" class="form-control" id="detalle_tarea" name="detalle_tarea" value="{{ mta['detalle_tarea'] }}">
+                        </div>
                     </div>
-
+                    {% if repuestos %}
+                    <label for="repuestos_requeridos" class="form-label">Repuestos Requeridos (referenciado del manual)</label>
+                    {% endif %}
+                    {% for repuesto in repuestos %}
+                        {% if loop.index0 % 3 == 0 %}
+                            <div class="row">
+                        {% endif %}
+                        <div class="col-md-4 form-check">
+                            <input type="checkbox" class="form-check-input repuesto-checkbox" id="{{ repuesto.id }}" value="{{ repuesto.id }}"
+                            {% if repuesto.id in repuestos_mta | map(attribute='id') %}checked{% endif %}>
+                            <label for="{{ repuesto.id }}" class="form-check-label">{{ repuesto.nombre_repuesto }}</label>
+                        </div>
+                        {% if loop.index0 % 3 == 2 or loop.last %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                     <!-- checkbox por repuesto -->
                     <h2 class="section-title text-center">Level Of Repair Analysis (LORA)</h2>
 
                     <div class="mt-3 popup">
@@ -534,42 +189,268 @@
                     </div>
 
                     <table class="table mt-3">
-                        <thead>
-                          <tr>
-                            <th scope="col">Nivel</th>
-                            <th scope="col">Actividades</th>
-                            <th scope="col">Operario</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>@mdo</td>
-                          </tr>
-                          <tr>
-                            <td>Jacob</td>
-                            <td>tdornton</td>
-                            <td>@fat</td>
-                          </tr>
-                          <tr>
-                            <td colspan="2">Larry tde Bird</td>
-                            <td>@twitter</td>
-                            
-                          </tr>
-                        </tbody>
-                      </table>
+                      <thead>
+                        <tr>
+                          <th scope="col">Nivel</th>
+                          <th scope="col">Actividades</th>
+                          <th scope="col">Operario</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>
+                            <select class="form-select" id="nivel" name="nivel">
+                              <option value="1" {% if lora_mta['nivel'] == "1" %}selected{% endif %}>Nivel 1</option>
+                              <option value="2" {% if lora_mta['nivel'] == "2" %}selected{% endif %}>Nivel 2</option>
+                              <option value="3" {% if lora_mta['nivel'] == "3" %}selected{% endif %}>Nivel 3</option>
+                            </select>
+                          </td>
+                          <td><input type="text" class="form-control gray-input" id="actividades" name="actividades" readonly value="{{ lora_mta['actividades'] }}"></td>
+                          <td><input type="text" class="form-control gray-input" id="operario" name="operario" value="{{ lora_mta['operario'] }}" readonly></td>
+                        </tr>
+                      </tbody>
+                    </table>
 
                     <!-- Botón siguiente -->
                     <div class="text-end mt-4">
-                        <button type="button" class="btn btn-siguiente" id="btn-siguiente">Siguiente modo de falla </button>
+                        <button type="submit" class="btn btn-siguiente" id="btn-siguiente">Actualizar MTA</button>
+
                     </div>
-                </div>    
-            </form>
+                </form>
+            {% else %}
+                <form id="mta-form" method="POST" action="{{ url_for('guardar_MTA', fmea_id=fmea['id']) }}">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="sistema" class="form-label">Sistema</label>
+                        <input type="text" id="sistema" class="form-control" name="sistema" value="{{ fmea['sistema'] | default('') }}" readonly>
+
+                        <label for="tipo_mantenimiento" class="form-label">Tipo de mantenimiento</label>
+                        <select class="form-control" id="tipo_mantenimiento" name="tipo_mantenimiento">
+                            <option value="" disabled selected>---- Selecciona ----</option>
+                            {% for tipo in tipo_de_manteniemto %}
+                                <option value="{{ tipo['id'] }}">{{ tipo['nombre'] }}</option>
+                            {% endfor %}
+                        </select>
+
+                    </div>
+                    <div class="col-md-4">
+                        <label for="componente" class="form-label">Componente</label>
+                        <input type="text" id="componente" class="form-control" name="componente" value="{{ fmea['componente'] | default('') }}" readonly>
+
+                        <label for="tarea_mantenimiento" class="form-label">Tarea de mantenimiento</label>
+                        <select class="form-control" id="tarea_mantenimiento" name="tarea_mantenimiento">
+                            <option value="" disabled selected>---- Selecciona ----</option>
+                            {% for tarea in tarea_mantenimento %}
+                                <option value="{{ tarea['id'] }}">{{ tarea['nombre'] }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="falla_funcional" class="form-label">Falla Funcional</label>
+                        <input type="text" id="falla_funcional" class="form-control" name="falla_funcional" value="{{ fmea['falla_funcional'] }}" readonly>
+
+                        <label for="personal_requerido" class="form-label">Cantidad de personal requerido</label>
+                        <input type="number" id="personal_requerido" name="personal_requerido"  class="form-control">
+                    </div>
+
+
+                    <!-- Herramientas / Equipos Requeridos -->
+                    <h4 class="section-title text-center my-4">HERRAMIENTAS / EQUIPOS REQUERIDOS</h4>
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        {% for key in herramientas_por_tipo %}
+                        {% set key_sin_espacios = key.replace(' ', '') %}
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="{{ key_sin_espacios + '-tab' }}" data-bs-toggle="tab" data-bs-target="#{{ key_sin_espacios }}" type="button" role="tab" aria-controls="{{ key_sin_espacios }}" aria-selected="true">{{ key }}</button>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                        {% for key in herramientas_por_tipo %}
+                        {% set key_sin_espacios = key.replace(' ', '') %}
+                        <div class="tab-pane fade show" id="{{ key_sin_espacios }}" role="tabpanel" aria-labelledby="{{ key_sin_espacios }}-tab">
+                            <br>
+                            {% for herramienta in herramientas_por_tipo[key] %}
+                                {% if loop.index0 % 3 == 0 %}
+                                    <div class="row">
+                                {% endif %}
+                                <div class="col-md-4 form-check">
+                                    <input type="checkbox" class="form-check-input herramienta-checkbox" id="{{ herramienta.id_herramienta_requerida  }}" value = "{{ herramienta.id_herramienta_requerida  }}">
+                                    <label for="{{ herramienta.id_herramienta_requerida }}" class="form-check-label">{{ herramienta.nombre }}</label>
+                                </div>
+                                {% if loop.index0 % 3 == 2 or loop.last %}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <!-- Fin Herramientas / Equipos Requeridos -->
+
+                    <!-- Primera columna -->
+                    <div class="row my-4">
+                        <div class="col-md-6">
+                            <label for="consumibles_requeridos" class="form-label">Consumibles requeridos</label>
+                            <input type="text" class="form-control" id="consumibles_requeridos" name="consumibles_requeridos">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="requeridos_tarea" class="form-label">Requeridos por Tarea</label>
+                            <input type="text" class="form-control" id="requeridos_tarea" name="requeridos_tarea">
+                        </div>
+                    </div>
+
+                    <!-- Segunda columna -->
+                    <div class="row my-4">
+                        <div class="col-md-4">
+                            <label for="condiciones_requeridas_ambientales" class="form-label">Condiciones Requeridas (Ambientales)</label>
+                            <input type="text" class="form-control" id="condiciones_requeridas_ambientales" name="condiciones_requeridas_ambientales">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="condiciones_requeridas_estado_equipo" class="form-label">Condiciones Requeridas (Estado del equipo)</label>
+                            <select class="form-control" id="condiciones_requeridas_estado_equipo" name="condiciones_requeridas_estado_equipo">
+                                <option value="" disabled selected>---- Selecciona ----</option>
+                                <option value="Apagado">Apagado</option>
+                                <option value="Apagado sin alimentacion">Apagado sin alimentación</option>
+                                <option value="Funcionando">Funcionando</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="condiciones_requeridas_especiales" class="form-label">Condiciones Requeridas (Especiales)</label>
+                            <input type="text" class="form-control" id="condiciones_requeridas_especiales" name="condiciones_requeridas_especiales">
+                        </div>
+                    </div>
+
+                    <!-- Tercera columna -->
+                    <div class="row my-4">
+                        <div class="col-md-4">
+                            <label for="duracion_tarea_horas" class="form-label">Duración de la Tarea (Horas)</label>
+                            <input type="number" class="form-control" id="duracion_tarea_horas" name="duracion_tarea_horas">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="duracion_tarea_minutos" class="form-label">Duración de la Tarea (Minutos)</label>
+                            <input type="number" class="form-control" id="duracion_tarea_minutos" name="duracion_tarea_minutos">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="detalle_tarea" class="form-label">Detalle de tarea</label>
+                            <input type="text" class="form-control" id="detalle_tarea" name="detalle_tarea">
+                        </div>
+                    </div>
+                    {% if repuestos %}
+                    <label for="repuestos_requeridos" class="form-label">Repuestos Requeridos (referenciado del manual)</label>
+                    {% endif %}
+                        {% for repuesto in repuestos %}
+                        {% if loop.index0 % 3 == 0 %}
+                            <div class="row">
+                        {% endif %}
+                        <div class="col-md-4 form-check">
+                            <input type="checkbox" class="form-check-input repuesto-checkbox" id="{{ repuesto.id }}" value="{{ repuesto.id }}">
+                            <label for="{{ repuesto.id }}" class="form-check-label">{{ repuesto.nombre_repuesto }}</label>
+                        </div>
+                        {% if loop.index0 % 3 == 2 or loop.last %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+
+                    <h2 class="section-title text-center">Level Of Repair Analysis (LORA)</h2>
+
+                    <div class="mt-3 popup">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" id="startQuizBtn">
+                            Realizar Cuestionario LORA
+                        </button>
+
+                        <!-- El Modal (popup) -->
+                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Cuestionario LORA</h5>
+                                        <button id="startQuizBtn" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body text-center">
+                                        <label id="questionText" class="d-block mb-3"></label>
+                                        <div id="answers">
+                                            <!-- Los botones "Sí" y "No" -->
+                                            <button type="button" class="btn btn-primary me-2" id="yesBtn">Sí</button>
+                                            <button type="button" class="btn btn-primary" id="noBtn">No</button>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <br><br>
+                                        <button type="button" class="btn btn-secondary" id="backBtn"><i class="bi bi-arrow-left-circle-fill"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <table class="table mt-3">
+                      <thead>
+                        <tr>
+                          <th scope="col">Nivel</th>
+                          <th scope="col">Actividades</th>
+                          <th scope="col">Operario</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>
+                            <select class="form-select" id="nivel" name="nivel">
+                              <option value="1">Nivel 1</option>
+                              <option value="2">Nivel 2</option>
+                              <option value="3">Nivel 3</option>
+                            </select>
+                          </td>
+                          <td><input type="text" class="form-control gray-input" id="actividades" name="actividades" readonly></td>
+                          <td><input type="text" class="form-control gray-input" id="operario" name="operario" value="{{ fmea['nombre_completo'] }}" readonly></td>
+                        </tr>
+                      </tbody>
+                    </table>
+
+                    <!-- Botón siguiente -->
+                    <div class="text-end mt-4">
+                        <button type="submit" class="btn btn-siguiente" id="btn-siguiente">Guardar MTA</button>
+                    </div>
+                </div>
+                </form>
+
+            {% endif %}
         </div>
+
+<!--
     </div>
 </div>
+<script>
+document.getElementById('mta-form').addEventListener('submit', function(event) {
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+    const selectedValues = Array.from(checkboxes).map(cb => cb.value);
+    const hiddenField = document.createElement('input');
+    hiddenField.type = 'hidden';
+    hiddenField.name = 'selected_herramientas';
+    hiddenField.value = JSON.stringify(selectedValues);
+    this.appendChild(hiddenField);
+});
+</script>
+-->
+
 <script src="{{ url_for('static', filename='js/cuestionario_lora.js') }}"></script>
 <script src="{{ url_for('static', filename='js/registro_mta.js') }}"></script>
+    <script>
+document.getElementById('mta-form').addEventListener('submit', function(event) {
+    const herramientaCheckboxes = document.querySelectorAll('.herramienta-checkbox:checked');
+    const selectedHerramientas = Array.from(herramientaCheckboxes).map(cb => cb.value);
+    const hiddenHerramientasField = document.createElement('input');
+    hiddenHerramientasField.type = 'hidden';
+    hiddenHerramientasField.name = 'selected_herramientas';
+    hiddenHerramientasField.value = JSON.stringify(selectedHerramientas);
+    this.appendChild(hiddenHerramientasField);
 
+    const repuestoCheckboxes = document.querySelectorAll('.repuesto-checkbox:checked');
+    const selectedRepuestos = Array.from(repuestoCheckboxes).map(cb => cb.value);
+    const hiddenRepuestosField = document.createElement('input');
+    hiddenRepuestosField.type = 'hidden';
+    hiddenRepuestosField.name = 'selected_repuestos';
+    hiddenRepuestosField.value = JSON.stringify(selectedRepuestos);
+    this.appendChild(hiddenRepuestosField);
+});
+</script>
 {% endblock %}

@@ -14,15 +14,33 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(result => {
             // Utiliza el resultado si es necesario
             if (result.message) {
-                alert(result.message);
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Éxito!',
+                    text: result.message,
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    window.location.href = '/LSA/mostrar-repuesto';
+                });
             } else {
-                alert('Repuesto agregado correctamente');
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Repuesto no agregado',
+                    text: 'Por favor, complete todos los campos obligatorios',
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    window.location.href = '/LSA/mostrar-repuesto';
+                });
             }
-            window.location.href = '/LSA/mostrar-repuesto';
         })
         .catch(error => {
             console.error('Error al guardar repuesto:', error);
-            alert('Error al guardar repuesto: ' + error.message);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Error al guardar repuesto: ' + error.message,
+                confirmButtonText: 'OK'
+            });
         });
     });
 });

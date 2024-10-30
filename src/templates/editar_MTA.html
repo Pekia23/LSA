@@ -11,7 +11,7 @@
 
 
 
-{% block nombre %}LSA | hola mundo - MTA{% endblock %}
+{% block nombre %}LSA |  MTA{% endblock %}
 
 {% block body %}
 <div class="container-fluid">
@@ -21,59 +21,111 @@
       <table class="table">
         <thead>
           <tr>
-              <th  colspan="11"></th>
-              <th scope="col"  colspan="3">Condiciones requeridas</th>
-              <th scope="col"  colspan="2">Duración de la tarea</th>
-              <td colspan="2"></td>
+            <th scope="col">#</th>
+            <th scope="col">Sistema</th>
+            <th scope="col">Item o componente</th>
+            <th scope="col">Falla Funcional</th>
+            <th scope="col">Descripción Modo de Falla</th>
+            <th scope="col">Tipo de Mantenimiento</th>
+            <th scope="col">Tarea de Mantenimiento</th>
+            <th scope="col">Cantidad de Personal Requerido</th>
+            <th scope="col">Herramientas/Equipos Requeridos</th>
+            <th scope="col">Repuestos requeridos(refenciado del manual)</th>
+            <th scope="col">Requeridos por Tarea</th>
+            <th scope="col">Ambientales</th>
+            <th scope="col">Estado del equipo</th>
+            <th scope="col">Especiales</th>
+            <th scope="col">Horas</th>
+            <th scope="col">Minutos</th>
+            <th scope="col">Detalle de la tarea</th>
+            <th scope="col">Nivel</th>
+            <th scope="col">Actividades</th>
+            <th scope="col">Operario</th>
+            <th colspan="2">Acciones</th>
           </tr>
         </thead>
         <tbody>
-          <tr style="font-weight:bold;">
-            <td>#</td>
-            <td>Sistema</td>
-            <td>Item o componente</td>
-            <td>Falla Funcional</td>
-            <td>Descripción Modo de Falla</td>
-            <td>Tipo de Mantenimiento</td>
-            <td>Tarea de Mantenimiento</td>
-            <td>Cantidad de Personal Requerido</td>
-            <td>Herramientas/Equipos Requeridos</td>
-            <td>Repuestos requeridos(refenciado del manual)</td>
-            <td>Requeridos por Tarea</td>
-            <td>Ambientales</td>
-            <td>Estado del equipo</td>
-            <td>Especiales</td>
-            <td>Horas</td>
-            <td>Minutos</td>
-            <td>Detalle de la tarea</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td scope="row">1</td>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td colspan="14">@mdo</td>
-            <td><button class="btn btn-primary"  data-bs-toggle="tooltip" data-bs-placement="top" title="Editar este registro"><a href = "{{url_for('registro_MTA')}}"> <i class="bi bi-pen pen" ></i></a></button></td>
-          </tr>
-          <tr>
-            <td scope="row">2</td>
-            <td>Jacob</td>
-            <td>tdornton</td>
-            <td colspan="14">@fat</td>
-            <td><button class="btn btn-primary"  data-bs-toggle="tooltip" data-bs-placement="top" title="Editar este registro"><a href = "{{url_for('registro_MTA')}}"> <i class="bi bi-pen pen" ></i></a></button></td>
-          </tr>
-          <tr>
-            <td scope="row">3</td>
-            <td colspan="2">Larry tde Bird</td>
-            <td colspan="14">@twitter</td>
-            <td><button class="btn btn-primary"  data-bs-toggle="tooltip" data-bs-placement="top" title="Editar este registro"><a href = "{{url_for('registro_MTA')}}"> <i class="bi bi-pen pen" ></i></a></button></td>
-          </tr>
+          {% for mta in mtas %}
+            <tr>
+                <td>{{ mta['id'] }}</td>
+                <td>{{ mta['sistema'] }}</td>
+                <td>{{ mta['componente'] }}</td>
+                <td>{{ mta['falla_funcional'] }}</td>
+                <td>{{ mta['descripcion_modo_falla'] }}</td>
+                <td>{{ mta['tipo_mantenimiento'] }}</td>
+                <td>{{ mta['tarea_mantenimiento'] }}</td>
+                <td>{{ mta['cantidad_personal'] }}</td>
+                <td>
+                    {% for herramienta in herramientas if herramienta.id_mta == mta.id %}
+                    {{ herramienta.nombre }}<br>
+                    {% endfor %}
+                </td>
+                <td>
+                    {% for repuesto in repuestos if repuesto.id_mta == mta.id %}
+                    {{ repuesto.nombre_repuesto }}<br>
+                    {% endfor %}
+                </td>
+                <td>{{ mta['requeridos_tarea'] }}</td>
+                <td>{{ mta['condiciones_ambientales'] }}</td>
+                <td>{{ mta['condiciones_estado_equipo'] }}</td>
+                <td>{{ mta['condiciones_especiales'] }}</td>
+                <td>{{ mta['horas'] }}</td>
+                <td>{{ mta['minutos'] }}</td>
+                <td>{{ mta['detalle_tarea'] }}</td>
+                <td>{{ mta['nivel'] }}</td>
+                <td>{{ mta['actividades'] }}</td>
+                <td>{{ mta['operario'] }}</td>
+                <td>
+                    <button class="btn btn-warning " data-bs-toggle="tooltip" data-bs-placement="top" title="Editar RCM">
+                        <a href="{{ url_for('editar_MTA', rcm_id=mta['id_rcm']) }}">MTA <i
+                                class="bi bi-pencil FMEA-edit"></i></a>
+                    </button>
+                </td>
+
+                <td>
+                    <button class="btn btn-danger mta" data-bs-toggle="tooltip" data-bs-placement="top"
+                            title="Eliminar RCM">
+                        <a href="{{ url_for('eliminar_MTA', mta_id=mta['id']) }}">MTA<i class="bi bi-trash FMEA-edit"></i></a>
+                    </button>
+                </td>
+            </tr>
+        {% endfor %}
         </tbody>
       </table>
     </div>
-    <div class="mt-5">
-      <button type="button" class="btn btn-primary"><a href="{{url_for('mostrar_MTA')}}">Regresar</a></button>
-    </div>  
+    <div class="mt-4">
+      <button type="button" class="btn btn-primary"><a href="{{url_for('editar_RCM_lista', id_equipo_info=id_equipo_info)}}">Regresar</a></button>
+      <button type="button" class="btn btn-primary" onclick="confirmarFinalizarRegistro()">Finalizar registro del equipo</button>
+  
+      <script>
+        function confirmarFinalizarRegistro(nombreEquipo) {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "¿Deseas finalizar el registro del equipo?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, finalizar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Redirige y muestra mensaje de éxito
+                    Swal.fire({
+                        title: '¡Registro Exitoso!',
+                        text: `${nombreEquipo} se ha registrado exitosamente.`,
+                        icon: 'success',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'Aceptar'
+                    }).then(() => {
+                        // Redirige al index después de mostrar el mensaje de éxito
+                        window.location.href = "{{ url_for('index') }}";
+                    });
+                }
+            });
+        }
+    </script>
+   
   </div>
 </div>
 {% endblock %}

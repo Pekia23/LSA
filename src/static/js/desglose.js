@@ -17,7 +17,12 @@ document.addEventListener('DOMContentLoaded', function () {
     buscarBtn.addEventListener('click', function () {
         let query = searchbox.value.trim();
         if (query === '') {
-            alert('Por favor, ingrese un término de búsqueda.');
+            Swal.fire({
+                icon: 'warning',
+                title: 'Campo vacío',
+                text: 'Por favor, ingrese un término de búsqueda.',
+                confirmButtonText: 'OK'
+            });
             return;
         }
 
@@ -30,21 +35,36 @@ document.addEventListener('DOMContentLoaded', function () {
             type = 'equipo';
         } else if (currentView === 'subgrupo') {
             if (!currentGroupId) {
-                alert('Por favor, seleccione un grupo constructivo.');
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Sin grupo seleccionado',
+                    text: 'Por favor, seleccione un grupo constructivo.',
+                    confirmButtonText: 'OK'
+                });
                 return;
             }
             apiUrl = `/api/buscar_subgrupos?busqueda=${encodeURIComponent(query)}&id_grupo=${currentGroupId}`;
             type = 'subgrupo';
         } else if (currentView === 'sistema') {
             if (!currentSubgroupId) {
-                alert('Por favor, seleccione un subgrupo.');
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Sin subgrupo seleccionado',
+                    text: 'Por favor, seleccione un subgrupo.',
+                    confirmButtonText: 'OK'
+                });
                 return;
             }
             apiUrl = `/api/buscar_sistemas?busqueda=${encodeURIComponent(query)}&id_subgrupo=${currentSubgroupId}`;
             type = 'sistema';
         } else if (currentView === 'equipo') {
             if (!currentSystemId) {
-                alert('Por favor, seleccione un sistema.');
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Sin sistema seleccionado',
+                    text: 'Por favor, seleccione un sistema.',
+                    confirmButtonText: 'OK'
+                });
                 return;
             }
             apiUrl = `/api/buscar_equipos?busqueda=${encodeURIComponent(query)}&id_sistema=${currentSystemId}`;
@@ -60,7 +80,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 } else {
                     data.forEach(item => {
                         let card = document.createElement('div');
-                        card.classList.add('card');
+                        card.classList.add('card', 'dynamic-card');  // Añadir las clases 'card' y 'dynamic-card'
+
                         card.setAttribute('data-id', item.id);
                         card.setAttribute('data-type', type);
 
@@ -74,7 +95,15 @@ document.addEventListener('DOMContentLoaded', function () {
                     });
                 }
             })
-            .catch(error => console.error('Error en la búsqueda:', error));
+            .catch(error => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error en la búsqueda',
+                    text: 'Hubo un error al realizar la búsqueda. Inténtalo de nuevo más tarde.',
+                    confirmButtonText: 'OK'
+                });
+                console.error('Error en la búsqueda:', error);
+            });
     });
 
     // Lógica para manejar el click en los cuadros
@@ -108,6 +137,33 @@ document.addEventListener('DOMContentLoaded', function () {
                     .then(response => response.json())
                     .then(data => mostrarTarjetas(data, 'equipo'))
                     .catch(error => console.error('Error:', error));
+            } else if (type === 'equipo') {
+                const nombre_equipo = card.querySelector('p').textContent.trim(); // Obtener el nombre del equipo desde la tarjeta
+                
+                // Hacer una petición POST al backend para mostrar la información del equipo
+                fetch('/LSA/mostrar-general', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ nombre_equipo: nombre_equipo }) // Enviar nombre_equipo al backend
+                })
+                .then(response => {
+                    if (response.redirected) {
+                        window.location.href = response.url; // Seguir la redirección del backend
+                    } else {
+                        console.error('Error en la redirección');
+                    }
+                })
+                .catch(error => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error en la redirección',
+                        text: 'Hubo un error al procesar la redirección. Inténtalo de nuevo más tarde.',
+                        confirmButtonText: 'OK'
+                    });
+                    console.error('Error en la petición POST:', error);
+                });
             }
         }
     });
@@ -117,7 +173,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         data.forEach(item => {
             let card = document.createElement('div');
-            card.classList.add('card');
+            card.classList.add('card', 'dynamic-card'); // Añadir la clase 'dynamic-card' a todas las tarjetas
+
             card.setAttribute('data-id', item.id);
             card.setAttribute('data-type', type);
 

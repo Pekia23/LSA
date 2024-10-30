@@ -1,9 +1,45 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Función para validar si los campos están vacíos
+    function validarCampos() {
+        let camposVacios = [];
+
+        // Capturamos los campos del formulario que deben ser llenados
+        const sistema = document.getElementById('sistema');
+        const subsistema = document.getElementById('subsistema');
+        const verbo = document.getElementById('verbo');
+        const accion = document.getElementById('accion');
+        const estandar_desempeño = document.getElementById('estandar_desempeño');
+
+        // Comprobamos si los campos están vacíos
+        if (!sistema.value.trim()) camposVacios.push('Sistema');
+        if (!subsistema.value.trim()) camposVacios.push('Subsistema');
+        if (!verbo.value.trim()) camposVacios.push('Verbo');
+        if (!accion.value.trim()) camposVacios.push('Acción');
+        if (!estandar_desempeño.value.trim()) camposVacios.push('Estándar de Desempeño');
+
+        // Retorna el array de campos vacíos
+        return camposVacios;
+    }
+
     // Capturar el evento submit del formulario de Análisis Funcional
     const form = document.getElementById('analisis-funcional-form');
 
     form.addEventListener('submit', function(e) {
         e.preventDefault(); // Evitar el comportamiento predeterminado del formulario
+
+        // Validar campos antes de enviar
+        const camposVacios = validarCampos();
+
+        if (camposVacios.length > 0) {
+            // Mostrar alerta si hay campos vacíos
+            Swal.fire({
+                icon: 'warning',
+                title: 'Campos Vacíos',
+                text: `Por favor, complete los siguientes campos: ${camposVacios.join(', ')}`,
+                confirmButtonText: 'OK'
+            });
+            return; // No continuar con el envío si hay campos vacíos
+        }
 
         // Capturar los datos del formulario
         const data = {
@@ -12,9 +48,24 @@ document.addEventListener('DOMContentLoaded', function() {
             verbo: document.getElementById('verbo').value,
             accion: document.getElementById('accion').value,
             estandar_desempeño: document.getElementById('estandar_desempeño').value,
+            componentes: [] // Array para capturar los componentes
         };
-        console.log('Datos enviados:', data);
 
+        // Capturar los componentes dinámicos del formulario
+        document.querySelectorAll('.componente-item').forEach(function(item) {
+            const idComponente = item.querySelector('p').textContent; // Obtener el nombre del componente
+            const verboComponente = item.querySelector(`[input[name^="verbo_"]`).value;
+            const accionComponente = item.querySelector(`[input[name^="accion_"]`).value;
+
+            // Agregar cada componente al array de componentes
+            data.componentes.push({
+                nombre_componente: idComponente,
+                verbo: verboComponente,
+                accion: accionComponente
+            });
+        });
+
+        console.log('Datos enviados:', data);
 
         // Enviar los datos mediante fetch
         fetch('/api/analisis-funcional', {
@@ -27,12 +78,28 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(result => {
             console.log('Análisis funcional guardado:', result);
-            alert('Análisis funcional agregado correctamente');
-            // Redirigir a la página de mostrar
-            window.location.href = '/LSA/equipo/mostrar-analisis-funcional';
+            
+            // Mostrar alerta de éxito con SweetAlert
+            Swal.fire({
+                icon: 'success',
+                title: '¡Éxito!',
+                text: 'Análisis funcional agregado correctamente',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                // Redirigir a la página de mostrar análisis funcional después de cerrar la alerta
+                window.location.href = '/LSA/equipo/mostrar-analisis-funcional';
+            });
         })
         .catch(error => {
             console.error('Error al guardar análisis funcional:', error);
+
+            // Mostrar alerta de error con SweetAlert
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Hubo un error al guardar el análisis funcional. Inténtalo de nuevo.',
+                confirmButtonText: 'OK'
+            });
         });
     });
 });

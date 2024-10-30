@@ -9,44 +9,59 @@ body {
     position: sticky;  /* Hace que el elemento sea pegajoso */
     top: 0;            /* El valor de 'top' define a partir de qué punto se pega */
     z-index: 1000;     /* Asegura que esté por encima de otros elementos */
-    /* Otros estilos que necesites para el diseño */
 }
 
 /* General layout */
 .grid-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 30px; /* Espacio mayor entre tarjetas */
+    gap: 15px; /* Espacio mayor entre tarjetas */
     justify-content: center;
-    margin-top: 30px;
+    margin-top: 20px; /* Reducido el margen superior */
 }
 
-/* Estilos para las tarjetas de los grupos, subgrupos, sistemas y equipos */
+/* Estilos para las tarjetas */
 .card {
-    width: 220px; /* Tamaño de tarjeta ajustado */
-    height: 170px; /* Ajuste de altura */
+    width: 200px; /* Tamaño de tarjeta ajustado */
+    height: 300px; /* Ajuste de altura */
     background-color: white;
     box-shadow: 0 4px 10px rgba(123, 115, 235, 0.473);
     border-radius: 8px;
     text-align: center;
     display: flex;
-    justify-content: center;
+    flex-direction: column; /* Coloca el contenido en columna */
+    justify-content: flex-start; /* Alinea el contenido en la parte superior */
     align-items: center;
     font-size: 18px;
     color: #003366; /* Color de texto */
-    font-weight: bold; /* Fuente más gruesa */
+    font-weight: bold;
     cursor: pointer;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    padding-left:10px ;
-    padding-right:10px ;
+    padding: 10px; /* Asegura que todo el contenido tenga algo de padding */
+}
+
+.card img {
+    width: 100%;
+    height: 150px; /* Asegura que las imágenes tengan la misma altura */
+    object-fit: cover; /* Recorta las imágenes para que se adapten al contenedor */
+    margin-bottom: 10px; /* Espacio entre la imagen y el texto */
+    
+}
+
+.card h1 {
+    font-size: 24px;
+    color: #0c377f;
+    margin: 5px 0; /* Espaciado más ajustado */
 }
 
 .card p {
-    margin: 0; /* Elimina el margen para centrar mejor el texto */
+    font-size: 16px;
+    color: #0c377f;
+    margin: 5px 0; /* Espaciado más ajustado */
 }
 
 .card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-5px); /* Efecto de levantar la tarjeta */
     box-shadow: 0 8px 16px rgba(123, 115, 235, 0.473);
 }
 
@@ -68,24 +83,23 @@ body {
     width: 50%;
 }
 
-/* Estilos actualizados para los botones */
- #nuevoEquipoBtn {
+/* Estilos para los botones */
+#nuevoEquipoBtn {
     padding: 12px 25px;
     background-color: rgb(33, 33, 99); /* Azul oscuro */
     color: white;
     border: none;
-    border-radius: 10px; /* Botones redondeados */
+    border-radius: 10px;
     cursor: pointer;
 }
-#buscarBtn{
-    border:none;
-    background-color: transparent;
+
+#nuevoEquipoBtn:hover {
+    background-color: rgb(13, 2, 63); /* Azul más oscuro al pasar el mouse */
 }
 
-
-
- #nuevoEquipoBtn:hover {
-    background-color: rgb(13, 2, 63); /* Azul aún más oscuro al pasar el mouse */
+#buscarBtn {
+    border: none;
+    background-color: transparent;
 }
 
 /* Botón de volver */
@@ -94,35 +108,71 @@ body {
     text-align: center;
 }
 
-i{
-    color:#002244;
-}
-
-.volverBtn{
+.volverBtn {
     padding: 12px 25px;
-    background-color:  rgb(33, 33, 99); /* Azul oscuro */
+    background-color: rgb(33, 33, 99); /* Azul oscuro */
     color: white;
     border: none;
-    border-radius: 10px; /* Botones redondeados */
+    border-radius: 10px;
     cursor: pointer;
 }
 
-
+/* Ocultar elementos si es necesario */
 .hidden {
     display: none;
 }
 
-.new_equipo{
+/* Enlaces para 'Nuevo equipo' */
+.new_equipo {
     text-decoration: none;
-    color:white;
+    color: white;
 }
 
+/* Estilos de navegación */
 .nav-link.active {
     background-color: #0c367f3a;
     border-radius: 10px;
 }
 
-.nav-item:hover{
+.nav-item:hover {
     background-color: #0c367f17;
     border-radius: 10px;
+}
+
+/* Iconos */
+i {
+    color: #002244;
+}
+
+/* Ajuste adicional para la distancia y posición de los elementos */
+.grid-container {
+    display: flex;
+    justify-content: space-around; /* Espacio uniforme entre las tarjetas */
+    flex-wrap: wrap;
+    padding: 20px;
+    margin-top: 10px; /* Ajuste adicional para que queden más pegadas arriba */
+}
+
+.dynamic-card {
+    width: 200px; /* Tamaño de tarjeta ajustado */
+    height: 150px; /* Ajuste de altura */
+    background-color: white;
+    box-shadow: 0 4px 10px rgba(123, 115, 235, 0.473);
+    border-radius: 8px;
+    text-align: center;
+    display: flex;
+    flex-direction: column; /* Coloca el contenido en columna */
+    justify-content: center; /* Alinea el contenido en la parte superior */
+    align-items: center;
+    font-size: 18px;
+    color: #003366; /* Color de texto */
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    padding: 10px;
+}
+
+.dynamic-card:hover {
+    transform: scale(1.05); /* Efecto de hover */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3); /* Sombra más marcada */
 }
