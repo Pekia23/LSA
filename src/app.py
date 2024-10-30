@@ -201,9 +201,9 @@ app.config['SECRET_KEY'] = 'tu_clave_secreta_aquí'
 
 
 
-@app.errorhandler(Exception)
+""" @app.errorhandler(Exception)
 def handle_all_errors(error):
-    return render_template('error.html'), 500 
+    return render_template('error.html'), 500  """
 
 
 @app.route('/check', methods=['GET'])
@@ -269,7 +269,7 @@ def buscar_sistemas_api():
 
 
 @app.route('/LSA/registro-generalidades', methods=['GET', 'POST'])
-def registro_generalidades(id_sistema=None, id_equipo=None):
+def registro_generalidades(id_sistema=None, id_equipo=None, aor=None):
     token = g.user_token
     if request.method == 'POST':
         # Extracción de datos del formulario
@@ -323,6 +323,7 @@ def registro_generalidades(id_sistema=None, id_equipo=None):
         id_diagrama = insertar_diagrama(diagrama_flujo, diagrama_caja_negra, diagrama_caja_transparente)
 
         print(f"Nombre del tipo de equipo recibido: {id_equipo}")
+        session['AOR'] = AOR
 
         # Insertar en la tabla equipo_info
         equipo_info_id = insertar_equipo_info(
@@ -336,7 +337,7 @@ def registro_generalidades(id_sistema=None, id_equipo=None):
             id_sistema=id_sistema,
             id_equipo=id_equipo,
             id_equipo_info=equipo_info_id,
-            usuario_id=g.usuario_id
+            usuario_id=g.usuario_id,
 
         )
 
@@ -1704,7 +1705,7 @@ def registro_FMEA():
     ocurrencia_datos = obtener_Ocurrencia()
     probabilidad_deteccion_datos = obtener_probablilidad_deteccion()
     lista_riesgos = obtener_lista_riesgos() or []
-    
+    AOR=session.get('AOR')
 
     # Renderizar la plantilla y pasar datos
     return render_template('registro_FMEA.html',fmea=None, fmea_id=None, editar=False,
@@ -1720,7 +1721,7 @@ def registro_FMEA():
                            costos_reparacion_datos=costos_reparacion_datos,
                            flexibilidad_operacional_datos=flexibilidad_operacional_datos,
                            ocurrencia_datos = ocurrencia_datos,
-
+                           AOR=AOR,
                            probabilidad_deteccion_datos = probabilidad_deteccion_datos,
                            lista_riesgos= lista_riesgos)
 
