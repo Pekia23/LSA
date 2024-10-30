@@ -14,6 +14,41 @@ if (editar == 'True') {
     }
 }
 
+function obtenerRiesgo(frecuencia, consecuencia) {
+    // Definición de la matriz de riesgo textual
+    const matrizTexto = {
+        10: { minima: "SEMI-CRITICO", menor: "SEMI-CRITICO", moderada: "CRITICO", mayor: "MUY CRITICO", maxima: "MUY CRITICO" },
+        8: { minima: "NO CRITICO", menor: "SEMI-CRITICO", moderada: "CRITICO", mayor: "MUY CRITICO", maxima: "MUY CRITICO" },
+        4: { minima: "NO CRITICO", menor: "SEMI-CRITICO", moderada: "CRITICO", mayor: "MUY CRITICO", maxima: "MUY CRITICO" },
+        2: { minima: "NO CRITICO", menor: "NO CRITICO", moderada: "SEMI-CRITICO", mayor: "CRITICO", maxima: "MUY CRITICO" }
+    };
+
+    // Función para determinar el rango de consecuencia
+    function determinarRango(consecuencia) {
+        if (consecuencia >= 0 && consecuencia < 2) return "minima";
+        else if (consecuencia >= 2 && consecuencia < 4) return "menor";
+        else if (consecuencia >= 4 && consecuencia < 6) return "moderada";
+        else if (consecuencia >= 6 && consecuencia < 8) return "mayor";
+        else if (consecuencia >= 8 && consecuencia <= 10) return "maxima";
+        else return null; // Si el valor está fuera de rango
+    }
+
+    // Determinar el rango de la consecuencia
+    const rangoConsecuencia = determinarRango(consecuencia);
+
+    // Validación de entradas
+    if (!matrizTexto[frecuencia] || !rangoConsecuencia) {
+        return "Valores de frecuencia o consecuencia fuera de rango";
+    }
+
+    // Obteniendo los resultados
+    const riesgoTexto = matrizTexto[frecuencia][rangoConsecuencia];
+
+
+    return { riesgoTexto};
+}
+
+
 
 
 function actualizarDetallesFalla() {
@@ -146,8 +181,17 @@ function actualizarCalculos() {
 
     var ocurrencia = parseFloat(document.getElementById('ocurrencia_valor').value) || 0;
     var deteccion = parseFloat(document.getElementById('probabilidad_deteccion_valor').value) || 0;
+    
+    const aorValue = parseFloat(document.querySelector('label[for="ocurrencia_matematica"]').getAttribute('data-aor')) || 0;
+    const mtbfValue = parseFloat(document.getElementById('mtbf').value) || 0;
+    let ocurrencia_matematica = 0;
 
-    var ocurrencia_matematica = ocurrencia*2;
+    if (mtbfValue !== 0) {
+        ocurrencia_matematica = aorValue / mtbfValue;
+    }
+
+    // Limitar el resultado a 2 decimales (opcional)
+    ocurrencia_matematica = ocurrencia_matematica.toFixed(2);
     document.getElementById('ocurrencia_matematica').value = ocurrencia_matematica;
 
     var rpn = (Severidad * ocurrencia * deteccion)/100;
@@ -158,28 +202,20 @@ function actualizarCalculos() {
     const listaRiesgos = JSON.parse(riesgosInput.getAttribute('data-riesgos'));
 
     // Determinar el riesgo según el RPN
-    let nombreRiesgo;
-    if (rpn >= 75) {
-        nombreRiesgo = 'MUY CRITICO';
-    } else if (rpn >= 50) {
-        nombreRiesgo = 'CRITICO';
-    } else if (rpn >= 25) {
-        nombreRiesgo = 'SEMI-CRITICO';
-    } else {
-        nombreRiesgo = 'NO CRITICO';
-    }
+    
 
+    const resultado = obtenerRiesgo(ocurrencia, rpn);
     // Buscar el id del riesgo correspondiente en la lista de riesgos
-    const idRiesgo = listaRiesgos.find(riesgo => riesgo.nombre === nombreRiesgo)?.id || null;
+    const idRiesgo = listaRiesgos.find(riesgo => riesgo.nombre === resultado.riesgoTexto)?.id || null;
 
     // Asignar el nombre del riesgo al campo de texto
-    document.getElementById('riesgo').value = nombreRiesgo;
+    document.getElementById('riesgo').value = resultado.riesgoTexto;
 
     // Guardar el id del riesgo en el campo oculto para enviar al backend
     document.getElementById('id_riesgo').value = idRiesgo;
 
     // Debug: Mostrar en la consola para verificar
-    console.log("Riesgo seleccionado:", nombreRiesgo);
+    console.log("Riesgo seleccionado:", resultado.riesgoTexto);
     console.log("ID del riesgo calculado:", idRiesgo);
 }
 
