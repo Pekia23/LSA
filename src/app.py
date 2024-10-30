@@ -13,6 +13,13 @@ from config import config
 from io import BytesIO
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
+from flask import Flask, send_file
+from io import BytesIO
+from reportlab.lib.pagesizes import letter, landscape, portrait
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib import colors
+
 
 from database import (
     insertar_componente_analisis_funcional,
@@ -192,9 +199,11 @@ app.secret_key = 'tu_clave_secreta'
 app.config['SECRET_KEY'] = 'tu_clave_secreta_aquí'
 
 
+
+
 @app.errorhandler(Exception)
 def handle_all_errors(error):
-    return render_template('error.html'), 500
+    return render_template('error.html'), 500 
 
 
 @app.route('/check', methods=['GET'])
@@ -1910,7 +1919,14 @@ def view_pdf_1():
 # Ruta para descargar el primer PDF
 @app.route('/download_pdf_1')
 def download_pdf_1():
+    ancho_contenido = 600  # Ajusta este valor según tus necesidades para la orientación
+    page_size = landscape(letter) if ancho_contenido > 550 else portrait(letter)
+
+    # Crear un buffer en memoria para el PDF
     pdf_buffer = BytesIO()
+    doc = SimpleDocTemplate(pdf_buffer, pagesize=page_size)
+    styles = getSampleStyleSheet()
+    story = []
 
     # Crear un PDF usando reportlab
     p = canvas.Canvas(pdf_buffer, pagesize=letter)
@@ -1922,7 +1938,7 @@ def download_pdf_1():
     pdf_buffer.seek(0)
 
     # Enviar el PDF para su descarga
-    return send_file(pdf_buffer, as_attachment=True, download_name="pdf_1.pdf", mimetype='application/pdf')
+    return send_file(pdf_buffer, as_attachment=True, download_name=f"Informe_LSA_nombre_equipo.pdf", mimetype='application/pdf')
 
 
 

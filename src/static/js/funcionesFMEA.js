@@ -60,6 +60,7 @@ function actualizarDetallesFalla() {
 
 
 
+
 function actualizarNombreFalla() {//documentred onload
 
     var codigoModoFallaId = document.getElementById("codigo_modo_falla").value;
@@ -123,6 +124,8 @@ function actualizarValor(selectId, inputId) {
 
 
 
+
+
 // Función para actualizar los cálculos automáticos
 
  // Declarar la lista de riesgos globalmente para que esté disponible para cualquier función
@@ -144,7 +147,7 @@ function actualizarCalculos() {
     var ocurrencia = parseFloat(document.getElementById('ocurrencia_valor').value) || 0;
     var deteccion = parseFloat(document.getElementById('probabilidad_deteccion_valor').value) || 0;
 
-    var ocurrencia_matematica = ocurrencia * 2;
+    var ocurrencia_matematica = ocurrencia*2;
     document.getElementById('ocurrencia_matematica').value = ocurrencia_matematica;
 
     var rpn = (Severidad * ocurrencia * deteccion)/100;
