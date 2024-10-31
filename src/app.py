@@ -59,6 +59,7 @@ from database import (
 
 
     insertar_fmea,
+    obtener_nombre_por_id,
     obtener_subsistema_por_id,
     insertar_falla_funcional,
     insertar_descripcion_modo_falla,
@@ -1690,6 +1691,8 @@ def editar_MTA_lista(id_equipo_info):
     return render_template('editar_MTA.html', mtas=mtas, herramientas=herramientas, repuestos=repuestos, id_equipo_info=id_equipo_info)
 
 
+from flask import request, redirect, url_for, g
+import json
 
 @app.route('/LSA/registro-MTA/<int:fmea_id>', methods=['POST'])
 def guardar_MTA(fmea_id):
@@ -1721,6 +1724,15 @@ def guardar_MTA(fmea_id):
     selected_herramientas_json = request.form.get('selected_herramientas')
     selected_herramientas = json.loads(selected_herramientas_json) if selected_herramientas_json else []
     print("Herramientas seleccionadas:", selected_herramientas)  # Para depuración
+
+    # Obtener nombres de las herramientas seleccionadas
+    nombres_herramientas = []
+    for herramienta_id in selected_herramientas:
+        nombre = obtener_nombre_por_id('herramientas_requeridas', herramienta_id, columna_id='id_herramienta_requerida')
+        if nombre:
+            nombres_herramientas.append(nombre)
+
+    print("Nombres de herramientas seleccionadas:", nombres_herramientas)  # Para ver los nombres en la consola
 
     # Guardar los datos en la base de datos
     insertar_mta(rcm['id'], fmea['id_equipo_info'], id_sistema, id_componente, 

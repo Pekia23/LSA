@@ -471,27 +471,27 @@ def insertar_fmea(id_equipo_info, id_sistema, id_falla_funcional, id_componente,
 #Funciones para mostrar fmea
 
 #funcion para poder obtener los nombres que estan ligados al id resgistrados en una tabla
-def obtener_nombre_por_id(tabla, id):
+def obtener_nombre_por_id(tabla, id, columna_id='id'):
     cursor = db.connection.cursor()
-
+    
     # Verificar si la tabla tiene la columna 'nombre'
     query_column_check = f"SHOW COLUMNS FROM {tabla} LIKE 'nombre'"
     cursor.execute(query_column_check)
     columna_existe = cursor.fetchone()
 
     if columna_existe:  # Si la columna 'nombre' existe
-        query = f"SELECT nombre FROM {tabla} WHERE id = %s"
+        # Usar el nombre de columna dinámico en el WHERE
+        query = f"SELECT nombre FROM {tabla} WHERE {columna_id} = %s"
         cursor.execute(query, (id,))
         resultado = cursor.fetchone()
         cursor.close()
 
         if resultado:
             return resultado['nombre']
-    else:  # Si no existe, devolver un valor por defecto
+    else:
         cursor.close()
         return None
 
-    return None
 
 
 #No me acuerdo pa que sirve pero no la quiero eliminar por si acaso
@@ -964,6 +964,17 @@ def obtener_mta_por_id_rcm(id_rcm):
     mta = cursor.fetchone()
     cursor.close()
     return mta
+
+"""
+Funcion: Obtener datos de herramienta
+Que debe recibir: Nombre de la herrramienta
+proceso1: Buscarlos en la tabla de: herramientas_requeridas
+proceso2: en esa tabla buscar el id_clase_herramienta y mirar si es 1 o es 2 y enviar el predermidado si es otro
+proceso3: si es 1. va a buscar el nombre en la tabla herramientas_generales y va a devolver el id donde su columna es 'id' + 'id_clase_herramienta'
+proceso4: si es 2. va a buscar el nombre en la tabla herramientas_especiales y va a devolver el id donde su columna es 'id' + 'id_clase_herramienta'
+Devuelve: el id y el id_clase_herramienta
+
+"""
 
 
 def obtener_nombre_componente_por_id(componente_id):
