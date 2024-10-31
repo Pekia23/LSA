@@ -1613,7 +1613,7 @@ def registro_MTA(fmea_id):
         # Obtener los datos de FMEA por su ID
         fmea = obtener_fmea_por_id(fmea_id,id_equipo_info)  #obtenemos los nombres en los compos de fmea
         fmea_id = obtener_ID_FMEA(fmea_id) # optenermos el id de fmea 
-        print(f'\nfmea:{fmea}\n\nfmea_id:{fmea_id}\n\n') #imprimo a ver
+        print(f'\nfmea:{fmea}\n\nfmea_id:{fmea_id}\n\n') 
         # Variables precargadas desde el FMEA
         sistema = fmea.get('id_sistema')
         componente = fmea.get('id_componente')
@@ -1865,7 +1865,7 @@ def registro_FMEA():
     impacto_operacional_datos = obtener_impacto_operacional()
     costos_reparacion_datos = obtener_costos_reparacion()
     flexibilidad_operacional_datos = obtener_flexibilidad_operacional()
-    ocurrencia_datos = obtener_Ocurrencia()
+    ocurrencia_datos = obtener_Ocurrencia() 
     probabilidad_deteccion_datos = obtener_probablilidad_deteccion()
     lista_riesgos = obtener_lista_riesgos() or []
     AOR = session.get('AOR')

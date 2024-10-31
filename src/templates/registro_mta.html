@@ -77,7 +77,6 @@
                                     <input type="checkbox" class="form-check-input herramienta-checkbox" id="{{ herramienta.id_herramienta_requerida }}" value="{{ herramienta.id_herramienta_requerida  }}"
                                     {% if herramienta['id_herramienta_requerida'] in herramientas_mta | map(attribute='id_herramienta_requerida') %}checked{% endif %}>
                                     <label for="{{ herramienta.id_herramienta_requerida }}" class="form-check-label">{{ herramienta.nombre }}</label>
-
                                 </div>
                                 {% if loop.index0 % 3 == 2 or loop.last %}
                                     </div>
