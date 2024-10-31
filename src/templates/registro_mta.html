@@ -66,39 +66,36 @@
                 {% for key in herramientas_por_tipo %}
                 {% set key_sin_espacios = key.replace(' ', '') %}
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="{{ key_sin_espacios + '-tab' }}" data-bs-toggle="tab"
-                        data-bs-target="#{{ key_sin_espacios }}" type="button" role="tab"
-                        aria-controls="{{ key_sin_espacios }}" aria-selected="true">{{ key }}</button>
+                    <button class="nav-link" id="{{ key_sin_espacios + '-tab' }}" data-bs-toggle="tab" data-bs-target="#{{ key_sin_espacios }}" type="button" role="tab" aria-controls="{{ key_sin_espacios }}" aria-selected="true">{{ key }}</button>
                 </li>
                 {% endfor %}
             </ul>
-
+            
             <div class="tab-content" id="myTabContent">
                 {% for key in herramientas_por_tipo %}
                 {% set key_sin_espacios = key.replace(' ', '') %}
-                <div class="tab-pane fade show" id="{{ key_sin_espacios }}" role="tabpanel"
-                    aria-labelledby="{{ key_sin_espacios }}-tab">
+                <div class="tab-pane fade show" id="{{ key_sin_espacios }}" role="tabpanel" aria-labelledby="{{ key_sin_espacios }}-tab">
                     <br>
                     {% for herramienta in herramientas_por_tipo[key] %}
-                    {% if loop.index0 % 3 == 0 %}
-                    <div class="row">
+                        {% if loop.index0 % 3 == 0 %}
+                            <div class="row">
                         {% endif %}
                         <div class="col-md-4 form-check">
-                            <input type="checkbox" class="form-check-input herramienta-checkbox"
-                                id="{{ herramienta.id_herramienta_requerida }}" name="selected_herramientas[]"
-                                value="{{ herramienta.id_herramienta_requerida }}" {% if
-                                herramienta['id_herramienta_requerida'] in herramientas_mta |
-                                map(attribute='id_herramienta_requerida' ) %}checked{% endif %}>
-                            <label for="{{ herramienta.id_herramienta_requerida }}" class="form-check-label">{{
-                                herramienta.nombre }}</label>
+                            <input type="checkbox" class="form-check-input herramienta-checkbox" 
+                                   id="{{ herramienta.id_herramienta_requerida }}" 
+                                   name="selected_herramientas[]" 
+                                   value="{{ herramienta.id_herramienta_requerida }}"
+                                   {% if herramienta['id_herramienta_requerida'] in herramientas_mta | map(attribute='id_herramienta_requerida') %}checked{% endif %}>
+                            <label for="{{ herramienta.id_herramienta_requerida }}" class="form-check-label">{{ herramienta.nombre }}</label>
                         </div>
                         {% if loop.index0 % 3 == 2 or loop.last %}
-                    </div>
-                    {% endif %}
+                            </div>
+                        {% endif %}
                     {% endfor %}
                 </div>
                 {% endfor %}
             </div>
+            
 
         </div>
 

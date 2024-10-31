@@ -1696,17 +1696,16 @@ def guardar_MTA(fmea_id):
     token = g.user_token
     user_data = obtener_info_usuario(token)
     id_equipo_info = user_data.get('id_equipo_info')
-     # Obtener los datos del formulario
+
+    # Obtener los datos del formulario
     fmea = obtener_ID_FMEA(fmea_id)
     rcm = obtener_rcm_por_fmea(fmea_id)
     id_sistema = fmea.get('id_sistema')
     id_componente = fmea.get('id_componente')
-    # id_falla_funcional = fmea_id.get('id_falla_funcional')
     id_tipo_mantenimiento = request.form.get('tipo_mantenimiento')
     id_tarea_mantenimiento = request.form.get('tarea_mantenimiento')
     cantidad_personal = request.form.get('personal_requerido')
     consumibles_requeridos = request.form.get('consumibles_requeridos')
-    # repuestos_requeridos = request.form.get('repuestos_requeridos')
     requeridos_tarea = request.form.get('requeridos_tarea')
     condiciones_ambientales = request.form.get('condiciones_requeridas_ambientales')
     condiciones_estado_equipo = request.form.get('condiciones_requeridas_estado_equipo')
@@ -1714,40 +1713,35 @@ def guardar_MTA(fmea_id):
     horas = request.form.get('duracion_tarea_horas')
     minutos = request.form.get('duracion_tarea_minutos')
     detalle_tarea = request.form.get('detalle_tarea')
-
     nivel = request.form.get('nivel')
     actividades = request.form.get('actividades')
     operario = request.form.get('operario')
 
-     # Recuperar la lista de checkboxes seleccionados
-    selected_repuestos_json = request.form.get('selected_repuestos')
-    selected_repuestos = json.loads(selected_repuestos_json) if selected_repuestos_json else []
-
-    # Recuperar la lista de checkboxes seleccionados
+    # Decodificar el JSON de herramientas seleccionadas en una lista
     selected_herramientas_json = request.form.get('selected_herramientas')
-    selected_herramientas = json.loads(selected_herramientas_json) if selected_repuestos_json else []
+    selected_herramientas = json.loads(selected_herramientas_json) if selected_herramientas_json else []
+    print("Herramientas seleccionadas:", selected_herramientas)  # Para depuración
 
-
-    # Ahora puedes usar la lista de repuestos seleccionados
-    print(selected_repuestos)
-    print(selected_herramientas)
-
-    #aca viene la logica pa añadir los datos a sus tablas y devolver el id que sera pasado a insertar_mta
+    # Guardar los datos en la base de datos
+    insertar_mta(rcm['id'], fmea['id_equipo_info'], id_sistema, id_componente, 
+                 fmea['id_falla_funcional'], fmea['id_descripcion_modo_falla'], 
+                 id_tipo_mantenimiento, id_tarea_mantenimiento, cantidad_personal, 
+                 consumibles_requeridos, requeridos_tarea, condiciones_ambientales, 
+                 condiciones_estado_equipo, condiciones_especiales, horas, minutos, detalle_tarea)
     
-    # Guardar en la base de datos
-    insertar_mta(rcm['id'], fmea['id_equipo_info'], id_sistema, id_componente, fmea['id_falla_funcional'], fmea['id_descripcion_modo_falla'], id_tipo_mantenimiento, id_tarea_mantenimiento, cantidad_personal, consumibles_requeridos ,requeridos_tarea,condiciones_ambientales, condiciones_estado_equipo, condiciones_especiales,  horas, minutos, detalle_tarea)
+    # Obtener el ID del registro MTA recién creado
     id_mta = obtener_max_id_mta()
-    if(selected_repuestos):
-        insertar_repuestos_requeridos_mta(selected_repuestos, id_mta)
-    if(selected_herramientas):
+    
+    # Insertar herramientas seleccionadas en la tabla correspondiente si existen
+    if selected_herramientas:
         insertar_herramientas_requeridas_mta(selected_herramientas, id_mta)
-    if(nivel and actividades and operario):
+    
+    # Insertar datos en tabla LORA-MTA si los valores están presentes
+    if nivel and actividades and operario:
         insertar_mta_lora(nivel, actividades, operario, id_mta)
 
-
-    return redirect(url_for('editar_MTA_lista',id_equipo_info=id_equipo_info))
-
-
+    # Redireccionar a la página de edición o lista
+    return redirect(url_for('editar_MTA_lista', id_equipo_info=id_equipo_info))
 
 #actualizar mta
 @app.route('/LSA/actualizar-MTA/<int:mta_id>', methods=['POST'])
