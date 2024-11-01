@@ -1,10 +1,10 @@
 function convertHTMLpdf(divElement) {
     const element = document.getElementById(divElement);
-
+    const nombreEquipo = document.getElementById("botonPDF").getAttribute("data-nombre-equipo") || "Informe";
     const options = {
-        filename: "informe_{{ equipo.nombre_equipo }}.pdf",
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 }, // Ajuste para mejor calidad de imagen
+        filename: `informe_${nombreEquipo}.pdf`,
+        image: { type: 'jpeg', quality: 0.90 },
+        html2canvas: { scale: 1.5 }, // Ajuste para mejor calidad de imagen
         jsPDF: { unit: 'in', format: 'a1', orientation: 'landscape' }, // Configuración de tamaño y orientación
         margin: [0.8, 0.8, 0.8, 0.8] // Agregar márgenes
     };
