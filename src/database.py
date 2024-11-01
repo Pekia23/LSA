@@ -565,12 +565,13 @@ def obtener_fmeas(id_equipo_info):
         pd.descripcion AS probabilidad_deteccion_descripcion,
         f.RPN,
         f.id_riesgo,
+        r.nombre AS nombre_riesgo,
         p.nombre_completo AS nombre_completo,
         p.id AS id_personal
-    FROM fmea f
+      FROM fmea f
     LEFT JOIN equipo_info ei ON f.id_equipo_info = ei.id
     LEFT JOIN personal p ON ei.id_personal = p.id
-    LEFT JOIN sistema s ON f.id_sistema = s.id
+    LEFT JOIN subsistemas s ON f.id_sistema = s.id
     LEFT JOIN falla_funcional ff ON f.id_falla_funcional = ff.id
     LEFT JOIN componentes c ON f.id_componente = c.id
     LEFT JOIN codigo_modo_falla cmf ON f.id_codigo_modo_falla = cmf.id
@@ -587,6 +588,7 @@ def obtener_fmeas(id_equipo_info):
     LEFT JOIN flexibilidad_operacional flex ON f.id_flexibilidad_operacional = flex.id
     LEFT JOIN ocurrencia o ON f.id_ocurrencia = o.id
     LEFT JOIN probabilidad_deteccion pd ON f.id_probabilidad_deteccion = pd.id
+    LEFT JOIN riesgo r ON f.id_riesgo = r.id
     WHERE f.id_equipo_info = %s AND f.estado = 'activo'
     """
 
@@ -627,6 +629,9 @@ def obtener_fmeas(id_equipo_info):
             'mecanismo_falla', fmea['id_mecanismo_falla'])
         detalle_falla_nombre = fmea['detalle_falla'] if fmea['detalle_falla'] else obtener_nombre_por_id(
             'detalle_falla', fmea['id_detalle_falla'])
+        
+        nombre_riesgo = fmea['nombre_riesgo'] or obtener_nombre_por_id('riesgo', fmea['id_riesgo'])
+
 
         # Contar las ocurrencias de consecutivo_modo_falla
         if consecutivo_modo_falla_nombre not in consecutivo_modo_falla_counter:
@@ -672,6 +677,7 @@ def obtener_fmeas(id_equipo_info):
             'probabilidad_deteccion_descripcion': fmea['probabilidad_deteccion_descripcion'],
             'RPN': fmea['RPN'],
             'id_riesgo': fmea['id_riesgo'],
+            'nombre_riesgo': nombre_riesgo,
             'nombre_completo': fmea['nombre_completo'],
             'id_personal': fmea['id_personal']
 
@@ -3336,78 +3342,82 @@ def obtener_fmeas_por_equipo_info(id_equipo_info):
     cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
     query = """
     SELECT 
-        f.id, 
-        f.id_equipo_info, 
-        f.id_sistema, 
-        s.nombre as sistema, 
-        f.id_falla_funcional, 
-        ff.nombre as falla_funcional, 
-        f.id_componente, 
-        c.nombre as componente, 
-        f.id_codigo_modo_falla, 
-        cmf.nombre as codigo_modo_falla, 
-
-        f.id_consecutivo_modo_falla, 
-        cf.nombre as consecutivo_modo_falla, 
-        f.id_descripcion_modo_falla, 
-        dmf.nombre as descripcion_modo_falla, 
-        f.id_causa, 
-        causa.nombre as causa, 
-        f.id_mecanismo_falla, 
-        mf.nombre as mecanismo_falla, 
-        f.id_detalle_falla, 
-        df.nombre as detalle_falla, 
-
-        f.MTBF, 
-        f.MTTR, 
-        f.id_metodo_deteccion_falla,
-        f.id_fallo_oculto,
-        fo.valor as fallo_oculto_valor, 
-        fo.nombre as fallo_oculto_descripcion, 
-        f.id_seguridad_fisica, 
-        sf.valor as seguridad_fisica_valor, 
-        sf.nombre as seguridad_fisica_descripcion, 
-        f.id_medio_ambiente, 
-        ma.valor as medio_ambiente_valor, 
-        ma.nombre as medio_ambiente_descripcion, 
-        f.id_impacto_operacional, 
-        io.valor as impacto_operacional_valor, 
-        io.nombre as impacto_operacional_descripcion, 
-        f.id_costos_reparacion, 
-        cr.valor as costos_reparacion_valor, 
-        cr.nombre as costos_reparacion_descripcion, 
-        f.id_flexibilidad_operacional, 
-        flex.valor as flexibilidad_operacional_valor, 
-        flex.nombre as flexibilidad_operacional_descripcion, 
-        f.calculo_severidad,
-        f.id_ocurrencia, 
-        o.valor as ocurrencia_valor, 
-        o.nombre as ocurrencia_descripcion, 
-        f.ocurrencia_mate, 
-        f.id_probabilidad_deteccion, 
-        pd.valor as probabilidad_deteccion_valor, 
-        pd.descripcion as probabilidad_deteccion_descripcion,
-        f.RPN,
-        f.id_riesgo
-    FROM fmea f
-    LEFT JOIN sistema s ON f.id_sistema = s.id
-    LEFT JOIN falla_funcional ff ON f.id_falla_funcional = ff.id
-    LEFT JOIN componentes c ON f.id_componente = c.id
-    LEFT JOIN codigo_modo_falla cmf ON f.id_codigo_modo_falla = cmf.id
-    LEFT JOIN consecutivo_modo_falla cf ON f.id_consecutivo_modo_falla = cf.id
-    LEFT JOIN descripcion_modo_falla dmf ON f.id_descripcion_modo_falla = dmf.id
-    LEFT JOIN causa ON f.id_causa = causa.id
-    LEFT JOIN mecanismo_falla mf ON f.id_mecanismo_falla = mf.id
-    LEFT JOIN detalle_falla df ON f.id_detalle_falla = df.id
-    LEFT JOIN fallo_oculto fo ON f.id_fallo_oculto = fo.id
-    LEFT JOIN seguridad_fisica sf ON f.id_seguridad_fisica = sf.id
-    LEFT JOIN medio_ambiente ma ON f.id_medio_ambiente = ma.id
-    LEFT JOIN impacto_operacional io ON f.id_impacto_operacional = io.id
-    LEFT JOIN costos_reparacion cr ON f.id_costos_reparacion = cr.id
-    LEFT JOIN flexibilidad_operacional flex ON f.id_flexibilidad_operacional = flex.id
-    LEFT JOIN ocurrencia o ON f.id_ocurrencia = o.id
-    LEFT JOIN probabilidad_deteccion pd ON f.id_probabilidad_deteccion = pd.id
-    WHERE f.id_equipo_info = %s
+            f.id, 
+            f.id_equipo_info, 
+            f.id_sistema, 
+            s.nombre AS sistema, 
+            f.id_falla_funcional, 
+            ff.nombre AS falla_funcional, 
+            f.id_componente, 
+            c.nombre AS componente, 
+            f.id_codigo_modo_falla, 
+            cmf.nombre AS codigo_modo_falla, 
+            f.id_consecutivo_modo_falla, 
+            cf.nombre AS consecutivo_modo_falla, 
+            f.id_descripcion_modo_falla, 
+            dmf.nombre AS descripcion_modo_falla, 
+            f.id_causa, 
+            causa.nombre AS causa, 
+            f.id_mecanismo_falla, 
+            mf.nombre AS mecanismo_falla, 
+            f.id_detalle_falla, 
+            df.nombre AS detalle_falla, 
+            f.MTBF, 
+            f.MTTR, 
+            f.id_metodo_deteccion_falla,
+            f.id_fallo_oculto,
+            fo.valor AS fallo_oculto_valor, 
+            fo.nombre AS fallo_oculto_descripcion, 
+            f.id_seguridad_fisica, 
+            sf.valor AS seguridad_fisica_valor, 
+            sf.nombre AS seguridad_fisica_descripcion, 
+            f.id_medio_ambiente, 
+            ma.valor AS medio_ambiente_valor, 
+            ma.nombre AS medio_ambiente_descripcion, 
+            f.id_impacto_operacional, 
+            io.valor AS impacto_operacional_valor, 
+            io.nombre AS impacto_operacional_descripcion, 
+            f.id_costos_reparacion, 
+            cr.valor AS costos_reparacion_valor, 
+            cr.nombre AS costos_reparacion_descripcion, 
+            f.id_flexibilidad_operacional, 
+            flex.valor AS flexibilidad_operacional_valor, 
+            flex.nombre AS flexibilidad_operacional_descripcion, 
+            f.calculo_severidad,
+            f.id_ocurrencia, 
+            o.valor AS ocurrencia_valor, 
+            o.nombre AS ocurrencia_descripcion, 
+            f.ocurrencia_mate, 
+            f.id_probabilidad_deteccion, 
+            pd.valor AS probabilidad_deteccion_valor, 
+            pd.descripcion AS probabilidad_deteccion_descripcion,
+            f.RPN,
+            f.id_riesgo,
+            r.nombre AS nombre_riesgo,
+            p.nombre_completo AS nombre_completo,
+            p.id AS id_personal
+          FROM fmea f
+        LEFT JOIN equipo_info ei ON f.id_equipo_info = ei.id
+        LEFT JOIN personal p ON ei.id_personal = p.id
+        LEFT JOIN subsistemas s ON f.id_sistema = s.id
+        LEFT JOIN falla_funcional ff ON f.id_falla_funcional = ff.id
+        LEFT JOIN componentes c ON f.id_componente = c.id
+        LEFT JOIN codigo_modo_falla cmf ON f.id_codigo_modo_falla = cmf.id
+        LEFT JOIN consecutivo_modo_falla cf ON f.id_consecutivo_modo_falla = cf.id
+        LEFT JOIN descripcion_modo_falla dmf ON f.id_descripcion_modo_falla = dmf.id
+        LEFT JOIN causa ON f.id_causa = causa.id
+        LEFT JOIN mecanismo_falla mf ON f.id_mecanismo_falla = mf.id
+        LEFT JOIN detalle_falla df ON f.id_detalle_falla = df.id
+        LEFT JOIN fallo_oculto fo ON f.id_fallo_oculto = fo.id
+        LEFT JOIN seguridad_fisica sf ON f.id_seguridad_fisica = sf.id
+        LEFT JOIN medio_ambiente ma ON f.id_medio_ambiente = ma.id
+        LEFT JOIN impacto_operacional io ON f.id_impacto_operacional = io.id
+        LEFT JOIN costos_reparacion cr ON f.id_costos_reparacion = cr.id
+        LEFT JOIN flexibilidad_operacional flex ON f.id_flexibilidad_operacional = flex.id
+        LEFT JOIN ocurrencia o ON f.id_ocurrencia = o.id
+        LEFT JOIN probabilidad_deteccion pd ON f.id_probabilidad_deteccion = pd.id
+        LEFT JOIN riesgo r ON f.id_riesgo = r.id
+        WHERE f.id_equipo_info = %s
     """
     cursor.execute(query, (id_equipo_info,))
     fmeas = cursor.fetchall()
@@ -3444,7 +3454,7 @@ def obtener_rcm_por_equipo_info(id_equipo_info):
                 r.intervalo_inicial_horas
             FROM rcm r
             LEFT JOIN fmea f ON r.id_fmea = f.id
-            LEFT JOIN sistema s ON f.id_sistema = s.id
+            LEFT JOIN subsistemas s ON f.id_sistema = s.id
             LEFT JOIN falla_funcional ff ON f.id_falla_funcional = ff.id
             LEFT JOIN componentes c ON f.id_componente = c.id
             LEFT JOIN codigo_modo_falla cmf ON f.id_codigo_modo_falla = cmf.id
@@ -3495,7 +3505,7 @@ def obtener_mta_por_equipo_info(id_equipo_info):
         FROM mta m
         LEFT JOIN rcm r ON m.id_rcm = r.id
         LEFT JOIN equipo_info ei ON m.id_equipo_info = ei.id
-        LEFT JOIN sistema s ON m.id_sistema = s.id
+        LEFT JOIN subsistemas s ON m.id_sistema = s.id
         LEFT JOIN componentes c ON m.id_componente = c.id
         LEFT JOIN falla_funcional ff ON m.id_falla_funcional = ff.id
         LEFT JOIN descripcion_modo_falla dmf ON m.id_descripcion_modo_falla = dmf.id

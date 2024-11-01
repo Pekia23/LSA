@@ -1,5 +1,4 @@
 ##este es el pro
-
 from flask import Flask,session,flash, render_template, request, jsonify, redirect, url_for, make_response, g, send_file
 
 from markupsafe import Markup
@@ -15,11 +14,6 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from flask import Flask, send_file
 from io import BytesIO
-from reportlab.lib.pagesizes import letter, landscape, portrait
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
-from reportlab.lib.styles import getSampleStyleSheet
-from reportlab.lib import colors
-
 
 from database import (
     insertar_componente_analisis_funcional,
@@ -191,13 +185,6 @@ from database import (
     actualizar_procedimiento,
     obtener_sistemas_por_grupo,
     obtener_subgrupos_por_sistema
-
-
-
-
-
-
-
 )
 
 from __init__ import create_app
@@ -975,137 +962,6 @@ def eliminar_herramienta_especial_route(id_herramienta):
     eliminar_herramienta_especial(id_herramienta)
     return jsonify({'message': 'Herramienta especial eliminada'}), 200
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-"""
-
-@app.route('/LSA/fmea', methods=['GET'])
-def registro_FMEA():
-    token = g.user_token  # Obtener el token del usuario desde la sesión
-    user_data = obtener_info_usuario(token)  # Obtener la información del usuario desde el token
-    id_sistema = user_data.get('id_sistema')  # Recuperar el ID del sistema asociado al usuario
-
-    # Obtener la información del sistema desde la base de datos
-    if id_sistema:
-        sistema = obtener_sistema_por_id(id_sistema)  # Llamar a la función en `database.py`
-    else:
-        sistema = None
-
-    # Pasar la información del sistema a la plantilla HTML
-    return render_template('registro_FMEA.html', sistema=sistema)
-"""
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-"""
-
-@app.route('/LSA/fmea', methods=['GET'])
-def registro_FMEA():
-    token = g.user_token  # Obtener el token del usuario desde la sesión
-    user_data = obtener_info_usuario(token)  # Obtener la información del usuario desde el token
-    id_sistema = user_data.get('id_sistema')  # Recuperar el ID del sistema asociado al usuario
-
-    # Obtener la información del sistema desde la base de datos
-    if id_sistema:
-        sistema = obtener_sistema_por_id(id_sistema)  # Llamar a la función en `database.py`
-    else:
-        sistema = None
-
-    # Pasar la información del sistema a la plantilla HTML
-    return render_template('registro_FMEA.html', sistema=sistema)
-"""
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 @app.route('/LSA/equipo/editar-FMEA/<int:id_equipo_info>')
 def editar_FMEA_lista(id_equipo_info):
     print(f'El id del equipo info es: {id_equipo_info}')
@@ -1114,22 +970,6 @@ def editar_FMEA_lista(id_equipo_info):
     fmeas_con_rcm = obtener_fmeas_con_rcm()
     return render_template('editar_FMEA.html', fmeas=fmeas, fmeas_con_rcm=fmeas_con_rcm, id_equipo_info=id_equipo_info)
 
-
-"""
-
-@app.route('/LSA/equipo/editar-FMEA/<int:id_equipo_info>')
-def editar_FMEA_lista(id_equipo_info):
-    fmeas = obtener_fmeas(id_equipo_info)  #Estoy llamando los fmeas para que salgan en la lista
-    #print(f'Para la lista{fmeas}')
-    fmeas_con_rcm = obtener_fmeas_con_rcm()
-    return render_template('editar_FMEA.html', fmeas=fmeas, fmeas_con_rcm=fmeas_con_rcm)
-
-
-
-
-
-
-"""
 @app.route('/LSA/editar-FMEA/<int:id_equipo_info>/<int:fmea_id>')
 def editar_FMEA(id_equipo_info,fmea_id):
     subsistema_id = session.get('subsistema_id')
@@ -1903,8 +1743,7 @@ def guardar_fmea():
     id_equipo = user_data.get('id_equipo') or session.get('id_equipo')
 
     # Obtener id_sistema usando obtener_equipo_info
-    equipo_info = obtener_equipo_info(id_equipo_info)
-    id_sistema = equipo_info.get('id_sistema')
+    id_subsistema = request.form.get('subsistema') 
 
     # Obtener los datos del formulario
     falla_funcional = request.form.get('falla_funcional')
@@ -1941,7 +1780,7 @@ def guardar_fmea():
 
     # Insertar todos estos IDs en la tabla FMEA junto con los nuevos campos
     id_fmea = insertar_fmea(
-        id_equipo_info, id_sistema, id_falla_funcional, id_componente, id_codigo_modo_falla,
+        id_equipo_info, id_subsistema, id_falla_funcional, id_componente, id_codigo_modo_falla,
         id_consecutivo_modo_falla, id_descripcion_modo_falla, id_causa, id_mecanismo_falla,
         id_detalle_falla, mtbf, mttr, id_metodo_deteccion_falla, id_fallo_oculto, id_seguridad_fisica,
         id_medio_ambiente, id_impacto_operacional, id_costos_reparacion, id_flexibilidad_operacional,
@@ -2052,61 +1891,9 @@ def registro_lora():
 def registro_analisis_funcional():
     return render_template('registro_analisis_funcional.html')
 """
-
-
-
 @app.route('/LSA/registro-repuesto')
 def registro_repuesto():
     return render_template('registro_repuesto.html')
-
-@app.route('/view_pdf_1')
-def view_pdf_1():
-    pdf_buffer = BytesIO()
-
-    # Crear un PDF usando reportlab
-    p = canvas.Canvas(pdf_buffer, pagesize=letter)
-    p.drawString(100, 750, "Este es el PDF 1 generado desde Flask y visualizado en el navegador!")
-    p.showPage()
-    p.save()
-
-    # Mover el puntero al principio del archivo
-    pdf_buffer.seek(0)
-
-    # Crear una respuesta personalizada para visualizar el PDF
-    response = make_response(send_file(pdf_buffer, mimetype='application/pdf'))
-
-    # Añadir encabezado para asegurar que no se descargue, solo se visualice
-    response.headers['Content-Disposition'] = 'inline; filename="documento.pdf"'
-
-    return response
-
-# Ruta para descargar el primer PDF
-@app.route('/download_pdf_1')
-def download_pdf_1():
-    ancho_contenido = 600  # Ajusta este valor según tus necesidades para la orientación
-    page_size = landscape(letter) if ancho_contenido > 550 else portrait(letter)
-
-    # Crear un buffer en memoria para el PDF
-    pdf_buffer = BytesIO()
-    doc = SimpleDocTemplate(pdf_buffer, pagesize=page_size)
-    styles = getSampleStyleSheet()
-    story = []
-
-    # Crear un PDF usando reportlab
-    p = canvas.Canvas(pdf_buffer, pagesize=letter)
-    p.drawString(100, 750, "Este es el PDF 1 generado desde Flask!")
-    p.showPage()
-    p.save()
-
-    # Mover el puntero al principio del archivo
-    pdf_buffer.seek(0)
-
-    # Enviar el PDF para su descarga
-    return send_file(pdf_buffer, as_attachment=True, download_name=f"Informe_LSA_nombre_equipo.pdf", mimetype='application/pdf')
-
-
-
-
 
 #new functions
 @app.route('/LSA/crear_RCM//<int:fmea_id>')
@@ -2123,7 +1910,6 @@ def crear_RCM(fmea_id):
     else:
         print("no tiene")
         return "FMEA no encontrado", 404
-
 
 #funcion para guardar el RCM
 @app.route('/LSA/guardar_RCM/<int:fmea_id>', methods=['POST'])
@@ -2160,10 +1946,6 @@ def guardar_RCM(fmea_id):
     # Redireccionar después de guardar los cambios
 
     return redirect(url_for('editar_RCM_lista',id_equipo_info=id_equipo_info))
-
-
-
-
 
 #actualizar rcm
 @app.route('/LSA/equipos/actualizar_RCM/<int:fmea_id>', methods=['POST'])
@@ -2211,14 +1993,7 @@ def eliminar_RCM(fmea_id,id_rcm):
     eliminar_rcm(fmea_id,id_rcm)
     return redirect(url_for('editar_RCM_lista',id_equipo_info=id_equipo_info))
 
-
-
-
-
-
-
 #####analisis_funcional:
-
 
 @app.route('/LSA/equipo/mostrar-analisis-funcional', methods=['GET'])
 def mostrar_analisis_funcional():
@@ -2371,18 +2146,6 @@ def eliminar_personal_route():
     else:
         return jsonify({'error': 'ID de personal es requerido'}), 400
 
-
-
-
-
-
-
-
-
-
-
-
-
 def obtener_equipo_info(id=None):
     if id:
         # Usar el id proporcionado para obtener id_sistema e id_equipo desde la tabla equipo_info
@@ -2418,10 +2181,6 @@ def obtener_equipo_info(id=None):
         else:
             # Manejar el caso donde no hay token
             return None
-
-
-
-
 
 
 @app.route('/LSA/mostrar-general', methods=['POST'])
@@ -2511,15 +2270,6 @@ def mostrar_general_page(id_equipo_info):
 def status404(error):
     return '<h1>La pagina no se encuentra, buscalo por otro lado</h1>',404
 
-
-
-
-
-
-
 if __name__ == '__main__':
     app.register_error_handler(404, status404)
     app.run()
-
-
-
