@@ -893,7 +893,7 @@ def mostrar_herramientas_especiales():
     if id_equipo_info is None:
         return redirect(url_for('registro_generalidades'))
 
-    # Paso 1: Obtener herramientas relacionadas para el equipo desde la tabla de relaciones
+    # Obtener herramientas relacionadas para el equipo desde la tabla de relaciones
     herramientas_relacionadas = obtener_herramientas_relacionadas_por_equipo(id_equipo_info)
     print("Herramientas relacionadas:", herramientas_relacionadas)
 
@@ -901,7 +901,15 @@ def mostrar_herramientas_especiales():
     analisis = []
     herramientas = []
 
-    # Paso 2: Filtrar y obtener detalles completos para herramientas generales y especiales
+    # Agregar herramientas registradas directamente en herramientas_generales
+    analisis_directas = obtener_analisis_herramientas_por_equipo(id_equipo_info)
+    analisis.extend(analisis_directas)  # Añadir al listado de análisis
+
+    # Agregar herramientas registradas directamente en herramientas_especiales
+    herramientas_directas = obtener_herramientas_especiales_por_equipo(id_equipo_info)
+    herramientas.extend(herramientas_directas)  # Añadir al listado de herramientas especiales
+
+    # Paso 2: Filtrar y obtener detalles completos para herramientas generales y especiales desde herramientas_relacion
     for relacion in herramientas_relacionadas:
         id_herramienta = relacion['id_herramienta']
         id_clase_herramienta = relacion['id_clase_herramienta']
