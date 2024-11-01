@@ -808,6 +808,13 @@ def obtener_equipos_por_tipo(id_tipo_equipo):
     cursor.close()
     return equipospro
 
+def obtener_id_equipo_por_id_info(id_equipo_info):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = "SELECT id_equipo FROM `equipo_info` WHERE id=%s;"
+    cursor.execute(query, (id_equipo_info,))
+    equipo= cursor.fetchall()
+    cursor.close()
+    return equipo
 
 def obtener_sistema_por_id(id_sistema):
     cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)

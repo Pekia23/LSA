@@ -978,12 +978,10 @@ def editar_FMEA(id_equipo_info,fmea_id):
     fmea_id = obtener_ID_FMEA(fmea_id)
     print(f'\n\n\n\n{fmea}\n\n\n\n') 
     # Cargar la información del sistema
-    sistema = fmea.get('sistema')
-    sistema_id = fmea_id.get('id_sistema')
-    print(f'\n\n\n\n{sistema_id}\n\n\n\n')
+    subsistema = fmea.get('sistema')
     #Obtener datos para desplegables
-    componentes = obtener_componentes_por_subsistema(subsistema_id)
-    print(f'\n\n\n\nlos componentes son: {componentes}\n\n\n\n')
+    componente = fmea.get('componente')
+    print(f'\n\n\n\nlos componentes son: {componente}\n\n\n\n')
     mecanismos_falla = obtener_mecanismos_falla()
     codigos_modo_falla = obtener_codigos_modo_falla()
     metodos_deteccion_falla = obtener_metodos_deteccion_falla() 
@@ -1000,8 +998,8 @@ def editar_FMEA(id_equipo_info,fmea_id):
 
     # Renderizar formularios
     return render_template('registro_FMEA.html',fmea=fmea, fmea_id=fmea_id, editar=True,
-                           sistema=sistema,
-                           componentes=componentes,
+                           subsistema=subsistema,
+                           componente=componente,
                            mecanismos_falla = mecanismos_falla,
                            codigos_modo_falla = codigos_modo_falla,
                            metodos_deteccion_falla = metodos_deteccion_falla,
@@ -1012,7 +1010,6 @@ def editar_FMEA(id_equipo_info,fmea_id):
                            costos_reparacion_datos=costos_reparacion_datos,
                            flexibilidad_operacional_datos=flexibilidad_operacional_datos,
                            ocurrencia_datos = ocurrencia_datos,
-
                            probabilidad_deteccion_datos = probabilidad_deteccion_datos,
                            lista_riesgos= lista_riesgos,
                            id_equipo_info=id_equipo_info)
@@ -1023,6 +1020,7 @@ def guardar_cambios_fmea(fmea_id):
     # Los siguientes campos no cambian
     id_equipo_info = obtener_id_equipo_info_por_fmea(fmea_id)
     sistema_id = obtener_id_sistema_por_fmea_id(fmea_id)
+    componente=obtener_id_componente_por_fmea_id(fmea_id)
     
     # Obtener los datos del formulario
     falla_funcional = request.form.get('falla_funcional')
@@ -1032,7 +1030,7 @@ def guardar_cambios_fmea(fmea_id):
     mttr = request.form.get('mttr')
 
     #campos de los menús desplegables
-    id_componente = request.form.get('item_componente')
+    
     id_mecanismo_falla = request.form.get('mecanismo_falla')
     id_detalle_falla = request.form.get('detalle_falla')
     id_codigo_modo_falla = request.form.get('codigo_modo_falla')
@@ -1064,7 +1062,7 @@ def guardar_cambios_fmea(fmea_id):
 
     # Actualizar el registro FMEA con los nuevos datos
     actualizar_fmea(
-        fmea_id, id_equipo_info, sistema_id, id_falla_funcional, id_componente, 
+        fmea_id, id_equipo_info, sistema_id, id_falla_funcional, componente, 
         id_codigo_modo_falla, id_consecutivo_modo_falla, id_descripcion_modo_falla, 
         id_causa, id_mecanismo_falla, id_detalle_falla, mtbf, mttr, id_fallo_oculto, 
         id_seguridad_fisica, id_medio_ambiente, id_impacto_operacional, id_costos_reparacion, 

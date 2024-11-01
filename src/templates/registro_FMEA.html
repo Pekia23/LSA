@@ -23,15 +23,20 @@
         <div class="row mt-3">
             <div class="col-md-4">
                 <label for="subsistema" class="form-label">Subsistema</label>
+                {%if subsistemas%}
                 <select class="form-control" id="subsistema" name="subsistema" onchange="cargarComponentes()">
                     <option value="">Seleccione Subsistema</option>
-                    {% for subsistema in subsistemas %}
-                        <option value="{{ subsistema.id }}">{{ subsistema.nombre }}</option>
-                    {% endfor %}
+                        {% for subsistema in subsistemas %}
+                            <option value="{{ subsistema.id }}">{{ subsistema.nombre }}</option>
+                        {% endfor %}  
                 </select>
+                {%else%}
+                    <p id="{{ subsistema.id }}">{{ subsistema }}</p>
+                {%endif%}  
             </div>            
             <div class="col-md-4">
                 <label for="item_componente" class="form-label">Item o componente</label>
+                {%if componentes %}
                 <select class="form-control" id="item_componente" name="item_componente">
                     <option value="" disabled selected>---- Selecciona el componente ----</option>
                     {% for componente in componentes %}
@@ -41,6 +46,9 @@
                     </option>
                     {% endfor %}
                 </select>
+                {%else%}
+                    <p id="{{ componente.id }}">{{ componente }}</p>
+                {%endif%} 
             </div>
             <div class="col-md-4">
                 <label for="falla_funcional" class="form-label">Falla Funcional (FF)</label>
