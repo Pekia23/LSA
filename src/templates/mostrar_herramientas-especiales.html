@@ -13,6 +13,7 @@
 {% block content %}
 <h2 class="section-title text-center">Modulo de Herramientas</h2>
 
+<!-- Tabs Navigation -->
 <ul class="nav nav-tabs" id="myTab" role="tablist">
   <li class="nav-item" role="presentation">
     <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Análisis de herramientas</button>
@@ -22,8 +23,9 @@
   </li>
 </ul>
 
+<!-- Tab Content -->
 <div class="tab-content" id="myTabContent">
-  <!-- Pestaña de "Análisis de herramientas" -->
+  <!-- Análisis de Herramientas Tab -->
   <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
     <h3>Análisis de herramientas</h3>
     <table class="table">
@@ -42,10 +44,10 @@
           <td>{{ analisis.parte_numero }}</td>
           <td>{{ analisis.valor }}</td>
           <td>
-            <button class="boton btn-editar-analisis" data-id="{{ analisis.id }}"><i class="bi bi-pen"></button>
+            <button class="boton btn-editar-analisis" data-id="{{ analisis.id }}"><i class="bi bi-pen"></i></button>
           </td>
           <td>    
-            <button class="btn btn-danger btn-eliminar-analisis" data-id="{{ analisis.id }}"><i class="bi bi-trash"></button>
+            <button class="btn btn-danger btn-eliminar-analisis" data-id="{{ analisis.id }}"><i class="bi bi-trash"></i></button>
           </td>
         </tr>
         {% endfor %}
@@ -53,7 +55,7 @@
     </table>
   </div>
 
-  <!-- Pestaña de "Herramientas especiales" -->
+  <!-- Herramientas Especiales Tab -->
   <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
     <h3>Herramientas especiales</h3>
     <table class="table">
@@ -82,17 +84,20 @@
           <td>{{ herramienta.valor }}</td>
           <td>{{ herramienta.manual_referencia }}</td>
           <td>
-            <button class="boton btn btn-primary btn-editar" data-id="{{ herramienta.id }}"><i class="bi bi-pen"></button>
+            <button class="boton btn btn-primary btn-editar" data-id="{{ herramienta.id }}"><i class="bi bi-pen"></i></button>
           </td>
           <td>
-            <button class="btn btn-danger btn-eliminar" data-id="{{ herramienta.id }}"><i class="bi bi-trash"></button>
+            <button class="btn btn-danger btn-eliminar" data-id="{{ herramienta.id }}"><i class="bi bi-trash"></i></button>
           </td>
         </tr>
         {% endfor %}
       </tbody>
-  </table>
+    </table>
+  </div>
 </div>
- <div class="mt-4">
+
+<!-- Additional Links and Scripts -->
+<div class="mt-4">
   <a href="{{ url_for('registro_repuesto', token=session['token']) }}" class="btn btn-primary">Terminar Modulo de Herramientas</a>
 </div>
 <a href="{{ url_for('registro_herramientas_especiales') }}"><i class="bi bi-arrow-left-circle-fill"></i></a> 

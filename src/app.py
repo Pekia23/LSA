@@ -79,6 +79,7 @@ from database import (
     obtener_flexibilidad_operacional,
     obtener_Ocurrencia,
     obtener_probablilidad_deteccion,
+    obtener_herramientas_por_equipo,
 
     obtener_fmeas,
     obtener_fmea_por_id,
@@ -121,6 +122,12 @@ from database import (
     obtener_datos_equipo_por_id,
     obtener_subgrupo_constructivo_por_sistema_id,
     obtener_mta_por_id_rcm,
+    insertar_herramienta_relacion,
+    obtener_herramientas_generales_por_equipo,
+    obtener_herramientas_especiales_por_equipo,
+    obtener_detalle_herramienta_especial,
+    obtener_detalle_herramienta_general,
+    obtener_herramientas_relacionadas_por_equipo,
 
     ##analisis funcional
 
@@ -132,6 +139,7 @@ from database import (
     obtener_subsistemas_por_equipo,
     obtener_nombre_sistema_por_id,
     obtener_subsistemas_por_equipo_mostrar,
+    
 
 
 
@@ -161,6 +169,7 @@ from database import (
 
     obtener_lora_mta_por_id_mta,
     obtener_herramientas_mta_por_id_mta,
+    obtener_datos_herramienta,
     obtener_repuestos_mta_por_id_mta,
 
     actualizar_mta_lora,
@@ -723,12 +732,12 @@ def b64encode_filter(data):
 
 
 
+#Aqui se hace todo lo que tiene que ver con herramientas
 
 
-
-# app.py
-
-
+    #Analisis herramientas es herramientas generales 
+    
+#agregar herramientas generales:
 @app.route('/api/analisis-herramientas', methods=['POST'])
 def agregar_analisis_herramienta():
     token = g.user_token
@@ -742,43 +751,42 @@ def agregar_analisis_herramienta():
     
     # Aquí se captura el archivo de dibujo seccion transversal
     dibujo_seccion_transversal = request.files.get('dibujo_seccion_transversal')
-    id_clase_herramienta = 1
+    id_clase_herramienta = 1  # Define que es herramienta general
 
     if not nombre:
         return jsonify({'error': 'Faltan datos obligatorios'}), 400
 
-    # Convertir 'valor' a float
     try:
         valor = float(valor) if valor else None
     except ValueError:
         return jsonify({'error': 'El valor debe ser numérico'}), 400
 
-
-    # Leer el archivo si existe
     dibujo_data = dibujo_seccion_transversal.read() if dibujo_seccion_transversal else None
 
     # Insertar en la tabla herramientas_requeridas y obtener el ID
-    id_herramienta_requerida = insertar_herramienta_requerida(nombre, id_tipo_herramienta,id_clase_herramienta)
+    id_herramienta_requerida = insertar_herramienta_requerida(nombre, id_tipo_herramienta, id_clase_herramienta)
 
-    # Insertar en la tabla herramientas_generales, incluyendo el archivo si está disponible
+    # Insertar en la tabla de herramientas_generales
     analisis_id = insertar_analisis_herramienta(
 
         nombre, valor, id_equipo_info, parte_numero, id_herramienta_requerida, id_tipo_herramienta,id_clase_herramienta
-        
-        
         #,dibujo_data
 
         
     )
+    # Todas las que yo registre apartir de esta ruta, se van a añadir a la tabla de relacion
+    # Registrar la relación en herramientas_relacion
+    insertar_herramienta_relacion(id_herramienta_requerida, id_clase_herramienta, id_equipo_info)
 
     return jsonify({'message': 'Análisis de herramienta agregado', 'id': analisis_id}), 200
 
 
 
-
+#editar las herramientas generales:
 @app.route('/LSA/editar-analisis-herramienta/<int:id_analisis>', methods=['GET'])
 def editar_analisis_herramienta(id_analisis):
     token = g.user_token
+    #se cargan las herramientas
     analisis = obtener_analisis_herramienta_por_id(id_analisis)
     if analisis is None:
         return "Análisis no encontrado", 404
@@ -849,14 +857,11 @@ def agregar_herramienta_especial():
     id_tipo_herramienta = request.form.get('tipo_herramienta')
     cantidad = request.form.get('cantidad')
 
-
-
-    id_clase_herramienta = 2
+    id_clase_herramienta = 2  # Define que es herramienta especial
 
     if not nombre_herramienta or not id_tipo_herramienta:
         return jsonify({'error': 'Faltan datos obligatorios'}), 400
 
-    # Convertir 'valor' a float
     try:
         valor = float(valor) if valor else None
     except ValueError:
@@ -865,15 +870,16 @@ def agregar_herramienta_especial():
     dibujo_data = dibujo_seccion_transversal.read() if dibujo_seccion_transversal else None
 
     # Insertar en la tabla herramientas_requeridas y obtener el ID
-    id_herramienta_requerida = insertar_herramienta_requerida(nombre_herramienta, id_tipo_herramienta,id_clase_herramienta)
+    id_herramienta_requerida = insertar_herramienta_requerida(nombre_herramienta, id_tipo_herramienta, id_clase_herramienta)
 
-    # Insertar en la tabla herramientas_especiales, incluyendo el id_herramienta_requerida
+    # Insertar en herramientas_especiales
     herramienta_id = insertar_herramienta_especial(
-        parte_numero, nombre_herramienta, valor,
-        dibujo_data, nota, id_equipo_info,
-        manual_referencia, id_tipo_herramienta, cantidad,
-        id_herramienta_requerida,id_clase_herramienta  # Asegurarse de pasar el id_herramienta_requerida aquí
+        parte_numero, nombre_herramienta, valor, dibujo_data, nota, id_equipo_info,
+        manual_referencia, id_tipo_herramienta, cantidad, id_herramienta_requerida, id_clase_herramienta
     )
+
+    # Registrar la relación en herramientas_relacion
+    insertar_herramienta_relacion(id_herramienta_requerida, id_clase_herramienta, id_equipo_info)
 
     return jsonify({'message': 'Herramienta especial agregada', 'id': herramienta_id}), 200
 
@@ -887,14 +893,39 @@ def mostrar_herramientas_especiales():
     if id_equipo_info is None:
         return redirect(url_for('registro_generalidades'))
 
-    analisis = obtener_analisis_herramientas_por_equipo(id_equipo_info)
-    herramientas = obtener_herramientas_especiales_por_equipo(id_equipo_info)
+    # Paso 1: Obtener herramientas relacionadas para el equipo desde la tabla de relaciones
+    herramientas_relacionadas = obtener_herramientas_relacionadas_por_equipo(id_equipo_info)
+    print("Herramientas relacionadas:", herramientas_relacionadas)
 
+    # Inicializar listas para análisis (herramientas generales) y herramientas especiales
+    analisis = []
+    herramientas = []
+
+    # Paso 2: Filtrar y obtener detalles completos para herramientas generales y especiales
+    for relacion in herramientas_relacionadas:
+        id_herramienta = relacion['id_herramienta']
+        id_clase_herramienta = relacion['id_clase_herramienta']
+
+        if id_clase_herramienta == 1:
+            # Si es herramienta general, obtener los detalles de herramientas_generales
+            herramienta_general = obtener_detalle_herramienta_general(id_herramienta)
+            if herramienta_general:
+                analisis.append(herramienta_general)
+        elif id_clase_herramienta == 2:
+            # Si es herramienta especial, obtener los detalles de herramientas_especiales
+            herramienta_especial = obtener_detalle_herramienta_especial(id_herramienta)
+            if herramienta_especial:
+                herramientas.append(herramienta_especial)
+
+    # Renderizar el template con los datos de análisis y herramientas especiales
     return render_template(
         'mostrar_herramientas-especiales.html',
         analisis=analisis,
         herramientas=herramientas
     )
+
+
+
 
 @app.route('/LSA/registro-herramientas-especiales', methods=['GET'])
 def registro_herramientas_especiales():
@@ -1691,9 +1722,6 @@ def editar_MTA_lista(id_equipo_info):
     return render_template('editar_MTA.html', mtas=mtas, herramientas=herramientas, repuestos=repuestos, id_equipo_info=id_equipo_info)
 
 
-from flask import request, redirect, url_for, g
-import json
-
 @app.route('/LSA/registro-MTA/<int:fmea_id>', methods=['POST'])
 def guardar_MTA(fmea_id):
     token = g.user_token
@@ -1725,15 +1753,23 @@ def guardar_MTA(fmea_id):
     selected_herramientas = json.loads(selected_herramientas_json) if selected_herramientas_json else []
     print("Herramientas seleccionadas:", selected_herramientas)  # Para depuración
 
-    # Obtener nombres de las herramientas seleccionadas
+    # Obtener nombres de las herramientas seleccionadas y luego sus datos
     nombres_herramientas = []
+    ids_herramientas = []
     for herramienta_id in selected_herramientas:
-        nombre = obtener_nombre_por_id('herramientas_requeridas', herramienta_id, columna_id='id_herramienta_requerida')
+        nombre = obtener_nombre_por_id('herramientas_requeridas', herramienta_id , columna_id='id_herramienta_requerida')
         if nombre:
             nombres_herramientas.append(nombre)
+            id_herramienta, id_clase_herramienta = obtener_datos_herramienta(nombre)
+            if id_herramienta:
+                ids_herramientas.append((id_herramienta, id_clase_herramienta))
 
-    print("Nombres de herramientas seleccionadas:", nombres_herramientas)  # Para ver los nombres en la consola
+    print("Datos de herramientas seleccionadas:", ids_herramientas)  # Para ver los ID y clase de herramienta
 
+    # Insertar relaciones en la tabla herramientas_relacion
+    for id_herramienta, id_clase_herramienta in ids_herramientas:
+        insertar_herramienta_relacion(id_herramienta, id_clase_herramienta, id_equipo_info)
+    
     # Guardar los datos en la base de datos
     insertar_mta(rcm['id'], fmea['id_equipo_info'], id_sistema, id_componente, 
                  fmea['id_falla_funcional'], fmea['id_descripcion_modo_falla'], 
@@ -1754,6 +1790,7 @@ def guardar_MTA(fmea_id):
 
     # Redireccionar a la página de edición o lista
     return redirect(url_for('editar_MTA_lista', id_equipo_info=id_equipo_info))
+
 
 #actualizar mta
 @app.route('/LSA/actualizar-MTA/<int:mta_id>', methods=['POST'])
@@ -2525,7 +2562,7 @@ def status404(error):
 
 if __name__ == '__main__':
     app.register_error_handler(404, status404)
-    app.run()
+    app.run(host='0.0.0.0', port=3000, debug=True)
 
 
 
