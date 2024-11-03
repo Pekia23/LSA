@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block navbar %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-auto">
+            <!-- Navbar lateral -->
+            <button class="navbar-toggler custom-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse navbarvertical" id="navbarContent">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'registro_generalidades' %}active{% endif %}" href="{{ url_for('registro_generalidades') }}">
+                            Información del equipo
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'registro_analisis_funcional' %}active{% endif %}" href="{{ url_for('registro_analisis_funcional', sistema_id=sistema_id) }}">
+                            Análisis funcional
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'registro_herramientas_especiales' %}active{% endif %}" href="{{ url_for('registro_herramientas_especiales') }}">
+                            Modulo de herramientas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'registro_repuesto' %}active{% endif %}" href="{{ url_for('registro_repuesto') }}">
+                            Repuesto
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'registro_FMEA' %}active{% endif %}" href="{{ url_for('registro_FMEA') }}">
+                            FMEA
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'registro_RCM' %}active{% endif %}" href="{{ url_for('registro_RCM') }}">
+                            RCM
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'registro_MTA' %}active{% endif %}" href="{{ url_for('registro_MTA',fmea_id=0) }}">
+                            MTA - LORA
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+</div>
+{% endblock %}
