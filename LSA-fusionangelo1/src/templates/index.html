@@ -1,0 +1,45 @@
+{% extends './base.html' %}
+
+
+{% block nombre %}LSA{% endblock %}
+{% block body %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/desglose.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/fondo.css') }}">
+    <div class="search-bar">
+        <input type="text" id="searchbox" placeholder="Buscar equipos">
+        <button id="buscarBtn"><i class="bi bi-search" style="font-size: 25px;" ></i></button>
+        <button id="nuevoEquipoBtn" class="nuevo-equipo-btn"><a class="new_equipo" href="{{url_for('registro_generalidades')}}">Nuevo equipo</a></button>
+    </div>
+
+    <div id="resultados" class="grid-container">
+        {% for grupo in grupos %}
+        <div class="card" data-id="{{ grupo.id }}" data-type="grupo">
+            <!-- Mostrar imagen según el valor de numeracion -->
+            {% if grupo.numeracion == 200 %}
+                <img src="{{ url_for('static', filename='img/200.jpeg') }}" alt="Planta de Propulsión">
+            {% elif grupo.numeracion == 300 %}
+                <img src="{{ url_for('static', filename='img/300.jpeg') }}" alt="Planta Eléctrica">
+            {% elif grupo.numeracion == 400 %}
+                <img src="{{ url_for('static', filename='img/400.jpeg') }}" alt="Sistemas Auxiliares">
+            {% elif grupo.numeracion == 500 %}
+                <img src="{{ url_for('static', filename='img/500.jpeg') }}" alt="Sistemas de Navegación">
+            {% elif grupo.numeracion == 600 %}
+                <img src="{{ url_for('static', filename='img/600.jpeg') }}" alt="Sistemas de Armamento">
+            {% else %}
+                <img src="{{ url_for('static', filename='img/700.jpeg') }}" alt="Imagen por defecto">
+            {% endif %}
+            
+            <!-- Mostrar número y nombre -->
+            <h1>{{ grupo.numeracion }}</h1>
+            <p>{{ grupo.nombre }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    
+
+    <div id="volverBtn" class="hidden">
+        <button class="volverBtn">Volver</button>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/desglose.js') }}"></script>
+{% endblock %}
