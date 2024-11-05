@@ -52,19 +52,19 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
         // Capturar los componentes dinámicos del formulario
-        document.querySelectorAll('.componente-item').forEach(function(item) {
-            const idComponente = item.querySelector('p').textContent; // Obtener el nombre del componente
-            const verboComponente = item.querySelector(`[input[name^="verbo_"]`).value;
-            const accionComponente = item.querySelector(`[input[name^="accion_"]`).value;
-
-            // Agregar cada componente al array de componentes
+        document.querySelectorAll('#componentes .row').forEach(function(item) {
+            console.log(item);
+            const nombre_componente = item.querySelector('p').textContent;
+            const verbo = item.querySelector('input[name^="verbo_"]').value;
+            const accion = item.querySelector('input[name^="accion_"]').value;
+            const id_ = item.querySelector('input[name^="id_"]').value;
             data.componentes.push({
-                nombre_componente: idComponente,
-                verbo: verboComponente,
-                accion: accionComponente
+                nombre_componente,
+                verbo,
+                accion,
+                id_
             });
         });
-
         console.log('Datos enviados:', data);
 
         // Enviar los datos mediante fetch

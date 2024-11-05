@@ -174,7 +174,6 @@ from database import (
 
     obtener_mta_por_equipo_info,
     crear_personal,
-
     eliminar_personal,
 
     obtener_fmeas_con_rcm_por_equipo_info,
@@ -201,21 +200,17 @@ app.config['SECRET_KEY'] = 'tu_clave_secreta_aquí'
 
 
 
-"""
+
 @app.errorhandler(Exception)
 
 def handle_all_errors(error):
     return render_template('error.html'), 500  
 
-"""
 @app.route('/check', methods=['GET', 'POST'])
 def check_db_connection():
     result, status_code = verificar_conexion()
     return jsonify(result), status_code
 
-@app.route('/api/popup-data', methods=['GET'])
-def obtener_datos_popup():
-    return render_template('pop.html')
 
 @app.route('/LSA', methods=['GET', 'POST'])
 def index():
@@ -404,16 +399,11 @@ def registro_analisis_funcional():
     else:
         # Obtener información del sistema
         sistema = obtener_sistema_por_id(id_sistema)
-        
         # Verificar si el sistema existe
         if sistema:
-            if id_equipo:
-                subsistemas = obtener_subsistemas_por_equipo(id_equipo)
-            else:
-                subsistemas = []
+            subsistemas = obtener_subsistemas_por_equipo(id_equipo) if id_equipo else []
         else:
-            # Si no se encuentra el sistema, no hay subsistemas
-            subsistemas = []        
+            subsistemas = []       
 
     # Renderizar la plantilla con los datos obtenidos
     return render_template('registro_analisis_funcional.html', sistema=sistema,subsistemas=subsistemas)
@@ -450,8 +440,6 @@ def api_analisis_funcional():
     if not sistema_id or not subsistema_id or not verbo or not accion or not estandar_desempeño or not id_equipo_info:
         return jsonify({'error': 'Faltan datos obligatorios'}), 400
 
-    guardar_info_usuario(token, subsistema_id=subsistema_id)
-
     # Insertar en la base de datos el análisis funcional principal
     analisis_funcional_id = insertar_analisis_funcional(
         verbo,
@@ -464,28 +452,120 @@ def api_analisis_funcional():
     # Verificar si hay componentes y guardar cada componente en la tabla relacionada
     if componentes:
         for componente in componentes:
-            id_componente = componente.get('id_componente')
-            verbo_componente = componente.get('verbo')
-            accion_componente = componente.get('accion')
-
-            if not id_componente or not verbo_componente or not accion_componente:
-                return jsonify({'error': 'Faltan datos en los componentes'}), 400
+            id_componente = componente.get('id_')
+            verbo_componente = componente.get('verbo') if componente.get('verbo') else None
+            accion_componente = componente.get('accion') if componente.get('accion') else None
 
             # Insertar cada componente en la tabla `componente_analisis_funcional`
-            componenete_analisis_funcional=insertar_componente_analisis_funcional(
+            insertar_componente_analisis_funcional(
+                analisis_funcional_id,
                 id_componente,
                 verbo_componente,
-                accion_componente,
-                analisis_funcional_id
+                accion_componente
             )
 
     return jsonify({'message': 'Análisis funcional agregado', 'id': analisis_funcional_id}), 200
 
-
-
-
-
 # Diccionario global para almacenar la información temporal de los usuarios
+
+@app.route('/LSA/equipo/mostrar-analisis-funcional', methods=['GET'])
+def mostrar_analisis_funcional():
+    token = g.user_token
+    user_data = obtener_info_usuario(token)
+    id_equipo_info = user_data.get('id_equipo_info')
+    id_equipo = user_data.get('id_equipo')
+    
+    if not id_equipo_info:
+        flash('No se ha seleccionado un equipo.')
+        return redirect(url_for('ruta_principal'))
+
+    # Obtén el id_sistema desde la tabla equipo_info usando el id_equipo_info
+    
+    id_sistema = user_data.get('id_sistema')
+    sistema_nombre = obtener_nombre_sistema_por_id(id_sistema)
+
+    # Obtención del sistema y subsistemas asociados
+    sistema = obtener_sistema_por_id(id_sistema) if id_sistema else None
+    analisis_funcionales, componentes_analisis_funcionales = obtener_analisis_funcionales_por_equipo_info(id_equipo_info)
+
+    # Añadir el nombre del sistema a cada análisis funcional
+    for analisis in analisis_funcionales:
+        analisis['sistema_nombre'] = sistema_nombre
+
+    return render_template('mostrar_analisis_funcional.html', analisis_funcionales=analisis_funcionales, sistema=sistema, componentes=componentes_analisis_funcionales)
+
+@app.route('/LSA/equipo/analisis_funcional/editar/<int:id>', methods=['GET', 'POST'])
+def editar_analisis_funcional(id):
+
+    token = g.user_token
+    user_data = obtener_info_usuario(token)
+    id_sistema = user_data.get('id_sistema')
+    id_equipo = user_data.get('id_equipo')
+    id_equipo_info = user_data.get('id_equipo_info')
+
+    # Verificación de existencia del sistema
+    sistema = obtener_sistema_por_id(id_sistema) if id_sistema else None
+    subsistemas = obtener_subsistemas_por_equipo(id_equipo) if sistema else []
+
+    # Obtención del análisis funcional y sus componentes
+    analisis_funcional, componentes_analisis_funcionales = obtener_analisis_funcional_por_id(id)
+
+    if request.method == 'POST':
+        # Capturar datos de análisis funcional
+        verbo = request.form['verbo']
+        accion = request.form['accion']
+        estandar_desempeño = request.form['estandar_desempeño']
+        id_subsistema = request.form['subsistema']
+        
+        # Capturar datos de los componentes
+        ids_componentes = request.form.getlist('id_componente[]')
+        verbos = request.form.getlist('verbo[]')
+        acciones = request.form.getlist('accion[]')
+
+        # Crear estructura para los componentes usando valores obtenidos del formulario
+        componentes_formateados = []
+        ids_procesados = set()  # Conjunto temporal solo para este procesamiento
+
+        for i in range(len(ids_componentes)):
+            id_componente = ids_componentes[i]
+
+            # Verificar si este id ya fue procesado en esta extracción
+            if id_componente not in ids_procesados:
+                componente = {
+                    'id_': id_componente,
+                    'verbo': verbos[i] if verbos[i] else None,  # Convertimos valores vacíos a None
+                    'accion': acciones[i] if acciones[i] else None
+                }
+                componentes_formateados.append(componente)
+                ids_procesados.add(id_componente)  # Marcamos este id como procesado en este ciclo
+
+
+        # Debug para verificar los componentes formateados
+        print("\n--- Componentes Formateados para Actualización ---")
+        for componente in componentes_formateados:
+            print(f"ID: {componente['id_']}, Verbo: {componente['verbo']}, Acción: {componente['accion']}")
+        print("--- Fin de Componentes Formateados ---\n")
+
+        # Llamar a la función de actualización con los datos capturados
+        actualizar_analisis_funcional(id, verbo, accion, estandar_desempeño, id_subsistema, componentes_formateados)
+        flash('Análisis funcional actualizado correctamente')
+
+        # Redireccionar después de la actualización
+        return redirect(url_for('mostrar_analisis_funcional'))
+
+    return render_template('editar_analisis_funcional.html', 
+                           analisis_funcional=analisis_funcional, 
+                           sistema=sistema, 
+                           subsistemas=subsistemas, 
+                           componentes=componentes_analisis_funcionales)
+
+# Ruta para eliminar un análisis funcional
+@app.route('/analisis_funcional/eliminar/<int:id>', methods=['POST'])
+def eliminar_analisis_funcional_route(id):
+    eliminar_analisis_funcional(id)
+    flash('Análisis funcional eliminado correctamente')
+    return redirect(url_for('mostrar_analisis_funcional'))
+
 usuario_info_temporal = {}
 
 def generar_token():
@@ -567,8 +647,6 @@ def logout():
     response.set_cookie('user_token', '', expires=0)  # Eliminar la cookie
     return response
 
-
-
 #Rutas para repuesto
 # app.py
 @app.route('/LSA/mostrar-repuesto', methods=['GET'])
@@ -584,8 +662,6 @@ def mostrar_repuestos():
 
     repuestos = obtener_repuestos_por_equipo_info(id_equipo_info)
     return render_template('mostrar_repuesto.html', repuestos=repuestos)
-
-
 
 # app.py
 @app.route('/api/repuesto', methods=['POST'])
@@ -641,7 +717,6 @@ def agregar_repuesto():
     )
     return jsonify({'message': 'Repuesto agregado correctamente', 'id': repuesto_id}), 200
 
-
 # app.py
 @app.route('/api/repuesto/<int:id_repuesto>', methods=['POST'])
 def actualizar_repuesto_route(id_repuesto):
@@ -669,15 +744,11 @@ def actualizar_repuesto_route(id_repuesto):
     actualizar_repuesto(id_repuesto, nombre_repuesto, valor, dibujo_transversal_data, notas, mtbf, codigo_otan)
     return jsonify({'message': 'Repuesto actualizado correctamente'}), 200
 
-
 # app.py
 @app.route('/api/repuesto/<int:id_repuesto>', methods=['DELETE'])
 def eliminar_repuesto_route(id_repuesto):
     eliminar_repuesto(id_repuesto)
     return jsonify({'message': 'Repuesto eliminado correctamente'}), 200
-
-
-
 
 @app.route('/LSA/editar-repuesto/<int:id_repuesto>', methods=['GET'])
 def editar_repuesto(id_repuesto):
@@ -696,7 +767,6 @@ def editar_repuesto(id_repuesto):
 
     return render_template('editar_repuesto.html', repuesto=repuesto)
 
-
 @app.template_filter('b64encode')
 def b64encode_filter(data):
     if data:
@@ -704,17 +774,7 @@ def b64encode_filter(data):
         return Markup(base64.b64encode(data).decode('utf-8'))
     return ''
 
-
-
-
-
-
-
-
-
 # app.py
-
-
 @app.route('/api/analisis-herramientas', methods=['POST'])
 def agregar_analisis_herramienta():
     token = g.user_token
@@ -748,19 +808,10 @@ def agregar_analisis_herramienta():
 
     # Insertar en la tabla herramientas_generales, incluyendo el archivo si está disponible
     analisis_id = insertar_analisis_herramienta(
-
         nombre, valor, id_equipo_info, parte_numero, id_herramienta_requerida, id_tipo_herramienta,id_clase_herramienta
-        
-        
-        #,dibujo_data
-
-        
+        #,dibujo_data      
     )
-
     return jsonify({'message': 'Análisis de herramienta agregado', 'id': analisis_id}), 200
-
-
-
 
 @app.route('/LSA/editar-analisis-herramienta/<int:id_analisis>', methods=['GET'])
 def editar_analisis_herramienta(id_analisis):
@@ -772,8 +823,6 @@ def editar_analisis_herramienta(id_analisis):
     tipos_herramientas = obtener_tipos_herramientas()
 
     return render_template('editar_analisis_herramienta.html', analisis=analisis, tipos_herramientas=tipos_herramientas)
-
-
 
 @app.route('/api/analisis-herramientas/<int:id_analisis>', methods=['PUT'])
 def actualizar_analisis_herramienta_route(id_analisis):
@@ -802,14 +851,10 @@ def actualizar_analisis_herramienta_route(id_analisis):
 
     return jsonify({'message': 'Análisis de herramienta actualizado'}), 200
 
-
 @app.route('/api/analisis-herramientas/<int:id_analisis>', methods=['DELETE'])
 def eliminar_analisis_herramienta_route(id_analisis):
     eliminar_analisis_herramienta(id_analisis)
     return jsonify({'message': 'Análisis de herramienta eliminado'}), 200
-
-
-
 
 # Función para obtener el equipo por id_equipo_info
 def obtener_equipo_por_id(id_equipo_info):
@@ -863,7 +908,6 @@ def agregar_herramienta_especial():
 
     return jsonify({'message': 'Herramienta especial agregada', 'id': herramienta_id}), 200
 
-
 @app.route('/LSA/mostrar-herramientas-especiales', methods=['GET'])
 def mostrar_herramientas_especiales():
     token = g.user_token
@@ -902,10 +946,6 @@ def registro_herramientas_especiales():
         tipos_herramientas=tipos_herramientas
     )
 
-
-
-
-
 @app.route('/LSA/editar-herramienta-especial/<int:id_herramienta>', methods=['GET'])
 def editar_herramienta_especial(id_herramienta):
     token = g.user_token
@@ -916,7 +956,6 @@ def editar_herramienta_especial(id_herramienta):
     tipos_herramientas = obtener_tipos_herramientas()
 
     return render_template('editar_herramienta_especial.html', herramienta=herramienta, tipos_herramientas=tipos_herramientas)
-
 
 @app.route('/api/herramientas-especiales/<int:id_herramienta>', methods=['PUT'])
 def actualizar_herramienta_especial_route(id_herramienta):
@@ -950,12 +989,6 @@ def actualizar_herramienta_especial_route(id_herramienta):
     )
 
     return jsonify({'message': 'Herramienta especial actualizada'}), 200
-
-
-
-
-
-
 
 @app.route('/api/herramientas-especiales/<int:id_herramienta>', methods=['DELETE'])
 def eliminar_herramienta_especial_route(id_herramienta):
@@ -1075,9 +1108,6 @@ def guardar_cambios_fmea(fmea_id):
     # Redireccionar después de guardar los cambios
     return redirect(url_for('mostrar_FMEA',id_equipo_info=id_equipo_info))
 
-
-
-
 @app.route('/LSA/eliminar-FMEA/<int:fmea_id>', methods=['POST'])
 def eliminar_FMEA(fmea_id):
     token = g.user_token
@@ -1120,20 +1150,9 @@ def eliminar_FMEA(fmea_id):
     # Redireccionar a la vista de la tabla después de eliminar
     return redirect(url_for('mostrar_FMEA',id_equipo_info=id_equipo_info))
 
-
-
-
-
-
 @app.route('/LSA/equipo/editar-modulo-herramientas')
 def editar_modulo_herramientas():
     return render_template('editar_herramientas_especial.html')
-
-"""
-@app.route('/LSA/equipo/editar-analisis-herramientas')
-def editar_analisis_herramientas():
-    return render_template('editar_analisis_herramientas.html')
-"""
 
 @app.route('/LSA/equipo/editar_RCM/<int:fmea_id>')
 def editar_RCM(fmea_id):
@@ -1147,43 +1166,7 @@ def editar_RCM_lista(id_equipo_info):
     rcms_con_mta = obtener_rcms_con_mta_por_equipo_info(id_equipo_info)
     return render_template('editar_RCM.html', rcms=rcms, rcms_con_mta=rcms_con_mta, id_equipo_info=id_equipo_info)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # app.py
-
 @app.route('/LSA/mostrar-equipo', methods=['GET'])
 def mostrar_equipo():
     
@@ -1237,10 +1220,7 @@ def mostrar_equipo():
                            id_equipo_info=id_equipo_info
                            )
 
-
-
 # app.py
-
 @app.route('/LSA/editar-equipo', methods=['GET', 'POST'])
 def editar_equipo():
     # Priorizar el parámetro de URL 'id_equipo_info' si está presente
@@ -1366,7 +1346,7 @@ def editar_equipo():
 
         return redirect(url_for('mostrar_equipo', id_equipo_info=id_equipo_info))
 
-       
+
 @app.route('/LSA/eliminar-equipo', methods=['POST'])
 def eliminar_equipo():
     try:
@@ -1387,39 +1367,15 @@ def eliminar_equipo():
     except Exception as e:
         return jsonify({"error": f"Error al eliminar el equipo: {str(e)}"}), 500
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 @app.route('/LSA/equipo/mostrar-FMEA/<int:id_equipo_info>')
 def mostrar_FMEA(id_equipo_info):
     fmeas = obtener_fmeas(id_equipo_info)# Obtener todos los registros de FMEA desde la base de datos
     return render_template('mostrar_FMEA.html',id_equipo_info=id_equipo_info, fmeas=fmeas)
 
-
-
-
 @app.route('/LSA/equipo/mostrar-RCM')
 def mostrar_RCM():
     rcms = obtener_rcms_completos()
     return render_template('mostrar_RCM.html', rcms=rcms)
-
-
 
 @app.route('/LSA/equipo/mostrar-analisis-herramientas')
 def mostrar_analisis_herramientas():
@@ -1432,12 +1388,6 @@ def mostrar_repuesto():
 @app.route('/LSA/equipo/mostrar-informe')
 def mostrar_informe():
     return render_template('mostrar_informe.html')
-
-
-
-
-
-
 
 #########################################################################################################
 
@@ -1482,6 +1432,7 @@ def registro_MTA(fmea_id):
                            repuestos = repuestos,
                            rcm=rcm
                            )
+
 @app.route('/LSA/equipo/editar-MTA/<int:rcm_id>')
 def editar_MTA(rcm_id):
     mta = obtener_mta_por_id_rcm(rcm_id)
@@ -1510,7 +1461,6 @@ def editar_MTA(rcm_id):
 
 @app.route('/LSA/eliminar-MTA/<int:mta_id>')
 def eliminar_MTA(mta_id):
-
     token = g.user_token
     user_data = obtener_info_usuario(token)
     id_equipo_info = user_data.get('id_equipo_info')
@@ -1519,15 +1469,12 @@ def eliminar_MTA(mta_id):
     eliminar_mta(mta_id)
     return redirect(url_for('editar_MTA_lista', id_equipo_info=id_equipo_info))
 
-
 @app.route('/LSA/editar-MTA-lista/<int:id_equipo_info>')
 def editar_MTA_lista(id_equipo_info):
     mtas = obtener_mta_por_equipo_info(id_equipo_info)
     herramientas = obtener_herramientas_especiales_por_equipo(id_equipo_info)
     repuestos = obtener_repuestos_por_equipo_info(id_equipo_info)
     return render_template('editar_MTA.html', mtas=mtas, herramientas=herramientas, repuestos=repuestos, id_equipo_info=id_equipo_info)
-
-
 
 @app.route('/LSA/registro-MTA/<int:fmea_id>', methods=['POST'])
 def guardar_MTA(fmea_id):
@@ -1585,16 +1532,12 @@ def guardar_MTA(fmea_id):
 
     return redirect(url_for('editar_MTA_lista',id_equipo_info=id_equipo_info))
 
-
-
 #actualizar mta
 @app.route('/LSA/actualizar-MTA/<int:mta_id>', methods=['POST'])
 def actualizar_MTA(mta_id):
-
     token = g.user_token
     user_data = obtener_info_usuario(token)
     id_equipo_info = user_data.get('id_equipo_info')
-
     # Obtener los datos del formulario
     id_tipo_mantenimiento = request.form.get('tipo_mantenimiento')
     id_tarea_mantenimiento = request.form.get('tarea_mantenimiento')
@@ -1650,7 +1593,6 @@ def actualizar_MTA(mta_id):
 
     return redirect(url_for('editar_RCM_lista',id_equipo_info=id_equipo_info))
 
-
 @app.route('/LSA/equipo/mostrar-MTA')
 def mostrar_MTA():
     mtas = obtener_mtas_completos()
@@ -1658,22 +1600,9 @@ def mostrar_MTA():
     repuestos = obtener_repuestos_mta()
     return render_template('mostrar_MTA.html', mtas=mtas, herramientas=herramientas, repuestos=repuestos)
 
-
-
-# def editar_MTA_lista():
-#     mtas = obtener_mtas_completos()
-#     herramientas = obtener_herramientas_mta()
-#     repuestos = obtener_repuestos_mta()
-#     return render_template('editar_MTA.html', mtas=mtas, herramientas=herramientas, repuestos=repuestos)
-
-
-##############################################################################################################
-
 @app.route('/LSA/registro-RCM')
 def registro_RCM():
     return render_template('registro_rcm.html')
-
-
 
 @app.route('/LSA/registro-FMEA')
 def registro_FMEA():
@@ -1788,8 +1717,6 @@ def guardar_fmea():
     # Redireccionar a la lista de FMEA con id_equipo_info como parámetro
     return redirect(url_for('editar_FMEA_lista', id_equipo_info=id_equipo_info))
  
-
-
 #rutas para funcionesFMEA.js
 @app.route('/LSA/obtener-detalles-falla/<int:mecanismo_id>', methods=['GET'])
 def obtener_detalles_falla(mecanismo_id):
@@ -1804,6 +1731,7 @@ def obtener_detalles_falla(mecanismo_id):
     
     detalles_falla_lista = [{'id': detalle['id'], 'nombre': detalle['nombre']} for detalle in detalles_falla]
     return jsonify(detalles_falla_lista)
+
 #Aqui estoy haciendo dos procesos a la vez tanto contando los consecutivos como mostrando el nombre
 @app.route('/LSA/obtener-nombre-falla/<int:codigo_id>')
 def obtener_nombre_falla(codigo_id):
@@ -1875,20 +1803,10 @@ def obtener_nombre_falla(codigo_id):
         cursor.close()
         return jsonify({'nombre': 'No encontrado', 'consecutivo': None}), 404
 
-
-############################################################################################################
-
-
-
 @app.route('/LSA/equipo/registro-LORA')
 def registro_lora():
     return render_template('registro_lora.html')
 
-"""
-@app.route('/LSA/registro-analisis-funcional')
-def registro_analisis_funcional():
-    return render_template('registro_analisis_funcional.html')
-"""
 @app.route('/LSA/registro-repuesto')
 def registro_repuesto():
     return render_template('registro_repuesto.html')
@@ -1983,146 +1901,12 @@ def actualizar_RCM(fmea_id):
 
 #eliminar rcm
 @app.route('/LSA/eliminar_RCM/<int:fmea_id>/<int:id_rcm>')
-
 def eliminar_RCM(fmea_id,id_rcm):
     token = g.user_token
     user_data = obtener_info_usuario(token)
     id_equipo_info = user_data.get('id_equipo_info')
     eliminar_rcm(fmea_id,id_rcm)
     return redirect(url_for('editar_RCM_lista',id_equipo_info=id_equipo_info))
-
-#####analisis_funcional:
-
-@app.route('/LSA/equipo/mostrar-analisis-funcional', methods=['GET'])
-def mostrar_analisis_funcional():
-    token = g.user_token
-    user_data = obtener_info_usuario(token)
-    id_equipo_info = user_data.get('id_equipo_info')
-    id_equipo = user_data.get('id_equipo')
-    
-    if not id_equipo_info:
-        flash('No se ha seleccionado un equipo.')
-        return redirect(url_for('ruta_principal'))
-
-    # Obtén el id_sistema desde la tabla equipo_info usando el id_equipo_info
-    
-    id_sistema = user_data.get('id_sistema')
-    sistema_nombre = obtener_nombre_sistema_por_id(id_sistema)
-
-    # Si no se proporciona id_sistema, el sistema es None
-    if id_sistema is None:
-        sistema = None
-        subsistemas = []
-    else:
-        # Obtener el sistema usando el id_sistema
-        sistema = obtener_sistema_por_id(id_sistema)
-        """
-        # Verificar si el sistema existe
-        if sistema:
-            # Obtener los subsistemas asociados al equipo
-            subsistemas = obtener_subsistemas_por_equipo(id_equipo)
-        else:
-            # Si el sistema no existe, no hay subsistemas
-            subsistemas = []
-        """
-    # Obtén los análisis funcionales relacionados con el equipo
-    analisis_funcionales = obtener_analisis_funcionales_por_equipo_info(id_equipo_info)
-    
-    # Añadir el nombre del sistema a cada análisis funcional
-    for analisis in analisis_funcionales:
-        analisis['sistema_nombre'] = sistema_nombre
-
-    return render_template('mostrar_analisis_funcional.html', analisis_funcionales=analisis_funcionales,sistema=sistema)
-
-
-
-@app.route('/LSA/equipo/analisis_funcional/editar/<int:id>', methods=['GET', 'POST'])
-def editar_analisis_funcional(id):
-
-    token = g.user_token
-    user_data = obtener_info_usuario(token)
-    id_sistema = user_data.get('id_sistema')
-    id_equipo = user_data.get('id_equipo')
-    id_equipo_info = user_data.get('id_equipo_info')
-
-
-    print(f"Token: {token}")
-    print(f"id_sistema: {id_sistema}")
-    print(f"id_equipo: {id_equipo}")
-    print(f"id_equipo_info: {id_equipo_info}")
-
-    # Si no se proporciona id_sistema, el sistema es None
-    if id_sistema is None:
-        sistema = None
-        subsistemas = []
-    else:
-        # Obtener el sistema usando el id_sistema
-        sistema = obtener_sistema_por_id(id_sistema)
-        
-        # Verificar si el sistema existe
-        if sistema:
-            # Obtener los subsistemas asociados al equipo
-            subsistemas = obtener_subsistemas_por_equipo(id_equipo)
-        else:
-            # Si el sistema no existe, no hay subsistemas
-            subsistemas = []
-
-    analisis_funcional = obtener_analisis_funcional_por_id(id)
-    
-
-    if request.method == 'POST':
-        verbo = request.form['verbo']
-        accion = request.form['accion']
-        estandar_desempeño = request.form['estandar_desempeño']
-        id_subsistema = request.form['subsistema']
-
-        
-        # Actualizar el análisis funcional
-        actualizar_analisis_funcional(id, verbo, accion, estandar_desempeño, id_subsistema)
-        flash('Análisis funcional actualizado correctamente')
-        return redirect(url_for('mostrar_analisis_funcional'))
-    
-    return render_template('editar_analisis_funcional.html', 
-                               analisis_funcional=analisis_funcional, 
-                               sistema=sistema, 
-                               subsistemas=subsistemas)
-
-# Ruta para eliminar un análisis funcional
-@app.route('/analisis_funcional/eliminar/<int:id>', methods=['POST'])
-def eliminar_analisis_funcional_route(id):
-    eliminar_analisis_funcional(id)
-    flash('Análisis funcional eliminado correctamente')
-    return redirect(url_for('mostrar_analisis_funcional'))
-
-# Ruta API para insertar un nuevo análisis funcional (usado por JavaScript)
-@app.route('/api/analisis-funcional', methods=['POST'])
-def api_insertar_analisis_funcional():
-    data = request.get_json()
-    verbo = data.get('verbo')
-    accion = data.get('accion')
-    estandar_desempeño = data.get('estandar_desempeño')
-    id_equipo_info = session.get('id_equipo_info')
-    id_subsistema = data.get('subsistema')
-    insertar_analisis_funcional(verbo, accion, estandar_desempeño, id_equipo_info, id_subsistema)
-    return jsonify({'status': 'success'})
-
-
-
-
-""""
-ciber
-# Ruta para registrar un nuevo análisis funcional
-@app.route('/registro_analisis_funcional', methods=['GET'])
-def registro_analisis_funcional():
-    token = g.user_token
-    user_data = obtener_info_usuario(token)
-    id_equipo_info = user_data.get('id_equipo_info')
-    sistema_nombre = obtener_nombre_sistema_por_id(id_equipo_info)
-    subsistemas = obtener_subsistemas_por_equipo_mostrar(id_equipo_info)
-    return render_template('registro_analisis_funcional.html', sistema_nombre=sistema_nombre, subsistemas=subsistemas)
-    """
-
-
 
 @app.route('/api/crear_personal', methods=['POST'])
 def crear_personal_route():

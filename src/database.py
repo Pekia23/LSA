@@ -1,8 +1,6 @@
+from flask import jsonify
 from __init__ import db
 import MySQLdb.cursors
-
-
-"""
 
 def obtener_componentes_por_subsistema(subsistema_id):
     cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -12,27 +10,52 @@ def obtener_componentes_por_subsistema(subsistema_id):
     cursor.close()
     return componentes
 
-"""
-
-
 def insertar_componente_analisis_funcional(id_analisis_funcional, id_componente, verbo, accion):
+    """
+    Inserta un componente relacionado con un análisis funcional en la base de datos.
+    Si `verbo` o `accion` están vacíos, se guardan como NULL en la base de datos.
+    
+    """
     # Conexión a la base de datos
     cursor = db.connection.cursor()
-    
+
+    # Convertir valores vacíos a None para que se guarden como NULL en la base de datos
+    verbo = verbo if verbo else None
+    accion = accion if accion else None
+
     # Insertar los datos del componente relacionado con el análisis funcional
     query = """
     INSERT INTO `componente_analisis_funcional`(`id_componente`, `verbo`, `accion`, `id_analisis_funcional`)
     VALUES (%s, %s, %s, %s)
     """
+    print(f'\n\n\nInsertar componentes:')
     print(f"Query: {query}")
-    print(f"Valores: id_componente={id_componente}, verbo={verbo}, accion={accion}, id_analisis_funcional={id_analisis_funcional}")
-    
+    print(f"Valores: id_componente={id_componente}, verbo={verbo}, accion={accion}, id_analisis_funcional={id_analisis_funcional}\n\n\n")
+
+    # Ejecutar la consulta
+    cursor.execute(query, (id_componente, verbo, accion, id_analisis_funcional))
+    db.connection.commit()
+
+    # Cerrar el cursor
+    cursor.close()
+
+def actualizar_componente_analisis_funcional(id_analisis_funcional, id_componente, verbo, accion):
+    # Conexión a la base de datos
+    cursor = db.connection.cursor()
+
+    # Insertar los datos del componente relacionado con el análisis funcional
+    query = """
+    INSERT INTO `componente_analisis_funcional`(`id_componente`, `verbo`, `accion`, `id_analisis_funcional`)
+    VALUES (%s, %s, %s, %s)
+    """
+    print(f'\n\n\n\nActualizar componentea:')
+    print(f"Query: {query}")
+    print(f"Valores: id_componente={id_componente}, verbo={verbo}, accion={accion}, id_analisis_funcional={id_analisis_funcional}\n\n\n")
+
     cursor.execute(query, (id_componente, verbo, accion, id_analisis_funcional))
     db.connection.commit()
 
     cursor.close()
-
-
 
 def verificar_conexion():
     try:
@@ -43,7 +66,6 @@ def verificar_conexion():
     except db.connection.Error as e:
         return {"status": "error", "message": str(e)}, 500
 
-
 def obtener_grupos_constructivos():
     cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
     query = "SELECT id, numeracion, nombre FROM grupo_constructivo ORDER BY numeracion"
@@ -51,7 +73,6 @@ def obtener_grupos_constructivos():
     grupos = cursor.fetchall()
     cursor.close()
     return grupos
-
 
 def obtener_subgrupos(id_grupo):
     cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -61,7 +82,6 @@ def obtener_subgrupos(id_grupo):
     cursor.close()
     return subgrupos
 
-
 def obtener_sistemas(id_subgrupo):
     cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
     query = "SELECT id, numeracion, nombre FROM sistema WHERE id_subgrupo = %s ORDER BY numeracion"
@@ -69,7 +89,6 @@ def obtener_sistemas(id_subgrupo):
     sistemas = cursor.fetchall()
     cursor.close()
     return sistemas
-
 
 def obtener_equipos(id_sistema):
     cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -79,7 +98,6 @@ def obtener_equipos(id_sistema):
     cursor.close()
     return equipos
 
-
 def obtener_personal():
     cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
     query = "SELECT id, nombre_completo FROM personal ORDER BY nombre_completo"
@@ -87,7 +105,6 @@ def obtener_personal():
     personal = cursor.fetchall()
     cursor.close()
     return personal
-
 
 def obtener_tipos_equipos():
     cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -97,7 +114,6 @@ def obtener_tipos_equipos():
     cursor.close()
     return tipos
 
-
 def buscar_subgrupos(busqueda, id_grupo):
     cursor = db.connection.cursor()
     query = "SELECT id, numeracion, nombre FROM subgrupo WHERE id_grupo_constructivo = %s AND nombre LIKE %s ORDER BY numeracion"
@@ -106,7 +122,6 @@ def buscar_subgrupos(busqueda, id_grupo):
     cursor.close()
     return subgrupos
 
-
 def buscar_sistemas(busqueda, id_subgrupo):
     cursor = db.connection.cursor()
     query = "SELECT id, numeracion, nombre FROM sistema WHERE id_subgrupo = %s AND nombre LIKE %s ORDER BY numeracion"
@@ -114,7 +129,6 @@ def buscar_sistemas(busqueda, id_subgrupo):
     sistemas = cursor.fetchall()
     cursor.close()
     return sistemas
-
 
 def buscar_equipos(busqueda, id_sistema=None):
     cursor = db.connection.cursor()
@@ -128,7 +142,6 @@ def buscar_equipos(busqueda, id_sistema=None):
     cursor.close()
     return equipos
 
-
 def obtener_personal():
     cursor = db.connection.cursor()
     query = "SELECT id, nombre_completo FROM personal ORDER BY nombre_completo"
@@ -137,7 +150,6 @@ def obtener_personal():
     cursor.close()
     return personal
 
-
 def obtener_tipos_equipos():
     cursor = db.connection.cursor()
     query = "SELECT id, nombre FROM tipo_equipos ORDER BY nombre"
@@ -145,7 +157,6 @@ def obtener_tipos_equipos():
     tipos_equipos = cursor.fetchall()
     cursor.close()
     return tipos_equipos
-
 
 #Funciones para FMEA
 
@@ -161,7 +172,6 @@ def obtener_fallos_ocultos():
 
     return [{'id': fila['id'], 'nombre': fila['nombre'], 'valor': fila['valor']} for fila in fallos_ocultos]
 
-
 def obtener_seguridad_fisica():
     cursor = db.connection.cursor()
     query = "SELECT id, nombre, valor FROM seguridad_fisica"
@@ -170,7 +180,6 @@ def obtener_seguridad_fisica():
     cursor.close()
 
     return [{'id': fila['id'], 'nombre': fila['nombre'], 'valor': fila['valor']} for fila in seguridad_fisica]
-
 
 def obtener_medio_ambiente():
     cursor = db.connection.cursor()
@@ -181,7 +190,6 @@ def obtener_medio_ambiente():
 
     return [{'id': fila['id'], 'nombre': fila['nombre'], 'valor': fila['valor']} for fila in medio_ambiente_datos]
 
-
 def obtener_impacto_operacional():
     cursor = db.connection.cursor()
     query = "SELECT id, nombre, valor FROM impacto_operacional"
@@ -191,7 +199,6 @@ def obtener_impacto_operacional():
 
     return [{'id': fila['id'], 'nombre': fila['nombre'], 'valor': fila['valor']} for fila in impacto_operacional_datos]
 
-
 def obtener_costos_reparacion():
     cursor = db.connection.cursor()
     query = "SELECT id, nombre, valor FROM costos_reparacion"
@@ -200,7 +207,6 @@ def obtener_costos_reparacion():
     cursor.close()
 
     return [{'id': fila['id'], 'nombre': fila['nombre'], 'valor': fila['valor']} for fila in costos_reparacion_datos]
-
 
 def obtener_flexibilidad_operacional():
     cursor = db.connection.cursor()
@@ -212,7 +218,6 @@ def obtener_flexibilidad_operacional():
     return [{'id': fila['id'], 'nombre': fila['nombre'], 'valor': fila['valor']} for fila in
             flexibilidad_operacional_datos]
 
-
 def obtener_Ocurrencia():
     cursor = db.connection.cursor()
     query = "SELECT id, nombre, valor FROM ocurrencia"
@@ -221,7 +226,6 @@ def obtener_Ocurrencia():
     cursor.close()
 
     return [{'id': fila['id'], 'nombre': fila['nombre'], 'valor': fila['valor']} for fila in ocurrencia_datos]
-
 
 def obtener_probablilidad_deteccion():
     cursor = db.connection.cursor()
@@ -232,7 +236,6 @@ def obtener_probablilidad_deteccion():
 
     return [{'id': fila['id'], 'descripcion': fila['descripcion'], 'valor': fila['valor']} for fila in
             probabilidad_deteccion_datos]
-
 
 def obtener_componentes_por_subsistema(subsistema_id):
     cursor = db.connection.cursor()
@@ -247,7 +250,6 @@ def obtener_componentes_por_subsistema(subsistema_id):
 
     return [{'id': c['id'], 'nombre': c['nombre']} for c in componentes]
 
-
 def obtener_mecanismos_falla():
     cursor = db.connection.cursor()
     query = "SELECT id, nombre FROM mecanismo_falla"
@@ -255,7 +257,6 @@ def obtener_mecanismos_falla():
     mecanismos_falla = cursor.fetchall()
     cursor.close()
     return [{'id': fila['id'], 'nombre': fila['nombre']} for fila in mecanismos_falla]
-
 
 def obtener_detalles_falla_por_mecanismo(id_mecanismo_falla):
     cursor = db.connection.cursor()
@@ -270,7 +271,6 @@ def obtener_detalles_falla_por_mecanismo(id_mecanismo_falla):
     print(f"Detalles de falla para id_mecanismo_falla {id_mecanismo_falla}: {detalles_falla}")
     return [{'id': fila['id'], 'nombre': fila['nombre']} for fila in detalles_falla]
 
-
 def obtener_codigos_modo_falla():
     cursor = db.connection.cursor()
     query = "SELECT id, codigo, nombre FROM codigo_modo_falla"
@@ -278,7 +278,6 @@ def obtener_codigos_modo_falla():
     codigos = cursor.fetchall()
     cursor.close()
     return [{'id': fila['id'], 'codigo': fila['codigo'], 'nombre': fila['nombre']} for fila in codigos]
-
 
 def obtener_metodos_deteccion_falla():
     cursor = db.connection.cursor()
@@ -288,7 +287,6 @@ def obtener_metodos_deteccion_falla():
     cursor.close()
 
     return [{'id': fila['id'], 'nombre': fila['nombre']} for fila in metodos_deteccion_falla]
-
 
 #Esta no es para un desplegable pero retorna una lista de la misma manera
 def obtener_lista_riesgos():
@@ -302,7 +300,6 @@ def obtener_lista_riesgos():
     print("Lista de riesgos obtenida:", riesgos)
 
     return [{'id': riesgo['id'], 'nombre': riesgo['nombre']} for riesgo in riesgos]
-
 
 #Obtener id para FMEA
 def obtener_id_equipo_info_por_fmea(fmea_id):
@@ -321,7 +318,6 @@ def obtener_id_equipo_info_por_fmea(fmea_id):
         return resultado['id_equipo_info']  # Retorna el id_equipo_info si lo encuentra
     else:
         return None  # Si no encuentra el fmea_id, retorna None
-
 
 def obtener_id_sistema_por_fmea_id(fmea_id):
     cursor = db.connection.cursor()
@@ -824,7 +820,6 @@ def obtener_sistema_por_id(id_sistema):
     cursor.close()
     return sistema
 
-
 def obtener_subsistema_por_id(id_subsistema):
     cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
     query = "SELECT * FROM subsistemas WHERE id = %s"
@@ -832,7 +827,6 @@ def obtener_subsistema_por_id(id_subsistema):
     sistema = cursor.fetchone()
     cursor.close()
     return sistema
-
 
 def obtener_subsistemas_por_equipo(id_equipo):
     cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -842,9 +836,7 @@ def obtener_subsistemas_por_equipo(id_equipo):
     cursor.close()
     return subsistemas
 
-
 # ... otras funciones ...
-
 def obtener_usuario_por_correo(correo):
     cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
     query = "SELECT id, correo, password, nombre_completo FROM personal WHERE correo = %s"
@@ -852,7 +844,6 @@ def obtener_usuario_por_correo(correo):
     usuario = cursor.fetchone()
     cursor.close()
     return usuario
-
 
 def insertar_analisis_funcional(verbo, accion, estandar_desempeño, id_equipo_info, subsistema_id):
     cursor = db.connection.cursor()
@@ -866,9 +857,7 @@ def insertar_analisis_funcional(verbo, accion, estandar_desempeño, id_equipo_in
     cursor.close()
     return analisis_funcional_id
 
-
 ###################################################################Funcines para MTA#############################
-
 
 #insertar_mta(fmea['id_equipo_info'], id_sistema, id_componente, fmea['id_falla_funcional'], fmea['id_descripcion_modo_falla'], id_tipo_mantenimiento, id_tarea_mantenimiento, cantidad_personal, consumibles_requeridos ,requeridos_tarea,condiciones_ambientales, condiciones_estado_equipo, condiciones_especiales,  horas, minutos, detalle_tarea)
 def insertar_mta(id_rcm, id_equipo_info, id_sistema, id_componente, id_falla_funcional, id_descripcion_modo_falla,
@@ -892,7 +881,6 @@ def insertar_mta(id_rcm, id_equipo_info, id_sistema, id_componente, id_falla_fun
     cursor.close()
     return mta_id
 
-
 def actualizar_mta(id_mta, id_tipo_mantenimiento, id_tarea_mantenimiento, cantidad_personal, consumibles_requeridos,
                    requeridos_tarea, condiciones_ambientales, condiciones_estado_equipo, condiciones_especiales, horas,
                    minutos, detalle_tarea):
@@ -910,7 +898,6 @@ def actualizar_mta(id_mta, id_tipo_mantenimiento, id_tarea_mantenimiento, cantid
     db.connection.commit()
     cursor.close()
 
-
 def eliminar_mta(id_mta):
     cursor = db.connection.cursor()
     # Cambiar el estado a 'inactivo' en lugar de eliminar
@@ -918,7 +905,6 @@ def eliminar_mta(id_mta):
     cursor.execute(update_query, (id_mta,))
     db.connection.commit()
     cursor.close()
-
 
 def obtener_mtas_completos():
     cursor = db.connection.cursor()
@@ -969,7 +955,6 @@ def obtener_mtas_completos():
     cursor.close()
     return mtas
 
-
 def obtener_mta_por_id_rcm(id_rcm):
     cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
     query = "SELECT * FROM mta WHERE id_rcm = %s AND m.estado = 'activo'"
@@ -977,7 +962,6 @@ def obtener_mta_por_id_rcm(id_rcm):
     mta = cursor.fetchone()
     cursor.close()
     return mta
-
 
 def obtener_nombre_componente_por_id(componente_id):
     cursor = db.connection.cursor()
@@ -3576,10 +3560,6 @@ def obtener_rcms_con_mta_por_equipo_info(id_equipo_info):
     id_rcms = [rcm['id_rcm'] for rcm in rcms_con_mta]
     return id_rcms
 
-
-
-
-
 ###funciones desactivar
 def desactivar_mta(id_mta):
     cursor = db.connection.cursor()
@@ -3613,17 +3593,7 @@ def desactivar_equipo_info(id_equipo_in):
     db.connection.commit()
     cursor.close()
 
-
 ########################################
-
-
-
-
-
-
-
-
-
 
 def obtener_subgrupos_por_sistema(id_sistema):
     cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
