@@ -183,3 +183,11 @@ tr{
     align-items: center; /* Alinea el contenido del botón (texto e íconos) verticalmente */
     justify-content: center;
 }
+
+.herramientas{
+    max-width: 100px;
+    max-width: 100px;
+    object-fit: contain;
+    display: block;
+    margin: auto; 
+}

@@ -17,7 +17,6 @@
 
     <div class="container" id="reporte" >
         <button class="reporte no-print" id="botonPDF" data-nombre-equipo="{{ equipo.nombre_equipo }}">
-
             <img src="{{ url_for('static', filename='img/acrobata.png') }}" alt="PDF">
             <span class="text">Generar informe</span>
         </button>
@@ -44,7 +43,7 @@
         <br>
 
         <!-- Incluir FMEA -->
-        <div class="section">
+        <div class="section special-fmea">
             {% include 'FMEA.html' %}
         </div>
         <br>
