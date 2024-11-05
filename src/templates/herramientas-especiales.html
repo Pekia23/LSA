@@ -35,6 +35,7 @@
               <th scope="col">Parte número</th>
               <th scope="col">Dibujo de sección transversal</th>
               <th scope="col">Cantidad</th>
+
               <th scope="col">Costo</th>
             </tr>
           </thead>
@@ -49,6 +50,7 @@
                 {% endif %}
               </td>
               <td>{{ analisis.cantidad }}</td>
+
               <td>{{ analisis.valor }}</td>
             </tr>
             {% endfor %}
@@ -91,6 +93,7 @@
     <div class="mt-4">
 
       <a href="{{ url_for('mostrar_herramientas_especiales',id_equipo_info=id_equipo_info) }}" class="btn btn-primary no-print">Editar Herramientas</a>
+
 
     </div>
     <script src="{{ url_for('static', filename='js/mostrar_herramientas.js') }}"></script>

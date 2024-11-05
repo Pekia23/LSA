@@ -93,6 +93,7 @@
                 <td>
                   <!-- Botón de Eliminar -->
                   <form action="{{ url_for('eliminar_FMEA', fmea_id=fmea['id'],id_equipo_info=id_equipo_info) }}" method="POST" style="display:inline-block;">
+
                     <button type="submit" class="btn btn-danger btn-sm"><i class="bi bi-trash fs-5"></i></button>
                   </form>
                 </td>
@@ -100,6 +101,7 @@
                   {% if fmea['id'] in fmeas_con_rcm %}
                     <button class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar RCM">
                       <a href="{{url_for('editar_RCM', id_equipo_info=id_equipo_info,fmea_id=fmea['id'])}}">RCM  <i class="bi bi-pencil FMEA-edit"></i></a>
+
                     </button>
                   {% else %}
                     <button class="btn btn-success" data-bs-toggle="tooltip" data-bs-placement="top" title="Crear RCM">
@@ -116,6 +118,7 @@
         </div>
       <div class="mt-4">
         <button type="button" class="btn btn-primary"><a href="{{url_for('registro_FMEA',id_equipo_info=id_equipo_info)}}">Agregar modo de falla</a></button>
+
 
         <button type="button" class="btn btn-primary"><a href="{{url_for('editar_RCM_lista', id_equipo_info=id_equipo_info)}}">Ver RCM</a></button>
 

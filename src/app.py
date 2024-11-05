@@ -22,8 +22,10 @@ from reportlab.lib import colors
 
 
 from database import (
+
     obtener_id_equipo_por_equipo_info,
     obtener_id_sistema_por_equipo_info,
+
     insertar_componente_analisis_funcional,
     verificar_conexion,
     obtener_grupos_constructivos,
@@ -61,6 +63,9 @@ from database import (
 
 
     insertar_fmea,
+
+    obtener_nombre_por_id,
+
     obtener_subsistema_por_id,
     insertar_falla_funcional,
     insertar_descripcion_modo_falla,
@@ -80,6 +85,9 @@ from database import (
     obtener_flexibilidad_operacional,
     obtener_Ocurrencia,
     obtener_probablilidad_deteccion,
+
+    obtener_herramientas_por_equipo,
+
 
     obtener_fmeas,
     obtener_fmea_por_id,
@@ -123,6 +131,13 @@ from database import (
     obtener_subgrupo_constructivo_por_sistema_id,
     obtener_mta_por_id_rcm,
 
+    insertar_herramienta_relacion,
+    obtener_herramientas_generales_por_equipo,
+    obtener_herramientas_especiales_por_equipo,
+    obtener_detalle_herramienta_especial,
+    obtener_detalle_herramienta_general,
+    obtener_herramientas_relacionadas_por_equipo,
+
     ##analisis funcional
 
     obtener_analisis_funcionales_por_equipo_info,
@@ -133,6 +148,7 @@ from database import (
     obtener_subsistemas_por_equipo,
     obtener_nombre_sistema_por_id,
     obtener_subsistemas_por_equipo_mostrar,
+
 
 
 
@@ -162,6 +178,8 @@ from database import (
 
     obtener_lora_mta_por_id_mta,
     obtener_herramientas_mta_por_id_mta,
+
+    obtener_datos_herramienta,
     obtener_repuestos_mta_por_id_mta,
 
     actualizar_mta_lora,
@@ -201,6 +219,7 @@ from database import (
 
 
 
+
 )
 
 from __init__ import create_app
@@ -225,8 +244,6 @@ def handle_all_errors(error):
 
 """
 
-
-    
 @app.route('/check', methods=['GET', 'POST'])
 def check_db_connection():
     result, status_code = verificar_conexion()
@@ -604,6 +621,7 @@ def mostrar_repuestos():
         id_equipo_info = user_data.get('id_equipo_info')
     #    repuestos = obtener_repuestos_por_equipo_info(id_equipo_info)
 
+
     ##estasaqui
 
     if id_equipo_info is None:
@@ -739,8 +757,17 @@ def b64encode_filter(data):
 
 
 
+
 # app.py
 
+
+
+#Aqui se hace todo lo que tiene que ver con herramientas
+
+
+    #Analisis herramientas es herramientas generales 
+    
+#agregar herramientas generales:
 
 @app.route('/api/analisis-herramientas', methods=['POST'])
 def agregar_analisis_herramienta():
@@ -755,17 +782,20 @@ def agregar_analisis_herramienta():
     
     # Aquí se captura el archivo de dibujo seccion transversal
     dibujo_seccion_transversal = request.files.get('dibujo_seccion_transversal')
-    id_clase_herramienta = 1
+
+    id_clase_herramienta = 1  # Define que es herramienta general
+
 
     if not nombre:
         return jsonify({'error': 'Faltan datos obligatorios'}), 400
 
+
     # Convertir 'valor' a float
+
     try:
         valor = float(valor) if valor else None
     except ValueError:
         return jsonify({'error': 'El valor debe ser numérico'}), 400
-
 
     # Leer el archivo si existe
     dibujo_seccion_transversal = dibujo_seccion_transversal.read() if dibujo_seccion_transversal else None
@@ -781,15 +811,21 @@ def agregar_analisis_herramienta():
 
         
     )
+    # Todas las que yo registre apartir de esta ruta, se van a añadir a la tabla de relacion
+    # Registrar la relación en herramientas_relacion
+    insertar_herramienta_relacion(id_herramienta_requerida, id_clase_herramienta, id_equipo_info)
+
 
     return jsonify({'message': 'Análisis de herramienta agregado', 'id': analisis_id}), 200
 
 
 
 
+#editar las herramientas generales:
 @app.route('/LSA/editar-analisis-herramienta/<int:id_analisis>', methods=['GET'])
 def editar_analisis_herramienta(id_analisis):
     token = g.user_token
+    #se cargan las herramientas
     analisis = obtener_analisis_herramienta_por_id(id_analisis)
     if analisis is None:
         return "Análisis no encontrado", 404
@@ -809,6 +845,7 @@ def actualizar_analisis_herramienta_route(id_analisis):
     dibujo_seccion_transversal = request.files.get('dibujo_seccion_transversal')
     cantidad = request.form.get('cantidad')
 
+
     if not nombre or not id_tipo_herramienta:
         return jsonify({'error': 'Faltan datos obligatorios'}), 400
 
@@ -825,6 +862,7 @@ def actualizar_analisis_herramienta_route(id_analisis):
         dibujo_data = analisis['dibujo_seccion_transversal']
 
     actualizar_analisis_herramienta(id_analisis, nombre, valor, parte_numero, dibujo_seccion_transversal,cantidad)
+
 
     return jsonify({'message': 'Análisis de herramienta actualizado'}), 200
 
@@ -861,14 +899,14 @@ def agregar_herramienta_especial():
     id_tipo_herramienta = request.form.get('tipo_herramienta')
     cantidad = request.form.get('cantidad')
 
+    id_clase_herramienta = 2  # Define que es herramienta especial
 
-
-    id_clase_herramienta = 2
 
     if not nombre_herramienta or not id_tipo_herramienta:
         return jsonify({'error': 'Faltan datos obligatorios'}), 400
 
     # Convertir 'valor' a float
+
     try:
         valor = float(valor) if valor else None
     except ValueError:
@@ -886,12 +924,15 @@ def agregar_herramienta_especial():
         manual_referencia, id_tipo_herramienta, cantidad,
         id_herramienta_requerida,id_clase_herramienta  # Asegurarse de pasar el id_herramienta_requerida aquí
     )
+    insertar_herramienta_relacion(id_herramienta_requerida, id_clase_herramienta, id_equipo_info)
+
 
     return jsonify({'message': 'Herramienta especial agregada', 'id': herramienta_id}), 200
 
 
 @app.route('/LSA/mostrar-herramientas-especiales', methods=['GET'])
 def mostrar_herramientas_especiales():
+
 
 
     # Priorizar el parámetro de URL 'id_equipo_info' si está presente
@@ -907,17 +948,54 @@ def mostrar_herramientas_especiales():
         herramientas = obtener_herramientas_especiales_por_equipo(id_equipo_info)
 
 
+
     if id_equipo_info is None:
         return redirect(url_for('registro_generalidades'))
 
-    analisis = obtener_analisis_herramientas_por_equipo(id_equipo_info)
-    herramientas = obtener_herramientas_especiales_por_equipo(id_equipo_info)
 
+    #analisis = obtener_analisis_herramientas_por_equipo(id_equipo_info)
+    #herramientas = obtener_herramientas_especiales_por_equipo(id_equipo_info)
+
+
+    # Obtener herramientas relacionadas para el equipo desde la tabla de relaciones
+    herramientas_relacionadas = obtener_herramientas_relacionadas_por_equipo(id_equipo_info)
+    print("Herramientas relacionadas:", herramientas_relacionadas)
+
+    # Inicializar listas para análisis (herramientas generales) y herramientas especiales
+    analisis = []
+    herramientas = []
+
+    # Agregar herramientas registradas directamente en herramientas_generales
+    analisis_directas = obtener_analisis_herramientas_por_equipo(id_equipo_info)
+    analisis.extend(analisis_directas)  # Añadir al listado de análisis
+
+    # Agregar herramientas registradas directamente en herramientas_especiales
+    herramientas_directas = obtener_herramientas_especiales_por_equipo(id_equipo_info)
+    herramientas.extend(herramientas_directas)  # Añadir al listado de herramientas especiales
+
+    # Paso 2: Filtrar y obtener detalles completos para herramientas generales y especiales desde herramientas_relacion
+    for relacion in herramientas_relacionadas:
+        id_herramienta = relacion['id_herramienta']
+        id_clase_herramienta = relacion['id_clase_herramienta']
+
+        if id_clase_herramienta == 1:
+            # Si es herramienta general, obtener los detalles de herramientas_generales
+            herramienta_general = obtener_detalle_herramienta_general(id_herramienta)
+            if herramienta_general:
+                analisis.append(herramienta_general)
+        elif id_clase_herramienta == 2:
+            # Si es herramienta especial, obtener los detalles de herramientas_especiales
+            herramienta_especial = obtener_detalle_herramienta_especial(id_herramienta)
+            if herramienta_especial:
+                herramientas.append(herramienta_especial)
+
+    # Renderizar el template con los datos de análisis y herramientas especiales
     return render_template(
         'mostrar_herramientas-especiales.html',
         analisis=analisis,
         herramientas=herramientas
     )
+
 
 @app.route('/LSA/registro-herramientas-especiales', methods=['GET'])
 def registro_herramientas_especiales():
@@ -981,6 +1059,7 @@ def actualizar_herramienta_especial_route(id_herramienta):
         herramienta = obtener_herramienta_especial_por_id(id_herramienta)
         dibujo_data = herramienta['dibujo_seccion_transversal']
 ##si algo raro pasa es por pasar como dibujo_Data la imagen viendo que luego se utiliza como dibujo seccion transversal
+
     actualizar_herramienta_especial(
         id_herramienta, parte_numero, nombre_herramienta, valor,
         dibujo_data, nota, manual_referencia, id_tipo_herramienta, cantidad
@@ -1027,79 +1106,13 @@ def eliminar_herramienta_especial_route(id_herramienta):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 @app.before_request
 def cargar_id_equipo_info():
     # Asignamos el id_equipo_info de la sesión si está disponible
     g.id_equipo_info = session.get('id_equipo_info')
     print(f"Token en before_request: {g.user_token}")
     print(f"id_equipo_info en sesión: {g.id_equipo_info}")
+
 
 
 
@@ -1120,11 +1133,13 @@ def editar_FMEA_lista(id_equipo_info):
                 session['id_equipo_info'] = id_equipo_info
 
 
+
     print(f'El id del equipo info es: {id_equipo_info}')
     fmeas = obtener_fmeas(id_equipo_info) #Estoy llamando los fmeas para que salgan en la lista
     #print(f'Para la lista{fmeas}')
     fmeas_con_rcm = obtener_fmeas_con_rcm()
     return render_template('editar_FMEA.html', fmeas=fmeas, fmeas_con_rcm=fmeas_con_rcm, id_equipo_info=id_equipo_info)
+
 
 
 
@@ -1140,6 +1155,7 @@ def editar_FMEA(id_equipo_info,fmea_id):
         id_equipo_info = user_data.get('id_equipo_info')
 
 
+
     subsistema_id = session.get('subsistema_id')
     # Obtener los datos del FMEA a partir del ID
     fmea = obtener_fmea_por_id(fmea_id, id_equipo_info)
@@ -1147,6 +1163,7 @@ def editar_FMEA(id_equipo_info,fmea_id):
     print(f'\n\n\n\n{fmea}\n\n\n\n') 
     # Cargar la información del sistema
     sistema = session.get('subsistema_id')
+
     sistema_id = fmea_id.get('id_sistema')
     print(f'\n\n\n\n{sistema_id}\n\n\n\n')
     #Obtener datos para desplegables
@@ -1194,6 +1211,7 @@ def guardar_cambios_fmea(fmea_id,id_equipo_info):
         token = g.user_token
         user_data = obtener_info_usuario(token)
         id_equipo_info = user_data.get('id_equipo_info')
+
 
     # Los siguientes campos no cambian
     id_equipo_info = obtener_id_equipo_info_por_fmea(fmea_id)
@@ -1255,6 +1273,7 @@ def guardar_cambios_fmea(fmea_id,id_equipo_info):
 
 
 
+
 @app.route('/LSA/eliminar-FMEA/<int:fmea_id>/<int:id_equipo_info>', methods=['POST'])
 def eliminar_FMEA(fmea_id,id_equipo_info):
 
@@ -1266,6 +1285,7 @@ def eliminar_FMEA(fmea_id,id_equipo_info):
     
 
     cursor = db.connection.cursor()
+
     #Obtener el id_consecutivo_modo_falla del registro a eliminar desde la tabla fmea
     cursor.execute("SELECT id_consecutivo_modo_falla FROM fmea WHERE id = %s", (fmea_id,))
     result = cursor.fetchone()
@@ -1316,6 +1336,7 @@ def editar_RCM(id_equipo_info,fmea_id):
     rcm = obtener_rcm_por_fmea(fmea_id)
     acciones = obtener_lista_acciones_recomendadas()
     return render_template('registro_rcm.html', rcm=rcm, editar=True, acciones=acciones,id_equipo_info=id_equipo_info)
+
 
 @app.route('/LSA/equipo/editar_RCM_lista/<int:id_equipo_info>')
 def editar_RCM_lista(id_equipo_info):
@@ -1602,6 +1623,10 @@ def mostrar_analisis_herramientas():
     return render_template('mostrar_analisis-herramientas.html')
 
 
+@app.route('/LSA/equipo/mostrar-repuestos')
+def mostrar_repuesto():
+    return render_template('mostrar_repuesto.html')
+
 
 @app.route('/LSA/equipo/mostrar-informe')
 def mostrar_informe():
@@ -1631,11 +1656,13 @@ def registro_MTA(fmea_id):
         id_equipo_info = user_data.get('id_equipo_info')
     
 
+
     if fmea_id:
         # Obtener los datos de FMEA por su ID
         fmea = obtener_fmea_por_id(fmea_id,id_equipo_info)  #obtenemos los nombres en los compos de fmea
         fmea_id = obtener_ID_FMEA(fmea_id) # optenermos el id de fmea 
         print(f'\nfmea:{fmea}\n\nfmea_id:{fmea_id}\n\n') #imprimo a ver
+
         # Variables precargadas desde el FMEA
         sistema = fmea.get('id_sistema')
         componente = fmea.get('id_componente')
@@ -1667,6 +1694,7 @@ def registro_MTA(fmea_id):
                            rcm=rcm,
                            id_equipo_info=id_equipo_info
                            )
+
 @app.route('/LSA/equipo/editar-MTA/<int:rcm_id>/<int:id_equipo_info>')
 def editar_MTA(rcm_id,id_equipo_info):
     # Priorizar el parámetro de URL 'id_equipo_info' si está presente
@@ -1680,6 +1708,7 @@ def editar_MTA(rcm_id,id_equipo_info):
         token = g.user_token
         user_data = obtener_info_usuario(token)
         id_equipo_info = user_data.get('id_equipo_info')
+
 
     mta = obtener_mta_por_id_rcm(rcm_id)
     rcm = obtener_rcm_por_id(mta['id_rcm'])
@@ -1723,6 +1752,7 @@ def eliminar_MTA(mta_id,id_equipo_info):
     # Aseguramos que 'id_equipo_info' tiene un valor antes de continuar
     if not id_equipo_info:
         return "Error: 'id_equipo_info' no encontrado", 400
+
     eliminar_herramientas_requeridas_mta(mta_id)
     eliminar_repuestos_requeridos_mta(mta_id)
     eliminar_mta(mta_id)
@@ -1744,6 +1774,7 @@ def editar_MTA_lista(id_equipo_info):
 
     # Ahora 'id_equipo_info' debería tener un valor válido
     
+
     mtas = obtener_mta_por_equipo_info(id_equipo_info)
     herramientas = obtener_herramientas_especiales_por_equipo(id_equipo_info)
     repuestos = obtener_repuestos_por_equipo_info(id_equipo_info)
@@ -1765,16 +1796,20 @@ def guardar_MTA(fmea_id,id_equipo_info):
         id_equipo_info = user_data.get('id_equipo_info')
 
      # Obtener los datos del formulario
+
     fmea = obtener_ID_FMEA(fmea_id)
     rcm = obtener_rcm_por_fmea(fmea_id)
     id_sistema = fmea.get('id_sistema')
     id_componente = fmea.get('id_componente')
     # id_falla_funcional = fmea_id.get('id_falla_funcional')
+
     id_tipo_mantenimiento = request.form.get('tipo_mantenimiento')
     id_tarea_mantenimiento = request.form.get('tarea_mantenimiento')
     cantidad_personal = request.form.get('personal_requerido')
     consumibles_requeridos = request.form.get('consumibles_requeridos')
-    # repuestos_requeridos = request.form.get('repuestos_requeridos')
+
+    #repuestos_requeridos = request.form.get('repuestos_requeridos')
+
     requeridos_tarea = request.form.get('requeridos_tarea')
     condiciones_ambientales = request.form.get('condiciones_requeridas_ambientales')
     condiciones_estado_equipo = request.form.get('condiciones_requeridas_estado_equipo')
@@ -1787,40 +1822,66 @@ def guardar_MTA(fmea_id,id_equipo_info):
     actividades = request.form.get('actividades')
     operario = request.form.get('operario')
 
-     # Recuperar la lista de checkboxes seleccionados
+
+
+    # Recuperar la lista de checkboxes seleccionados
     selected_repuestos_json = request.form.get('selected_repuestos')
     selected_repuestos = json.loads(selected_repuestos_json) if selected_repuestos_json else []
 
-    # Recuperar la lista de checkboxes seleccionados
+    # Decodificar el JSON de herramientas seleccionadas en una lista
     selected_herramientas_json = request.form.get('selected_herramientas')
-    selected_herramientas = json.loads(selected_herramientas_json) if selected_repuestos_json else []
+    selected_herramientas = json.loads(selected_herramientas_json) if selected_herramientas_json else []
+    print("Herramientas seleccionadas:", selected_herramientas)  # Para depuración
 
+    # Obtener nombres de las herramientas seleccionadas y luego sus datos
+    nombres_herramientas = []
+    ids_herramientas = []
+    for herramienta_id in selected_herramientas:
+        nombre = obtener_nombre_por_id('herramientas_requeridas', herramienta_id , columna_id='id_herramienta_requerida')
+        if nombre:
+            nombres_herramientas.append(nombre)
+            id_herramienta, id_clase_herramienta = obtener_datos_herramienta(nombre)
+            if id_herramienta:
+                ids_herramientas.append((id_herramienta, id_clase_herramienta))
+
+    print("Datos de herramientas seleccionadas:", ids_herramientas)  # Para ver los ID y clase de herramienta
 
     # Ahora puedes usar la lista de repuestos seleccionados
     print(selected_repuestos)
-    print(selected_herramientas)
 
-    #aca viene la logica pa añadir los datos a sus tablas y devolver el id que sera pasado a insertar_mta
+    # Insertar relaciones en la tabla herramientas_relacion
+    for id_herramienta, id_clase_herramienta in ids_herramientas:
+        insertar_herramienta_relacion(id_herramienta, id_clase_herramienta, id_equipo_info)
     
-    # Guardar en la base de datos
-    insertar_mta(rcm['id'], fmea['id_equipo_info'], id_sistema, id_componente, fmea['id_falla_funcional'], fmea['id_descripcion_modo_falla'], id_tipo_mantenimiento, id_tarea_mantenimiento, cantidad_personal, consumibles_requeridos ,requeridos_tarea,condiciones_ambientales, condiciones_estado_equipo, condiciones_especiales,  horas, minutos, detalle_tarea)
+    # Guardar los datos en la base de datos
+    insertar_mta(rcm['id'], fmea['id_equipo_info'], id_sistema, id_componente, 
+                 fmea['id_falla_funcional'], fmea['id_descripcion_modo_falla'], 
+                 id_tipo_mantenimiento, id_tarea_mantenimiento, cantidad_personal, 
+                 consumibles_requeridos, requeridos_tarea, condiciones_ambientales, 
+                 condiciones_estado_equipo, condiciones_especiales, horas, minutos, detalle_tarea)
+    
+    # Obtener el ID del registro MTA recién creado
     id_mta = obtener_max_id_mta()
+
+
     if(selected_repuestos):
         insertar_repuestos_requeridos_mta(selected_repuestos, id_mta)
-    if(selected_herramientas):
+    # Insertar herramientas seleccionadas en la tabla correspondiente si existen
+    if selected_herramientas:
         insertar_herramientas_requeridas_mta(selected_herramientas, id_mta)
-    if(nivel and actividades and operario):
+    
+    # Insertar datos en tabla LORA-MTA si los valores están presentes
+    if nivel and actividades and operario:
         insertar_mta_lora(nivel, actividades, operario, id_mta)
 
-
-    return redirect(url_for('editar_MTA_lista',id_equipo_info=id_equipo_info))
-
+    # Redireccionar a la página de edición o lista
+    return redirect(url_for('editar_MTA_lista', id_equipo_info=id_equipo_info))
 
 
 #actualizar mta
 @app.route('/LSA/actualizar-MTA/<int:mta_id>/<int:id_equipo_info>', methods=['POST'])
 def actualizar_MTA(mta_id,id_equipo_info):
-    
+
     if not id_equipo_info:
         id_equipo_info = session.get('id_equipo_info')
         if not id_equipo_info:
@@ -1896,6 +1957,7 @@ def mostrar_MTA():
 
 
 
+
 ##############################################################################################################
 
 @app.route('/LSA/registro-RCM')
@@ -1923,6 +1985,7 @@ def registro_FMEA():
 
     #id_equipo = user_data.get('id_equipo') or session.get('id_equipo')
 
+
     # Si el id_equipo no está en la sesión, lo añadimos
     if id_equipo:
         session['id_equipo'] = id_equipo
@@ -1943,6 +2006,7 @@ def registro_FMEA():
     costos_reparacion_datos = obtener_costos_reparacion()
     flexibilidad_operacional_datos = obtener_flexibilidad_operacional()
     ocurrencia_datos = obtener_Ocurrencia()
+
     probabilidad_deteccion_datos = obtener_probablilidad_deteccion()
     lista_riesgos = obtener_lista_riesgos() or []
     AOR = session.get('AOR')
@@ -2004,6 +2068,7 @@ def guardar_fmea(id_equipo_info):
     
 
     #id_equipo = user_data.get('id_equipo') or session.get('id_equipo')
+
 
     # Obtener id_sistema usando obtener_equipo_info
     equipo_info = obtener_equipo_info(id_equipo_info)
@@ -2226,11 +2291,13 @@ def crear_RCM(fmea_id,id_equipo_info):
 
   
 
+
     fmea = obtener_fmea_por_id(fmea_id,id_equipo_info)
     acciones = obtener_lista_acciones_recomendadas()
     if fmea:
         print(fmea)
         return render_template('registro_rcm.html',id_equipo_info=id_equipo_info, fmea=fmea, acciones=acciones, editar = False)
+
     else:
         print("no tiene")
         return "FMEA no encontrado", 404
@@ -2247,6 +2314,7 @@ def guardar_RCM(fmea_id):
         user_data = obtener_info_usuario(token)
         id_equipo_info = user_data.get('id_equipo_info')
     
+
     rcm = {
         'id_fmea': fmea_id,
         'sistema': request.form.get('sistema'),
@@ -2296,6 +2364,7 @@ def actualizar_RCM(fmea_id,id_equipo_info):
      
 
 
+
     # Obtener los datos del formulario
     rcm = {
         'id_fmea': fmea_id,
@@ -2320,12 +2389,12 @@ def actualizar_RCM(fmea_id,id_equipo_info):
         'id_accion_recomendada': request.form.get('accion_recomendada')
     }
 
-    
 
     # Actualizar el registro RCM con los nuevos datos
     actualizar_rcm(rcm)
 
     # Redireccionar después de guardar los cambios
+
     return redirect(url_for('editar_RCM_lista',id_equipo_info=id_equipo_info,fmea_id=fmea_id))
 
 #eliminar rcm
@@ -2341,6 +2410,7 @@ def eliminar_RCM(id_rcm,id_equipo_info,fmea_id):
         id_equipo_info = user_data.get('id_equipo_info')
     eliminar_rcm(fmea_id,id_rcm)
     return redirect(url_for('editar_RCM_lista',id_equipo_info=id_equipo_info,fmea_id=fmea_id))
+
 
 
 
@@ -2369,6 +2439,7 @@ def mostrar_analisis_funcional():
  
     # Obtén el id_sistema desde la tabla equipo_info usando el id_equipo_info
     
+
     sistema_nombre = obtener_nombre_sistema_por_id(id_sistema)
 
     # Si no se proporciona id_sistema, el sistema es None
@@ -2653,8 +2724,10 @@ def check_nombre_equipo():
     else:
         return jsonify({'exists': False})
 
+
 def status404(error):
     return '<h1>La pagina no se encuentra, buscalo por otro lado</h1>',404
+
 
 
 @app.before_request
@@ -2669,9 +2742,11 @@ def before_request():
 
 
 
+
 if __name__ == '__main__':
     app.register_error_handler(404, status404)
     app.run()
+
 
 
 

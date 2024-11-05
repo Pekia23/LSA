@@ -71,6 +71,7 @@
                                     <button class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="top"
                                             title="Editar RCM">
                                         <a href="{{ url_for('editar_RCM', fmea_id=rcm['id_fmea'],id_equipo_info=id_equipo_info) }}"> RCM<i
+
                                                 class="bi bi-pencil FMEA-edit"></i></a>
                                     </button>
                                 </td>
@@ -79,6 +80,7 @@
                                     <button class="btn btn-danger mta" data-bs-toggle="tooltip" data-bs-placement="top"
                                             title="Eliminar RCM">
                                         <a href="{{ url_for('eliminar_RCM', fmea_id=rcm['id_fmea'],id_rcm=rcm['id'],id_equipo_info=id_equipo_info) }}">RCM<i
+
                                                 class="bi bi-trash FMEA-edit"></i></a>
                                     </button>
                                 </td>
@@ -88,6 +90,7 @@
                                         <button class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="top"
                                                 title="Editar MTA">
                                             <a href="{{ url_for('editar_MTA', rcm_id=rcm['id'],id_equipo_info=id_equipo_info) }}"> MTA <i
+
                                                     class="bi bi-pencil FMEA-edit"></i></a>
                                         </button>
                                     {% else %}

@@ -20,6 +20,7 @@
     <br>
     <form id="fmea-form" method="POST"
         action="{% if editar %}{{ url_for('guardar_cambios_fmea', fmea_id=fmea['id'],id_equipo_info=id_equipo_info) }}{% else %}{{ url_for('guardar_fmea',fmea_id=fmea['id'],id_equipo_info=id_equipo_info) }}{% endif %}">
+
         <div class="row mt-3">
             <div class="col-md-4">
                 <label for="subsistema" class="form-label">Subsistema</label>

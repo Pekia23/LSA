@@ -4,9 +4,6 @@ from functools import wraps
 
 
 
-
-
-
 """
 
 def obtener_componentes_por_subsistema(subsistema_id):
@@ -476,8 +473,10 @@ def insertar_fmea(id_equipo_info, id_sistema, id_falla_funcional, id_componente,
 #Funciones para mostrar fmea
 
 #funcion para poder obtener los nombres que estan ligados al id resgistrados en una tabla
-def obtener_nombre_por_id(tabla, id):
+
+def obtener_nombre_por_id(tabla, id, columna_id='id'):
     cursor = db.connection.cursor()
+    
 
     # Verificar si la tabla tiene la columna 'nombre'
     query_column_check = f"SHOW COLUMNS FROM {tabla} LIKE 'nombre'"
@@ -485,18 +484,20 @@ def obtener_nombre_por_id(tabla, id):
     columna_existe = cursor.fetchone()
 
     if columna_existe:  # Si la columna 'nombre' existe
-        query = f"SELECT nombre FROM {tabla} WHERE id = %s"
+
+        # Usar el nombre de columna dinámico en el WHERE
+        query = f"SELECT nombre FROM {tabla} WHERE {columna_id} = %s"
         cursor.execute(query, (id,))
         resultado = cursor.fetchone()
         cursor.close()
 
         if resultado:
             return resultado['nombre']
-    else:  # Si no existe, devolver un valor por defecto
+
+    else:
         cursor.close()
         return None
 
-    return None
 
 
 #No me acuerdo pa que sirve pero no la quiero eliminar por si acaso
@@ -515,6 +516,7 @@ def obtener_nombre_por_id(tabla, id):
 
 def obtener_fmeas(id_equipo_info):
     print(f"Llamada a obtener_fmeas con id_equipo_info={id_equipo_info}")
+
 
     cursor = db.connection.cursor()
 
@@ -603,6 +605,7 @@ def obtener_fmeas(id_equipo_info):
 
     print("Resultados de la consulta FMEAs:", fmeas)
 
+
     # Lista para almacenar los FMEAs procesados
     fmeas_completos = []
 
@@ -686,6 +689,7 @@ def obtener_fmeas(id_equipo_info):
 
         })
     print("FMEAs completos procesados:", fmeas_completos)
+
     return fmeas_completos
 
 
@@ -975,6 +979,134 @@ def obtener_mta_por_id_rcm(id_rcm):
     return mta
 
 
+"""
+1RO para la funcion de mostrar herramientas necesito que haga una peticion a la base de datos de herramientas
+relaciones y que me devuelva todas las herramientas que tienen el id_equipo_info y me va a devolver los datos en la columna id_herramienta y en la id_clase_herramienta
+luego un print para ver que me devolivo, despues de eso, voy a hacer otra peticion para mostrar donde en la variable analisis se va a hacer una funcion
+que busque en la base de datos de herramientas_generales las que tengan el id_clase_herramienta 1 donde por cada dato que obtuve en el filtrado de herramientas relaciones
+voy a hacer una peticion para que se me devulva toda la fila que contiene ese id_herramienta, y la misma logica con herramientas especiales que se guarda en la variable herramientas
+"""
+#######################
+def obtener_herramientas_relacionadas_por_equipo(id_equipo_info):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = """
+        SELECT id_herramienta, id_clase_herramienta
+        FROM herramientas_relacion
+        WHERE id_equipo_info = %s
+    """
+    cursor.execute(query, (id_equipo_info,))
+    herramientas_relacionadas = cursor.fetchall()
+    cursor.close()
+    return herramientas_relacionadas
+
+def obtener_detalle_herramienta_general(id_herramienta):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = """
+        SELECT * FROM herramientas_generales
+        WHERE id = %s
+    """
+    cursor.execute(query, (id_herramienta,))
+    herramienta_general = cursor.fetchone()
+    cursor.close()
+    return herramienta_general
+
+def obtener_detalle_herramienta_especial(id_herramienta):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = """
+        SELECT * FROM herramientas_especiales
+        WHERE id = %s
+    """
+    cursor.execute(query, (id_herramienta,))
+    herramienta_especial = cursor.fetchone()
+    cursor.close()
+    return herramienta_especial
+
+#######################
+def obtener_datos_herramienta(nombre_herramienta):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)  # Usar un cursor de diccionario para acceder por nombre de columna
+
+    # Buscar el id_clase_herramienta en la tabla herramientas_requeridas usando el nombre de la herramienta
+    query = "SELECT id_clase_herramienta FROM herramientas_requeridas WHERE nombre = %s"
+    cursor.execute(query, (nombre_herramienta,))
+    resultado = cursor.fetchone()
+    
+    # Si no se encuentra la herramienta, devolver None para ambos valores
+    if not resultado:
+        cursor.close()
+        return None, None
+
+    # Extraer id_clase_herramienta del resultado
+    id_clase_herramienta = resultado.get('id_clase_herramienta')
+
+    # Determinar en cuál tabla buscar según el valor de id_clase_herramienta
+    if id_clase_herramienta == 1:
+        tabla_busqueda = 'herramientas_generales'
+        columna_nombre = 'nombre'
+    elif id_clase_herramienta == 2:
+        tabla_busqueda = 'herramientas_especiales'
+        columna_nombre = 'nombre_herramienta'
+    else:
+        cursor.close()
+        return None, id_clase_herramienta
+
+    # Ejecutar la consulta para obtener el ID de la herramienta en la tabla correspondiente
+    query = f"SELECT id FROM {tabla_busqueda} WHERE {columna_nombre} = %s"
+    cursor.execute(query, (nombre_herramienta,))
+    resultado = cursor.fetchone()
+    cursor.close()
+
+    # Si se encuentra un ID en la tabla específica, devolver el ID y el id_clase_herramienta
+    if resultado:
+        return resultado.get('id'), id_clase_herramienta
+    else:
+        return None, id_clase_herramienta
+
+def insertar_herramienta_relacion(id_herramienta, id_clase_herramienta, id_equipo_info):
+    cursor = db.connection.cursor()
+
+    # Inserta la relación en la tabla herramientas_relacion
+    query = """
+        INSERT INTO herramientas_relacion (id_herramienta, id_clase_herramienta, id_equipo_info)
+        VALUES (%s, %s, %s)
+    """
+    try:
+        cursor.execute(query, (id_herramienta, id_clase_herramienta, id_equipo_info))
+        db.connection.commit()  # Confirma los cambios en la base de datos
+        print(f"Relación insertada: Herramienta ID {id_herramienta}, Clase {id_clase_herramienta}, Equipo {id_equipo_info}")
+    except Exception as e:
+        db.connection.rollback()  # Revertir cambios si ocurre un error
+        print("Error al insertar la relación:", e)
+    finally:
+        cursor.close()
+    
+    
+def obtener_herramientas_generales_por_equipo(id_equipo_info):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = "SELECT * FROM `herramientas_relacion` WHERE id_equipo_info = %s;"
+    cursor.execute(query, (id_equipo_info,))
+    herramientas_relacion = cursor.fetchall()
+    query = "SELECT * FROM `herramientas_generales` WHERE id_tipo_herramienta = 1;"
+    cursor.execute(query)
+    herramientas_generales = cursor.fetchall()
+    cursor.close()
+    print("herramientas_relacion:", herramientas_relacion)
+    print("herramientas_generales:", herramientas_generales)
+    return herramientas_generales
+
+def obtener_herramientas_especiales_por_equipo(id_equipo_info):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = """
+        SELECT he.*, hr.id_equipo_info 
+        FROM herramientas_especiales he
+        JOIN herramientas_relacion hr ON he.id = hr.id_herramienta
+        WHERE hr.id_clase_herramienta = 2 AND hr.id_equipo_info = %s
+    """
+    cursor.execute(query, (id_equipo_info,))
+    herramientas_especiales = cursor.fetchall()
+    cursor.close()
+    return herramientas_especiales
+
+
 def obtener_nombre_componente_por_id(componente_id):
     cursor = db.connection.cursor()
     query = "SELECT nombre FROM componentes WHERE id = %s"
@@ -1135,6 +1267,7 @@ def actualizar_analisis_herramienta(id_analisis, nombre, valor, parte_numero,dib
     """
     cursor.execute(query, (nombre, valor, parte_numero,dibujo_seccion_transversal,cantidad, id_analisis))
 
+
     db.connection.commit()
     cursor.close()
 
@@ -1145,6 +1278,47 @@ def eliminar_analisis_herramienta(id_analisis):
     cursor.execute(query, (id_analisis,))
     db.connection.commit()
     cursor.close()
+
+
+def obtener_herramientas_por_equipo(id_equipo_info):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    
+    # Obtener herramientas relacionadas con el equipo
+    query = """
+        SELECT hr.id_clase_herramienta, hr.id_herramienta 
+        FROM herramientas_relacion hr 
+        WHERE hr.id_equipo_info = %s
+    """
+    cursor.execute(query, (id_equipo_info,))
+    relaciones = cursor.fetchall()
+    
+    herramientas = []
+    
+    for relacion in relaciones:
+        id_clase_herramienta = relacion['id_clase_herramienta']
+        id_herramienta = relacion['id_herramienta']
+        
+        if id_clase_herramienta == 1:
+            # Buscar en herramientas_generales
+            query_general = "SELECT * FROM herramientas_generales WHERE id = %s"
+            cursor.execute(query_general, (id_herramienta,))
+            herramienta = cursor.fetchone()
+            if herramienta:
+                herramienta['tipo'] = 'general'
+                herramientas.append(herramienta)
+        
+        elif id_clase_herramienta == 2:
+            # Buscar en herramientas_especiales
+            query_especial = "SELECT * FROM herramientas_especiales WHERE id = %s"
+            cursor.execute(query_especial, (id_herramienta,))
+            herramienta = cursor.fetchone()
+            if herramienta:
+                herramienta['tipo'] = 'especial'
+                herramientas.append(herramienta)
+    
+    cursor.close()
+    return herramientas
+
 
 
 #Herramientas especiales:
@@ -2497,24 +2671,7 @@ def obtener_repuesto_por_id(id_repuesto):
 
 # database.py
 
-def insertar_analisis_herramienta(nombre, valor, id_equipo_info, parte_numero, id_herramienta_requerida,
-                                  id_tipo_herramienta, id_clase_herramienta,dibujo_seccion_transversal):
-    cursor = db.connection.cursor()
-    query = """
-        INSERT INTO herramientas_generales (
-            nombre, valor, id_equipo_info, parte_numero, id_herramienta_requerida, id_tipo_herramienta,id_clase_herramienta,dibujo_seccion_transversal
 
-        )
-        VALUES (%s, %s, %s, %s, %s, %s, %s,%s)
-    """
-
-    cursor.execute(query, (
-    nombre, valor, id_equipo_info, parte_numero, id_herramienta_requerida, id_tipo_herramienta, id_clase_herramienta,dibujo_seccion_transversal))
-
-    db.connection.commit()
-    analisis_id = cursor.lastrowid
-    cursor.close()
-    return analisis_id
 
 
 def obtener_analisis_herramienta_por_id(id_analisis):
@@ -2533,6 +2690,7 @@ def obtener_analisis_herramientas_por_equipo(id_equipo_info):
     analisis = cursor.fetchall()
     cursor.close()
     return analisis
+
 
 
 
@@ -2592,6 +2750,23 @@ def obtener_herramientas_especiales_por_equipo(id_equipo_info):
     cursor.close()
     return herramientas
 
+
+########################################
+def obtener_ids_herramientas_relacionadas(id_equipo_info, clase_herramienta):
+    cursor = db.connection.cursor()
+    query = """
+        SELECT id_herramienta
+        FROM herramientas_equipo_info
+        WHERE id_equipo_info = %s AND id_clase_herramienta = %s
+    """
+    cursor.execute(query, (id_equipo_info, clase_herramienta))
+    resultados = cursor.fetchall()
+    cursor.close()
+    # Extraemos solo los IDs en una lista
+    ids_herramientas = [row[0] for row in resultados]
+    return ids_herramientas
+
+########################################
 
 def actualizar_herramienta_especial(
         id_herramienta, parte_numero, nombre_herramienta, valor,
@@ -2785,6 +2960,7 @@ def obtener_fmeas_con_rcm():
     # Extraer solo los id_fmea de los resultados
     id_fmeas = [fmea['id_fmea'] for fmea in fmeas_con_rcm]
     return id_fmeas
+
 
 
 
@@ -3745,6 +3921,7 @@ def check_nombre_equipo_exists(nombre_equipo):
     result = cursor.fetchone()
     cursor.close()
     return result['count'] > 0
+
 
 
 
