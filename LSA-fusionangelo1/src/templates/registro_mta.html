@@ -234,7 +234,7 @@
                     </div>
                 </form>
             {% else %}
-                <form id="mta-form" method="POST" action="{{ url_for('guardar_MTA', fmea_id=fmea['id']) }}">
+                <form id="mta-form" method="POST" action="{{ url_for('guardar_MTA', fmea_id=fmea['id'],id_equipo_info=id_equipo_info) }}">
                 <div class="row">
                     <div class="col-md-4">
                         <label for="sistema" class="form-label">Sistema</label>

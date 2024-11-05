@@ -1620,6 +1620,9 @@ def registro_MTA(fmea_id):
 
     # Priorizar el parámetro de URL 'id_equipo_info' si está presente
     id_equipo_info = request.args.get('id_equipo_info')
+    id_equipo_info_query = request.args.get('id_equipo_info')
+    if id_equipo_info_query:
+        id_equipo_info = id_equipo_info_query
 
     if not id_equipo_info:
         # Si no se recibe el parámetro, se toma el de la sesión
@@ -1661,7 +1664,8 @@ def registro_MTA(fmea_id):
                            herramientas = herramientas,
                            herramientas_por_tipo = dict_herramientas_por_tipo,
                            repuestos = repuestos,
-                           rcm=rcm
+                           rcm=rcm,
+                           id_equipo_info=id_equipo_info
                            )
 @app.route('/LSA/equipo/editar-MTA/<int:rcm_id>/<int:id_equipo_info>')
 def editar_MTA(rcm_id,id_equipo_info):
@@ -1705,14 +1709,20 @@ def editar_MTA(rcm_id,id_equipo_info):
 @app.route('/LSA/eliminar-MTA/<int:mta_id>/<int:id_equipo_info>')
 def eliminar_MTA(mta_id,id_equipo_info):
 
-    # Priorizar el parámetro de URL 'id_equipo_info' si está presente
-    id_equipo_info = request.args.get('id_equipo_info')
+    # Si existe un parámetro de consulta 'id_equipo_info', lo usamos para sobrescribir el de la URL
+    id_equipo_info_query = request.args.get('id_equipo_info')
+    if id_equipo_info_query:
+        id_equipo_info = id_equipo_info_query
 
+    # Si todavía no tenemos 'id_equipo_info', lo obtenemos de la sesión o del usuario
     if not id_equipo_info:
-        # Si no se recibe el parámetro, se toma el de la sesión
         token = g.user_token
         user_data = obtener_info_usuario(token)
         id_equipo_info = user_data.get('id_equipo_info')
+
+    # Aseguramos que 'id_equipo_info' tiene un valor antes de continuar
+    if not id_equipo_info:
+        return "Error: 'id_equipo_info' no encontrado", 400
     eliminar_herramientas_requeridas_mta(mta_id)
     eliminar_repuestos_requeridos_mta(mta_id)
     eliminar_mta(mta_id)
@@ -1744,13 +1754,16 @@ def editar_MTA_lista(id_equipo_info):
 @app.route('/LSA/registro-MTA/<int:fmea_id>/<int:id_equipo_info>', methods=['POST'])
 def guardar_MTA(fmea_id,id_equipo_info):
     # Priorizar el parámetro de URL 'id_equipo_info' si está presente
-    id_equipo_info = request.args.get('id_equipo_info')
+    id_equipo_info_query = request.args.get('id_equipo_info')
+    if id_equipo_info_query:
+        id_equipo_info = id_equipo_info_query
 
     if not id_equipo_info:
         # Si no se recibe el parámetro, se toma el de la sesión
         token = g.user_token
         user_data = obtener_info_usuario(token)
         id_equipo_info = user_data.get('id_equipo_info')
+
      # Obtener los datos del formulario
     fmea = obtener_ID_FMEA(fmea_id)
     rcm = obtener_rcm_por_fmea(fmea_id)
@@ -1895,6 +1908,7 @@ def registro_RCM():
 def registro_FMEA():
     # Obtener el token y datos del usuario
     id_equipo_info = request.args.get('id_equipo_info')
+    
     id_equipo = obtener_id_equipo_por_equipo_info(id_equipo_info)
 
     if not id_equipo_info:
