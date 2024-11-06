@@ -1221,18 +1221,18 @@ def obtener_repuesto_por_id(id_repuesto):
 # database.py
 
 def insertar_analisis_herramienta(nombre, valor, id_equipo_info, parte_numero, id_herramienta_requerida,
-                                  id_tipo_herramienta, id_clase_herramienta):
+                                  id_tipo_herramienta, id_clase_herramienta,dibujo_seccion_transversal,cantidad):
     cursor = db.connection.cursor()
     query = """
         INSERT INTO herramientas_generales (
-            nombre, valor, id_equipo_info, parte_numero, id_herramienta_requerida, id_tipo_herramienta,id_clase_herramienta
+            nombre, valor, id_equipo_info, parte_numero, id_herramienta_requerida, id_tipo_herramienta,id_clase_herramienta,dibujo_seccion_transversal,cantidad
 
         )
-        VALUES (%s, %s, %s, %s, %s, %s, %s)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s,%s)
     """
 
     cursor.execute(query, (
-    nombre, valor, id_equipo_info, parte_numero, id_herramienta_requerida, id_tipo_herramienta, id_clase_herramienta))
+    nombre, valor, id_equipo_info, parte_numero, id_herramienta_requerida, id_tipo_herramienta, id_clase_herramienta,dibujo_seccion_transversal,cantidad))
 
     db.connection.commit()
     analisis_id = cursor.lastrowid

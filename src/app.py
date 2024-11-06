@@ -779,6 +779,7 @@ def agregar_analisis_herramienta():
     valor = request.form.get('valor')
     parte_numero = request.form.get('parte_numero')
     id_tipo_herramienta = request.form.get('tipo_herramienta')
+    cantidad = request.form.get('cantidad')
     
     # Aquí se captura el archivo de dibujo seccion transversal
     dibujo_seccion_transversal = request.files.get('dibujo_seccion_transversal')
@@ -807,7 +808,7 @@ def agregar_analisis_herramienta():
     analisis_id = insertar_analisis_herramienta(
 
         nombre, valor, id_equipo_info, parte_numero, id_herramienta_requerida, id_tipo_herramienta,id_clase_herramienta,
-        dibujo_seccion_transversal
+        dibujo_seccion_transversal,cantidad
 
         
     )
@@ -932,8 +933,6 @@ def agregar_herramienta_especial():
 
 @app.route('/LSA/mostrar-herramientas-especiales', methods=['GET'])
 def mostrar_herramientas_especiales():
-
-
 
     # Priorizar el parámetro de URL 'id_equipo_info' si está presente
     id_equipo_info = request.args.get('id_equipo_info')
