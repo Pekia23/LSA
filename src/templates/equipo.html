@@ -18,7 +18,7 @@
         <h2>{{ equipo.nombre_equipo }}</h2>
       </div>
       <br>
-
+      
       <h3>Generalidades</h3>
         <div class="row">
           <div class="col-md-6 section1">
@@ -124,23 +124,17 @@
       <h3>Diagrama de Flujo del Subsistema Donde se encuentra Ubicado el Equipo</h3>
       
       {% if diagrama.diagrama_fijo %}
-
-      <img src="data:image/png;base64,{{ diagrama.diagrama_fijo|b64encode }}" class="imagend" style="width: 1000px; height: auto;">
-
+      <img src="data:image/png;base64,{{ diagrama.diagrama_fijo|b64encode }}" class="imagend">
       {% endif %}
       <br>
       <h3>Diagrama Caja Negra de la Función</h3>
       {% if diagrama.diagrama_caja_negra %}
-
-      <img src="data:image/png;base64,{{ diagrama.diagrama_caja_negra|b64encode }}" class="imagend" style="width: 1000px; height: auto;">
-
+      <img src="data:image/png;base64,{{ diagrama.diagrama_caja_negra|b64encode }}" class="imagend">
       {% endif %}
       <br>
       <h3>Diagrama de Caja Transparente</h3>
       {% if diagrama.diagrama_caja_transparente %}
-
-      <img src="data:image/png;base64,{{ diagrama.diagrama_caja_transparente|b64encode }}" class="imagend" style="width: 1000px; height: auto;">
-
+      <img src="data:image/png;base64,{{ diagrama.diagrama_caja_transparente|b64encode }}" class="imagend">
       {% endif %}
       <br>
       <h3>Procedimiento de Arranque</h3>
@@ -150,54 +144,6 @@
       <p>{{ procedimiento.parada }}</p>
       
       <br>
-
-      <div>
-        <a href="{{ url_for('editar_equipo', id_equipo_info=id_equipo_info) }}" class="btn btn-primary">
-          <i class="bi bi-pen" style="color: whitesmoke;"></i>
-      </a>      
-      <button id="btn-eliminar-equipo" class="btn btn-danger" data-equipo-id="{{ id_equipo_info }}">
-        <i class="bi bi-trash-fill" style="color: whitesmoke;"></i>
-      </button>
-    
-      </div>
     </main>
   </body>
 </html>  
-
-<!-- Script para manejar la eliminación del equipo -->
-<script>
-document.getElementById('btn-eliminar-equipo').addEventListener('click', function() {
-    const equipoId = this.getAttribute('data-equipo-id');
-
-    if (confirm('¿Estás seguro de que deseas eliminar este equipo?')) {
-        fetch('/LSA/eliminar-equipo', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ id_equipo_info: equipoId })
-        })
-        .then(response => {
-            if (response.headers.get('content-type')?.includes('application/json')) {
-                return response.json();
-            } else {
-                throw new Error("La respuesta no es JSON");
-            }
-        })
-        .then(result => {
-            if (result.message) {
-                alert(result.message);
-                window.location.href = '/LSA/registro-generalidades';
-            } else if (result.error) {
-                alert(result.error);
-            }
-        })
-        .catch(error => {
-            console.error('Error al eliminar equipo:', error);
-            alert('Error al eliminar equipo: ' + error.message);
-        });
-    }
-});
-
-</script>
-

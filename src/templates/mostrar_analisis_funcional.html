@@ -24,15 +24,17 @@
         </tr>
     </thead>
     <tbody>
+
     {% for analisis in analisis_funcionales %}
-        <tr>
+        <tr style="cursor: pointer;" id="id_{{analisis.id}}" onclick="get_id(`{{analisis.id}}`)">
+            
             <td>{{ sistema.nombre if sistema else 'No hay sistema seleccionado'}}</td>
             <td>{{ analisis.subsistema_nombre }}</td>
             <td>{{ analisis.verbo }}</td>
             <td>{{ analisis.accion }}</td>
             <td>{{ analisis.estandar_desempeño }}</td>
             <td>
-                <button class="boton"><a href="{{ url_for('editar_analisis_funcional', id=analisis.id) }}" ><i class="bi bi-pen"></i></a></button>
+                <a class="boton" href="{{ url_for('editar_analisis_funcional', id=analisis.id) }}" ><i class="bi bi-pen"></i></a>
             </td>
             <td>    
                 <form action="{{ url_for('eliminar_analisis_funcional_route', id=analisis.id) }}" method="post" style="display:inline;">
@@ -40,9 +42,38 @@
                 </form>
             </td>
         </tr>
+
     {% endfor %}
     </tbody>
 </table>
+
+
+{% for analisis in analisis_funcionales %}
+    <table class="table comp_{{analisis.id}} componentes" hidden>
+        <thead>
+            <tr>
+                <th scope="col">Nombre</th>
+                <th scope="col">Verbo</th>
+                <th scope="col">Acción</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+        {% for componente in componentes %}
+            {% if componente.id_analisis_funcional == analisis.id %}
+            <tr>
+                <td>{{ componente.nombre}}</td>
+                <td>{{ componente.verbo }}</td>
+                <td>{{ componente.accion }}</td>
+        
+            
+            </tr>
+            {% endif %}
+        {% endfor %}
+        </tbody>
+    </table>
+{% endfor %}
+
 <div class="mt-4">
     <a href="{{ url_for('registro_analisis_funcional') }}" class="btn btn-primary">Agregar análisis funcional</a>
 </div>
@@ -50,6 +81,8 @@
 <div class="mt-4">
     <a href="{{ url_for('registro_herramientas_especiales', token=session['token']) }}" class="btn btn-primary">Terminar Análisis funcional</a>
 </div> 
+
+<script src="{{ url_for('static', filename='js/mostrar_analisis_funcional.js') }}"></script>
 
 
 {% endblock %}

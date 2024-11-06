@@ -73,25 +73,3 @@ tr{
     
 }
 
-
-#reporte{
-    margin-left: 25px;
-    margin-right: 0;
-    padding: 0;
-}
-
-/* Evitar que las tablas se partan entre páginas */
-table {
-    page-break-inside: avoid;
-}
-
-/* Forzar que cada sección empiece en una nueva página */
-.section {
-    page-break-before: always;
-}
-
-/* Asegura un espacio inferior en cada tabla o sección */
-table, h3, .section {
-    margin-bottom: 20px; /* Ajusta según tus necesidades */
-}
-

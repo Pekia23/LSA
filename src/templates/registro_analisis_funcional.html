@@ -32,6 +32,12 @@ function cargarComponentes() {
 
                         // Crear el contenedor para el nombre del componente (columna 3)
                         // Crear el contenedor para el nombre del componente (columna 3)
+                        var id_ = document.createElement('input');
+                        id_.id =  `id_${componente.id}`;
+                        id_.value = `${componente.id}`;
+                        id_.name = `id_`;
+                        id_.style.display = 'none';
+
                         var divNombre = document.createElement('div');
                         divNombre.classList.add('col-md-4');  // 4/12 del ancho para el nombre
                         // Crear el label que diga 'Items'
@@ -78,6 +84,7 @@ function cargarComponentes() {
                         inputAccion.placeholder = 'Acción';
                         divAccion.appendChild(labelAccion);
                         divAccion.appendChild(inputAccion);
+                        divAccion.appendChild(id_);
 
                         // Añadir las columnas de nombre, verbo y acción a la fila
                         divComponente.appendChild(divNombre);

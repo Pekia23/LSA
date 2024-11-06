@@ -24,11 +24,7 @@
 
 <div>
   <a href="{{ url_for('editar_equipo') }}" class="btn btn-primary"><i class="bi bi-pen" style="color: whitesmoke;"></i></a>
-
-  <button id="btn-eliminar-equipo" class="btn btn-danger" data-equipo-id="{{ id_equipo_info }}">
-    <i class="bi bi-trash-fill" style="color: whitesmoke;"></i>
-</button>
-
+  <button id="btn-eliminar-equipo" class="btn btn-danger"><i class="bi bi-trash-fill" style="color: whitesmoke;"></i></button>
 </div>
 
 <h3>Generalidades</h3>
@@ -161,29 +157,22 @@
 <!-- Script para manejar la eliminación del equipo -->
 <script>
   document.getElementById('btn-eliminar-equipo').addEventListener('click', function() {
-    const equipoId = this.getAttribute('data-equipo-id');
-
     if (confirm('¿Estás seguro de que deseas eliminar este equipo?')) {
       fetch('/LSA/eliminar-equipo', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          
         },
-        body: JSON.stringify({ id_equipo_info: equipoId })
+        body: JSON.stringify({})
       })
-      .then(response => {
-        if (response.headers.get('content-type')?.includes('application/json')) {
-          return response.json();
-        } else {
-          throw new Error("La respuesta no es JSON");
-        }
-      })
+      .then(response => response.json())
       .then(result => {
         if (result.message) {
           alert(result.message);
           window.location.href = '/LSA/registro-generalidades';
-        } else if (result.error) {
-          alert(result.error);
+        } else {
+          alert('Error al eliminar equipo');
         }
       })
       .catch(error => {
@@ -193,5 +182,4 @@
     }
   });
 </script>
-
 {% endblock %}
