@@ -46,6 +46,8 @@
           <th>Ocurrencia (Descripción)</th>
           <th>Probabilidad de Detección (Valor)</th>
           <th>Probabilidad de Detección (Descripción)</th>
+          <th>RPN</th>
+          <th>Riesgo</th>
         </tr>
       </thead>
       <tbody>
@@ -79,6 +81,8 @@
           <td>{{ fmea['ocurrencia_descripcion'] }}</td>
           <td>{{ fmea['probabilidad_deteccion_valor'] }}</td>
           <td>{{ fmea['probabilidad_deteccion_descripcion'] }}</td>
+          <td>{{ fmea['RPN']}}</td>
+          <td>{{ fmea['nombre_riesgo']}}</td>
         </tr>
         {% endfor %}
       </tbody>

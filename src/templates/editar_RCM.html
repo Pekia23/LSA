@@ -22,7 +22,7 @@
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
-                                <th scope="col">Sistema</th>
+                                <th scope="col">Subsistema</th>
                                 <th scope="col">Falla Funcional</th>
                                 <th scope="col">Item o componente</th>
                                 <th scope="col">Codigo Modo de Falla</th>
@@ -50,7 +50,7 @@
                                 <td>{{ loop.index }}</td>
                                 <td>{{ rcm['sistema'] }}</td>
                                 <td>{{ rcm['falla_funcional'] }}</td>
-                                <td>{{ rcm['item_componente'] }}</td>
+                                <td>{{ rcm['componente'] }}</td>
                                 <td>{{ rcm['codigo_modo_falla'] }}</td>
                                 <td>{{ rcm['consecutivo_modo_falla'] }}</td>
                                 <td>{{ rcm['descripcion_modo_falla'] }}</td>
@@ -90,6 +90,7 @@
                                         <button class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="top"
                                                 title="Editar MTA">
                                             <a href="{{ url_for('editar_MTA', rcm_id=rcm['id'],id_equipo_info=id_equipo_info) }}"> MTA <i
+
 
                                                     class="bi bi-pencil FMEA-edit"></i></a>
                                         </button>

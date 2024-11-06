@@ -1,56 +1,74 @@
-function convertHTMLpdf(divElement) {
-    const element = document.getElementById(divElement);
 
+document.getElementById("botonPDF").addEventListener("click", function (event) {
+    event.preventDefault();
+
+    // Mostrar el pop-up de confirmación con SweetAlert
+    Swal.fire({
+        title: '¿Deseas descargar el PDF?',
+        text: "Puedes visualizarlo antes o descargarlo directamente.",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, descargar',
+        cancelButtonText: 'Solo visualizar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Generar y descargar el PDF
+            generatePDF("reporte", true); // El segundo parámetro indica que se debe descargar
+        } else {
+            // Solo visualizar el PDF sin descargar
+            generatePDF("reporte", false); // No descargar, solo visualizar
+        }
+    });
+});
+
+function generatePDF(divElement, shouldDownload) {
+    const element = document.getElementById(divElement);
+    const nombreEquipo = document.getElementById("botonPDF").getAttribute("data-nombre-equipo") || "Informe";
+    
     const options = {
-        filename: "informe_{{ equipo.nombre_equipo }}.pdf",
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 }, // Ajuste para mejor calidad de imagen
-        jsPDF: { unit: 'in', format: 'a1', orientation: 'landscape' }, // Configuración de tamaño y orientación
-        margin: [0.8, 0.8, 0.8, 0.8] // Agregar márgenes
+        filename: `informe_${nombreEquipo}.pdf`,
+        image: { type: 'jpeg', quality: 0.90 },
+        html2canvas: { scale: 1.5 },
+        jsPDF: { unit: 'in', format: 'a2', orientation: 'landscape' },
+        margin: [0.5, 0.5, 0.5, 0.5]
     };
 
-    // Seleccionar todos los botones o elementos a ocultar
     const noPrintElements = document.querySelectorAll('.no-print');
-
-    // Ocultar los elementos antes de generar el PDF
     noPrintElements.forEach(el => el.style.display = 'none');
 
-    // Obtener todas las pestañas y guardar la pestaña activa
     const tabs = document.querySelectorAll('.tab-pane');
     const activeTab = document.querySelector('.tab-pane.active');
-
-    // Mostrar temporalmente todas las pestañas para la generación del PDF
-    tabs.forEach(tab => {
-        tab.classList.add('show', 'active'); // Agregar clases para que sean visibles
-    });
+    tabs.forEach(tab => tab.classList.add('show', 'active'));
 
     if (element) {
-        html2pdf().set(options).from(element).save().then(() => {
-            // Restaurar la visibilidad original de las pestañas
-            tabs.forEach(tab => {
-                tab.classList.remove('show', 'active'); // Remover clases para ocultar las no activas
-            });
-            // Restaurar solo la pestaña que estaba activa originalmente
-            if (activeTab) {
-                activeTab.classList.add('show', 'active');
+        html2pdf().set(options).from(element).outputPdf('blob').then((pdfBlob) => {
+            const pdfUrl = URL.createObjectURL(pdfBlob);
+            if (shouldDownload) {
+                // Descargar el PDF
+                const link = document.createElement('a');
+                link.href = pdfUrl;
+                link.download = `informe_${nombreEquipo}.pdf`;
+                link.click();
+            } else {
+                // Solo abrir el PDF en una nueva pestaña para visualizar
+                window.open(pdfUrl, '_blank');
             }
+
+            // Restaurar la visibilidad original de las pestañas
+            noPrintElements.forEach(el => el.style.display = '');
+            tabs.forEach(tab => tab.classList.remove('show', 'active'));
+            if (activeTab) activeTab.classList.add('show', 'active');
         }).catch(error => {
             console.error("Error al generar el PDF:", error);
-            // Restaurar la visibilidad original en caso de error
-            tabs.forEach(tab => {
-                tab.classList.remove('show', 'active');
-            });
-            if (activeTab) {
-                activeTab.classList.add('show', 'active');
-            }
+            noPrintElements.forEach(el => el.style.display = '');
+            tabs.forEach(tab => tab.classList.remove('show', 'active'));
+            if (activeTab) activeTab.classList.add('show', 'active');
+
         });
     } else {
         console.error("Elemento no encontrado:", divElement);
     }
 }
 
-// Agrega el evento de clic al enlace o botón para generar el PDF
-document.getElementById("botonPDF").addEventListener("click", function (event) {
-    event.preventDefault(); // Previene el comportamiento predeterminado del enlace
-    convertHTMLpdf("reporte"); // Llama a la función con el ID del contenedor principal
-});

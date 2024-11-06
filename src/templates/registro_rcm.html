@@ -21,6 +21,7 @@
                     <input type="hidden" name="id_equipo_info" value="{{ id_equipo_info }}">
                 
 
+
                 <div class="row">
                     <!-- Primera Columna -->
                     <div class="col-md-4">
@@ -136,6 +137,7 @@
 
             {% elif editar and rcm%}
                 <form id="rcm-form" method="POST" action="{{ url_for('actualizar_RCM', fmea_id=rcm['id_fmea'],id_equipo_info=id_equipo_info) }}">
+
 
                 <div class="row">
                     <!-- Primera Columna -->

@@ -86,12 +86,32 @@ table {
 }
 
 /* Forzar que cada sección empiece en una nueva página */
+
+
 .section {
-    page-break-before: always;
+    page-break-after: always;
 }
+
+table {
+    page-break-inside: auto;
+}
+
+tr {
+    page-break-inside: avoid;
+    page-break-after: auto;
+}
+
+
 
 /* Asegura un espacio inferior en cada tabla o sección */
 table, h3, .section {
     margin-bottom: 20px; /* Ajusta según tus necesidades */
 }
+
+
+.special-fmea {
+    font-size: 11.5px; /* Ajuste de tamaño de texto si es necesario */
+}
+
+
 

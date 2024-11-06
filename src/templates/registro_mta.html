@@ -92,6 +92,7 @@
 
                         </div>
                         {% if loop.index0 % 3 == 2 or loop.last %}
+
                             </div>
                         {% endif %}
                     {% endfor %}
@@ -550,6 +551,7 @@
     // Agregar evento change a los checkboxes
 
     document.querySelectorAll('.herramienta-checkbox').forEach(function (checkbox) {
+
         checkbox.addEventListener('change', updateSelectedHerramientas);
     });
 

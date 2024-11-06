@@ -36,6 +36,38 @@ def insertar_componente_analisis_funcional(id_analisis_funcional, id_componente,
 
 
 
+"""
+
+def obtener_componentes_por_subsistema(subsistema_id):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = "SELECT * FROM componentes WHERE subsistema_id = %s"
+    cursor.execute(query, (subsistema_id,))
+    componentes = cursor.fetchall()
+    cursor.close()
+    return componentes
+
+"""
+
+
+def insertar_componente_analisis_funcional(id_analisis_funcional, id_componente, verbo, accion):
+    # Conexión a la base de datos
+    cursor = db.connection.cursor()
+    
+    # Insertar los datos del componente relacionado con el análisis funcional
+    query = """
+    INSERT INTO `componente_analisis_funcional`(`id_componente`, `verbo`, `accion`, `id_analisis_funcional`)
+    VALUES (%s, %s, %s, %s)
+    """
+    print(f"Query: {query}")
+    print(f"Valores: id_componente={id_componente}, verbo={verbo}, accion={accion}, id_analisis_funcional={id_analisis_funcional}")
+    
+    cursor.execute(query, (id_componente, verbo, accion, id_analisis_funcional))
+    db.connection.commit()
+
+    cursor.close()
+
+
+
 def verificar_conexion():
     try:
         cursor = db.connection.cursor()
@@ -476,7 +508,6 @@ def insertar_fmea(id_equipo_info, id_sistema, id_falla_funcional, id_componente,
 
 def obtener_nombre_por_id(tabla, id, columna_id='id'):
     cursor = db.connection.cursor()
-    
 
     # Verificar si la tabla tiene la columna 'nombre'
     query_column_check = f"SHOW COLUMNS FROM {tabla} LIKE 'nombre'"
@@ -500,6 +531,7 @@ def obtener_nombre_por_id(tabla, id, columna_id='id'):
 
 
 
+
 #No me acuerdo pa que sirve pero no la quiero eliminar por si acaso
 
 # def obtener_valor_por_id(tabla, id):
@@ -516,7 +548,6 @@ def obtener_nombre_por_id(tabla, id, columna_id='id'):
 
 def obtener_fmeas(id_equipo_info):
     print(f"Llamada a obtener_fmeas con id_equipo_info={id_equipo_info}")
-
 
     cursor = db.connection.cursor()
 
@@ -574,12 +605,14 @@ def obtener_fmeas(id_equipo_info):
         pd.descripcion AS probabilidad_deteccion_descripcion,
         f.RPN,
         f.id_riesgo,
+
+        r.nombre AS nombre_riesgo,
         p.nombre_completo AS nombre_completo,
         p.id AS id_personal
-    FROM fmea f
+      FROM fmea f
     LEFT JOIN equipo_info ei ON f.id_equipo_info = ei.id
     LEFT JOIN personal p ON ei.id_personal = p.id
-    LEFT JOIN sistema s ON f.id_sistema = s.id
+    LEFT JOIN subsistemas s ON f.id_sistema = s.id
     LEFT JOIN falla_funcional ff ON f.id_falla_funcional = ff.id
     LEFT JOIN componentes c ON f.id_componente = c.id
     LEFT JOIN codigo_modo_falla cmf ON f.id_codigo_modo_falla = cmf.id
@@ -596,6 +629,7 @@ def obtener_fmeas(id_equipo_info):
     LEFT JOIN flexibilidad_operacional flex ON f.id_flexibilidad_operacional = flex.id
     LEFT JOIN ocurrencia o ON f.id_ocurrencia = o.id
     LEFT JOIN probabilidad_deteccion pd ON f.id_probabilidad_deteccion = pd.id
+    LEFT JOIN riesgo r ON f.id_riesgo = r.id
     WHERE f.id_equipo_info = %s AND f.estado = 'activo'
     """
 
@@ -639,6 +673,10 @@ def obtener_fmeas(id_equipo_info):
             'mecanismo_falla', fmea['id_mecanismo_falla'])
         detalle_falla_nombre = fmea['detalle_falla'] if fmea['detalle_falla'] else obtener_nombre_por_id(
             'detalle_falla', fmea['id_detalle_falla'])
+
+        
+        nombre_riesgo = fmea['nombre_riesgo'] or obtener_nombre_por_id('riesgo', fmea['id_riesgo'])
+
 
         # Contar las ocurrencias de consecutivo_modo_falla
         if consecutivo_modo_falla_nombre not in consecutivo_modo_falla_counter:
@@ -684,6 +722,7 @@ def obtener_fmeas(id_equipo_info):
             'probabilidad_deteccion_descripcion': fmea['probabilidad_deteccion_descripcion'],
             'RPN': fmea['RPN'],
             'id_riesgo': fmea['id_riesgo'],
+            'nombre_riesgo': nombre_riesgo,
             'nombre_completo': fmea['nombre_completo'],
             'id_personal': fmea['id_personal']
 
@@ -815,6 +854,14 @@ def obtener_equipos_por_tipo(id_tipo_equipo):
     cursor.close()
     return equipospro
 
+
+def obtener_id_equipo_por_id_info(id_equipo_info):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = "SELECT id_equipo FROM `equipo_info` WHERE id=%s;"
+    cursor.execute(query, (id_equipo_info,))
+    equipo= cursor.fetchall()
+    cursor.close()
+    return equipo
 
 def obtener_sistema_por_id(id_sistema):
     cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -979,6 +1026,7 @@ def obtener_mta_por_id_rcm(id_rcm):
     return mta
 
 
+
 """
 1RO para la funcion de mostrar herramientas necesito que haga una peticion a la base de datos de herramientas
 relaciones y que me devuelva todas las herramientas que tienen el id_equipo_info y me va a devolver los datos en la columna id_herramienta y en la id_clase_herramienta
@@ -1105,6 +1153,7 @@ def obtener_herramientas_especiales_por_equipo(id_equipo_info):
     herramientas_especiales = cursor.fetchall()
     cursor.close()
     return herramientas_especiales
+
 
 
 def obtener_nombre_componente_por_id(componente_id):
@@ -1234,6 +1283,7 @@ def insertar_analisis_herramienta(nombre, valor, id_equipo_info, parte_numero, i
     cursor.execute(query, (
     nombre, valor, id_equipo_info, parte_numero, id_herramienta_requerida, id_tipo_herramienta, id_clase_herramienta,dibujo_seccion_transversal,cantidad))
 
+
     db.connection.commit()
     analisis_id = cursor.lastrowid
     cursor.close()
@@ -1258,6 +1308,7 @@ def obtener_analisis_herramientas_por_equipo(id_equipo_info):
     return analisis
 
 
+
 def actualizar_analisis_herramienta(id_analisis, nombre, valor, parte_numero,dibujo_seccion_transversal,cantidad):
     cursor = db.connection.cursor()
     query = """
@@ -1266,6 +1317,7 @@ def actualizar_analisis_herramienta(id_analisis, nombre, valor, parte_numero,dib
         WHERE id = %s
     """
     cursor.execute(query, (nombre, valor, parte_numero,dibujo_seccion_transversal,cantidad, id_analisis))
+
 
 
     db.connection.commit()
@@ -1318,6 +1370,7 @@ def obtener_herramientas_por_equipo(id_equipo_info):
     
     cursor.close()
     return herramientas
+
 
 
 
@@ -3506,6 +3559,7 @@ def obtener_fmeas_por_equipo_info(id_equipo_info):
         f.id, 
         f.id_equipo_info, 
         f.id_sistema, 
+
         s.nombre as sistema, 
         f.id_falla_funcional, 
         ff.nombre as falla_funcional, 
@@ -3555,8 +3609,12 @@ def obtener_fmeas_por_equipo_info(id_equipo_info):
         pd.valor as probabilidad_deteccion_valor, 
         pd.descripcion as probabilidad_deteccion_descripcion,
         f.RPN,
-        f.id_riesgo
+        f.id_riesgo,
+        p.nombre_completo as nombre_completo,
+        p.id as id_personal
     FROM fmea f
+    LEFT JOIN equipo_info ei ON f.id_equipo_info = ei.id
+    LEFT JOIN personal p ON ei.id_personal = p.id
     LEFT JOIN sistema s ON f.id_sistema = s.id
     LEFT JOIN falla_funcional ff ON f.id_falla_funcional = ff.id
     LEFT JOIN componentes c ON f.id_componente = c.id
@@ -3575,6 +3633,642 @@ def obtener_fmeas_por_equipo_info(id_equipo_info):
     LEFT JOIN ocurrencia o ON f.id_ocurrencia = o.id
     LEFT JOIN probabilidad_deteccion pd ON f.id_probabilidad_deteccion = pd.id
     WHERE f.id_equipo_info = %s
+    """
+    cursor.execute(query, (id_equipo_info,))
+    fmeas = cursor.fetchall()
+    cursor.close()
+    return fmeas
+
+
+# obtener_rcm_por_equipo_info,
+def obtener_rcm_por_equipo_info(id_equipo_info):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+
+    query = """
+            SELECT
+                r.id,
+                r.id_fmea,
+                f.id_equipo_info,
+                s.nombre as sistema, 
+                ff.nombre as falla_funcional, 
+                c.nombre as componente, 
+                cmf.nombre as codigo_modo_falla, 
+                cf.nombre as consecutivo_modo_falla, 
+                dmf.nombre as descripcion_modo_falla, 
+                causa.nombre as causa, 
+                r.hidden_failures,
+                r.safety,
+                r.environment,
+                r.operation,
+                r.h1_s1_n1_o1,
+                r.h2_s2_n2_o2,
+                r.h3_s3_n3_o3,
+                r.h4_s4,
+                r.h5,
+                r.tarea,
+                r.id_accion_recomendada,
+                r.intervalo_inicial_horas
+            FROM rcm r
+            LEFT JOIN fmea f ON r.id_fmea = f.id
+            LEFT JOIN sistema s ON f.id_sistema = s.id
+            LEFT JOIN falla_funcional ff ON f.id_falla_funcional = ff.id
+            LEFT JOIN componentes c ON f.id_componente = c.id
+            LEFT JOIN codigo_modo_falla cmf ON f.id_codigo_modo_falla = cmf.id
+            LEFT JOIN consecutivo_modo_falla cf ON f.id_consecutivo_modo_falla = cf.id
+            LEFT JOIN descripcion_modo_falla dmf ON f.id_descripcion_modo_falla = dmf.id
+            LEFT JOIN causa ON f.id_causa = causa.id
+            WHERE f.id_equipo_info = %s AND r.estado = 'activo'
+
+        """
+
+    cursor.execute(query, (id_equipo_info,))
+    rcms = cursor.fetchall()
+    cursor.close()
+    return rcms
+
+# obtener_mta_por_equipo_info
+def obtener_mta_por_equipo_info(id_equipo_info):
+
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = """
+        SELECT 
+            m.id, 
+            m.id_rcm, 
+            m.id_equipo_info, 
+            m.id_sistema, 
+            m.id_componente, 
+            m.id_falla_funcional, 
+            m.id_descripcion_modo_falla, 
+            m.id_tipo_mantenimiento, 
+            m.id_tarea_mantenimiento, 
+            m.cantidad_personal, 
+            m.consumibles_requeridos, 
+            m.requeridos_tarea, 
+            m.condiciones_ambientales, 
+            m.condiciones_estado_equipo, 
+            m.condiciones_especiales, 
+            m.horas, 
+            m.minutos, 
+            m.detalle_tarea,
+            ei.nombre_equipo as equipo, 
+            s.nombre as sistema, 
+            c.nombre as componente, 
+            ff.nombre as falla_funcional, 
+            dmf.nombre as descripcion_modo_falla, 
+            tm.nombre as tipo_mantenimiento, 
+            tmr.nombre as tarea_mantenimiento,
+            l.nivel,
+            l.actividades,
+            l.operario        
+        FROM mta m
+        LEFT JOIN rcm r ON m.id_rcm = r.id
+        LEFT JOIN equipo_info ei ON m.id_equipo_info = ei.id
+        LEFT JOIN sistema s ON m.id_sistema = s.id
+        LEFT JOIN componentes c ON m.id_componente = c.id
+        LEFT JOIN falla_funcional ff ON m.id_falla_funcional = ff.id
+        LEFT JOIN descripcion_modo_falla dmf ON m.id_descripcion_modo_falla = dmf.id
+        LEFT JOIN tipo_mantenimiento tm ON m.id_tipo_mantenimiento = tm.id
+        LEFT JOIN tarea_mantenimiento tmr ON m.id_tarea_mantenimiento = tmr.id
+        LEFT JOIN lora_mta l ON m.id = l.id_mta
+        WHERE m.id_equipo_info = %s AND m.estado = 'activo'
+        """
+    cursor.execute(query, (id_equipo_info,))
+    mta = cursor.fetchall()
+    cursor.close()
+
+    return mta
+
+def eliminar_personal(id_personal):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    sql = "DELETE FROM personal WHERE id = %s"
+    cursor.execute(sql, (id_personal,))
+    db.connection.commit()
+    cursor.close()
+
+def crear_personal(nombre_completo):
+    correo = 'correo1@example.com'
+    password = 'password1'
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    sql = "INSERT INTO personal (correo, password, nombre_completo) VALUES (%s, %s, %s)"
+    cursor.execute(sql, (correo, password, nombre_completo))
+    db.connection.commit()
+    new_id = cursor.lastrowid
+    cursor.close()
+    return new_id
+
+def obtener_fmeas_con_rcm_por_equipo_info(id_equipo_info):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = """
+        SELECT f.id
+        FROM rcm r
+        LEFT JOIN fmea f ON r.id_fmea = f.id
+        WHERE f.id_equipo_info = %s AND r.estado = 'activo'
+    """
+    cursor.execute(query, (id_equipo_info,))
+
+    fmeas_con_rcm = cursor.fetchall()
+    cursor.close()
+
+    # Extraer solo los id_fmea de los resultados
+    id_fmeas = [fmea['id_fmea'] for fmea in fmeas_con_rcm]
+    return id_fmeas
+
+def obtener_rcms_con_mta_por_equipo_info(id_equipo_info):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+
+    query = """
+        SELECT m.id_rcm
+        FROM mta m
+        WHERE m.id_equipo_info = %s AND m.estado = 'activo'
+    """
+
+    cursor.execute(query, (id_equipo_info,))
+    rcms_con_mta = cursor.fetchall()
+    cursor.close()
+
+    # Extraer solo los id_rcm de los resultados
+    id_rcms = [rcm['id_rcm'] for rcm in rcms_con_mta]
+    return id_rcms
+
+
+
+
+
+###funciones desactivar
+def desactivar_mta(id_mta):
+
+    cursor = db.connection.cursor()
+    # Cambiar el estado a 'inactivo' en lugar de eliminar
+    update_query = "UPDATE mta SET estado = 'inactivo' WHERE id = %s"
+    cursor.execute(update_query, (id_mta,))
+    db.connection.commit()
+    cursor.close()
+
+def desactivar_rcm(id_fmea,id_rcm):
+    cursor = db.connection.cursor()
+    # Cambiar el estado a 'inactivo' en lugar de eliminar
+    update_query = "UPDATE rcm SET estado = 'inactivo' WHERE id_fmea = %s AND id = %s"
+    cursor.execute(update_query, (id_fmea,id_rcm))
+    db.connection.commit()
+    cursor.close()
+"""
+def eliminar_FMEA(fmea_id):
+    cursor = db.connection.cursor()
+    # Cambiar el estado a 'inactivo' en lugar de eliminar
+    update_query = "UPDATE fmea SET estado = 'inactivo' WHERE id = %s"
+    cursor.execute(update_query, (fmea_id,))
+    db.connection.commit()
+    cursor.close()
+"""
+def desactivar_equipo_info(id_equipo_in):
+    cursor = db.connection.cursor()
+    # Cambiar el estado a 'inactivo' en lugar de eliminar
+    update_query = "UPDATE equipo_info SET estado = 'inactivo' WHERE id = %s"
+    cursor.execute(update_query, (id_equipo_in,))
+
+    db.connection.commit()
+    cursor.close()
+
+
+########################################
+
+
+
+
+
+
+def obtener_subgrupos_por_sistema(id_sistema):
+
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+
+    # Obtener el id_subgrupo relacionado con el sistema
+
+    query_sistema = "SELECT id_subgrupo FROM sistema WHERE id = %s"
+    cursor.execute(query_sistema, (id_sistema,))
+    sistema = cursor.fetchone()
+
+    if not sistema:
+        cursor.close()
+        return None  # Si el sistema no existe, retornamos None
+
+    id_subgrupo = sistema['id_subgrupo']
+
+    # Obtener información del subgrupo asociado
+    query_subgrupo = "SELECT * FROM subgrupo WHERE id = %s"
+    cursor.execute(query_subgrupo, (id_subgrupo,))
+    subgrupo_constructivo = cursor.fetchall()  # Retornará una lista de subgrupos
+
+    cursor.close()
+    return subgrupo_constructivo
+
+
+def obtener_sistemas_por_grupo(grupo_id):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+
+    # Obtener todos los subgrupos que pertenecen al grupo constructivo
+    query_subgrupos = "SELECT id FROM subgrupo WHERE id_grupo_constructivo = %s"
+    cursor.execute(query_subgrupos, (grupo_id,))
+    subgrupos = cursor.fetchall()
+
+    # Extraer los IDs de subgrupo para buscar sistemas asociados
+    subgrupo_ids = [subgrupo['id'] for subgrupo in subgrupos]
+
+    if not subgrupo_ids:
+        cursor.close()
+        return []  # Si no hay subgrupos, retornar lista vacía
+
+    # Obtener sistemas que pertenecen a estos subgrupos
+    query_sistemas = "SELECT * FROM sistema WHERE id_subgrupo IN %s"
+    cursor.execute(query_sistemas, (tuple(subgrupo_ids),))
+    sistemas = cursor.fetchall()
+
+    cursor.close()
+    return sistemas
+
+
+def obtener_equipos_por_sistema(sistema_id):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    
+    # Consultar equipos relacionados al sistema específico en la tabla equipo_info
+    query = """
+        SELECT *
+        FROM equipo_info
+        WHERE id_sistema = %s
+    """
+    cursor.execute(query, (sistema_id,))
+    equipos = cursor.fetchall()
+    
+
+    cursor.close()
+    return equipos
+
+
+
+def actualizar_procedimiento(id_procedimiento, arranque, parada):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = '''
+        UPDATE procedimientos
+        SET arranque = %s,
+            parada = %s
+        WHERE id = %s
+    '''
+    cursor.execute(query, (arranque, parada, id_procedimiento))
+    db.connection.commit()
+    cursor.close()
+
+
+
+def actualizar_diagrama(id_diagrama, diagrama_flujo_file, diagrama_caja_negra_file, diagrama_caja_transparente_file):
+
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+
+    # Leer los archivos si existen
+    diagrama_flujo = diagrama_flujo_file.read() if diagrama_flujo_file else None
+    diagrama_caja_negra = diagrama_caja_negra_file.read() if diagrama_caja_negra_file else None
+    diagrama_caja_transparente = diagrama_caja_transparente_file.read() if diagrama_caja_transparente_file else None
+
+    # Preparar los campos y valores para la consulta de actualización
+    campos = []
+    valores = []
+
+    if diagrama_flujo is not None:
+        campos.append('diagrama_flujo = %s')
+        valores.append(diagrama_flujo)
+    if diagrama_caja_negra is not None:
+        campos.append('diagrama_caja_negra = %s')
+        valores.append(diagrama_caja_negra)
+    if diagrama_caja_transparente is not None:
+        campos.append('diagrama_caja_transparente = %s')
+        valores.append(diagrama_caja_transparente)
+
+    # Solo ejecutamos la consulta si hay campos para actualizar
+    if campos:
+        valores.append(id_diagrama)
+        query = 'UPDATE diagramas SET ' + ', '.join(campos) + ' WHERE id = %s'
+        cursor.execute(query, valores)
+        db.connection.commit()
+
+    cursor.close()
+
+
+
+def obtener_id_sistema_por_equipo_info(id_equipo_info):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = """
+        SELECT id_sistema 
+        FROM equipo_info 
+        WHERE id = %s
+    """
+    cursor.execute(query, (id_equipo_info,))
+    fila = cursor.fetchone()
+    cursor.close()
+    return fila['id_sistema'] if fila else None
+
+
+
+def obtener_id_equipo_por_equipo_info(id_equipo_info):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+
+    query = """
+        SELECT id_equipo 
+        FROM equipo_info 
+        WHERE id = %s
+    """
+    cursor.execute(query, (id_equipo_info,))
+    fila = cursor.fetchone()
+
+    cursor.close()
+    return fila['id_equipo'] if fila else None
+
+
+
+
+
+def check_nombre_equipo_exists(nombre_equipo):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = "SELECT COUNT(*) AS count FROM equipo_info WHERE nombre_equipo = %s AND estado = 'activo'"
+    cursor.execute(query, (nombre_equipo,))
+    result = cursor.fetchone()
+    cursor.close()
+    return result['count'] > 0
+
+
+
+
+
+def obtener_herramientas_requeridas_por_tipo():
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    dict_herramientas = {}
+    tipos = obtener_tipos_herramientas()
+    for tipo in tipos:
+        query = '''SELECT * FROM herramientas_requeridas hr 
+                join tipo_herramientas th on hr.id_tipo_herramienta = th.id_tipo_herramienta 
+                WHERE nombre_tipo = %s'''
+        cursor.execute(query, (tipo['nombre_tipo'],))
+        herramientas = cursor.fetchall()
+        dict_herramientas[tipo['nombre_tipo']] = herramientas
+    cursor.close()
+
+    return dict_herramientas
+
+
+def insertar_herramientas_requeridas_mta(herramientas_requeridas, id_mta):
+    cursor = db.connection.cursor()
+    #recorrer la tupla de herramientas requeridas e insertarlas junto al id_mta en la tabla herramientas_mta
+    if herramientas_requeridas:
+        for herramienta in herramientas_requeridas:
+            query = '''INSERT INTO herramientas_mta (id_mta, id_herramienta_requerida) VALUES (%s, %s)'''
+            cursor.execute(query, (id_mta, herramienta))
+        db.connection.commit()
+    cursor.close()
+
+
+def eliminar_herramientas_requeridas_mta(id_mta):
+    cursor = db.connection.cursor()
+    query = "DELETE FROM herramientas_mta WHERE id_mta = %s"
+    cursor.execute(query, (id_mta,))
+    db.connection.commit()
+    cursor.close()
+
+
+# obtener_herramientas_mta,
+def obtener_herramientas_mta():
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = '''SELECT * FROM herramientas_mta hm
+            JOIN herramientas_requeridas hr on hm.id_herramienta_requerida = hr.id_herramienta_requerida'''
+    cursor.execute(query)
+    herramientas_mta = cursor.fetchall()
+    cursor.close()
+    return herramientas_mta
+
+
+def insertar_repuestos_requeridos_mta(repuestos_requeridos, id_mta):
+    cursor = db.connection.cursor()
+    #recorrer la tupla de herramientas requeridas e insertarlas junto al id_mta en la tabla herramientas_mta
+    if repuestos_requeridos:
+        for repuesto in repuestos_requeridos:
+            query = '''INSERT INTO repuestos_mta (id_mta, id_repuesto) VALUES (%s, %s)'''
+            cursor.execute(query, (id_mta, repuesto))
+        db.connection.commit()
+    cursor.close()
+
+
+def eliminar_repuestos_requeridos_mta(id_mta):
+    cursor = db.connection.cursor()
+    query = "DELETE FROM repuestos_mta WHERE id_mta = %s"
+    cursor.execute(query, (id_mta,))
+    db.connection.commit()
+    cursor.close()
+
+
+#     obtener_repuestos_mta
+def obtener_repuestos_mta():
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = '''SELECT * FROM repuestos_mta rm
+            JOIN repuesto r on rm.id_repuesto = r.id'''
+    cursor.execute(query)
+    repuestos_mta = cursor.fetchall()
+    cursor.close()
+    return repuestos_mta
+
+
+def insertar_mta_lora(nivel, actividades, operario, id_mta):
+    cursor = db.connection.cursor()
+    query = '''INSERT INTO lora_mta (nivel, actividades, operario, id_mta) VALUES (%s, %s, %s, %s)'''
+    cursor.execute(query, (nivel, actividades, operario, id_mta))
+    db.connection.commit()
+    cursor.close()
+
+
+def actualizar_mta_lora(nivel, actividades, operario, id_mta):
+    cursor = db.connection.cursor()
+    query = '''UPDATE lora_mta SET nivel = %s, actividades = %s, operario = %s WHERE id_mta = %s'''
+    cursor.execute(query, (nivel, actividades, operario, id_mta))
+    db.connection.commit()
+    cursor.close()
+
+
+def eliminar_mta_lora(id_mta):
+    cursor = db.connection.cursor()
+    query = "DELETE FROM lora_mta WHERE id_mta = %s"
+    cursor.execute(query, (id_mta,))
+    db.connection.commit()
+    cursor.close()
+
+
+def obtener_mta_lora():
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = "SELECT * FROM lora_mta"
+    cursor.execute(query)
+    lora_mta = cursor.fetchall()
+    cursor.close()
+    return lora_mta
+
+
+def obtener_max_id_mta():
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = "SELECT MAX(id) as max_id FROM mta"
+    cursor.execute(query)
+    max_id = cursor.fetchone()
+    cursor.close()
+    print(max_id['max_id'])
+    return max_id['max_id']
+
+
+def obtener_rcms_con_mta():
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = "SELECT id_rcm FROM mta"
+    cursor.execute(query)
+    rcms_con_mta = cursor.fetchall()
+    cursor.close()
+
+    # Extraer solo los id_fmea de los resultados
+    id_rcms = [mta['id_rcm'] for mta in rcms_con_mta]
+    return id_rcms
+
+
+def obtener_lora_mta_por_id_mta(id_mta):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = "SELECT * FROM lora_mta WHERE id_mta = %s"
+    cursor.execute(query, (id_mta,))
+    lora_mta = cursor.fetchone()
+    cursor.close()
+    return lora_mta
+
+
+def obtener_herramientas_mta_por_id_mta(id_mta):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = '''SELECT * FROM herramientas_mta hm
+            JOIN herramientas_requeridas hr on hm.id_herramienta_requerida = hr.id_herramienta_requerida
+            WHERE id_mta = %s'''
+    cursor.execute(query, (id_mta,))
+    herramientas_mta = cursor.fetchall()
+    cursor.close()
+    return herramientas_mta
+
+
+def obtener_repuestos_mta_por_id_mta(id_mta):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = '''SELECT * FROM repuestos_mta rm
+            JOIN repuesto r on rm.id_repuesto = r.id
+            WHERE id_mta = %s'''
+    cursor.execute(query, (id_mta,))
+    repuestos_mta = cursor.fetchall()
+    cursor.close()
+    return repuestos_mta
+
+
+# Función para obtener el id_equipo_info basado en nombre_equipo en MySQL
+def obtener_id_equipo_info_por_nombre(nombre_equipo):
+    # Conectar a la base de datos MySQL
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+
+    # Consulta SQL para obtener id_equipo_info basado en nombre_equipo
+    query = "SELECT id FROM equipo_info WHERE nombre_equipo = %s"
+    cursor.execute(query, (nombre_equipo,))
+
+    # Obtener el primer resultado
+    result = cursor.fetchone()
+
+    # Cerrar la conexión
+    cursor.close()
+    if result:
+        return result['id']  # Devuelve el id del equipo
+    else:
+        return None
+
+
+# obtener_informacion_equipo_info,
+def obtener_informacion_equipo_info(id_equipo_info):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = "SELECT * FROM equipo_info WHERE id = %s"
+    cursor.execute(query, (id_equipo_info,))
+    equipo_info = cursor.fetchone()
+    cursor.close()
+    return equipo_info
+
+
+# obtener_fmeas_por_equipo_info,
+def obtener_fmeas_por_equipo_info(id_equipo_info):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = """
+    SELECT 
+            f.id, 
+            f.id_equipo_info, 
+            f.id_sistema, 
+            s.nombre AS sistema, 
+            f.id_falla_funcional, 
+            ff.nombre AS falla_funcional, 
+            f.id_componente, 
+            c.nombre AS componente, 
+            f.id_codigo_modo_falla, 
+            cmf.nombre AS codigo_modo_falla, 
+            f.id_consecutivo_modo_falla, 
+            cf.nombre AS consecutivo_modo_falla, 
+            f.id_descripcion_modo_falla, 
+            dmf.nombre AS descripcion_modo_falla, 
+            f.id_causa, 
+            causa.nombre AS causa, 
+            f.id_mecanismo_falla, 
+            mf.nombre AS mecanismo_falla, 
+            f.id_detalle_falla, 
+            df.nombre AS detalle_falla, 
+            f.MTBF, 
+            f.MTTR, 
+            f.id_metodo_deteccion_falla,
+            f.id_fallo_oculto,
+            fo.valor AS fallo_oculto_valor, 
+            fo.nombre AS fallo_oculto_descripcion, 
+            f.id_seguridad_fisica, 
+            sf.valor AS seguridad_fisica_valor, 
+            sf.nombre AS seguridad_fisica_descripcion, 
+            f.id_medio_ambiente, 
+            ma.valor AS medio_ambiente_valor, 
+            ma.nombre AS medio_ambiente_descripcion, 
+            f.id_impacto_operacional, 
+            io.valor AS impacto_operacional_valor, 
+            io.nombre AS impacto_operacional_descripcion, 
+            f.id_costos_reparacion, 
+            cr.valor AS costos_reparacion_valor, 
+            cr.nombre AS costos_reparacion_descripcion, 
+            f.id_flexibilidad_operacional, 
+            flex.valor AS flexibilidad_operacional_valor, 
+            flex.nombre AS flexibilidad_operacional_descripcion, 
+            f.calculo_severidad,
+            f.id_ocurrencia, 
+            o.valor AS ocurrencia_valor, 
+            o.nombre AS ocurrencia_descripcion, 
+            f.ocurrencia_mate, 
+            f.id_probabilidad_deteccion, 
+            pd.valor AS probabilidad_deteccion_valor, 
+            pd.descripcion AS probabilidad_deteccion_descripcion,
+            f.RPN,
+            f.id_riesgo,
+            r.nombre AS nombre_riesgo,
+            p.nombre_completo AS nombre_completo,
+            p.id AS id_personal
+          FROM fmea f
+        LEFT JOIN equipo_info ei ON f.id_equipo_info = ei.id
+        LEFT JOIN personal p ON ei.id_personal = p.id
+        LEFT JOIN subsistemas s ON f.id_sistema = s.id
+        LEFT JOIN falla_funcional ff ON f.id_falla_funcional = ff.id
+        LEFT JOIN componentes c ON f.id_componente = c.id
+        LEFT JOIN codigo_modo_falla cmf ON f.id_codigo_modo_falla = cmf.id
+        LEFT JOIN consecutivo_modo_falla cf ON f.id_consecutivo_modo_falla = cf.id
+        LEFT JOIN descripcion_modo_falla dmf ON f.id_descripcion_modo_falla = dmf.id
+        LEFT JOIN causa ON f.id_causa = causa.id
+        LEFT JOIN mecanismo_falla mf ON f.id_mecanismo_falla = mf.id
+        LEFT JOIN detalle_falla df ON f.id_detalle_falla = df.id
+        LEFT JOIN fallo_oculto fo ON f.id_fallo_oculto = fo.id
+        LEFT JOIN seguridad_fisica sf ON f.id_seguridad_fisica = sf.id
+        LEFT JOIN medio_ambiente ma ON f.id_medio_ambiente = ma.id
+        LEFT JOIN impacto_operacional io ON f.id_impacto_operacional = io.id
+        LEFT JOIN costos_reparacion cr ON f.id_costos_reparacion = cr.id
+        LEFT JOIN flexibilidad_operacional flex ON f.id_flexibilidad_operacional = flex.id
+        LEFT JOIN ocurrencia o ON f.id_ocurrencia = o.id
+        LEFT JOIN probabilidad_deteccion pd ON f.id_probabilidad_deteccion = pd.id
+        LEFT JOIN riesgo r ON f.id_riesgo = r.id
+        WHERE f.id_equipo_info = %s
     """
     cursor.execute(query, (id_equipo_info,))
     fmeas = cursor.fetchall()
@@ -3611,7 +4305,7 @@ def obtener_rcm_por_equipo_info(id_equipo_info):
                 r.intervalo_inicial_horas
             FROM rcm r
             LEFT JOIN fmea f ON r.id_fmea = f.id
-            LEFT JOIN sistema s ON f.id_sistema = s.id
+            LEFT JOIN subsistemas s ON f.id_sistema = s.id
             LEFT JOIN falla_funcional ff ON f.id_falla_funcional = ff.id
             LEFT JOIN componentes c ON f.id_componente = c.id
             LEFT JOIN codigo_modo_falla cmf ON f.id_codigo_modo_falla = cmf.id
@@ -3662,7 +4356,7 @@ def obtener_mta_por_equipo_info(id_equipo_info):
         FROM mta m
         LEFT JOIN rcm r ON m.id_rcm = r.id
         LEFT JOIN equipo_info ei ON m.id_equipo_info = ei.id
-        LEFT JOIN sistema s ON m.id_sistema = s.id
+        LEFT JOIN subsistemas s ON m.id_sistema = s.id
         LEFT JOIN componentes c ON m.id_componente = c.id
         LEFT JOIN falla_funcional ff ON m.id_falla_funcional = ff.id
         LEFT JOIN descripcion_modo_falla dmf ON m.id_descripcion_modo_falla = dmf.id
@@ -3882,46 +4576,3 @@ def actualizar_diagrama(id_diagrama, diagrama_flujo_file, diagrama_caja_negra_fi
         db.connection.commit()
 
     cursor.close()
-
-
-def obtener_id_sistema_por_equipo_info(id_equipo_info):
-    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
-    query = """
-        SELECT id_sistema 
-        FROM equipo_info 
-        WHERE id = %s
-    """
-    cursor.execute(query, (id_equipo_info,))
-    fila = cursor.fetchone()
-    cursor.close()
-    return fila['id_sistema'] if fila else None
-
-
-
-def obtener_id_equipo_por_equipo_info(id_equipo_info):
-    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
-    query = """
-        SELECT id_equipo 
-        FROM equipo_info 
-        WHERE id = %s
-    """
-    cursor.execute(query, (id_equipo_info,))
-    fila = cursor.fetchone()
-    cursor.close()
-    return fila['id_equipo'] if fila else None
-
-
-
-
-
-def check_nombre_equipo_exists(nombre_equipo):
-    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
-    query = "SELECT COUNT(*) AS count FROM equipo_info WHERE nombre_equipo = %s AND estado = 'activo'"
-    cursor.execute(query, (nombre_equipo,))
-    result = cursor.fetchone()
-    cursor.close()
-    return result['count'] > 0
-
-
-
-

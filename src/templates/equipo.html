@@ -152,10 +152,11 @@
       <br>
 
       <div>
-        <a href="{{ url_for('editar_equipo', id_equipo_info=id_equipo_info) }}" class="btn btn-primary">
+
+        <a href="{{ url_for('editar_equipo', id_equipo_info=id_equipo_info) }}" class="btn btn-primary no-print FMEA-edit">
           <i class="bi bi-pen" style="color: whitesmoke;"></i>
       </a>      
-      <button id="btn-eliminar-equipo" class="btn btn-danger" data-equipo-id="{{ id_equipo_info }}">
+      <button id="btn-eliminar-equipo" class="btn btn-danger no-print" data-equipo-id="{{ id_equipo_info }}">
         <i class="bi bi-trash-fill" style="color: whitesmoke;"></i>
       </button>
     

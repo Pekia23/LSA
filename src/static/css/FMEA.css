@@ -81,9 +81,9 @@ body {
 .btn-primary {
     background-color: rgb(33, 33, 99);
     color: white;
-    padding: 10px 20px;
+    padding: 6px 5px;
     border: none;
-    font-size: 16px;
+    font-size: 10px;
     cursor: pointer;
     text-decoration: none; /* Evita subrayado en el enlace si lo hubiera */
 }
@@ -126,6 +126,7 @@ h3 {
     margin: 0 auto; /* Centra la tabla horizontalmente */
     border-collapse: collapse; /* Elimina los espacios entre bordes de celdas */
     text-align: left; /* Alinea el texto dentro de las celdas a la izquierda */
+
 }
 
 i{
@@ -170,9 +171,10 @@ tr{
     justify-content: center;
 }
 
-.FMEA-edit{
-    margin: 5px;
+i{
+    color:white;
 }
+
 
 .mta{
     padding: 2px 30px; /* Ajusta el padding según tus preferencias */
@@ -185,4 +187,13 @@ tr{
     display: inline-flex; /* Para adaptar el tamaño al contenido */
     align-items: center; /* Alinea el contenido del botón (texto e íconos) verticalmente */
     justify-content: center;
+
+}
+
+.herramientas{
+    max-width: 100px;
+    max-width: 100px;
+    object-fit: contain;
+    display: block;
+    margin: auto; 
 }

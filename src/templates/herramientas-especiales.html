@@ -33,9 +33,12 @@
             <tr>
               <th scope="col">Nombre de la herramienta</th>
               <th scope="col">Parte número</th>
+<<<<<<< HEAD
               <th scope="col">Dibujo de sección transversal</th>
               <th scope="col">Cantidad</th>
 
+=======
+>>>>>>> origin/main
               <th scope="col">Costo</th>
             </tr>
           </thead>
@@ -44,6 +47,7 @@
             <tr>
               <td>{{ analisis.nombre }}</td>
               <td>{{ analisis.parte_numero }}</td>
+<<<<<<< HEAD
               <td>
                 {% if analisis.dibujo_seccion_transversal %}
                 <img src="data:image/png;base64,{{ analisis.dibujo_seccion_transversal|b64encode }}" alt="Dibujo" style="max-width: 100px; max-height: 100px;">
@@ -51,6 +55,8 @@
               </td>
               <td>{{ analisis.cantidad }}</td>
 
+=======
+>>>>>>> origin/main
               <td>{{ analisis.valor }}</td>
             </tr>
             {% endfor %}
@@ -80,7 +86,11 @@
               <td>{{ herramienta.parte_numero }}</td>
               <td>
                 {% if herramienta.dibujo_seccion_transversal %}
+<<<<<<< HEAD
                 <img src="data:image/png;base64,{{ herramienta.dibujo_seccion_transversal|b64encode }}" alt="Dibujo" style="max-width: 100px; max-height: 100px;">
+=======
+                <img src="data:image/png;base64,{{ herramienta.dibujo_seccion_transversal|b64encode }}" alt="Dibujo" style="max-width: 100px; max-height: 100px;" class="herramientas">
+>>>>>>> origin/main
                 {% endif %}
               </td>
               <td>{{ herramienta.cantidad }}</td>
@@ -93,6 +103,7 @@
     <div class="mt-4">
 
       <a href="{{ url_for('mostrar_herramientas_especiales',id_equipo_info=id_equipo_info) }}" class="btn btn-primary no-print">Editar Herramientas</a>
+
 
 
     </div>
