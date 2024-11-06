@@ -1,5 +1,20 @@
-# LSA
-Documentación:
-¿Que se trata LSA?
-Este proceso integral se enfoca en garantizar que los sistemas y productos operen de manera óptima a lo largo de su ciclo de vida, minimizando costos, optimizando el tiempo de actividad y asegurando la satisfacción del usuario final, con el fin de aumentar la fiabilidad mediante la identificación de acciones de mantenimiento preventivo y disminuir el tiempo de inactividad por mantenimiento al definir las acciones de mantenimiento y los recursos de apoyo necesarios. 
+# LSA 📊
+
+## Documentación 📘
+
+### ¿De qué se trata LSA? 🔍
+Este proceso integral se enfoca en garantizar que los **sistemas y productos** operen de manera óptima a lo largo de su ciclo de vida, minimizando **costos** y optimizando el **tiempo de actividad**.
+
+### Objetivos 🎯
+- **Minimizar costos** asociados al ciclo de vida.
+- **Optimizar el tiempo de actividad** de los sistemas.
+- **Aumentar la fiabilidad** mediante mantenimiento preventivo.
+
+### Acciones Principales 🔧
+| Acción                   | Descripción                                               |
+|--------------------------|-----------------------------------------------------------|
+| Mantenimiento preventivo | Reducir tiempos de inactividad                            |
+| Recursos necesarios      | Definir equipos y personal necesario para cada acción     |
+
+> **Nota:** Este proceso es fundamental para garantizar la satisfacción del usuario final y reducir el tiempo de inactividad.
 
