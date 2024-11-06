@@ -201,10 +201,9 @@ app.config['SECRET_KEY'] = 'tu_clave_secreta_aquí'
 
 
 
-@app.errorhandler(Exception)
-
+""" @app.errorhandler(Exception)
 def handle_all_errors(error):
-    return render_template('error.html'), 500  
+    return render_template('error.html'), 500   """
 
 @app.route('/check', methods=['GET', 'POST'])
 def check_db_connection():
