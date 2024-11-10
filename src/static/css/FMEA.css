@@ -1,0 +1,199 @@
+body {
+    background-color: #f5f5f5;
+}
+
+.navbar{
+    position: sticky;  /* Hace que el elemento sea pegajoso */
+    top: 0;            /* El valor de 'top' define a partir de qué punto se pega */
+    z-index: 1000;     /* Asegura que esté por encima de otros elementos */
+    /* Otros estilos que necesites para el diseño */
+}
+
+.scroll-container-horizontal {
+    width:auto;        /* Ancho del contenedor */
+    overflow-x: scroll;  /* Habilita el scroll horizontal */
+    border-bottom: 1px solid #ccc; /* Borde para visualizar mejor el área */
+    border-top: 1px solid #ccc;
+}
+
+.navbarvertical {
+    width: auto;
+    padding: 10px;
+}
+
+.navbarvertical .nav-link {
+    white-space: nowrap; /* Asegura que el texto no se corte en varias líneas */
+    color: #052647;;
+    font-weight: bold;
+
+}
+
+.custom-toggler {
+    display: flex;         /* Establece un contenedor flex para centrar el ícono */
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center;   /* Centra verticalmente */
+    width: 50px;           /* Ajusta el ancho del botón si es necesario */
+    height: 50px;          /* Ajusta la altura del botón si es necesario */      /* Mueve el ícono 60px hacia abajo */
+}
+
+.custom-toggler .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%23052647' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    background-size: 40px 40px; /* Ajusta el tamaño aquí */
+    width: 40px;
+    height: 40px; 
+    text-align: center;
+}
+
+.col-auto{
+    align-items: center;
+    max-height:auto ;
+    padding-top: 50px;
+    /*box-shadow: 10px 10px 5px rgba(137, 143, 233, 0.3)*/
+}
+
+.section-title {
+    color:  #0c377f !important; /* Azul */
+    font-weight: bold; /* Negrita */
+    margin-top: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.form-label {
+    font-weight: bold; 
+    display: block;
+}
+
+.form-control {
+    margin-bottom: 15px;
+}
+
+.nav-link{
+    color: #0c377f; /* Azul */
+    font-weight: bold;
+    margin: 0;
+}
+
+.col{
+    padding:35px 85px 30px 45px;
+}
+
+.btn-primary {
+    background-color: rgb(33, 33, 99);
+    color: white;
+    padding: 6px 5px;
+    border: none;
+    font-size: 10px;
+    cursor: pointer;
+    text-decoration: none; /* Evita subrayado en el enlace si lo hubiera */
+}
+
+.btn-primary:hover {
+    background-color:rgb(13, 2, 63) ;
+    color: inherit; /* Esto asegura que el link no cambie de color */
+    text-decoration: none; /* Evita subrayado en el enlace si lo hubiera */
+    color: white;
+}
+
+#navbarContent{
+    padding-top: 40px;
+}
+
+.pen {
+    color: white !important; /* Cambia el color del icono a blanco */
+}
+
+a{
+    color: inherit; /* Esto asegura que el link no cambie de color */
+    text-decoration: none; /* Evita subrayado en el enlace si lo hubiera */
+    color: white;
+}
+
+h3 {
+    color:  #0c377f !important; /* Azul */
+    font-weight: bold; /* Negrita */
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+
+.icon-size {
+    font-size: 30px; /* Puedes ajustar el tamaño aquí */
+  }
+
+.tablas {
+    width: 60%; /* Ajusta el ancho de la tabla al 60% del contenedor */
+    margin: 0 auto; /* Centra la tabla horizontalmente */
+    border-collapse: collapse; /* Elimina los espacios entre bordes de celdas */
+    text-align: left; /* Alinea el texto dentro de las celdas a la izquierda */
+
+}
+
+i{
+    color:white;
+}
+
+.boton{
+    background-color: rgb(33, 33, 99);
+    color: white;
+    padding: 7px 12px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    text-decoration: none; /* Evita subrayado en el enlace si lo hubiera */
+}
+
+.bi-arrow-left-circle-fill{
+    color:#052647;
+    font-size: 40px;
+}
+
+tr{
+    text-align: center;
+    vertical-align: middle; 
+}
+
+.bi-eye, .bi-arrow-down-circle, .bi-file-earmark{
+    color:#052647
+}
+
+.btn-warning, .btn-success{
+    padding: 2px 30px; /* Ajusta el padding según tus preferencias */
+    font-size: 16px; /* Tamaño de fuente */
+    cursor: pointer; /* Cambia el cursor a pointer */
+    color: white; 
+}
+
+.btn-warning a, .btn-success a{
+    display: inline-flex; /* Para adaptar el tamaño al contenido */
+    align-items: center; /* Alinea el contenido del botón (texto e íconos) verticalmente */
+    justify-content: center;
+}
+
+i{
+    color:white;
+}
+
+
+.mta{
+    padding: 2px 30px; /* Ajusta el padding según tus preferencias */
+    font-size: 16px; /* Tamaño de fuente */
+    cursor: pointer; /* Cambia el cursor a pointer */
+    color: white; 
+}
+
+.mta a{
+    display: inline-flex; /* Para adaptar el tamaño al contenido */
+    align-items: center; /* Alinea el contenido del botón (texto e íconos) verticalmente */
+    justify-content: center;
+
+}
+
+.herramientas{
+    max-width: 100px;
+    max-width: 100px;
+    object-fit: contain;
+    display: block;
+    margin: auto; 
+}

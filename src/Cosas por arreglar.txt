@@ -1,0 +1,13 @@
+1. que en editar se muestren todos los componentes y no solo
+los compotenentes que estan llenos.
+
+2. UPDATE de analisis_funcional
+
+1.1 un onload en la pagina de editar analisis funcional que carge todos los compotenentes y que se autollenen los que
+coinciden con los que le llegan del backend, pero los que no tienen dato o es vacio, solo se deja vacio.
+
+
+1. Funcion para obtener todos los componentes de la tabla de componentes por id_subsistema
+con esos componentes se les va a añadir verbo y accion a los que esten en la tabla de componente_analisis_funcional, 
+si no estan en la tabla de componente_analisis_funcional se les va a añadir verbo y accion vacios.
+y estos son los que se pasaran a la vista de mostrar y de editar analisis funcional.

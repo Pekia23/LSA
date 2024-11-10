@@ -1,0 +1,63 @@
+{% extends '/base.html' %}
+
+{% block title %}LSA de {{ equipo.nombre_equipo }}{% endblock %}
+
+{%block custom%}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mostrar_general.css') }}">
+{%endblock%}
+
+{%block nombre%}{{ equipo.nombre_equipo }}{%endblock%}
+
+{% block body %}
+
+    <div class="container" id="reporte" >
+
+        <button class="reporte no-print" id="botonPDF" data-nombre-equipo="{{ equipo.nombre_equipo }}">
+
+            <img src="{{ url_for('static', filename='img/acrobata.png') }}" alt="PDF">
+            <span class="text">Generar informe</span>
+        </button>
+        <br>
+        <!-- Incluir Información del Equipo -->
+        <div class="section">
+            {% include 'equipo.html' %}
+        </div>
+        <br>
+        <!-- Incluir Análisis Funcional -->
+        <div class="section">
+            {% include 'analisis_funcional.html' %}
+        </div>
+        <br>
+        <!-- Incluir Herramientas Especiales -->
+        <div class="section">
+            {% include 'herramientas-especiales.html' %}
+        </div>
+        <br>
+        <!-- Incluir Repuesto -->
+        <div class="section">
+            {% include 'repuesto.html' %}
+        </div>
+        <br>
+
+        <!-- Incluir FMEA -->
+
+        <div class="section special-fmea">
+            {% include 'FMEA.html' %}
+        </div>
+        <br>
+        <!-- Incluir RCM -->
+        <div class="section">
+            {% include 'RCM.html' %}
+        </div>
+        <br>
+        <!-- Incluir MTA -->
+        <div class="section">
+            {% include 'MTA.html' %}
+        </div>
+        <br>
+        <a href="{{ url_for('index') }} " class="volver"><i class="bi bi-arrow-left-circle-fill"></i></a>
+        <br>
+    </div>
+{% endblock %}
+
