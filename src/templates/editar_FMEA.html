@@ -45,10 +45,14 @@
                 <th>OR - Costos de Reparación (Descripción)</th>
                 <th>FO - Flexibilidad Operacional (Valor)</th>
                 <th>FO - Flexibilidad Operacional (Descripción)</th>
+                <th>Cálculo de Severidad</th>
                 <th>Ocurrencia (Valor)</th>
                 <th>Ocurrencia (Descripción)</th>
+                <th>Ocurrencia Matemática</th>
                 <th>Probabilidad de Detección (Valor)</th>
                 <th>Probabilidad de Detección (Descripción)</th>
+                <th>RPN</th>
+                <th>Riesgo</th>
                 <th colspan="4">Acciones</th> <!-- columna para los botones -->
 
               </tr>
@@ -80,10 +84,14 @@
                 <td>{{ fmea['costos_reparacion_descripcion'] }}</td>
                 <td>{{ fmea['flexibilidad_operacional_valor'] }}</td>
                 <td>{{ fmea['flexibilidad_operacional_descripcion'] }}</td>
+                <td>{{ fmea['calculo_severidad'] }}</td>
                 <td>{{ fmea['ocurrencia_valor'] }}</td>
                 <td>{{ fmea['ocurrencia_descripcion'] }}</td>
+                <td>{{ fmea['ocurrencia_mate'] }}</td>
                 <td>{{ fmea['probabilidad_deteccion_valor'] }}</td>
                 <td>{{ fmea['probabilidad_deteccion_descripcion'] }}</td>
+                <td>{{ fmea['RPN']}}</td>
+                <td>{{ fmea['nombre_riesgo']}}</td>
                 <td>
                   <!-- Botón de Editar -->
                   <a href="{{ url_for('editar_FMEA', fmea_id=fmea['id'],  id_equipo_info=id_equipo_info) }}" class="btn  btn-sm boton"><i class="bi bi-pen pen" ></i></a>

@@ -752,6 +752,8 @@ def obtener_fmeas(id_equipo_info):
             'flexibilidad_operacional_descripcion': fmea['flexibilidad_operacional_descripcion'],
             'ocurrencia_valor': fmea['ocurrencia_valor'],
             'ocurrencia_descripcion': fmea['ocurrencia_descripcion'],
+            'ocurrencia_mate': fmea['ocurrencia_mate'],  # Añadir este campo
+            'calculo_severidad': fmea['calculo_severidad'],
             'probabilidad_deteccion_valor': fmea['probabilidad_deteccion_valor'],
             'probabilidad_deteccion_descripcion': fmea['probabilidad_deteccion_descripcion'],
             'RPN': fmea['RPN'],
@@ -834,6 +836,16 @@ def actualizar_fmea(
 
 ##################################################################################################################
 
+def obtener_aor_por_id_equipo_info(id_equipo_info):
+    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = "SELECT AOR FROM equipo_info WHERE id = %s"
+    cursor.execute(query, (id_equipo_info,))
+    resultado = cursor.fetchone()
+    cursor.close()
+    if resultado:
+        return resultado['AOR']
+    else:
+        return None
 
 def insertar_procedimiento(arranque, parada):
     cursor = db.connection.cursor()
@@ -2577,55 +2589,6 @@ def eliminar_mta(id_mta):
     cursor.close()
 
 
-def obtener_mtas_completos():
-    cursor = db.connection.cursor()
-    query = """
-    SELECT 
-        m.id, 
-        m.id_rcm, 
-        m.id_equipo_info, 
-        m.id_sistema, 
-        m.id_componente, 
-        m.id_falla_funcional, 
-        m.id_descripcion_modo_falla, 
-        m.id_tipo_mantenimiento, 
-        m.id_tarea_mantenimiento, 
-        m.cantidad_personal, 
-        m.consumibles_requeridos, 
-        m.requeridos_tarea, 
-        m.condiciones_ambientales, 
-        m.condiciones_estado_equipo, 
-        m.condiciones_especiales, 
-        m.horas, 
-        m.minutos, 
-        m.detalle_tarea,
-        ei.nombre_equipo as equipo, 
-        s.nombre as sistema, 
-        c.nombre as componente, 
-        ff.nombre as falla_funcional, 
-        dmf.nombre as descripcion_modo_falla, 
-        tm.nombre as tipo_mantenimiento, 
-        tmr.nombre as tarea_mantenimiento,
-        l.nivel,
-        l.actividades,
-        l.operario        
-    FROM mta m
-    LEFT JOIN rcm r ON m.id_rcm = r.id
-    LEFT JOIN equipo_info ei ON m.id_equipo_info = ei.id
-    LEFT JOIN sistema s ON m.id_sistema = s.id
-    LEFT JOIN componentes c ON m.id_componente = c.id
-    LEFT JOIN falla_funcional ff ON m.id_falla_funcional = ff.id
-    LEFT JOIN descripcion_modo_falla dmf ON m.id_descripcion_modo_falla = dmf.id
-    LEFT JOIN tipo_mantenimiento tm ON m.id_tipo_mantenimiento = tm.id
-    LEFT JOIN tarea_mantenimiento tmr ON m.id_tarea_mantenimiento = tmr.id
-    LEFT JOIN lora_mta l ON m.id = l.id_mta
-    """
-    cursor.execute(query)
-    mtas = cursor.fetchall()
-    cursor.close()
-    return mtas
-
-
 
 def obtener_nombre_componente_por_id(componente_id):
     cursor = db.connection.cursor()
@@ -4326,47 +4289,6 @@ def obtener_fmeas_por_equipo_info(id_equipo_info):
 
 
 
-def obtener_rcm_por_equipo_info(id_equipo_info):
-    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
-    query = """
-            SELECT
-                r.id,
-                r.id_fmea,
-                f.id_equipo_info,
-                s.nombre as sistema, 
-                ff.nombre as falla_funcional, 
-                c.nombre as componente, 
-                cmf.nombre as codigo_modo_falla, 
-                cf.nombre as consecutivo_modo_falla, 
-                dmf.nombre as descripcion_modo_falla, 
-                causa.nombre as causa, 
-                r.hidden_failures,
-                r.safety,
-                r.environment,
-                r.operation,
-                r.h1_s1_n1_o1,
-                r.h2_s2_n2_o2,
-                r.h3_s3_n3_o3,
-                r.h4_s4,
-                r.h5,
-                r.tarea,
-                r.id_accion_recomendada,
-                r.intervalo_inicial_horas
-            FROM rcm r
-            LEFT JOIN fmea f ON r.id_fmea = f.id
-            LEFT JOIN subsistemas s ON f.id_sistema = s.id
-            LEFT JOIN falla_funcional ff ON f.id_falla_funcional = ff.id
-            LEFT JOIN componentes c ON f.id_componente = c.id
-            LEFT JOIN codigo_modo_falla cmf ON f.id_codigo_modo_falla = cmf.id
-            LEFT JOIN consecutivo_modo_falla cf ON f.id_consecutivo_modo_falla = cf.id
-            LEFT JOIN descripcion_modo_falla dmf ON f.id_descripcion_modo_falla = dmf.id
-            LEFT JOIN causa ON f.id_causa = causa.id
-            where f.id_equipo_info = %s
-        """
-    cursor.execute(query, (id_equipo_info,))
-    rcms = cursor.fetchall()
-    cursor.close()
-    return rcms
 
 # obtener_mta_por_equipo_info
 def obtener_mta_por_equipo_info(id_equipo_info):

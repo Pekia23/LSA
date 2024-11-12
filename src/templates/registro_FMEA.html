@@ -25,33 +25,32 @@
             <div class="col-md-4">
                 <label for="subsistema" class="form-label">Subsistema</label>
 
-                {%if subsistemas%}
-                <select class="form-control" id="subsistema" name="subsistema" onchange="cargarComponentes()">
-                    <option value="">Seleccione Subsistema</option>
-                        {% for subsistema in subsistemas %}
-                            <option value="{{ subsistema.id }}">{{ subsistema.nombre }}</option>
-                        {% endfor %}  
-                </select>
-                {%else%}
+                {%if subsistema%}
                     <p id="{{ subsistema.id }}">{{ subsistema }}</p>
+                {%else%}
+                    <select class="form-control" id="subsistema" name="subsistema" onchange="cargarComponentes()">
+                        <option value="">Seleccione Subsistema</option>
+                            {% for subsistema in subsistemas %}
+                                <option value="{{ subsistema.id }}">{{ subsistema.nombre }}</option>
+                            {% endfor %}  
+                    </select>
                 {%endif%}  
             </div>            
 
             <div class="col-md-4">
                 <label for="item_componente" class="form-label">Item o componente</label>
-                {%if componentes %}
-                <select class="form-control" id="item_componente" name="item_componente">
-                    <option value="" disabled selected>---- Selecciona el componente ----</option>
-                    {% for componente in componentes %}
-                    <option value="{{ componente['id'] }}" {% if componente['id']==fmea_id['id_componente'] %}selected{%
-                        endif %}>
-                        {{ componente['nombre'] }}
-                    </option>
-                    {% endfor %}
-                </select>
-
-                {%else%}
+                {%if componente %}
                     <p id="{{ componente.id }}">{{ componente }}</p>
+                {%else%}
+                    <select class="form-control" id="item_componente" name="item_componente">
+                        <option value="" disabled selected>---- Selecciona el componente ----</option>
+                        {% for componente in componentes %}
+                        <option value="{{ componente['id'] }}" {% if componente['id']==fmea_id['id_componente'] %}selected{%
+                            endif %}>
+                            {{ componente['nombre'] }}
+                        </option>
+                        {% endfor %}
+                    </select>
                 {%endif%} 
             </div>
             <div class="col-md-4">
@@ -291,7 +290,7 @@
             </div>
         </div>
         <div class="col-md-4">
-            <label for="ocurrencia_matematica" class="form-label">Ocurrencia Matemática</label>
+            <label for="ocurrencia_matematica" class="form-label" data-aor="{{ AOR }}">Ocurrencia Matemática</label>
             <input type="text" class="form-control gray-input" id="ocurrencia_matematica" name="ocurrencia_matematica"
                 readonly>
         </div>
