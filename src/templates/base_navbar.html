@@ -30,14 +30,14 @@
                     </li>
                     <li class="nav-item">
 
-                        <a class="nav-link {% if request.endpoint == 'registro_repuesto' %}active{% endif %}" href="{{ url_for('registro_repuesto',id_equipo_info=id_equipo_info) }}">
+                        <a class="nav-link {% if request.endpoint == 'registro_repuesto' %}active{% endif %}" href="{{ url_for('registro_repuesto', id_equipo_info=(id_equipo_info or session.get('id_equipo_info') or 0)) }}">
 
                             Repuesto
                         </a>
                     </li>
                     <li class="nav-item">
 
-                        <a class="nav-link {% if request.endpoint == 'registro_FMEA' %}active{% endif %}" href="{{ url_for('registro_FMEA',id_equipo_info=id_equipo_info) }}">
+                        <a class="nav-link {% if request.endpoint == 'registro_FMEA' %}active{% endif %}" href="{{ url_for('registro_FMEA',id_equipo_info=(id_equipo_info or session.get('user_data', {}).get('id_equipo_info', 0)), AOR=session.get('user_data', {}).get('AOR', 0)) }}">
 
                             FMEA
                         </a>

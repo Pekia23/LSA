@@ -18,6 +18,7 @@ from database import (
 
     obtener_id_equipo_por_equipo_info,
     obtener_id_sistema_por_equipo_info,
+    obtener_aor_por_id_equipo_info,
 
 
     insertar_componente_analisis_funcional,
@@ -178,10 +179,9 @@ from database import (
     actualizar_mta_lora,
     actualizar_mta,
 
-    obtener_rcm_por_id,
+
     obtener_mtas_completos,
 
-    eliminar_mta,
     obtener_herramientas_mta,
     obtener_repuestos_mta,
     obtener_mta_lora,
@@ -406,6 +406,9 @@ def registro_generalidades(id_sistema=None, id_equipo=None):
             usuario_id=g.usuario_id
 
         )
+        session['user_data'] = session.get('user_data', {})
+        session['user_data']['id_equipo_info'] = equipo_info_id
+        session['user_data']['AOR'] = AOR
 
         return redirect(url_for('registro_analisis_funcional'))
     else:
@@ -721,16 +724,20 @@ def mostrar_repuestos():
         return redirect(url_for('registro_generalidades'))
 
     repuestos = obtener_repuestos_por_equipo_info(id_equipo_info)
-    return render_template('mostrar_repuesto.html', repuestos=repuestos)
+    return render_template('mostrar_repuesto.html', repuestos=repuestos,id_equipo_info=id_equipo_info)
 
 
 
 # app.py
 @app.route('/api/repuesto', methods=['POST'])
 def agregar_repuesto():
+
     token = g.user_token
     user_data = obtener_info_usuario(token)
     id_equipo_info = user_data.get('id_equipo_info')
+    if id_equipo_info is None:
+        id_equipo_info = request.form.get('id_equipo_info')
+
 
     print(f"id_equipo_info en agregar_repuesto: {id_equipo_info}")
 
@@ -1022,6 +1029,8 @@ def mostrar_herramientas_especiales():
 
     # Priorizar el parámetro de URL 'id_equipo_info' si está presente
     id_equipo_info = request.args.get('id_equipo_info')
+    analisis = obtener_analisis_herramientas_por_equipo(id_equipo_info)
+    herramientas = obtener_herramientas_especiales_por_equipo(id_equipo_info)
 
 
     if not id_equipo_info:
@@ -1032,7 +1041,7 @@ def mostrar_herramientas_especiales():
         analisis = obtener_analisis_herramientas_por_equipo(id_equipo_info)
         herramientas = obtener_herramientas_especiales_por_equipo(id_equipo_info)
 
-
+    
 
     if id_equipo_info is None:
         return redirect(url_for('registro_generalidades'))
@@ -1141,6 +1150,7 @@ def cargar_id_equipo_info():
     print(f"Token en before_request: {g.user_token}")
     print(f"id_equipo_info en sesión: {g.id_equipo_info}")
 
+
 @app.route('/LSA/equipo/editar-FMEA/<int:id_equipo_info>')
 def editar_FMEA_lista(id_equipo_info):
 
@@ -1170,16 +1180,26 @@ def editar_FMEA_lista(id_equipo_info):
 @app.route('/LSA/editar-FMEA/<int:id_equipo_info>/<int:fmea_id>')
 def editar_FMEA(id_equipo_info,fmea_id):
     
-    
+    AOR = request.args.get('AOR', None)
 
     if not id_equipo_info:
         # Si no se recibe el parámetro, se toma el de la sesión
         token = g.user_token
         user_data = obtener_info_usuario(token)
         id_equipo_info = user_data.get('id_equipo_info')
+        AOR = session.get('user_data', {}).get('AOR')
+        AOR = user_data.get('AOR') or obtener_aor_por_id_equipo_info(id_equipo_info)
 
 
 
+    
+    if not AOR:
+        AOR = session.get('user_data', {}).get('AOR')
+
+    if not AOR:
+        AOR =  obtener_aor_por_id_equipo_info(id_equipo_info)
+   
+    
 
     subsistema_id = session.get('subsistema_id')
 
@@ -1229,6 +1249,7 @@ def editar_FMEA(id_equipo_info,fmea_id):
                            ocurrencia_datos = ocurrencia_datos,
                            probabilidad_deteccion_datos = probabilidad_deteccion_datos,
                            lista_riesgos= lista_riesgos,
+                           AOR=AOR,
                            id_equipo_info=id_equipo_info
                            )
 
@@ -1273,7 +1294,7 @@ def guardar_cambios_fmea(fmea_id,id_equipo_info):
     id_costos_reparacion = request.form.get('costos_reparacion')
     id_flexibilidad_operacional = request.form.get('flexibilidad_operacional')
 
-    calculo_severidad = request.form.get('severidad')
+    calculo_severidad = request.form.get('calculo_severidad')
     id_ocurrencia = request.form.get('ocurrencia')
     ocurrencia_mate = request.form.get('ocurrencia_matematica')
     id_probabilidad_deteccion = request.form.get('probabilidad_deteccion') 
@@ -1677,6 +1698,7 @@ def editar_MTA(rcm_id,id_equipo_info):
     print("herramientas_mta")
     print(herramientas_mta)
     dict_herramientas_por_tipo = obtener_herramientas_requeridas_por_tipo()
+    herramientas = 0
     return render_template('registro_mta.html',
                            tipo_de_manteniemto=tipo_de_manteniemto,
                            tarea_mantenimento=tarea_mantenimento,
@@ -1687,6 +1709,7 @@ def editar_MTA(rcm_id,id_equipo_info):
                            herramientas_mta=herramientas_mta,
                            herramientas_por_tipo=dict_herramientas_por_tipo,
                            id_equipo_info=id_equipo_info,
+                           herramienta=herramientas,
                            editar=True)
 
 @app.route('/LSA/eliminar-MTA/<int:mta_id>/<int:id_equipo_info>')
@@ -1712,7 +1735,7 @@ def eliminar_MTA(mta_id,id_equipo_info):
     eliminar_herramientas_requeridas_mta(mta_id)
     eliminar_repuestos_requeridos_mta(mta_id)
     eliminar_mta(mta_id)
-    return redirect(url_for('editar_MTA_lista'))
+    return redirect(url_for('editar_MTA_lista',id_equipo_info=id_equipo_info))
 
 @app.route('/LSA/editar-MTA-lista/<int:id_equipo_info>')
 def editar_MTA_lista(id_equipo_info):
@@ -1911,6 +1934,7 @@ def registro_RCM():
 @app.route('/LSA/registro-FMEA/')
 def registro_FMEA():
     # Obtener el token y datos del usuario
+    AOR = request.args.get('AOR', None)
     id_equipo_info = request.args.get('id_equipo_info')
     
     id_equipo = obtener_id_equipo_por_equipo_info(id_equipo_info)
@@ -1921,17 +1945,19 @@ def registro_FMEA():
         user_data = obtener_info_usuario(token)
         id_equipo_info = user_data.get('id_equipo_info')
         id_equipo = user_data.get('id_equipo') or session.get('id_equipo')
+        AOR = session.get('user_data', {}).get('AOR')
     
     # Obtener el id_equipo desde los datos del usuario o la sesión
 
 
-    #id_equipo = user_data.get('id_equipo') or session.get('id_equipo')
 
-
-
+    AOR = session.get('user_data', {}).get('AOR')
     # Si el id_equipo no está en la sesión, lo añadimos
     if id_equipo:
         session['id_equipo'] = id_equipo
+    
+    if not AOR:
+        AOR = obtener_aor_por_id_equipo_info(id_equipo_info)
     
     # Obtener subsistemas relacionados al equipo
     subsistemas = obtener_subsistemas_por_equipo(id_equipo) if id_equipo else []
@@ -1953,7 +1979,6 @@ def registro_FMEA():
 
     probabilidad_deteccion_datos = obtener_probablilidad_deteccion()
     lista_riesgos = obtener_lista_riesgos() or []
-    AOR = session.get('AOR')
 
     # Renderizar la plantilla con los datos
     return render_template(
@@ -2168,10 +2193,26 @@ def registro_lora():
 def registro_analisis_funcional():
     return render_template('registro_analisis_funcional.html')
 """
-@app.route('/LSA/registro-repuesto')
-def registro_repuesto():
-    return render_template('registro_repuesto.html')
 
+@app.route('/LSA/registro-repuesto/<int:id_equipo_info>')
+def registro_repuesto(id_equipo_info):
+    
+    if not id_equipo_info or id_equipo_info == 0:
+        id_equipo_info = session.get('id_equipo_info')
+
+    if not id_equipo_info:
+        token = g.get('user_token')
+        if token:
+            user_data = obtener_info_usuario(token)
+            id_equipo_info = user_data.get('id_equipo_info')
+
+    return render_template('registro_repuesto.html', id_equipo_info=id_equipo_info)
+
+@app.context_processor
+def inject_id_equipo_info():
+    from flask import session, g
+    id_equipo_info = g.get('id_equipo_info') or session.get('id_equipo_info', 0)
+    return {'id_equipo_info': id_equipo_info}
 
 
 
@@ -2441,6 +2482,8 @@ def mostrar_general():
 
 @app.route('/LSA/mostrar-general/<int:id_equipo_info>', methods=['GET'])
 def mostrar_general_page(id_equipo_info):
+        session['id_equipo_info'] = id_equipo_info
+        g.id_equipo_info = id_equipo_info
         analisis_funcionales, componentes = obtener_analisis_funcionales_por_equipo_info(id_equipo_info)
         equipo = obtener_informacion_equipo_info(id_equipo_info)
         fmeas = obtener_fmeas_por_equipo_info(id_equipo_info)
