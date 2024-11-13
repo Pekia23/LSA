@@ -114,6 +114,13 @@ table, h3, .section {
     font-size: 11.5px; /* Ajuste de tamaño de texto si es necesario */
 }
 
+.imagend{
+    max-width: 800px;
+    object-fit: contain;
+}
 
-
+img {
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
 

@@ -31,7 +31,7 @@ function generatePDF(divElement, shouldDownload) {
         filename: `informe_${nombreEquipo}.pdf`,
         image: { type: 'jpeg', quality: 0.90 },
         html2canvas: { scale: 1.5 },
-        jsPDF: { unit: 'in', format: 'a1', orientation: 'landscape' },
+        jsPDF: { unit: 'mm', format: 'a1', orientation: 'landscape' },
         margin: [0.5, 0.5, 0.5, 0.5]
     };
 

@@ -11,8 +11,6 @@ import uuid  # Para generar un token único
 from __init__ import db
 from config import config
 from io import BytesIO
-from reportlab.lib.pagesizes import letter
-from reportlab.pdfgen import canvas
 
 from database import (
 
