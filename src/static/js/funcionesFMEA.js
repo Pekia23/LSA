@@ -36,35 +36,44 @@ function cargarComponentes() {
 function obtenerRiesgo(frecuencia, consecuencia) {
     // Definición de la matriz de riesgo textual
     const matrizTexto = {
-        10: { minima: "SEMI-CRITICO", menor: "SEMI-CRITICO", moderada: "CRITICO", mayor: "MUY CRITICO", maxima: "MUY CRITICO" },
-        8: { minima: "NO CRITICO", menor: "SEMI-CRITICO", moderada: "CRITICO", mayor: "MUY CRITICO", maxima: "MUY CRITICO" },
-        4: { minima: "NO CRITICO", menor: "SEMI-CRITICO", moderada: "CRITICO", mayor: "MUY CRITICO", maxima: "MUY CRITICO" },
-        2: { minima: "NO CRITICO", menor: "NO CRITICO", moderada: "SEMI-CRITICO", mayor: "CRITICO", maxima: "MUY CRITICO" }
+        rango10: { minima: "SEMI-CRITICO", menor: "SEMI-CRITICO", moderada: "CRITICO", mayor: "MUY CRITICO", maxima: "MUY CRITICO" },
+        rango8: { minima: "NO CRITICO", menor: "SEMI-CRITICO", moderada: "CRITICO", mayor: "MUY CRITICO", maxima: "MUY CRITICO" },
+        rango4: { minima: "NO CRITICO", menor: "SEMI-CRITICO", moderada: "SEMI-CRITICO", mayor: "CRITICO", maxima: "MUY CRITICO" },
+        rango2: { minima: "NO CRITICO", menor: "NO CRITICO", moderada: "SEMI-CRITICO", mayor: "CRITICO", maxima: "MUY CRITICO" }
     };
 
     // Función para determinar el rango de consecuencia
-    function determinarRango(consecuencia) {
+    function determinarRangoConsecuencia(consecuencia) {
         if (consecuencia >= 0 && consecuencia < 2) return "minima";
         else if (consecuencia >= 2 && consecuencia < 4) return "menor";
         else if (consecuencia >= 4 && consecuencia < 6) return "moderada";
         else if (consecuencia >= 6 && consecuencia < 8) return "mayor";
         else if (consecuencia >= 8 && consecuencia <= 10) return "maxima";
-        else return null; // Si el valor está fuera de rango
+        else return null; // Consecuencia fuera de rango
     }
 
-    // Determinar el rango de la consecuencia
-    const rangoConsecuencia = determinarRango(consecuencia);
+    // Función para determinar el rango de frecuencia
+    function determinarRangoFrecuencia(frecuencia) {
+        if (frecuencia >= 8 && frecuencia <= 10) return "rango10";
+        else if (frecuencia >= 6 && frecuencia < 8) return "rango8";
+        else if (frecuencia >= 4 && frecuencia < 6) return "rango4";
+        else if (frecuencia >= 0 && frecuencia < 4) return "rango2";
+        else return null; // Frecuencia fuera de rango
+    }
+
+    // Determinar el rango de frecuencia y consecuencia
+    const rangoFrecuencia = determinarRangoFrecuencia(frecuencia);
+    const rangoConsecuencia = determinarRangoConsecuencia(consecuencia);
 
     // Validación de entradas
-    if (!matrizTexto[frecuencia] || !rangoConsecuencia) {
+    if (!rangoFrecuencia || !rangoConsecuencia) {
         return "Valores de frecuencia o consecuencia fuera de rango";
     }
 
-    // Obteniendo los resultados
-    const riesgoTexto = matrizTexto[frecuencia][rangoConsecuencia];
+    // Obteniendo el resultado de riesgo textual
+    const riesgoTexto = matrizTexto[rangoFrecuencia][rangoConsecuencia];
 
-
-    return { riesgoTexto};
+    return {riesgoTexto};
 }
 
 
