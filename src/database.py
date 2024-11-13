@@ -1929,19 +1929,6 @@ def obtener_tipo_equipo_por_id(id_tipos_equipos):
 
 
 
-# Función para obtener un análisis funcional por su ID
-def obtener_analisis_funcional_por_id(id_analisis_funcional):
-    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
-    query = """
-        SELECT af.*
-        FROM analisis_funcional af
-        WHERE af.id = %s
-    """
-    cursor.execute(query, (id_analisis_funcional,))
-    analisis_funcional = cursor.fetchone()
-    cursor.close()
-    return analisis_funcional
-
 
 # Función para actualizar un análisis funcional existente
 def actualizar_analisis_funcional(id_analisis_funcional, verbo, accion, estandar_desempeño, id_subsistema):
@@ -1959,10 +1946,12 @@ def actualizar_analisis_funcional(id_analisis_funcional, verbo, accion, estandar
 # Función para eliminar un análisis funcional
 def eliminar_analisis_funcional(id_analisis_funcional):
     cursor = db.connection.cursor()
-    query = "DELETE FROM analisis_funcional WHERE id = %s"
+    # Cambiar el estado a 'inactivo' en lugar de eliminar
+    query = "UPDATE analisis_funcional SET estado = 'inactivo' WHERE id = %s"
     cursor.execute(query, (id_analisis_funcional,))
     db.connection.commit()
     cursor.close()
+
 
 
 def obtener_subsistemas_por_equipo_mostrar(id_equipo_info):
@@ -3237,7 +3226,7 @@ def obtener_analisis_funcionales_por_equipo_info(id_equipo_info):
     SELECT af.id, af.verbo, af.accion, af.estandar_desempeño, ss.nombre AS subsistema_nombre
     FROM analisis_funcional af
     JOIN subsistemas ss ON af.id_subsistema = ss.id
-    WHERE af.id_equipo_info = %s
+    WHERE af.id_equipo_info = %s AND af.estado = 'activo'
     """
 
     query2 = """
@@ -3245,7 +3234,7 @@ def obtener_analisis_funcionales_por_equipo_info(id_equipo_info):
         FROM componente_analisis_funcional cf
         JOIN analisis_funcional af ON af.id = cf.id_analisis_funcional
         JOIN componentes c ON c.id = cf.id_componente
-        WHERE af.id_equipo_info = %s;
+        WHERE af.id_equipo_info = %s AND af.estado = 'activo';
     """
 
 
@@ -3266,14 +3255,14 @@ def obtener_analisis_funcional_por_id(id_analisis_funcional):
     query = """
         SELECT af.*
         FROM analisis_funcional af
-        WHERE af.id = %s
+        WHERE af.id = %s AND af.estado = 'activo'
     """
 
     query2="""SELECT cf.id, cf.id_componente, c.nombre, cf.verbo, cf.accion, cf.id_analisis_funcional
         FROM componente_analisis_funcional cf
         JOIN analisis_funcional af ON cf.id_analisis_funcional = af.id
         JOIN componentes c ON c.id = cf.id_componente
-        WHERE af.id = %s;
+        WHERE af.id = %s AND af.estado = 'activo';
     """
 
     cursor.execute(query, (id_analisis_funcional,))
@@ -3321,13 +3310,6 @@ def actualizar_analisis_funcional(id_analisis_funcional, verbo, accion, estandar
     cursor.close()
 
 
-# Función para eliminar un análisis funcional
-def eliminar_analisis_funcional(id_analisis_funcional):
-    cursor = db.connection.cursor()
-    query = "DELETE FROM analisis_funcional WHERE id = %s"
-    cursor.execute(query, (id_analisis_funcional,))
-    db.connection.commit()
-    cursor.close()
 
 
 def obtener_subsistemas_por_equipo_mostrar(id_equipo_info):

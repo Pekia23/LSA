@@ -865,9 +865,19 @@ def b64encode_filter(data):
 
 @app.route('/api/analisis-herramientas', methods=['POST'])
 def agregar_analisis_herramienta():
-    token = g.user_token
-    user_data = obtener_info_usuario(token)
-    id_equipo_info = user_data.get('id_equipo_info')
+
+    id_equipo_info = (
+        request.args.get('id_equipo_info') or
+        session.get('id_equipo_info') or
+        request.form.get('id_equipo_info')
+    )
+
+    # Si no se recibe desde el formulario, tomarlo del usuario
+    if not id_equipo_info:
+        token = g.user_token
+        user_data = obtener_info_usuario(token)
+        id_equipo_info = user_data.get('id_equipo_info')
+
 
     nombre = request.form.get('nombre')
     valor = request.form.get('valor')
@@ -978,9 +988,31 @@ def obtener_equipo_por_id(id_equipo_info):
 
 @app.route('/api/herramientas-especiales', methods=['POST'])
 def agregar_herramienta_especial():
-    token = g.user_token
-    user_data = obtener_info_usuario(token)
-    id_equipo_info = user_data.get('id_equipo_info')
+
+    id_equipo_info = (
+        request.args.get('id_equipo_info') or
+        session.get('id_equipo_info') or
+        request.form.get('id_equipo_info')
+    )
+
+
+    # Depuración para verificar el valor recibido
+    print(f"ID Equipo Info recibido del formulario: {request.form.get('id_equipo_info')}")
+
+    print(f"ID Equipo Info recibido del formulario: {id_equipo_info}")
+
+    # Si no se recibe desde el formulario, tomarlo del usuario
+    if not id_equipo_info:
+        token = g.user_token
+        user_data = obtener_info_usuario(token)
+        id_equipo_info = user_data.get('id_equipo_info')
+
+    # Depuración para verificar el valor
+    print(f"ID Equipo Info recibido del formulario: {request.form.get('id_equipo_info')}")
+    print(f"ID Equipo Info final después de validación: {id_equipo_info}")
+
+    print(f"ID Equipo Info después de validación: {id_equipo_info}")
+
 
     parte_numero = request.form.get('parte_numero')
     nombre_herramienta = request.form.get('nombre_herramienta')
@@ -1028,10 +1060,13 @@ def agregar_herramienta_especial():
 def mostrar_herramientas_especiales():
 
     # Priorizar el parámetro de URL 'id_equipo_info' si está presente
-    id_equipo_info = request.args.get('id_equipo_info')
+    id_equipo_info = request.args.get('id_equipo_info') or session.get('id_equipo_info')
+
     analisis = obtener_analisis_herramientas_por_equipo(id_equipo_info)
     herramientas = obtener_herramientas_especiales_por_equipo(id_equipo_info)
+    # If not found, try to get it from the session
 
+    
 
     if not id_equipo_info:
         # Si no se recibe el parámetro, se toma el de la sesión
@@ -1041,7 +1076,7 @@ def mostrar_herramientas_especiales():
         analisis = obtener_analisis_herramientas_por_equipo(id_equipo_info)
         herramientas = obtener_herramientas_especiales_por_equipo(id_equipo_info)
 
-    
+
 
     if id_equipo_info is None:
         return redirect(url_for('registro_generalidades'))
@@ -1059,18 +1094,25 @@ def mostrar_herramientas_especiales():
     return render_template(
         'mostrar_herramientas-especiales.html',
         analisis=analisis,
-        herramientas=herramientas
+        herramientas=herramientas,
+        id_equipo_info=id_equipo_info
     )
 
 @app.route('/LSA/registro-herramientas-especiales', methods=['GET'])
 def registro_herramientas_especiales():
-    token = g.user_token
-    user_data = obtener_info_usuario(token)
-    id_equipo_info = user_data.get('id_equipo_info')
 
-    if id_equipo_info is None:
-        return redirect(url_for('registro_generalidades'))
+    # Priorizar el parámetro de URL 'id_equipo_info' si está presente
+    id_equipo_info = request.args.get('id_equipo_info') or session.get('id_equipo_info')
 
+
+    if not id_equipo_info:
+        # Si no se recibe el parámetro, se toma el de la sesión
+        token = g.user_token
+        user_data = obtener_info_usuario(token)
+        id_equipo_info = user_data.get('id_equipo_info')
+    
+
+    
     tipos_herramientas = obtener_tipos_herramientas()
 
     # Obtener el nombre del equipo
@@ -1079,7 +1121,8 @@ def registro_herramientas_especiales():
     return render_template(
         'registro_herramientas_especiales.html',
         equipo=equipo,
-        tipos_herramientas=tipos_herramientas
+        tipos_herramientas=tipos_herramientas,
+        id_equipo_info=id_equipo_info
     )
 
 
@@ -2188,11 +2231,6 @@ def obtener_nombre_falla(codigo_id):
 def registro_lora():
     return render_template('registro_lora.html')
 
-"""
-@app.route('/LSA/registro-analisis-funcional')
-def registro_analisis_funcional():
-    return render_template('registro_analisis_funcional.html')
-"""
 
 @app.route('/LSA/registro-repuesto/<int:id_equipo_info>')
 def registro_repuesto(id_equipo_info):

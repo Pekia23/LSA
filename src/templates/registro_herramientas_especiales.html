@@ -16,6 +16,9 @@
     <h2 class="section-title text-center">Análisis de Herramientas</h2>
     <br>
     <form id="analisis-herramientas-form" enctype="multipart/form-data">
+        <!-- Campo oculto para id_equipo_info -->
+        <input type="hidden" name="id_equipo_info" value="{{ id_equipo_info }}">
+
         <div class="row">
             <!-- Primera columna -->
             <div class="col-md-6 my-4">
@@ -56,6 +59,9 @@
     <h2 class="section-title text-center">Herramientas Especiales</h2>
     <br>
     <form id="herramientas-especiales-form" enctype="multipart/form-data">
+        <!-- Campo oculto para id_equipo_info -->
+        <input type="hidden" name="id_equipo_info" value="{{ id_equipo_info }}">
+
         <div class="row">
             <!-- Primera columna -->
             <div class="col-md-4 my-4">
@@ -101,7 +107,7 @@
         </div>
     </form>
     <div class="mt-4">
-        <a href="{{ url_for('mostrar_herramientas_especiales') }}" class="btn btn-primary">Visualizar Herramientas</a>
+        <a href="{{ url_for('mostrar_herramientas_especiales',id_equipo_info=id_equipo_info) }}" class="btn btn-primary">Visualizar Herramientas</a>
     </div>
 </div>
 

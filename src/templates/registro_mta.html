@@ -494,6 +494,7 @@
 <script src="{{ url_for('static', filename='js/registro_mta.js') }}"></script>
 <script>
 document.getElementById('mta-form').addEventListener('submit', function (event) {
+    event.preventDefault();
     const herramientaCheckboxes = document.querySelectorAll('.herramienta-checkbox:checked');
     const selectedHerramientas = Array.from(herramientaCheckboxes).map(cb => cb.value);
 
@@ -512,6 +513,7 @@ document.getElementById('mta-form').addEventListener('submit', function (event) 
     hiddenRepuestosField.name = 'selected_repuestos';
     hiddenRepuestosField.value = JSON.stringify(selectedRepuestos);
     this.appendChild(hiddenRepuestosField);
+    this.submit();
 });
 
 
