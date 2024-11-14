@@ -437,7 +437,7 @@ const nodos = {
         }
     },
     "ABB": {
-        pregunta: "Activar bandera B.",
+        pregunta: "Reparar por el primer escalón.",
         respuestas: {
             "Fin": "fin"
         }
@@ -449,19 +449,7 @@ const nodos = {
         }
     },
     "ABB_B": {
-        pregunta: "Activar bandera B.",
-        respuestas: {
-            "Fin": "fin"
-        }
-    },
-    "ABC": {
-        pregunta:"Activar bandera C." ,
-        respuestas: {
-            "Fin": "fin"
-        }
-    },
-    "ABC_C": {
-        pregunta: "Activar bandera C.",
+        pregunta: "Reparar por el 2do escalon",
         respuestas: {
             "Fin": "fin"
         }
@@ -600,12 +588,6 @@ const nodos = {
             "Fin": "fin"
         }
     },
-    "ABD_E": {
-        pregunta:"Activar bandera D." ,
-        respuestas: {
-            "Fin": "fin"
-        }
-    },
     "DYR2E_D2E_F": {
         pregunta: "Desmontar y reemplazar por el segundo escalón y desechar por el segundo escalón.",
         respuestas: {
@@ -695,13 +677,13 @@ const nodos = {
         }
     },
     "ABE_K": {
-        pregunta:"Activar bandera E." ,
+        pregunta:"Desmontar y reemplazar por el primer escalón y desechar en el primer escalón." ,
         respuestas: {
             "Fin": "fin"
         }
     },
     "ABF_L": {
-        pregunta: "Activar bandera F.",
+        pregunta: "Desmontar y reemplazar en el primer escalón y desechar en el primer escalón.",
         respuestas: {
             "Fin": "fin"
         }
@@ -719,14 +701,14 @@ const nodos = {
         }
     },
     "ABG_N": {
-        pregunta: "Activar bandera G.",
+        pregunta: "Desmontar y reemplazar por el primer escalón y desechar en el primer escalón",
         respuestas: {
             "Fin": "fin"
         }
     },
 
     "ABG_O": {
-        pregunta: "Activar bandera G.",
+        pregunta: "Desmontar y reemplazar por el primer escalón y desechar en el primer escalón",
         respuestas: {
             "Fin": "fin"
         }
