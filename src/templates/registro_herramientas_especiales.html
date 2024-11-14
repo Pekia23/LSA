@@ -25,8 +25,17 @@
                 <label for="nombre" class="form-label">Nombre de la herramienta</label>
                 <input type="text" class="form-control" id="nombre" name="nombre">
 
-                <label for="valor" class="form-label mt-3">Costo</label>
-                <input type="number" class="form-control" id="valor" name="valor"  step="0.01">
+                <div class="mt-3">
+                    <label for="valor" class="form-label">Costo</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="valor" name="valor" placeholder="Ingresa el valor"  step="0.01">
+                        <select class="form-select" id="moneda" name="moneda" style="width: auto;">
+                            <option value="USD">USD</option>
+                            <option value="EURO">EURO</option>
+                            <option value="COP">COP</option>
+                        </select>
+                    </div>
+                </div>
 
 
                 <label for="tipo_herramienta" class="form-label mt-3">Tipo de herramienta</label>
@@ -97,8 +106,18 @@
                 <label for="parte_numero_especial" class="form-label">Parte número</label>
                 <input type="text" class="form-control" id="parte_numero_especial" name="parte_numero">
 
-                <label for="valor_especial" class="form-label mt-3">Costo</label>
-                <input type="number" class="form-control" id="valor_especial" name="valor" step="0.01">
+                <div class="mt-3">
+                    <label for="valor" class="form-label">Costo</label>
+                    <div class="input-group">
+                        <input type="number" class="form-control" id="valor_especial" name="valor" step="0.01">
+                        <select class="form-select" id="moneda" name="moneda" style="width: auto;">
+                            <option value="USD">USD</option>
+                            <option value="EURO">EURO</option>
+                            <option value="COP">COP</option>
+                        </select>
+                    </div>
+                </div>
+                
             </div>
         </div>
         <!-- Botón "Agregar herramienta especial" -->

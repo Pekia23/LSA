@@ -78,3 +78,9 @@ textarea {
     background-color: #0c367f17;
     border-radius: 10px;
 }
+
+#moneda {
+    width: 80px; /* Ajusta el ancho según tus necesidades */
+    max-width: 100px; /* Establece un ancho máximo */
+    padding-right: 1rem; /* Ajusta el espacio para la flecha desplegable */
+}

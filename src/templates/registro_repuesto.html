@@ -24,15 +24,25 @@
                     <label for="nombre_repuesto" class="form-label mt-3">Nombre del Repuesto</label>
                     <input type="text" class="form-control" id="nombre_repuesto" name="nombre_repuesto" placeholder="Nombre del repuesto">                    
 
-                    <label for="valor" class="form-label mt-3">Valor</label>
-                    <input type="text" class="form-control" id="valor" name="valor" placeholder="Valor">
+                    <div class="mt-3">
+                        <label for="valor" class="form-label">Valor</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="valor" name="valor" placeholder="Ingresa el valor">
+                            <select class="form-select" id="moneda" name="moneda" style="width: auto;">
+                                <option value="USD">USD</option>
+                                <option value="EURO">EURO</option>
+                                <option value="COP">COP</option>
+                            </select>
+                        </div>
+                    </div>
+                    
 
                     <!-- Campo MTBF -->
                     <label for="mtbf" class="form-label mt-3">MTBF</label>
                     <input type="text" class="form-control" id="mtbf" name="mtbf" placeholder="MTBF">
 
                     <!-- Campo Código OTAN -->
-                    <label for="codigo_otan" class="form-label mt-3">Código OTAN</label>
+                    <label for="codigo_otan" class="form-label mt-3">Código OTAN / Parte Número</label>
                     <input type="text" class="form-control" id="codigo_otan" name="codigo_otan" placeholder="Código OTAN">
 
                     <label for="dibujo_transversal" class="form-label mt-3">Dibujo de Sección Transversal</label>
