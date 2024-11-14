@@ -190,6 +190,7 @@ function mostrarPregunta(nodeId) {
 
     // Si es el nodo de fin, ocultamos todos los botones
     if (nodeId === "fin") {
+        llenarCamposVaciosConGuion(); 
         ocultarBotones(); // Aseguramos que todos los botones estén ocultos
         return;
     }
@@ -219,6 +220,7 @@ function mostrarPregunta(nodeId) {
     document.getElementById("yesBtn").onclick = function() {
         if (currentNode !== "inicio") { // No guardar si es el nodo de inicio
             guardarRespuesta(currentNode, "Sí");
+            validarRespuestasEspecificas(currentNode, "Sí");
         }
         questionHistory.push(currentNode); // Guardamos la pregunta actual antes de avanzar
         currentNode = nodo.respuestas["Sí"]; // Actualizamos al nodo siguiente según "Sí"
@@ -229,6 +231,7 @@ function mostrarPregunta(nodeId) {
     document.getElementById("noBtn").onclick = function() {
         if (currentNode !== "inicio") { // No guardar si es el nodo de inicio
             guardarRespuesta(currentNode, "No");
+            validarRespuestasEspecificas(currentNode, "No");
         }
         questionHistory.push(currentNode); // Guardamos la pregunta actual antes de avanzar
         currentNode = nodo.respuestas["No"]; // Actualizamos al nodo siguiente según "No"
@@ -294,6 +297,100 @@ function volverAtras(preguntaId) {
         if (inputElement) {
             inputElement.value = ""; // Borramos la respuesta del input al retroceder
             contadorRespuestas--; // Reducimos el contador ya que volvemos atrás
+        }
+    }
+}
+
+// Función para llenar automáticamente los campos del formulario
+// Función para llenar automáticamente los campos del formulario
+function llenarCampos(safety, environment, operation) {
+    if (safety !== null) {
+        llenarSiguienteCampoDisponible(safety);
+        actualizarLabel("label_safety", safety);
+    }
+    if (environment !== null) {
+        llenarSiguienteCampoDisponible(environment);
+        actualizarLabel("label_environment", environment);
+    }
+    if (operation !== null) {
+        llenarSiguienteCampoDisponible(operation);
+        actualizarLabel("label_operation", operation);
+    }
+}
+
+// Nueva función para actualizar un label específico
+function actualizarLabel(labelId, value) {
+    const labelElement = document.getElementById(labelId);
+    if (labelElement) {
+        labelElement.textContent = `${labelElement.textContent.split(':')[0]}: ${value}`;
+    }
+}
+
+// Función para validar respuestas específicas y llenar campos automáticamente
+function validarRespuestasEspecificas(preguntaId, respuesta) {
+    if (preguntaId === "P1" && respuesta === "No") {
+        llenarCampos("No", "No", "No");
+    }
+
+    if (preguntaId === "P7" && respuesta === "Sí") {
+        llenarCampos(null, "No", "No");
+    }
+
+    if (preguntaId === "P6" && respuesta === "Sí") {
+        llenarCampos(null, null, "No");
+    }
+    // Continuar llenando los campos restantes después del llenado específico
+    continuarLlenadoSecuencial();
+}
+
+// Función para llenar el siguiente campo disponible en el cuestionario
+function llenarSiguienteCampoDisponible(valor) {
+    for (let i = 2; i <= 10; i++) {
+        const inputId = `cuestionario_rcm${i}`;
+        const inputElement = document.getElementById(inputId);
+
+        // Verificamos si el campo está vacío y lo llenamos
+        if (inputElement && inputElement.value === "") {
+            inputElement.value = valor;
+            actualizarLabelPorCampo(inputId, valor);
+            break; // Salimos del bucle una vez que llenamos un campo
+        }
+    }
+}
+
+// Función para actualizar el label correspondiente al campo llenado
+function actualizarLabelPorCampo(campoId, valor) {
+    const labelId = campoId.replace("cuestionario_rcm", "label_rcm");
+    const labelElement = document.getElementById(labelId);
+    if (labelElement) {
+        labelElement.textContent = `${labelElement.textContent.split(':')[0]}: ${valor}`;
+    }
+}
+
+// Función para continuar llenando los campos de forma secuencial
+function continuarLlenadoSecuencial() {
+    for (let i = contadorRespuestas; i <= 10; i++) {
+        const inputId = `cuestionario_rcm${i}`;
+        const inputElement = document.getElementById(inputId);
+
+        // Si encontramos un campo vacío, dejamos de llenar
+        if (inputElement && inputElement.value === "") {
+            contadorRespuestas = i;
+            break;
+        }
+    }
+}
+
+// Función para llenar todos los campos vacíos con '--'
+function llenarCamposVaciosConGuion() {
+    for (let i = 2; i <= 10; i++) {
+        const inputId = `cuestionario_rcm${i}`;
+        const inputElement = document.getElementById(inputId);
+
+        // Si el campo está vacío, lo llenamos con '--'
+        if (inputElement && inputElement.value === "") {
+            inputElement.value = "--";
+            actualizarLabelPorCampo(inputId, "--");
         }
     }
 }
