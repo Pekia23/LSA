@@ -3643,13 +3643,13 @@ def obtener_rcm_por_equipo_info(id_equipo_info):
                 r.id,
                 r.id_fmea,
                 f.id_equipo_info,
-                s.nombre as sistema, 
-                ff.nombre as falla_funcional, 
-                c.nombre as componente, 
-                cmf.nombre as codigo_modo_falla, 
-                cf.nombre as consecutivo_modo_falla, 
-                dmf.nombre as descripcion_modo_falla, 
-                causa.nombre as causa, 
+                s.nombre AS sistema, 
+                ff.nombre AS falla_funcional, 
+                c.nombre AS componente, 
+                cmf.nombre AS codigo_modo_falla, 
+                cf.nombre AS consecutivo_modo_falla, 
+                dmf.nombre AS descripcion_modo_falla, 
+                causa.nombre AS causa, 
                 r.hidden_failures,
                 r.safety,
                 r.environment,
@@ -3660,7 +3660,7 @@ def obtener_rcm_por_equipo_info(id_equipo_info):
                 r.h4_s4,
                 r.h5,
                 r.tarea,
-                r.id_accion_recomendada,
+                ar.nombre AS accion_recomendada, -- Se agrega el nombre de la acción recomendada
                 r.intervalo_inicial_horas
             FROM rcm r
             LEFT JOIN fmea f ON r.id_fmea = f.id
@@ -3671,6 +3671,7 @@ def obtener_rcm_por_equipo_info(id_equipo_info):
             LEFT JOIN consecutivo_modo_falla cf ON f.id_consecutivo_modo_falla = cf.id
             LEFT JOIN descripcion_modo_falla dmf ON f.id_descripcion_modo_falla = dmf.id
             LEFT JOIN causa ON f.id_causa = causa.id
+            LEFT JOIN accion_recomendada ar ON r.id_accion_recomendada = ar.id 
             WHERE f.id_equipo_info = %s AND r.estado = 'activo'
 
         """

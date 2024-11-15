@@ -19,13 +19,13 @@ body {
 .navbarvertical {
     width: auto;
     padding: 10px;
+    display: none;
 }
 
 .navbarvertical .nav-link {
     white-space: nowrap; /* Asegura que el texto no se corte en varias líneas */
     color: #052647;;
     font-weight: bold;
-
 }
 
 .custom-toggler {
@@ -42,6 +42,7 @@ body {
     width: 40px;
     height: 40px; 
     text-align: center;
+    display: none;
 }
 
 .col-auto{
