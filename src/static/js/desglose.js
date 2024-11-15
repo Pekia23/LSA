@@ -169,36 +169,43 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     function mostrarTarjetas(data, type) {
-        resultados.innerHTML = '';  // Limpia los resultados anteriores
+        resultados.innerHTML = ''; // Limpiar los resultados anteriores
 
         data.forEach(item => {
             let card = document.createElement('div');
-            card.classList.add('card', 'dynamic-card'); // Añadir la clase 'dynamic-card' a todas las tarjetas
-
+            card.classList.add('card');
+    
             card.setAttribute('data-id', item.id);
             card.setAttribute('data-type', type);
-
-            if (type === 'grupo' || type === 'subgrupo' || type === 'sistema') {
+    
+            if (type === 'grupo') {
+                card.classList.add('card');
+                let imageSrc = item.numeracion == 200 ? 'img/200.jpeg' :
+                               item.numeracion == 300 ? 'img/300.jpeg' :
+                               item.numeracion == 400 ? 'img/400.jpeg' :
+                               item.numeracion == 500 ? 'img/500.jpeg' :
+                               item.numeracion == 600 ? 'img/600.jpeg' : 'img/700.jpeg';
+                card.innerHTML = `<img src="/static/${imageSrc}" alt="Grupo"><h1>${item.numeracion}</h1><p>${item.nombre}</p>`;
+            } else if (type === 'subgrupo' || type === 'sistema') {
+                card.classList.add('dynamic-card');
                 card.innerHTML = `<p>${item.numeracion ? item.numeracion + ' - ' : ''}${item.nombre}</p>`;
             } else if (type === 'equipo') {
-                card.innerHTML = `<p>${item.nombre_equipo}</p>`;
+                // Verificar cuál es el nombre de la propiedad del equipo
+                card.classList.add('dynamic-card');
+                const nombreEquipo = item.nombre_equipo || item.nombre || item.equipo || 'Nombre no disponible';
+                card.innerHTML = `<p>${nombreEquipo}</p>`;
             }
-
+    
             resultados.appendChild(card);
         });
-
+    
         currentView = type;
-
-        // Actualizar el placeholder según la vista actual
         actualizarPlaceholder();
-
-        // Mostrar botón de volver
-        if (currentView === 'grupo') {
-            volverBtn.classList.add('hidden');
-        } else {
-            volverBtn.classList.remove('hidden');
-        }
+    
+        // Mostrar o esconder botón de volver
+        volverBtn.classList.toggle('hidden', currentView === 'grupo');
     }
+    
 
     // Función para actualizar el placeholder del buscador
     function actualizarPlaceholder() {
