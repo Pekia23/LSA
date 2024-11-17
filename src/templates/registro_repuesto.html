@@ -52,9 +52,10 @@
                     <textarea class="form-control" id="notas" name="notas" placeholder="Notas"></textarea>
                 </div>
             </div>
-
+            
             <!-- Botón "Agregar repuesto" -->
             <div class="text-end mt-4">
+                <input type="hidden" name="id_equipo_info" value="{{ id_equipo_info }}">
                 <button type="submit" class="btn btn-primary" id="btn-agregar-repuesto">Guardar repuesto</button>
             </div>
         </form>

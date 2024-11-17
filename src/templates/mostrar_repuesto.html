@@ -91,6 +91,6 @@
     <a href="{{ url_for('registro_repuesto',id_equipo_info=id_equipo_info) }}" class="btn btn-primary1">Agregar Repuesto</a>
 </div>
 <div class="mt-4">
-    <a href="{{ url_for('registro_FMEA', token=session['token']) }}" class="btn btn-primary1">Terminar Repuesto</a>
+    <a href="{{ url_for('registro_FMEA', token=session['token']) }}" class="btn btn-primary1 terminar">Terminar Repuesto</a>
 </div> 
 {% endblock %}

@@ -102,6 +102,10 @@ tr {
     page-break-after: auto;
 }
 
+main{
+    padding: 0;
+}
+
 
 
 /* Asegura un espacio inferior en cada tabla o sección */

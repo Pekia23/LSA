@@ -713,17 +713,28 @@ def mostrar_repuestos():
         id_equipo_info = user_data.get('id_equipo_info')
     #    repuestos = obtener_repuestos_por_equipo_info(id_equipo_info)
 
-
-    ##estasaqui
-
-    ##estasaqui
-
     if id_equipo_info is None:
         return redirect(url_for('registro_generalidades'))
 
     repuestos = obtener_repuestos_por_equipo_info(id_equipo_info)
     return render_template('mostrar_repuesto.html', repuestos=repuestos,id_equipo_info=id_equipo_info)
 
+@app.route('/LSA/mostrar-repuesto-ext', methods=['GET'])
+def mostrar_repuestos_ext():
+    # Priorizar el parámetro de URL 'id_equipo_info' si está presente
+    id_equipo_info = request.args.get('id_equipo_info')
+    if not id_equipo_info:
+        # Si no se recibe el parámetro, se toma el de la sesión
+        token = g.user_token
+        user_data = obtener_info_usuario(token)
+        id_equipo_info = user_data.get('id_equipo_info')
+    #    repuestos = obtener_repuestos_por_equipo_info(id_equipo_info)
+    if id_equipo_info is None:
+        return redirect(url_for('registro_generalidades'))
+    print("Rutas de búsqueda de templates:", app.jinja_loader.searchpath)
+
+    repuestos = obtener_repuestos_por_equipo_info(id_equipo_info)
+    return render_template('mostrar_respuestos_ext.html', repuestos=repuestos,id_equipo_info=id_equipo_info)
 
 
 # app.py
@@ -747,16 +758,6 @@ def agregar_repuesto():
     mtbf = request.form.get('mtbf')
         
     codigo_otan = request.form.get('codigo_otan')
-
-    
-    print(f"nombre_repuesto: {nombre_repuesto}")
-    print(f"valor: {valor}")
-    print(f"dibujo_transversal: {dibujo_transversal}")
-    print(f"notas: {notas}")
-    print(f"mtbf: {mtbf}")
-    print(f"codigo_otan: {codigo_otan}")
-
-
 
     if not id_equipo_info or not nombre_repuesto:
         return jsonify({'error': 'Faltan datos obligatorios'}), 400
@@ -1096,6 +1097,48 @@ def mostrar_herramientas_especiales():
         id_equipo_info=id_equipo_info
     )
 
+@app.route('/LSA/mostrar-herramientas-especiales-ext', methods=['GET'])
+def mostrar_herramientas_especiales_ext():
+
+    # Priorizar el parámetro de URL 'id_equipo_info' si está presente
+    id_equipo_info = request.args.get('id_equipo_info') or session.get('id_equipo_info')
+
+    analisis = obtener_analisis_herramientas_por_equipo(id_equipo_info)
+    herramientas = obtener_herramientas_especiales_por_equipo(id_equipo_info)
+    # If not found, try to get it from the session
+
+    
+
+    if not id_equipo_info:
+        # Si no se recibe el parámetro, se toma el de la sesión
+        token = g.user_token
+        user_data = obtener_info_usuario(token)
+        id_equipo_info = user_data.get('id_equipo_info')
+        analisis = obtener_analisis_herramientas_por_equipo(id_equipo_info)
+        herramientas = obtener_herramientas_especiales_por_equipo(id_equipo_info)
+
+
+
+    if id_equipo_info is None:
+        return redirect(url_for('registro_generalidades'))
+
+
+    #analisis = obtener_analisis_herramientas_por_equipo(id_equipo_info)
+    #herramientas = obtener_herramientas_especiales_por_equipo(id_equipo_info)
+
+
+    # Obtener herramientas relacionadas para el equipo desde la tabla de relaciones
+    herramientas_relacionadas = obtener_herramientas_relacionadas_por_equipo(id_equipo_info)
+    print("Herramientas relacionadas:", herramientas_relacionadas)
+
+
+    return render_template(
+        'mostrar_herramientas_especiales_ext.html',
+        analisis=analisis,
+        herramientas=herramientas,
+        id_equipo_info=id_equipo_info
+    )
+
 @app.route('/LSA/registro-herramientas-especiales', methods=['GET'])
 def registro_herramientas_especiales():
 
@@ -1216,6 +1259,7 @@ def editar_FMEA_lista(id_equipo_info):
     #print(f'Para la lista{fmeas}')
     fmeas_con_rcm = obtener_fmeas_con_rcm()
     return render_template('editar_FMEA.html', fmeas=fmeas, fmeas_con_rcm=fmeas_con_rcm, id_equipo_info=id_equipo_info)
+
 
 
 @app.route('/LSA/editar-FMEA/<int:id_equipo_info>/<int:fmea_id>')
@@ -1413,7 +1457,7 @@ def eliminar_FMEA(fmea_id,id_equipo_info):
     cursor.close()
 
     # Redireccionar a la vista de la tabla después de eliminar
-    return redirect(url_for('mostrar_FMEA',id_equipo_info=id_equipo_info))
+    return redirect(url_for('editar_FMEA_lista',id_equipo_info=id_equipo_info))
 
 
 
@@ -2427,6 +2471,36 @@ def mostrar_analisis_funcional():
         analisis['sistema_nombre'] = sistema_nombre
 
     return render_template('mostrar_analisis_funcional.html', analisis_funcionales=analisis_funcionales, sistema=sistema, componentes=componentes_analisis_funcionales,id_equipo_info=id_equipo_info)
+
+@app.route('/LSA/equipo/mostrar-analisis-funcional-ext', methods=['GET'])
+def mostrar_analisis_funcional_ext():
+    # Priorizar el parámetro de URL 'id_equipo_info' si está presente
+    id_equipo_info = request.args.get('id_equipo_info')
+    id_sistema = obtener_id_sistema_por_equipo_info(id_equipo_info)
+    id_equipo = obtener_id_equipo_por_equipo_info(id_equipo_info)
+
+    if not id_equipo_info:
+        # Si no se recibe el parámetro, se toma el de la sesión
+        token = g.user_token
+        user_data = obtener_info_usuario(token)
+        id_equipo_info = user_data.get('id_equipo_info')
+        id_sistema = user_data.get('id_sistema')
+        id_equipo = user_data.get('id_equipo')
+
+ 
+   # Obtención del nombre del sistema
+    
+    sistema_nombre = obtener_nombre_sistema_por_id(id_sistema)
+
+    # Obtención del sistema y subsistemas asociados
+    sistema = obtener_sistema_por_id(id_sistema) if id_sistema else None
+    analisis_funcionales, componentes_analisis_funcionales = obtener_analisis_funcionales_por_equipo_info(id_equipo_info)
+
+    # Añadir el nombre del sistema a cada análisis funcional
+    for analisis in analisis_funcionales:
+        analisis['sistema_nombre'] = sistema_nombre
+
+    return render_template('mostrar_analisis_funcional_ext.html', analisis_funcionales=analisis_funcionales, sistema=sistema, componentes=componentes_analisis_funcionales,id_equipo_info=id_equipo_info)
 
 
 
