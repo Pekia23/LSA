@@ -13,57 +13,60 @@ document.getElementById("botonPDF").addEventListener("click", function (event) {
         cancelButtonText: 'Solo visualizar'
     }).then((result) => {
         if (result.isConfirmed) {
-            generatePDF(true);
+            // Generar y descargar el PDF
+            generatePDF("reporte", true); // El segundo parámetro indica que se debe descargar
         } else {
-            generatePDF(false);
+            // Solo visualizar el PDF sin descargar
+            generatePDF("reporte", false); // No descargar, solo visualizar
         }
     });
 });
 
-async function generatePDF(shouldDownload) {
-    const doc = new jsPDF();
+function generatePDF(divElement, shouldDownload) {
+    const element = document.getElementById(divElement);
+    const nombreEquipo = document.getElementById("botonPDF").getAttribute("data-nombre-equipo") || "Informe";
+    
+    const options = {
+        filename: `informe_${nombreEquipo}.pdf`,
+        image: { type: 'jpeg', quality: 0.90 },
+        html2canvas: { scale: 1.5 },
+        jsPDF: { unit: 'mm', format: 'a1', orientation: 'landscape' },
+        margin: [20,20,20,20]
+    };
 
-    const sections = [
-        { id: 'section1', format: 'a4', orientation: 'portrait' },
-        { id: 'section2', format: 'a3', orientation: 'landscape' },
-        { id: 'section3', format: 'a5', orientation: 'portrait' }
-    ];
+    const noPrintElements = document.querySelectorAll('.no-print');
+    noPrintElements.forEach(el => el.style.display = 'none');
 
-    for (const section of sections) {
-        const element = document.getElementById(section.id);
+    const tabs = document.querySelectorAll('.tab-pane');
+    const activeTab = document.querySelector('.tab-pane.active');
+    tabs.forEach(tab => tab.classList.add('show', 'active'));
 
-        if (element) {
-            // Generar imagen de la sección usando html2canvas
-            const canvas = await html2canvas(element, { scale: 2 });
-            const imgData = canvas.toDataURL('image/jpeg', 0.9);
-
-            // Establecer el formato y la orientación para la sección actual
-            doc.setPageSize(section.format, section.orientation);
-
-            // Calcular las dimensiones para la imagen
-            const pageWidth = doc.internal.pageSize.getWidth();
-            const pageHeight = doc.internal.pageSize.getHeight();
-            const imgWidth = canvas.width;
-            const imgHeight = canvas.height;
-            const ratio = Math.min(pageWidth / imgWidth, pageHeight / imgHeight);
-
-            const width = imgWidth * ratio;
-            const height = imgHeight * ratio;
-
-            // Agregar la imagen al PDF
-            doc.addImage(imgData, 'JPEG', 0, 0, width, height);
-
-            // Agregar una nueva página si no es la última sección
-            if (section !== sections[sections.length - 1]) {
-                doc.addPage();
+    if (element) {
+        html2pdf().set(options).from(element).outputPdf('blob').then((pdfBlob) => {
+            const pdfUrl = URL.createObjectURL(pdfBlob);
+            if (shouldDownload) {
+                // Descargar el PDF
+                const link = document.createElement('a');
+                link.href = pdfUrl;
+                link.download = `informe_${nombreEquipo}.pdf`;
+                link.click();
+            } else {
+                // Solo abrir el PDF en una nueva pestaña para visualizar
+                window.open(pdfUrl, '_blank');
             }
-        }
-    }
 
-    // Descargar o visualizar el PDF según la opción elegida
-    if (shouldDownload) {
-        doc.save('reporte.pdf');
+            // Restaurar la visibilidad original de las pestañas
+            noPrintElements.forEach(el => el.style.display = '');
+            tabs.forEach(tab => tab.classList.remove('show', 'active'));
+            if (activeTab) activeTab.classList.add('show', 'active');
+        }).catch(error => {
+            console.error("Error al generar el PDF:", error);
+            noPrintElements.forEach(el => el.style.display = '');
+            tabs.forEach(tab => tab.classList.remove('show', 'active'));
+            if (activeTab) activeTab.classList.add('show', 'active');
+
+        });
     } else {
-        window.open(doc.output('bloburl'), '_blank');
+        console.error("Elemento no encontrado:", divElement);
     }
 }

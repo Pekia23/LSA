@@ -75,12 +75,10 @@ tr{
     
 }
 
-
-
 #reporte{
     margin-left: 25px;
-    margin-right: 0;
     padding: 0;
+
 }
 
 /* Evitar que las tablas se partan entre páginas */
@@ -91,13 +89,13 @@ table {
 /* Forzar que cada sección empiece en una nueva página */
 
 
-.section {
-    page-break-after: always;
-    margin-bottom: 20px;  
+.section, p {
+    page-break-inside: avoid;
 }
 
 table {
     page-break-inside: auto;
+    page-break-after: auto;
 }
 
 tr {
@@ -105,11 +103,13 @@ tr {
     page-break-after: auto;
 }
 
+td {
+    page-break-inside: avoid;
+}
+
 main{
     padding: 0;
 }
-
-
 
 /* Asegura un espacio inferior en cada tabla o sección */
 table, h3, .section {
@@ -122,6 +122,7 @@ table, h3, .section {
     break-inside: avoid;      /* Evitar cortes dentro de la sección FMEA */
     overflow: visible;        /* Asegurar que todo el contenido sea visible */
     width: 100%;              /* Asegurar que la sección ocupe todo el ancho */
+    font-size: 14px;
 }
 
 .imagend{
