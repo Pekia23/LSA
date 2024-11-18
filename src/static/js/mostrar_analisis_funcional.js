@@ -1,28 +1,27 @@
 function get_id(id) {
     // Seleccionar todos los elementos con la clase 'componentes'
     let componentes = document.querySelectorAll('.componentes');
-    // Seleccionar el elemento específico usando la clase 'comp_' + id
     let table_comp = document.querySelector(`.comp_${id}`);
 
-    // Iterar sobre cada elemento en 'componentes'
+    // Ocultar todos los elementos menos el seleccionado
     componentes.forEach(element => {
-        // Si el elemento no coincide con 'table_comp', se oculta
-        if (element !== table_comp) {
-            element.hidden = true;
-        }
+        element.hidden = (element !== table_comp);
     });
 
     // Alternar visibilidad del elemento específico
     table_comp.hidden = !table_comp.hidden;
 }
 
-// Función para confirmar la eliminación utilizando SweetAlert2
+// Función para confirmar la eliminación utilizando SweetAlert2 y `fetch`
 function confirmarEliminacion(event) {
-    event.preventDefault(); // Prevenir el envío del formulario por defecto
+    event.preventDefault(); // Prevenir el envío del formulario
+
+    const eliminarButton = event.currentTarget;
+    const idAnalisis = eliminarButton.getAttribute('data-id');
 
     Swal.fire({
         title: '¿Estás seguro?',
-        text: "Esta acción no se puede deshacer",
+        text: "Esta acción no se puede deshacer.",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#d33',
@@ -31,15 +30,45 @@ function confirmarEliminacion(event) {
         cancelButtonText: 'Cancelar'
     }).then((result) => {
         if (result.isConfirmed) {
-            // Si el usuario confirma, se envía el formulario
-            event.target.closest('form').submit();
+            // Realizar la petición DELETE con Fetch API
+            fetch(`/analisis_funcional/eliminar/${idAnalisis}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Error al eliminar el análisis funcional');
+                }
+            })
+            .then(data => {
+                Swal.fire({
+                    title: 'Eliminado',
+                    text: data.message,
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    // Remover la fila de la tabla si la eliminación fue exitosa
+                    eliminarButton.closest('tr').remove();
+                });
+            })
+            .catch(error => {
+                console.error('Error al eliminar:', error);
+                Swal.fire('Error', 'No se pudo eliminar el análisis funcional', 'error');
+            });
         }
     });
 }
 
 // Función para confirmar la edición utilizando SweetAlert2
 function confirmarEdicion(event) {
-    event.preventDefault(); // Prevenir la redirección por defecto
+    event.preventDefault();
+
+    const enlace = event.currentTarget.closest('a');
+    const url = enlace.getAttribute('href');
 
     Swal.fire({
         title: '¿Deseas editar este análisis?',
@@ -52,21 +81,18 @@ function confirmarEdicion(event) {
         cancelButtonText: 'Cancelar'
     }).then((result) => {
         if (result.isConfirmed) {
-            // Redirigir si el usuario confirma
-            window.location.href = event.target.href;
+            window.location.assign(url);
         }
     });
 }
 
-// Agregar los event listeners para eliminar y editar
+// Agregar los event listeners
 document.addEventListener('DOMContentLoaded', () => {
-    const botonesEliminar = document.querySelectorAll('form button.btn-danger');
-    botonesEliminar.forEach(boton => {
+    document.querySelectorAll('.btn-eliminar').forEach(boton => {
         boton.addEventListener('click', confirmarEliminacion);
     });
 
-    const botonesEditar = document.querySelectorAll('a.boton');
-    botonesEditar.forEach(boton => {
+    document.querySelectorAll('a.boton').forEach(boton => {
         boton.addEventListener('click', confirmarEdicion);
     });
 });

@@ -37,9 +37,9 @@
                 <a class="boton" href="{{ url_for('editar_analisis_funcional', id=analisis.id) }}" ><i class="bi bi-pen"></i></a>
             </td>
             <td>    
-                <form action="{{ url_for('eliminar_analisis_funcional_route', id=analisis.id) }}" method="post" style="display:inline;">
-                    <button type="submit" class="btn btn-danger" ><i class="bi bi-trash"></i></button>
-                </form>
+                <button type="button" class="btn btn-danger btn-eliminar" data-id="{{ analisis.id }}">
+                    <i class="bi bi-trash"></i>
+                </button>
             </td>
         </tr>
 

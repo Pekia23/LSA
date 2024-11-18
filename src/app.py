@@ -602,12 +602,11 @@ def editar_analisis_funcional(id):
 
 
 # Ruta para eliminar un análisis funcional
-@app.route('/analisis_funcional/eliminar/<int:id>', methods=['POST'])
+@app.route('/analisis_funcional/eliminar/<int:id>', methods=['DELETE'])
 def eliminar_analisis_funcional_route(id):
     # Llama a la función para eliminar el análisis funcional
     eliminar_analisis_funcional(id)
-    flash('Análisis funcional eliminado correctamente')
-    return redirect(url_for('mostrar_analisis_funcional'))
+    return jsonify({'message': 'Repuesto eliminado correctamente'}), 200
 
 
 ############## Fin de analisis funcional ######################################
@@ -838,7 +837,7 @@ def editar_repuesto(id_repuesto):
     if not repuesto:
         return 'Repuesto no encontrado', 404
 
-    return render_template('editar_repuesto.html', repuesto=repuesto)
+    return render_template('editar_repuesto.html', repuesto=repuesto, id_equipo_info=id_equipo_info)
 
 
 @app.template_filter('b64encode')
@@ -2425,13 +2424,6 @@ def eliminar_RCM(id_rcm,id_equipo_info,fmea_id):
         id_equipo_info = user_data.get('id_equipo_info')
     eliminar_rcm(fmea_id,id_rcm)
     return redirect(url_for('editar_RCM_lista',id_equipo_info=id_equipo_info,fmea_id=fmea_id))
-
-
-
-
-
-
-
 
 def eliminar_RCM(fmea_id,id_rcm):
     token = g.user_token

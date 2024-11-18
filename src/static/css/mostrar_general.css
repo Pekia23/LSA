@@ -1,3 +1,5 @@
+
+
 .imagens h2{
     color: #0c377f !important;
     font-weight: bold;
@@ -91,6 +93,7 @@ table {
 
 .section {
     page-break-after: always;
+    margin-bottom: 20px;  
 }
 
 table {
@@ -115,7 +118,10 @@ table, h3, .section {
 
 
 .special-fmea {
-    font-size: 11.5px; /* Ajuste de tamaño de texto si es necesario */
+    page-break-inside: avoid; /* Evitar cortes dentro de la sección FMEA */
+    break-inside: avoid;      /* Evitar cortes dentro de la sección FMEA */
+    overflow: visible;        /* Asegurar que todo el contenido sea visible */
+    width: 100%;              /* Asegurar que la sección ocupe todo el ancho */
 }
 
 .imagend{

@@ -2,8 +2,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Manejo del botón Editar
     const editButtons = document.querySelectorAll('.btn-editar');
     editButtons.forEach(function(button) {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function(event) {
+            event.preventDefault(); // Prevenir la redirección por defecto
+
             const repuestoId = this.getAttribute('data-id');
+            const idEquipoInfo = this.getAttribute('data-id-equipo-info');
 
             // Confirmación con SweetAlert2 antes de editar
             Swal.fire({
@@ -17,8 +20,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 cancelButtonColor: '#d33'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Redirigir si el usuario confirma
-                    window.location.href = '/LSA/editar-repuesto/' + repuestoId;
+                    // Redirigir a la página de edición incluyendo id_equipo_info en la URL
+                    window.location.href = `/LSA/editar-repuesto/${repuestoId}?id_equipo_info=${idEquipoInfo}`;
                 }
             });
         });
@@ -27,8 +30,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Manejo del botón Eliminar
     const deleteButtons = document.querySelectorAll('.btn-eliminar');
     deleteButtons.forEach(function(button) {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function(event) {
+            event.preventDefault(); // Prevenir el envío del formulario
+
             const repuestoId = this.getAttribute('data-id');
+            const idEquipoInfo = this.getAttribute('data-id-equipo-info');
 
             // Confirmación con SweetAlert2 antes de eliminar
             Swal.fire({
@@ -43,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }).then((result) => {
                 if (result.isConfirmed) {
                     // Petición de eliminación con Fetch API
-                    fetch('/api/repuesto/' + repuestoId, {
+                    fetch(`/api/repuesto/${repuestoId}?id_equipo_info=${idEquipoInfo}`, {
                         method: 'DELETE'
                     })
                     .then(response => response.json())
