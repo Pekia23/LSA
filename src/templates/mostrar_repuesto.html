@@ -46,46 +46,7 @@
       </tr>
       {% endfor %}
   </tbody>
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Manejo del botón Editar
-        const editButtons = document.querySelectorAll('.btn-editar');
-        editButtons.forEach(function(button) {
-            button.addEventListener('click', function() {
-                const repuestoId = this.getAttribute('data-id');
-                window.location.href = '/LSA/editar-repuesto/' + repuestoId;
-            });
-        });
-    
-        // Manejo del botón Eliminar
-        const deleteButtons = document.querySelectorAll('.btn-eliminar');
-        deleteButtons.forEach(function(button) {
-            button.addEventListener('click', function() {
-                const repuestoId = this.getAttribute('data-id');
-    
-                if (confirm('¿Estás seguro de que deseas eliminar este repuesto?')) {
-                    fetch('/api/repuesto/' + repuestoId, {
-                        method: 'DELETE'
-                    })
-                    .then(response => response.json())
-                    .then(result => {
-                        if (result.message) {
-                            alert(result.message);
-                            // Remueve la fila de la tabla
-                            this.closest('tr').remove();
-                        } else {
-                            alert('Error al eliminar repuesto');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error al eliminar repuesto:', error);
-                        alert('Error al eliminar repuesto: ' + error.message);
-                    });
-                }
-            });
-        });
-    });
-    </script>
+  <script src="{{ url_for('static', filename='js/mostrar_repuesto.js') }}"></script>
 </table>
 <div class="mt-4">
     <a href="{{ url_for('registro_repuesto',id_equipo_info=id_equipo_info) }}" class="btn btn-primary1">Agregar Repuesto</a>

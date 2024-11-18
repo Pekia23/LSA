@@ -262,4 +262,30 @@ document.getElementById('ocurrencia_valor').addEventListener('input', actualizar
 
 document.getElementById('probabilidad_deteccion_valor').addEventListener('input', actualizarCalculos);
 
+document.addEventListener('DOMContentLoaded', function () {
+    const fmeaForm = document.getElementById('fmea-form');
+
+    if (fmeaForm) {
+        fmeaForm.addEventListener('submit', function (event) {
+            event.preventDefault(); // Evitar el envío automático del formulario
+
+            // Mostrar alerta de confirmación con SweetAlert2
+            Swal.fire({
+                title: '¿Deseas registrar este modo de falla?',
+                text: "Verifica que todos los datos estén correctos antes de continuar.",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Sí, registrar',
+                cancelButtonText: 'Cancelar',
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Enviar el formulario si el usuario confirma
+                    fmeaForm.submit();
+                }
+            });
+        });
+    }
+});
 

@@ -22,3 +22,4 @@ document.addEventListener('DOMContentLoaded', function () {
         window.location.href = 'registro-mta-2';  // Asegúrate de tener esta ruta configurada en Flask
     });
 });
+

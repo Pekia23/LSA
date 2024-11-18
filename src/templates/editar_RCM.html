@@ -69,9 +69,9 @@
                                 <td>{{ rcm['accion_recomendada'] }}</td>
                                 <td>{{ rcm['intervalo_inicial_horas'] }}</td>
                                 <td>
-                                    <button class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="top"
+                                    <button class="btn btn-warning btn-editar-rcm " data-bs-toggle="tooltip" data-bs-placement="top"
                                             title="Editar RCM">
-                                        <a href="{{ url_for('editar_RCM', fmea_id=rcm['id_fmea'],id_equipo_info=id_equipo_info) }}"> RCM<i
+                                        <a href="{{ url_for('editar_RCM', fmea_id=rcm['id_fmea'],id_equipo_info=id_equipo_info) }}" class="btn-editar-rcm"> RCM<i
 
                                                 class="bi bi-pencil FMEA-edit"></i></a>
                                     </button>
@@ -88,7 +88,7 @@
                                 <td>
 
                                     {% if rcm['id'] in rcms_con_mta %}
-                                        <button class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="top"
+                                        <button class="btn btn-warning btn-editar-mta" data-bs-toggle="tooltip" data-bs-placement="top"
                                                 title="Editar MTA">
                                             <a href="{{ url_for('editar_MTA', rcm_id=rcm['id'],id_equipo_info=id_equipo_info) }}"> MTA <i
 
@@ -96,7 +96,7 @@
                                                     class="bi bi-pencil FMEA-edit"></i></a>
                                         </button>
                                     {% else %}
-                                        <button class="btn btn-success" data-bs-toggle="tooltip" data-bs-placement="top"
+                                        <button class="btn btn-success btn-crear-mta" data-bs-toggle="tooltip" data-bs-placement="top"
                                                 title="Crear RCM">
                                             <a href="{{ url_for('registro_MTA',id_equipo_info=id_equipo_info, fmea_id=rcm['id_fmea']) }}"> MTA <i
                                                     class="bi bi-plus-circle FMEA-edit"></i></a>
@@ -120,4 +120,5 @@
     </div>
   </div>
 </div>
+<script src="{{ url_for('static', filename='js/editar_RCM.js') }}"></script>
 {% endblock %}

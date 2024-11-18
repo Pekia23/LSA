@@ -4,7 +4,22 @@ document.addEventListener('DOMContentLoaded', function() {
     editButtonsAnalisis.forEach(function(button) {
         button.addEventListener('click', function() {
             const herramientaId = this.getAttribute('data-id');
-            window.location.href = '/LSA/editar-analisis-herramienta/' + herramientaId;
+
+            // Confirmación de SweetAlert2 antes de editar
+            Swal.fire({
+                title: '¿Deseas editar esta herramienta?',
+                text: "Serás redirigido a la página de edición.",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Sí, editar',
+                cancelButtonText: 'Cancelar',
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '/LSA/editar-analisis-herramienta/' + herramientaId;
+                }
+            });
         });
     });
 
@@ -13,24 +28,38 @@ document.addEventListener('DOMContentLoaded', function() {
     deleteButtonsAnalisis.forEach(function(button) {
         button.addEventListener('click', function() {
             const herramientaId = this.getAttribute('data-id');
-            if (confirm('¿Estás seguro de que deseas eliminar esta herramienta?')) {
-                fetch('/api/analisis-herramientas/' + herramientaId, {
-                    method: 'DELETE'
-                })
-                .then(response => response.json())
-                .then(result => {
-                    if (result.message) {
-                        alert(result.message);
-                        this.closest('tr').remove();
-                    } else {
-                        alert('Error al eliminar herramienta');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error al eliminar herramienta:', error);
-                    alert('Error al eliminar herramienta: ' + error.message);
-                });
-            }
+
+            // Confirmación de SweetAlert2 antes de eliminar
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "Esta acción no se puede deshacer.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar',
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Petición de eliminación con Fetch API
+                    fetch('/api/analisis-herramientas/' + herramientaId, {
+                        method: 'DELETE'
+                    })
+                    .then(response => response.json())
+                    .then(result => {
+                        if (result.message) {
+                            Swal.fire('Eliminado', result.message, 'success');
+                            this.closest('tr').remove();
+                        } else {
+                            Swal.fire('Error', 'Error al eliminar herramienta', 'error');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error al eliminar herramienta:', error);
+                        Swal.fire('Error', 'Error al eliminar herramienta: ' + error.message, 'error');
+                    });
+                }
+            });
         });
     });
 
@@ -39,7 +68,22 @@ document.addEventListener('DOMContentLoaded', function() {
     editButtonsEspecial.forEach(function(button) {
         button.addEventListener('click', function() {
             const herramientaId = this.getAttribute('data-id');
-            window.location.href = '/LSA/editar-herramienta-especial/' + herramientaId;
+
+            // Confirmación de SweetAlert2 antes de editar
+            Swal.fire({
+                title: '¿Deseas editar esta herramienta especial?',
+                text: "Serás redirigido a la página de edición.",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Sí, editar',
+                cancelButtonText: 'Cancelar',
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '/LSA/editar-herramienta-especial/' + herramientaId;
+                }
+            });
         });
     });
 
@@ -48,24 +92,38 @@ document.addEventListener('DOMContentLoaded', function() {
     deleteButtonsEspecial.forEach(function(button) {
         button.addEventListener('click', function() {
             const herramientaId = this.getAttribute('data-id');
-            if (confirm('¿Estás seguro de que deseas eliminar esta herramienta?')) {
-                fetch('/api/herramientas-especiales/' + herramientaId, {
-                    method: 'DELETE'
-                })
-                .then(response => response.json())
-                .then(result => {
-                    if (result.message) {
-                        alert(result.message);
-                        this.closest('tr').remove();
-                    } else {
-                        alert('Error al eliminar herramienta');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error al eliminar herramienta:', error);
-                    alert('Error al eliminar herramienta: ' + error.message);
-                });
-            }
+
+            // Confirmación de SweetAlert2 antes de eliminar
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "Esta acción no se puede deshacer.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar',
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Petición de eliminación con Fetch API
+                    fetch('/api/herramientas-especiales/' + herramientaId, {
+                        method: 'DELETE'
+                    })
+                    .then(response => response.json())
+                    .then(result => {
+                        if (result.message) {
+                            Swal.fire('Eliminado', result.message, 'success');
+                            this.closest('tr').remove();
+                        } else {
+                            Swal.fire('Error', 'Error al eliminar herramienta', 'error');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error al eliminar herramienta:', error);
+                        Swal.fire('Error', 'Error al eliminar herramienta: ' + error.message, 'error');
+                    });
+                }
+            });
         });
     });
 });

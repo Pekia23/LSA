@@ -55,3 +55,30 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+document.addEventListener('DOMContentLoaded', function () {
+    const rcmForm = document.getElementById('rcm-form');
+
+    if (rcmForm) {
+        rcmForm.addEventListener('submit', function (event) {
+            event.preventDefault(); // Evitar el envío automático del formulario
+
+            // Mostrar alerta de confirmación con SweetAlert2
+            Swal.fire({
+                title: '¿Deseas guardar los cambios del RCM?',
+                text: "Verifica que todos los datos estén correctos antes de continuar.",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Sí, guardar',
+                cancelButtonText: 'Cancelar',
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Enviar el formulario si el usuario confirma
+                    rcmForm.submit();
+                }
+            });
+        });
+    }
+});
