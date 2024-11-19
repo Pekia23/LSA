@@ -1,11 +1,10 @@
-
-
 .imagens h2{
     color: #0c377f !important;
     font-weight: bold;
     margin-top: 20px;
     margin-bottom: 20px;
 }
+
 
 .imagens{
     padding: 5px;
@@ -116,7 +115,6 @@ table, h3, .section {
     margin-bottom: 20px; /* Ajusta según tus necesidades */
 }
 
-
 .special-fmea {
     page-break-inside: avoid; /* Evitar cortes dentro de la sección FMEA */
     break-inside: avoid;      /* Evitar cortes dentro de la sección FMEA */
@@ -128,10 +126,11 @@ table, h3, .section {
 .imagend{
     max-width: 800px;
     object-fit: contain;
+    display: block; /* Asegura que se comporte como un bloque */
+    margin-left: auto; /* Centra horizontalmente */
+    margin-right: auto; /* Centra horizontalmente */
 }
 
 img {
-    page-break-inside: avoid;
     break-inside: avoid;
 }
-
