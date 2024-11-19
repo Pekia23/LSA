@@ -7,10 +7,19 @@ if (editar == 'True') {
         console.log("Hola, mundo")
         // console.log(event.target)
         actualizarDetallesFalla()
-        actualizarNombreFalla()
+
         actualizarValoresConOnChange('Severidad')
         actualizarValoresConOnChange('Riesgo')
         actualizarCalculos()
+    }
+} else {
+    window.onload = event => {
+        // En modo registro, sí llamamos a actualizarNombreFalla()
+        actualizarNombreFalla();
+        actualizarDetallesFalla();
+        actualizarValoresConOnChange('Severidad');
+        actualizarValoresConOnChange('Riesgo');
+        actualizarCalculos();
     }
 }
 
@@ -124,14 +133,41 @@ function actualizarDetallesFalla() {
 
 
 
-function actualizarNombreFalla() {//documentred onload
+function actualizarNombreFalla() {
+    // Obtener el valor actual del código de modo de falla
+    const selectCodigo = document.getElementById("codigo_modo_falla");
+    const codigoModoFallaId = selectCodigo.value;
 
-    var codigoModoFallaId = document.getElementById("codigo_modo_falla").value;
+    // Obtener el estado de edición y el valor original del código
+    const editar = selectCodigo.getAttribute("data-editar");
+    const originalCodigoModoFallaId = selectCodigo.getAttribute("data-original-value");
+
+    // Obtener id_equipo_info desde el campo oculto
+    const id_equipo_info = document.getElementById("id_equipo_info").value;
+
+    // Verificar si estamos en modo edición y si el código no ha cambiado
+    if (editar === "True" && codigoModoFallaId === originalCodigoModoFallaId) {
+        console.log("El código de modo de falla no ha cambiado, se mantiene el consecutivo.");
+        return; // Salimos de la función sin hacer la petición
+    }
+
+    // Construir la URL de la petición
+    let url = `/LSA/obtener-nombre-falla/${codigoModoFallaId}/${id_equipo_info}`;
+    
+    if (editar === "True") {
+        // Obtener id_consecutivo_modo_falla desde el campo oculto
+        const id_consecutivo_modo_falla = document.getElementById("id_consecutivo_modo_falla").value;
+        url += `?editar=True&id_consecutivo_modo_falla=${id_consecutivo_modo_falla}`;
+    }
 
     // Realiza una petición para obtener el nombre del modo de falla y el consecutivo
-    fetch(`/LSA/obtener-nombre-falla/${codigoModoFallaId}`)
+    fetch(url)
         .then(response => response.json())
         .then(data => {
+            if (data.error) {
+                console.error(data.error);
+                return;
+            }
             // Actualizar el nombre del modo de falla
             document.getElementById("nombre_modo_falla").value = data.nombre;
 
@@ -143,6 +179,11 @@ function actualizarNombreFalla() {//documentred onload
         })
         .catch(error => console.error('Error al actualizar el nombre y consecutivo:', error));
 }
+
+
+
+
+
 
 function actualizarValoresConOnChange(nombreClasePadre) {
     const contenedorDiv = document.querySelector(`.${nombreClasePadre}`);

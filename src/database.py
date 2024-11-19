@@ -5,17 +5,6 @@ from functools import wraps
 
 
 
-"""
-
-def obtener_componentes_por_subsistema(subsistema_id):
-    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
-    query = "SELECT * FROM componentes WHERE subsistema_id = %s"
-    cursor.execute(query, (subsistema_id,))
-    componentes = cursor.fetchall()
-    cursor.close()
-    return componentes
-
-"""
 
 
 def insertar_componente_analisis_funcional(id_analisis_funcional, id_componente, verbo, accion):
@@ -566,19 +555,6 @@ def obtener_nombre_por_id(tabla, id, columna_id='id'):
 
 
 
-#No me acuerdo pa que sirve pero no la quiero eliminar por si acaso
-
-# def obtener_valor_por_id(tabla, id):
-#     cursor = db.connection.cursor()
-#     query = f"SELECT valor FROM {tabla} WHERE id = %s"
-#     cursor.execute(query, (id,))
-#     resultado = cursor.fetchone()
-#     cursor.close()
-
-#     if resultado:
-#         return resultado['valor']
-#     return None
-
 def obtener_fmeas(id_equipo_info):
     print(f"Llamada a obtener_fmeas con id_equipo_info={id_equipo_info}")
 
@@ -903,11 +879,12 @@ def obtener_equipos_por_tipo(id_tipo_equipo):
 
 def obtener_id_equipo_por_id_info(id_equipo_info):
     cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
-    query = "SELECT id_equipo FROM `equipo_info` WHERE id=%s;"
+    query = "SELECT id_equipo FROM equipo_info WHERE id=%s;"
     cursor.execute(query, (id_equipo_info,))
-    equipo= cursor.fetchall()
+    resultado = cursor.fetchone()
     cursor.close()
-    return equipo
+    return resultado['id_equipo'] if resultado else None
+
 
 def obtener_sistema_por_id(id_sistema):
     cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -1815,13 +1792,6 @@ def obtener_responsables():
     return responsables
 
 
-def obtener_procedimiento_por_id(id_procedimiento):
-    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
-    query = "SELECT * FROM procedimientos WHERE id = %s"
-    cursor.execute(query, (id_procedimiento,))
-    procedimiento = cursor.fetchone()
-    cursor.close()
-    return procedimiento
 
 
 def obtener_personal_por_id(id_personal):
@@ -1842,38 +1812,6 @@ def obtener_grupo_constructivo_por_id(id_grupo_constructivo):
     return grupo_constructivo
 
 
-def obtener_grupo_constructivo_por_sistema_id(id_sistema):
-    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
-
-    # Obtener id_subgrupo de la tabla sistema
-    query_sistema = "SELECT id_subgrupo FROM sistema WHERE id = %s"
-    cursor.execute(query_sistema, (id_sistema,))
-    sistema = cursor.fetchone()
-
-    if not sistema:
-        cursor.close()
-        return None  # Si no se encuentra el sistema, retornamos None
-
-    id_subgrupo = sistema['id_subgrupo']
-
-    # Obtener id_grupo_constructivo de la tabla subgrupo
-    query_subgrupo = "SELECT id_grupo_constructivo FROM subgrupo WHERE id = %s"
-    cursor.execute(query_subgrupo, (id_subgrupo,))
-    subgrupo = cursor.fetchone()
-
-    if not subgrupo:
-        cursor.close()
-        return None  # Si no se encuentra el subgrupo, retornamos None
-
-    id_grupo_constructivo = subgrupo['id_grupo_constructivo']
-
-    # Obtener el grupo_constructivo de la tabla grupo_constructivo
-    query_grupo = "SELECT * FROM grupo_constructivo WHERE id = %s"
-    cursor.execute(query_grupo, (id_grupo_constructivo,))
-    grupo_constructivo = cursor.fetchone()
-
-    cursor.close()
-    return grupo_constructivo  # Retornamos el grupo constructivo obtenido
 
 
 def obtener_equipo_por_id(id_equipo):
@@ -1915,17 +1853,6 @@ def obtener_datos_equipo_por_id(id_equipo):
     equipo = cursor.fetchone()
     cursor.close()
     return equipo
-
-
-def obtener_tipo_equipo_por_id(id_tipos_equipos):
-    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
-    query = "SELECT * FROM tipo_equipos WHERE id = %s"
-    cursor.execute(query, (id_tipos_equipos,))
-    tipo_equipo = cursor.fetchone()
-    cursor.close()
-    return tipo_equipo
-
-
 
 
 
@@ -3733,12 +3660,7 @@ def obtener_mta_por_equipo_info(id_equipo_info):
 
     return mta
 
-def eliminar_personal(id_personal):
-    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
-    sql = "DELETE FROM personal WHERE id = %s"
-    cursor.execute(sql, (id_personal,))
-    db.connection.commit()
-    cursor.close()
+
 
 def crear_personal(nombre_completo):
     correo = 'correo1@example.com'
@@ -4326,10 +4248,26 @@ def obtener_mta_por_equipo_info(id_equipo_info):
 
 def eliminar_personal(id_personal):
     cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
-    sql = "DELETE FROM personal WHERE id = %s"
-    cursor.execute(sql, (id_personal,))
-    db.connection.commit()
-    cursor.close()
+    try:
+        # Primero, eliminar registros en equipo_info que referencian al personal
+        sql_equipo_info = "UPDATE equipo_info SET id_personal = NULL WHERE id_personal = %s"
+        cursor.execute(sql_equipo_info, (id_personal,))
+
+        # Ahora, eliminar el registro en personal
+        sql = "DELETE FROM personal WHERE id = %s"
+        cursor.execute(sql, (id_personal,))
+
+        db.connection.commit()
+    except MySQLdb.IntegrityError as e:
+        print(f"Error al eliminar personal: {e}")
+        # Opcionalmente, puedes manejar la excepción según tus necesidades
+        # Por ejemplo, devolver un mensaje de error o lanzar una excepción personalizada
+        raise
+    finally:
+        cursor.close()
+
+
+
 
 def crear_personal(nombre_completo):
     correo = 'correo1@example.com'

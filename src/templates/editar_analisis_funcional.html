@@ -140,6 +140,7 @@
     <h2 class="section-title text-center"> Editar Análisis Funcional</h2>
     <br>
     <form method="POST" action="{{ url_for('editar_analisis_funcional', id=analisis_funcional.id) }}">
+        <input type="hidden" id="id_equipo_info" name="id_equipo_info" value="{{ id_equipo_info }}">
         <div class="row">
             <div class="row">
                 <div class="col-md-6">

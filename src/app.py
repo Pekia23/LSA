@@ -17,6 +17,7 @@ from database import (
     obtener_id_equipo_por_equipo_info,
     obtener_id_sistema_por_equipo_info,
     obtener_aor_por_id_equipo_info,
+    obtener_id_equipo_por_id_info,
 
 
     insertar_componente_analisis_funcional,
@@ -236,9 +237,7 @@ from database import (
     obtener_rcm_por_equipo_info,
 
     obtener_mta_por_equipo_info,
-    crear_personal,
-
-    eliminar_personal,
+   
 
     obtener_fmeas_con_rcm_por_equipo_info,
     obtener_rcms_con_mta_por_equipo_info,
@@ -457,11 +456,25 @@ def obtener_componentes(subsistema_id):
 @app.route('/LSA/registro-analisis-funcional', methods=['GET', 'POST'])
 def registro_analisis_funcional():
     # Generación del token y obtención de información del usuario
-    token = g.user_token
-    user_data = obtener_info_usuario(token)
-    id_sistema = user_data.get('id_sistema')
-    id_equipo = user_data.get('id_equipo')
-    id_equipo_info = user_data.get('id_equipo_info')
+    token = g.get('user_token', None)
+    # Priorizar el parámetro de URL 'id_equipo_info' si está presente
+    id_equipo_info = (
+        request.args.get('id_equipo_info') or
+        session.get('id_equipo_info') or
+        request.form.get('id_equipo_info')
+    )
+
+    if not id_equipo_info:
+        # Si no se recibe el parámetro, se toma el de la sesión
+        token = g.user_token
+        user_data = obtener_info_usuario(token)
+        id_sistema = user_data.get('id_sistema')
+        id_equipo = user_data.get('id_equipo')
+        id_equipo_info = user_data.get('id_equipo_info')
+    
+
+    id_equipo = obtener_id_equipo_por_id_info(id_equipo_info)
+    id_sistema = obtener_id_sistema_por_equipo_info(id_equipo_info)
 
     # Logs para depuración
     print(f"Token: {token}")
@@ -481,17 +494,32 @@ def registro_analisis_funcional():
             subsistemas = []
 
     # Renderiza la plantilla con los datos obtenidos
-    return render_template('registro_analisis_funcional.html', sistema=sistema, subsistemas=subsistemas)
+    return render_template('registro_analisis_funcional.html', sistema=sistema, subsistemas=subsistemas,id_equipo_info=id_equipo_info)
 
 # Ruta para registrar un nuevo análisis funcional en la base de datos
 @app.route('/api/analisis-funcional', methods=['POST'])
 def api_analisis_funcional():
-    token = g.user_token
-    user_data = obtener_info_usuario(token)
-    id_equipo_info = user_data.get('id_equipo_info')
-    subsistema_id = user_data.get('subsistema_id')
-
+    token = g.get('user_token', None)
     data = request.get_json()
+    print('Datos recibidos:', data)
+
+    id_equipo_info = (
+        data.get('id_equipo_info') or
+        request.args.get('id_equipo_info') or
+        session.get('id_equipo_info')
+    )
+
+    if not id_equipo_info:
+        # Si no se recibe el parámetro, se toma el de la sesión
+        token = g.user_token
+        user_data = obtener_info_usuario(token)
+        id_sistema = user_data.get('id_sistema')
+        id_equipo = user_data.get('id_equipo')
+        id_equipo_info = user_data.get('id_equipo_info')
+        subsistema_id = user_data.get('subsistema_id')
+
+
+   
 
     # Obtener los datos principales del análisis funcional
     sistema_id = data.get('sistema')
@@ -499,6 +527,7 @@ def api_analisis_funcional():
     verbo = data.get('verbo')
     accion = data.get('accion')
     estandar_desempeño = data.get('estandar_desempeño')
+    
 
     # Obtener los componentes enviados (debería ser una lista de componentes)
     componentes = data.get('componentes', [])  # Esto se espera como una lista [{id_componente, verbo, accion}, ...]
@@ -537,21 +566,38 @@ def api_analisis_funcional():
 # Ruta para editar un análisis funcional específico
 @app.route('/LSA/equipo/analisis_funcional/editar/<int:id>', methods=['GET', 'POST'])
 def editar_analisis_funcional(id):
+    token = g.get('user_token', None)
+
+    id_equipo_info = (
+        request.args.get('id_equipo_info') or
+        session.get('id_equipo_info') or
+        request.form.get('id_equipo_info')
+    )
+
+
+    if not id_equipo_info:
     # Obtención de token y datos del equipo
-    token = g.user_token
-    user_data = obtener_info_usuario(token)
-    id_sistema = user_data.get('id_sistema')
-    id_equipo = user_data.get('id_equipo')
-    id_equipo_info = user_data.get('id_equipo_info')
+        token = g.user_token
+        user_data = obtener_info_usuario(token)
+        id_sistema = user_data.get('id_sistema')
+        id_equipo = user_data.get('id_equipo')
+        id_equipo_info = user_data.get('id_equipo_info')
     
     # Verificación de existencia del sistema
+
+    id_equipo = obtener_id_equipo_por_id_info(id_equipo_info)
+    id_sistema = obtener_id_sistema_por_equipo_info(id_equipo_info)
+
     sistema = obtener_sistema_por_id(id_sistema) if id_sistema else None
     subsistemas = obtener_subsistemas_por_equipo(id_equipo) if sistema else []
+
+    
 
     # Obtención del análisis funcional y sus componentes
     analisis_funcional, componentes_analisis_funcionales = obtener_analisis_funcional_por_id(id)
 
     if request.method == 'POST':
+        print('Datos del formulario:', request.form)
         # Capturar datos de análisis funcional
         verbo = request.form['verbo']
         accion = request.form['accion']
@@ -598,7 +644,8 @@ def editar_analisis_funcional(id):
                            analisis_funcional=analisis_funcional, 
                            sistema=sistema, 
                            subsistemas=subsistemas, 
-                           componentes=componentes_analisis_funcionales)
+                           componentes=componentes_analisis_funcionales,
+                           id_equipo_info=id_equipo_info)
 
 
 # Ruta para eliminar un análisis funcional
@@ -631,6 +678,7 @@ def before_request():
         g.user_token = None
 
 # No es necesario 'after_request' en este caso
+#aui se crea el diccionario de usuario info o usuario data
 
 def guardar_info_usuario(token, id_sistema=None, id_equipo=None, id_equipo_info=None, usuario_id=None,subsistema_id=None):
     
@@ -1568,31 +1616,93 @@ def mostrar_equipo():
 
 
 
+# app.py
+
 @app.route('/LSA/editar-equipo', methods=['GET', 'POST'])
 def editar_equipo():
-    token = g.user_token
-    user_data = obtener_info_usuario(token)
-    id_equipo_info = user_data.get('id_equipo_info')
+    # Priorizar el parámetro de URL 'id_equipo_info' si está presente
+    id_equipo_info = request.args.get('id_equipo_info')
 
-    if id_equipo_info is None:
-        return redirect(url_for('registro_generalidades'))
+    if not id_equipo_info:
+        # Si no se recibe el parámetro, se toma el de la sesión
+        token = g.user_token
+        user_data = obtener_info_usuario(token)
+        id_equipo_info = user_data.get('id_equipo_info')
+
+
+   
 
     if request.method == 'GET':
         equipo = obtener_equipo_info_por_id(id_equipo_info)
-        # Obtener datos adicionales si es necesario
+        if equipo is None:
+            return "Equipo no encontrado", 404
+
+        # Obtener el grupo constructivo
+        grupo_constructivo = obtener_grupo_constructivo_por_sistema_id(equipo['id_sistema']) if equipo.get('id_sistema') else None
+
+        # Obtener el subgrupo constructivo
+        subgrupo_constructivo = obtener_subgrupo_constructivo_por_sistema_id(equipo['id_sistema']) if equipo.get('id_sistema') else None
+
+        # Obtener procedimientos y diagramas si existen
+        procedimiento = obtener_procedimiento_por_id(equipo.get('id_procedimiento')) if equipo.get('id_procedimiento') else None
+        diagrama = obtener_diagramas_por_id(equipo.get('id_diagrama')) if equipo.get('id_diagrama') else None
+
+        # Obtener más detalles relacionados
+        
+        responsable = obtener_personal_por_id(equipo.get('id_personal')) if equipo.get('id_personal') else None
+        sistema = obtener_sistema_por_id(equipo.get('id_sistema')) if equipo.get('id_sistema') else None
+
+###algopasa aqui
+        datos_equipo = obtener_datos_equipo_por_id(equipo['id_equipo']) if equipo.get('id_equipo') else None
+        # Obtener el tipo de equipo
+        tipo_equipo = obtener_tipo_equipo_por_id(equipo['id_tipos_equipos']) if equipo.get('id_tipos_equipos') else None
+        # Obtener equipos por tipo de equipo
+        equipos = obtener_equipos_por_tipo(tipo_equipo['id']) if tipo_equipo else []
+
+
+
+        # Obtener listas necesarias para los selectores
         responsables = obtener_responsables()
         grupos = obtener_grupos_constructivos()
         tipos_equipos = obtener_tipos_equipos()
+
+         # Obtener subgrupos asociados al sistema actual
+        subgrupos = obtener_subgrupos_por_sistema(equipo['id_sistema']) if equipo.get('id_sistema') else []
+
+        # Obtener sistemas asociados al grupo constructivo
+        sistemas = obtener_sistemas_por_grupo(grupo_constructivo['id']) if grupo_constructivo else []
+        # Obtener equipos asociados al sistema actual desde equipo_info
+
         return render_template(
             'editar_equipo.html',
             equipo=equipo,
+            equipos=equipos,
+            datos_equipo=datos_equipo,
+            tipo_equipo=tipo_equipo,
+            diagrama=diagrama,
+            procedimiento=procedimiento,
+            responsable=responsable,
+            sistema=sistema,
+            grupo_constructivo=grupo_constructivo,
+            subgrupo_constructivo=subgrupo_constructivo,
             responsables=responsables,
             grupos=grupos,
+            subgrupos=subgrupos,
+            sistemas=sistemas,
             tipos_equipos=tipos_equipos
         )
+ 
+
     elif request.method == 'POST':
         # Obtener datos del formulario
         data = request.form.to_dict()
+        data['id_personal'] = request.form.get('responsable')
+        data['grupo_constructivo_id'] = request.form.get('grupo_constructivo')
+        data['subgrupo_constructivo_id'] = request.form.get('subgrupo_constructivo')
+        data['sistema_id'] = request.form.get('sistema')
+        data['tipo_equipo_id'] = request.form.get('tipo_equipo')
+        data['equipo_id'] = request.form.get('equipo')
+
         # Verificar si el archivo de imagen está presente
         imagen_file = request.files.get('imagen_equipo')
         if imagen_file and imagen_file.filename != '':
@@ -1600,40 +1710,59 @@ def editar_equipo():
         else:
             data['imagen_equipo'] = None  # Si no hay imagen, asignamos None
 
-         # Manejo de los diagramas
-        diagrama_flujo = request.files.get('diagrama_flujo')
-        diagrama_caja_negra = request.files.get('diagrama_caja_negra')
-        diagrama_caja_transparente = request.files.get('diagrama_caja_transparente')
+        # Manejo de los diagramas
+        diagrama_flujo_file = request.files.get('diagrama_flujo')
+        diagrama_caja_negra_file = request.files.get('diagrama_caja_negra')
+        diagrama_caja_transparente_file = request.files.get('diagrama_caja_transparente')
 
         # Procedimientos
         procedimiento_arranque = request.form.get('procedimiento_arranque')
         procedimiento_parada = request.form.get('procedimiento_parada')
 
-        # Insertar o actualizar los procedimientos y diagramas
-        id_procedimiento = insertar_procedimiento(procedimiento_arranque, procedimiento_parada)
-        data['id_procedimiento'] = id_procedimiento
+        # Obtener el equipo actual para verificar si ya tiene procedimientos y diagramas asociados
+        equipo_actual = obtener_equipo_info_por_id(id_equipo_info)
 
-        id_diagrama = insertar_diagrama(diagrama_flujo, diagrama_caja_negra, diagrama_caja_transparente)
-        data['id_diagrama'] = id_diagrama
+        # Actualizar o insertar procedimientos
+        if equipo_actual.get('id_procedimiento'):
+            actualizar_procedimiento(equipo_actual['id_procedimiento'], procedimiento_arranque, procedimiento_parada)
+            data['id_procedimiento'] = equipo_actual['id_procedimiento']
+        else:
+            id_procedimiento = insertar_procedimiento(procedimiento_arranque, procedimiento_parada)
+            data['id_procedimiento'] = id_procedimiento
+
+        # Actualizar o insertar diagramas
+        if equipo_actual.get('id_diagrama'):
+            actualizar_diagrama(equipo_actual['id_diagrama'], diagrama_flujo_file, diagrama_caja_negra_file, diagrama_caja_transparente_file)
+            data['id_diagrama'] = equipo_actual['id_diagrama']
+        else:
+            id_diagrama = insertar_diagrama(diagrama_flujo_file, diagrama_caja_negra_file, diagrama_caja_transparente_file)
+            data['id_diagrama'] = id_diagrama
 
         # Actualizar la información del equipo
         actualizar_equipo_info(id_equipo_info, data)
 
-        return redirect(url_for('mostrar_equipo'))
+        return redirect(url_for('mostrar_equipo', id_equipo_info=id_equipo_info))
 
+       
 @app.route('/LSA/eliminar-equipo', methods=['POST'])
 def eliminar_equipo():
-    token = g.user_token
-    user_data = obtener_info_usuario(token)
-    id_equipo_info = user_data.get('id_equipo_info')
+    try:
+        data = request.get_json()
+        if data is None:
+            return jsonify({"error": "Formato de solicitud incorrecto o datos no recibidos"}), 400
 
-    if id_equipo_info is None:
-        return jsonify({'error': 'No se ha seleccionado ningún equipo'}), 400
+        id_equipo_info = data.get('id_equipo_info')
+        if not id_equipo_info:
+            return jsonify({"error": "ID de equipo no proporcionado"}), 400
 
-    eliminar_equipo_info(id_equipo_info)
-    # Opcionalmente, puedes limpiar el id_equipo_info de la sesión
-    user_data['id_equipo_info'] = None
-    return jsonify({'message': 'Equipo eliminado exitosamente'}), 200
+        equipo = obtener_equipo_info_por_id(id_equipo_info)
+        if equipo is None:
+            return jsonify({"error": "Equipo no encontrado"}), 404
+
+        eliminar_equipo_info(id_equipo_info)
+        return jsonify({"message": "Equipo eliminado correctamente"})
+    except Exception as e:
+        return jsonify({"error": f"Error al eliminar el equipo: {str(e)}"}), 500
 
 
 
@@ -2192,9 +2321,11 @@ def obtener_detalles_falla(mecanismo_id):
     
     detalles_falla_lista = [{'id': detalle['id'], 'nombre': detalle['nombre']} for detalle in detalles_falla]
     return jsonify(detalles_falla_lista)
+
 #Aqui estoy haciendo dos procesos a la vez tanto contando los consecutivos como mostrando el nombre
-@app.route('/LSA/obtener-nombre-falla/<int:codigo_id>')
-def obtener_nombre_falla(codigo_id):
+@app.route('/LSA/obtener-nombre-falla/<int:codigo_id>/<int:id_equipo_info>')
+def obtener_nombre_falla(codigo_id,id_equipo_info):
+    editar = request.args.get('editar', 'False') == 'True'
     cursor = db.connection.cursor()
 
     # Obtener el nombre del modo de falla
@@ -2210,6 +2341,16 @@ def obtener_nombre_falla(codigo_id):
         nombre_modo_falla = result['nombre']
         codigo_modo_falla = result['codigo']
         id_codigo_modo_falla = result['id']
+
+
+        # Verificar si estamos en modo edición
+        if editar:
+            return jsonify({
+                'nombre': nombre_modo_falla,
+                'consecutivo': f"{codigo_modo_falla}-0",  # Mantener el consecutivo existente
+                'id_consecutivo_modo_falla': id_codigo_modo_falla
+            })
+
 
         # Obtener el consecutivo de modo de falla
         query_consecutivo = """
@@ -2230,12 +2371,11 @@ def obtener_nombre_falla(codigo_id):
             count_query = """
                 SELECT COUNT(*) as count
                 FROM fmea
-                WHERE id_consecutivo_modo_falla = %s
-            """
-            cursor.execute(count_query, (id_consecutivo_modo_falla,))
+                WHERE id_consecutivo_modo_falla = %s AND id_equipo_info = %s
+             """
+            cursor.execute(count_query, (id_consecutivo_modo_falla, id_equipo_info))
             count_result = cursor.fetchone()
             ocurrencias = count_result['count'] if count_result else 0
-
             # Calcular la nueva numeración
             nueva_numeracion = ocurrencias + 1
 
@@ -2437,7 +2577,7 @@ def eliminar_RCM(fmea_id,id_rcm):
 @app.route('/LSA/equipo/mostrar-analisis-funcional', methods=['GET'])
 def mostrar_analisis_funcional():
     # Priorizar el parámetro de URL 'id_equipo_info' si está presente
-    id_equipo_info = request.args.get('id_equipo_info')
+    id_equipo_info = request.args.get('id_equipo_info') or session.get('id_equipo_info')
     id_sistema = obtener_id_sistema_por_equipo_info(id_equipo_info)
     id_equipo = obtener_id_equipo_por_equipo_info(id_equipo_info)
 
@@ -2462,7 +2602,7 @@ def mostrar_analisis_funcional():
     for analisis in analisis_funcionales:
         analisis['sistema_nombre'] = sistema_nombre
 
-    return render_template('mostrar_analisis_funcional.html', analisis_funcionales=analisis_funcionales, sistema=sistema, componentes=componentes_analisis_funcionales,id_equipo_info=id_equipo_info)
+    return render_template('mostrar_analisis_funcional.html', analisis_funcionales=analisis_funcionales, sistema=sistema, componentes=componentes_analisis_funcionales,id_equipo_info=id_equipo_info,id_equipo=id_equipo)
 
 @app.route('/LSA/equipo/mostrar-analisis-funcional-ext', methods=['GET'])
 def mostrar_analisis_funcional_ext():

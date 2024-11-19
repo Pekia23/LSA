@@ -23,6 +23,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Capturar el evento submit del formulario de Análisis Funcional
     const form = document.getElementById('analisis-funcional-form');
+    const id_equipo_info_element = document.getElementById('id_equipo_info');
+    console.log('id_equipo_info_element:', id_equipo_info_element);
+
+
 
     form.addEventListener('submit', function(e) {
         e.preventDefault(); // Evitar el comportamiento predeterminado del formulario
@@ -48,6 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
             verbo: document.getElementById('verbo').value,
             accion: document.getElementById('accion').value,
             estandar_desempeño: document.getElementById('estandar_desempeño').value,
+            id_equipo_info: id_equipo_info_element.value,
             componentes: [] // Array para capturar los componentes
         };
 

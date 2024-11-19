@@ -20,7 +20,8 @@
     <br>
     <form id="fmea-form" method="POST"
         action="{% if editar %}{{ url_for('guardar_cambios_fmea', fmea_id=fmea['id'],id_equipo_info=id_equipo_info) }}{% else %}{{ url_for('guardar_fmea',fmea_id=fmea['id'],id_equipo_info=id_equipo_info) }}{% endif %}">
-
+        <!-- Campo oculto para id_equipo_info -->
+        <input type="hidden" id="id_equipo_info" name="id_equipo_info" value="{{ id_equipo_info }}">
         <div class="row mt-3">
             <div class="col-md-4">
                 <label for="subsistema" class="form-label">Subsistema</label>
@@ -65,7 +66,11 @@
                 <label for="codigo_modo_falla" class="form-label">Código Modo de Falla (Acc. to ISO 14224)</label>
                 <div class="d-flex">
                     <!-- Select para el código de modo de falla -->
-                    <select data-editar="{{editar}}" class="form-control" id="codigo_modo_falla" name="codigo_modo_falla"
+                    <select data-editar="{{ editar }}" 
+                        data-original-value="{{ fmea['id_codigo_modo_falla'] if editar else '' }}" 
+                        class="form-control" 
+                        id="codigo_modo_falla" 
+                        name="codigo_modo_falla"
                         onchange="actualizarNombreFalla()">
                         <option value="" disabled selected>---- Selecciona ----</option>
                         {% for codigo in codigos_modo_falla %}
@@ -77,14 +82,19 @@
                     </select>
                     <!-- Campo de solo lectura para el nombre del modo de falla -->
                     <input type="text" class="form-control ms-2" id="nombre_modo_falla" name="nombre_modo_falla" readonly
+                        value="{% if editar %}{{ fmea['nombre_modo_falla'] }}{% endif %}" readonly
                         style="width: 200px;">
                 </div>
             </div>
 
             <div class="col-md-4">
                 <label for="consecutivo_modo_falla" class="form-label">Consecutivo de Modo de Falla</label>
-                <input type="text" class="form-control" id="consecutivo_modo_falla" name="consecutivo_modo_falla" readonly>
-                <input type="hidden" id="id_consecutivo_modo_falla" name="id_consecutivo_modo_falla">
+                <input type="text" class="form-control" id="consecutivo_modo_falla" name="consecutivo_modo_falla" readonly
+                value="{% if editar %}{{ fmea['consecutivo_modo_falla'] }}{% endif %}" readonly>
+
+                <input type="hidden" id="id_consecutivo_modo_falla" name="id_consecutivo_modo_falla"
+                value="{% if editar %}{{ fmea['id_consecutivo_modo_falla'] }}{% endif %}">
+                  
             </div>    
             <div class="col-md-4">
                 <label for="descripcion_modo_falla" class="form-label">Descripcion de Modo de Falla</label>
