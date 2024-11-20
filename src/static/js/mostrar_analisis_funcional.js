@@ -12,6 +12,8 @@ function get_id(id) {
     table_comp.hidden = !table_comp.hidden;
 }
 
+
+
 // Función para confirmar la eliminación utilizando SweetAlert2 y `fetch`
 function confirmarEliminacion(event) {
     event.preventDefault(); // Prevenir el envío del formulario

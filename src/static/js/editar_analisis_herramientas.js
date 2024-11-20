@@ -35,8 +35,8 @@ document.addEventListener('DOMContentLoaded', function() {
                             icon: 'success',
                             confirmButtonText: 'OK'
                         }).then(() => {
-                            // Redirigir después de la confirmación del usuario
-                            window.location.href = '/LSA/mostrar-herramientas-especiales';
+                            // Lógica de redirección según la URL anterior
+                            redirigirSegunURLAnterior();
                         });
                     } else {
                         // Alerta de error
@@ -61,4 +61,19 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+
+    // Función para redirigir según la URL anterior
+    function redirigirSegunURLAnterior() {
+        const urlAnterior = document.referrer;
+        const idEquipoInfo = document.getElementById('id_equipo_info').value;
+
+        // Lógica de redirección según la URL anterior
+        if (urlAnterior.includes(`/LSA/equipo/mostrar-analisis-funcional-ext?id_equipo_info=${idEquipoInfo}`)) {
+            // Redirige a una vista específica
+            window.location.href = `/LSA/equipo/mostrar-analisis-funcional-ext?id_equipo_info=${idEquipoInfo}`;
+        } else {
+            // Redirige a una vista por defecto si no coincide
+            window.location.href = '/LSA/equipo/mostrar-analisis-funcional-ext';
+        }
+    }
 });

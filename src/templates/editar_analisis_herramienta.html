@@ -17,6 +17,7 @@
             <h2 class="section-title text-center">Editar Herramientas generales</h2>
             <br>
             <form id="editar-analisis-herramienta-form" enctype="multipart/form-data" data-analisis-id="{{ analisis.id }}">
+                <input type="hidden" id="id_equipo_info" name="id_equipo_info" value="{{ id_equipo_info }}">
                 <div class="row">
                     <!-- Primera columna -->
                     <div class="col-md-4 my-4">
@@ -66,6 +67,5 @@
         </div>
     </div>
 </div>
-
 <script src="{{ url_for('static', filename='js/editar_analisis_herramientas.js') }}"></script>
 {% endblock %}

@@ -10,7 +10,7 @@ class DevelopmentConfig(Config):
     MYSQL_USER = 'root'
     MYSQL_PASSWORD = ''
     MYSQL_DB = 'lsa'
-    MYSQL_PORT = 3306
+    MYSQL_PORT = 3307
     MYSQL_UNIX_SOCKET = None
     MYSQL_CONNECT_TIMEOUT = 10  # Valor en segundos
     MYSQL_READ_DEFAULT_FILE = None
