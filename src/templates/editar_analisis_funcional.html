@@ -217,11 +217,35 @@
             </section>
 
             <div class="text-end mt-4">
-                <button type="submit" class="btn btn-primary">Actualizar análisis funcional</button>
+                <button type="submit" class="btn btn-primary"   id="redirect-button">Actualizar análisis funcional</button>
             </div>
         </div>
     </form>
 </div>
+<script>
 
+    // Seleccionar el botón por su ID
+    const button = document.getElementById("redirect-button");
+
+    // Agregar el evento click al botón
+    button.addEventListener("click", (event) => {
+        event.preventDefault(); // Evitar el comportamiento predeterminado del botón
+
+        const referrer = document.referrer; // Obtener la URL anterior
+        const idEquipo = button.getAttribute("data-id-equipo"); // Obtener el id_equipo_info del atributo data-id-equipo
+
+        // Depurar valores en la consola
+        console.log("Referrer:", referrer);
+        console.log("ID Equipo:", idEquipo);
+
+        // Validar que el referrer no esté vacío y redirigir según la lógica
+        if (referrer && referrer.includes(`/LSA/equipo/mostrar-analisis-funcional-ext?id_equipo_info=${idEquipo}`)) {
+            window.location.href = `/LSA/equipo/mostrar-analisis-funcional-ext?id_equipo_info=${idEquipo}`;
+        } else {
+            window.location.href = `/LSA/equipo/mostrar-analisis-funcional?id_equipo_info=${idEquipo}`;
+        }
+    });
+
+</script>
 <script src="{{ url_for('static', filename='js/analisis_funcional.js') }}"></script>
 {% endblock %}

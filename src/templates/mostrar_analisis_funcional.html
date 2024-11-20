@@ -77,11 +77,11 @@
 
 <div class="mt-4">
 
-    <a href="{{ url_for('registro_analisis_funcional',id_equipo_info=id_equipo_info) }}" class="btn btn-primary">Agregar análisis funcional</a>
+    <a href="{{ url_for('registro_analisis_funcional',id_equipo_info=id_equipo_info) }}" class="btn btn-primary1">Agregar análisis funcional</a>
 </div>
 
 <div class="mt-4">
-    <a href="{{ url_for('registro_herramientas_especiales', token=session['token'],id_equipo_info=id_equipo_info) }}" class="btn btn-primary">Terminar Análisis funcional</a>
+    <a id="terminar-analisis-funcional" href="{{ url_for('registro_herramientas_especiales', token=session['token'],id_equipo_info=id_equipo_info) }}" class="btn btn-primary1 ">Terminar Análisis funcional</a>
 
 </div> 
 

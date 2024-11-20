@@ -1740,8 +1740,7 @@ def editar_equipo():
 
         # Actualizar la información del equipo
         actualizar_equipo_info(id_equipo_info, data)
-
-        return redirect(url_for('mostrar_equipo', id_equipo_info=id_equipo_info))
+        return redirect(url_for('mostrar_general_page', id_equipo_info=id_equipo_info))
 
        
 @app.route('/LSA/eliminar-equipo', methods=['POST'])
