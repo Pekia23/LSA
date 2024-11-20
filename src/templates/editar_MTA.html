@@ -53,16 +53,7 @@
                 <td>{{ mta['tipo_mantenimiento'] }}</td>
                 <td>{{ mta['tarea_mantenimiento'] }}</td>
                 <td>{{ mta['cantidad_personal'] }}</td>
-                <td>
-                    {% for herramienta in herramientas if herramienta.id_mta == mta.id %}
-                    {{ herramienta.nombre }}<br>
-                    {% endfor %}
-                </td>
-                <td>
-                    {% for repuesto in repuestos if repuesto.id_mta == mta.id %}
-                    {{ repuesto.nombre_repuesto }}<br>
-                    {% endfor %}
-                </td>
+                
                 <td>{{ mta['requeridos_tarea'] }}</td>
                 <td>{{ mta['condiciones_ambientales'] }}</td>
                 <td>{{ mta['condiciones_estado_equipo'] }}</td>

@@ -19,7 +19,7 @@ function confirmarFinalizarRegistro(nombreEquipo) {
                 confirmButtonText: 'Aceptar'
             }).then(() => {
                 // Redirige al index después de mostrar el mensaje de éxito
-                window.location.href = "{{ url_for('index') }}";
+                window.location.href = "/LSA";
             });
         }
     });
@@ -77,22 +77,5 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Función para confirmar finalizar el registro del equipo
-    window.confirmarFinalizarRegistro = function () {
-        Swal.fire({
-            title: '¿Deseas finalizar el registro del equipo?',
-            text: "No podrás realizar más cambios después de finalizar.",
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonText: 'Sí, finalizar',
-            cancelButtonText: 'Cancelar',
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Redirigir a la página de finalizar registro
-                window.location.href = '/LSA/finalizar-registro-equipo';
-            }
-        });
-    };
+    
 });

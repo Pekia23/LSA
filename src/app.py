@@ -2345,11 +2345,50 @@ def obtener_nombre_falla(codigo_id,id_equipo_info):
 
         # Verificar si estamos en modo edición
         if editar:
-            return jsonify({
-                'nombre': nombre_modo_falla,
-                'consecutivo': f"{codigo_modo_falla}-0",  # Mantener el consecutivo existente
-                'id_consecutivo_modo_falla': id_codigo_modo_falla
-            })
+            # Obtener el consecutivo de modo de falla
+            query_consecutivo = """
+
+                SELECT id
+
+                FROM consecutivo_modo_falla 
+                WHERE nombre = %s
+            """
+            cursor.execute(query_consecutivo, (codigo_modo_falla,))
+            consecutivo_result = cursor.fetchone()
+
+            if consecutivo_result:
+                id_consecutivo_modo_falla = consecutivo_result['id']
+
+
+                # Contar cuántas veces se usa el id_consecutivo_modo_falla en la tabla fmea
+                count_query = """
+                    SELECT COUNT(*) as count
+                    FROM fmea
+                    WHERE id_consecutivo_modo_falla = %s AND id_equipo_info = %s
+                """
+                cursor.execute(count_query, (id_consecutivo_modo_falla, id_equipo_info))
+                count_result = cursor.fetchone()
+                ocurrencias = count_result['count'] if count_result else 0
+                # Calcular la nueva numeración
+                nueva_numeracion = ocurrencias 
+
+                # Actualizar la numeración en la tabla consecutivo_modo_falla
+
+                query_update = """
+                    UPDATE consecutivo_modo_falla
+                    SET numeracion = %s
+                    WHERE id = %s
+                """
+                cursor.execute(query_update, (nueva_numeracion, id_consecutivo_modo_falla))
+                db.connection.commit()
+
+                cursor.close()
+
+                return jsonify({
+                    'nombre': nombre_modo_falla,
+                    'consecutivo': f"{codigo_modo_falla}-{nueva_numeracion}",
+                    'id_consecutivo_modo_falla': id_consecutivo_modo_falla
+                })
 
 
         # Obtener el consecutivo de modo de falla

@@ -2369,7 +2369,7 @@ def insertar_procedimiento(arranque, parada):
 def insertar_diagrama(diagrama_flujo, diagrama_caja_negra, diagrama_caja_transparente):
     cursor = db.connection.cursor()
 
-    query = "INSERT INTO diagramas (diagrama_fijo, diagrama_caja_negra, diagrama_caja_transparente) VALUES (%s, %s, %s)"
+    query = "INSERT INTO diagramas (diagrama_flujo, diagrama_caja_negra, diagrama_caja_transparente) VALUES (%s, %s, %s)"
     cursor.execute(query, (diagrama_flujo, diagrama_caja_negra, diagrama_caja_transparente))
     db.connection.commit()
     diagrama_id = cursor.lastrowid
@@ -2841,47 +2841,6 @@ def obtener_rcm_por_id(id_rcm):
     cursor.close()
     return rcm
 
-
-def obtener_rcms_completos():
-    cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
-    query = """
-        SELECT
-            r.id,
-            r.id_fmea,
-            f.id_equipo_info,
-            s.nombre as sistema, 
-            ff.nombre as falla_funcional, 
-            c.nombre as componente, 
-            cmf.nombre as codigo_modo_falla, 
-            cf.nombre as consecutivo_modo_falla, 
-            dmf.nombre as descripcion_modo_falla, 
-            causa.nombre as causa, 
-            r.hidden_failures,
-            r.safety,
-            r.environment,
-            r.operation,
-            r.h1_s1_n1_o1,
-            r.h2_s2_n2_o2,
-            r.h3_s3_n3_o3,
-            r.h4_s4,
-            r.h5,
-            r.tarea,
-            r.id_accion_recomendada,
-            r.intervalo_inicial_horas
-        FROM rcm r
-        LEFT JOIN fmea f ON r.id_fmea = f.id
-        LEFT JOIN sistema s ON f.id_sistema = s.id
-        LEFT JOIN falla_funcional ff ON f.id_falla_funcional = ff.id
-        LEFT JOIN componentes c ON f.id_componente = c.id
-        LEFT JOIN codigo_modo_falla cmf ON f.id_codigo_modo_falla = cmf.id
-        LEFT JOIN consecutivo_modo_falla cf ON f.id_consecutivo_modo_falla = cf.id
-        LEFT JOIN descripcion_modo_falla dmf ON f.id_descripcion_modo_falla = dmf.id
-        LEFT JOIN causa ON f.id_causa = causa.id
-    """
-    cursor.execute(query)
-    rcms_completos = cursor.fetchall()
-    cursor.close()
-    return rcms_completos
 
 
 def obtener_fmeas_con_rcm():
