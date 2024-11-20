@@ -66,14 +66,11 @@ document.addEventListener('DOMContentLoaded', function() {
     function redirigirSegunURLAnterior() {
         const urlAnterior = document.referrer;
         const idEquipoInfo = document.getElementById('id_equipo_info').value;
-
+        console.log(idEquipoInfo)
         // Lógica de redirección según la URL anterior
-        if (urlAnterior.includes(`/LSA/equipo/mostrar-analisis-funcional-ext?id_equipo_info=${idEquipoInfo}`)) {
+        if (urlAnterior.includes(`LSA/mostrar-herramientas-especiales-ext?id_equipo_info=${idEquipoInfo}`)) {
             // Redirige a una vista específica
-            window.location.href = `/LSA/equipo/mostrar-analisis-funcional-ext?id_equipo_info=${idEquipoInfo}`;
-        } else {
-            // Redirige a una vista por defecto si no coincide
-            window.location.href = '/LSA/equipo/mostrar-analisis-funcional-ext';
+            window.location.href = `LSA/mostrar-herramientas-especiales-ext?id_equipo_info=${idEquipoInfo}`;
         }
     }
 });

@@ -122,8 +122,8 @@
         </p>
       <br><br>
       <h3>Diagrama de Flujo del Subsistema Donde se encuentra Ubicado el Equipo</h3>
-      {% if diagrama.diagrama_fijo %}
-      <img src="data:image/png;base64,{{ diagrama.diagrama_fijo|b64encode }}" class="imagend">
+      {% if diagrama.diagrama_flujo %}
+      <img src="data:image/png;base64,{{ diagrama.diagrama_flujo|b64encode }}" class="imagend">
       {% endif %}
       <br><br><br><br>
       <h3>Diagrama Caja Negra de la Función</h3>

@@ -836,7 +836,7 @@ def insertar_procedimiento(arranque, parada):
 def insertar_diagrama(diagrama_flujo, diagrama_caja_negra, diagrama_caja_transparente):
     cursor = db.connection.cursor()
 
-    query = "INSERT INTO diagramas (diagrama_fijo, diagrama_caja_negra, diagrama_caja_transparente) VALUES (%s, %s, %s)"
+    query = "INSERT INTO diagramas (diagrama_flujo, diagrama_caja_negra, diagrama_caja_transparente) VALUES (%s, %s, %s)"
     cursor.execute(query, (diagrama_flujo, diagrama_caja_negra, diagrama_caja_transparente))
     db.connection.commit()
     diagrama_id = cursor.lastrowid
