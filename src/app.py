@@ -875,9 +875,8 @@ def editar_repuesto(id_repuesto):
     token = g.user_token
     user_data = obtener_info_usuario(token)
     id_equipo_info = user_data.get('id_equipo_info')
-
     if id_equipo_info is None:
-        return redirect(url_for('registro_generalidades'))
+        id_equipo_info = request.form.get('id_equipo_info')
 
     # Obtener los datos del repuesto
     repuesto = obtener_repuesto_por_id(id_repuesto)

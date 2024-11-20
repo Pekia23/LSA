@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }).then((result) => {
                 if (result.isConfirmed) {
                     // Redirigir a la página de edición incluyendo id_equipo_info en la URL
-                    window.location.href = `/LSA/editar-repuesto/${repuestoId}?id_equipo_info=${idEquipoInfo}`;
+                    window.location.href = `/LSA/editar-repuesto/${repuestoId}`;
                 }
             });
         });
