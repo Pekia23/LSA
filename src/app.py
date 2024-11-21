@@ -973,15 +973,14 @@ def agregar_analisis_herramienta():
 @app.route('/LSA/editar-analisis-herramienta/<int:id_analisis>', methods=['GET'])
 def editar_analisis_herramienta(id_analisis):
     token = g.user_token
+    id_equipo_info = request.args.get('id_equipo_info')
     analisis = obtener_analisis_herramienta_por_id(id_analisis)
     if analisis is None:
         return "Análisis no encontrado", 404
 
     tipos_herramientas = obtener_tipos_herramientas()
 
-    return render_template('editar_analisis_herramienta.html', analisis=analisis, tipos_herramientas=tipos_herramientas)
-
-
+    return render_template('editar_analisis_herramienta.html', analisis=analisis, tipos_herramientas=tipos_herramientas, id_equipo_info=id_equipo_info)
 
 @app.route('/api/analisis-herramientas/<int:id_analisis>', methods=['PUT'])
 def actualizar_analisis_herramienta_route(id_analisis):
@@ -1453,7 +1452,7 @@ def guardar_cambios_fmea(fmea_id,id_equipo_info):
 
 
     # Redireccionar después de guardar los cambios
-    return redirect(url_for('mostrar_FMEA',id_equipo_info=id_equipo_info))
+    return redirect(url_for('editar_FMEA_lista',id_equipo_info=id_equipo_info))
 
 
 

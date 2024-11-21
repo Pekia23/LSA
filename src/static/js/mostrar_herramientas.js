@@ -3,9 +3,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const editButtonsAnalisis = document.querySelectorAll('.btn-editar-analisis');
     editButtonsAnalisis.forEach(function(button) {
         button.addEventListener('click', function() {
-            const herramientaId = this.getAttribute('data-id');
-
             // Confirmación de SweetAlert2 antes de editar
+            const idAnalisis = button.getAttribute('data-id');
+            const idEquipoInfo = button.getAttribute('data-equipo-info-id');
             Swal.fire({
                 title: '¿Deseas editar esta herramienta?',
                 text: "Serás redirigido a la página de edición.",
@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 cancelButtonColor: '#d33'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = '/LSA/editar-analisis-herramienta/' + herramientaId;
+                    window.location.href = `/LSA/editar-analisis-herramienta/${idAnalisis}?id_equipo_info=${idEquipoInfo}`;
                 }
             });
         });

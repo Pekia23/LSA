@@ -3550,7 +3550,7 @@ def obtener_rcm_por_equipo_info(id_equipo_info):
                 r.intervalo_inicial_horas
             FROM rcm r
             LEFT JOIN fmea f ON r.id_fmea = f.id
-            LEFT JOIN sistema s ON f.id_sistema = s.id
+            LEFT JOIN subsistemas s ON f.id_sistema = s.id
             LEFT JOIN falla_funcional ff ON f.id_falla_funcional = ff.id
             LEFT JOIN componentes c ON f.id_componente = c.id
             LEFT JOIN codigo_modo_falla cmf ON f.id_codigo_modo_falla = cmf.id

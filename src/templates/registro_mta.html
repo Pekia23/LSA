@@ -347,48 +347,6 @@
                 </div>
             </div>
 
-            <!-- Segunda columna -->
-            <div class="row my-4">
-                <div class="col-md-4">
-                    <label for="condiciones_requeridas_ambientales" class="form-label">Condiciones Requeridas
-                        (Ambientales)</label>
-                    <input type="text" class="form-control" id="condiciones_requeridas_ambientales"
-                        name="condiciones_requeridas_ambientales">
-                </div>
-                <div class="col-md-4">
-                    <label for="condiciones_requeridas_estado_equipo" class="form-label">Condiciones Requeridas (Estado
-                        del equipo)</label>
-                    <select class="form-control" id="condiciones_requeridas_estado_equipo"
-                        name="condiciones_requeridas_estado_equipo">
-                        <option value="" disabled selected>---- Selecciona ----</option>
-                        <option value="Apagado">Apagado</option>
-                        <option value="Apagado sin alimentacion">Apagado sin alimentación</option>
-                        <option value="Funcionando">Funcionando</option>
-                    </select>
-                </div>
-                <div class="col-md-4">
-                    <label for="condiciones_requeridas_especiales" class="form-label">Condiciones Requeridas
-                        (Especiales)</label>
-                    <input type="text" class="form-control" id="condiciones_requeridas_especiales"
-                        name="condiciones_requeridas_especiales">
-                </div>
-            </div>
-
-            <!-- Tercera columna -->
-            <div class="row my-4">
-                <div class="col-md-4">
-                    <label for="duracion_tarea_horas" class="form-label">Duración de la Tarea (Horas)</label>
-                    <input type="number" class="form-control" id="duracion_tarea_horas" name="duracion_tarea_horas">
-                </div>
-                <div class="col-md-4">
-                    <label for="duracion_tarea_minutos" class="form-label">Duración de la Tarea (Minutos)</label>
-                    <input type="number" class="form-control" id="duracion_tarea_minutos" name="duracion_tarea_minutos">
-                </div>
-                <div class="col-md-4">
-                    <label for="detalle_tarea" class="form-label">Detalle de tarea</label>
-                    <input type="text" class="form-control" id="detalle_tarea" name="detalle_tarea">
-                </div>
-            </div>
             {% if repuestos %}
             <label for="repuestos_requeridos" class="form-label">Repuestos Requeridos (referenciado del manual)</label>
             {% endif %}
@@ -406,6 +364,45 @@
             {% endif %}
             {% endfor %}
 
+            <div style="padding-top:10px ;">
+                <label for="condiciones_requeridas_ambientales" class="form-label">Condiciones Requeridas
+                    (Ambientales)</label>
+                <textarea class="form-control" id="condiciones_requeridas_ambientales"
+                    name="condiciones_requeridas_ambientales" rows="4" placeholder="Escribe tus comentarios aquí..."></textarea>
+            </div>
+
+            <div style="padding-top:10px ;">
+                <label for="condiciones_requeridas_especiales" class="form-label">Condiciones Requeridas
+                    (Especiales)</label>
+                <textarea class="form-control" id="condiciones_requeridas_especiales"
+                    name="condiciones_requeridas_especiales"  rows="4" placeholder="Escribe tus comentarios aquí..."></textarea>
+            </div>
+            <!-- Tercera columna -->
+            <div class="row my-4">
+                <div class="col-md-4">
+                    <label for="condiciones_requeridas_estado_equipo" class="form-label">Condiciones Requeridas (Estado
+                        del equipo)</label>
+                    <select class="form-control" id="condiciones_requeridas_estado_equipo"
+                        name="condiciones_requeridas_estado_equipo">
+                        <option value="" disabled selected>---- Selecciona ----</option>
+                        <option value="Apagado">Apagado</option>
+                        <option value="Apagado sin alimentacion">Apagado sin alimentación</option>
+                        <option value="Funcionando">Funcionando</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="duracion_tarea_horas" class="form-label">Duración de la Tarea (Horas)</label>
+                    <input type="number" class="form-control" id="duracion_tarea_horas" name="duracion_tarea_horas">
+                </div>
+                <div class="col-md-4">
+                    <label for="duracion_tarea_minutos" class="form-label">Duración de la Tarea (Minutos)</label>
+                    <input type="number" class="form-control" id="duracion_tarea_minutos" name="duracion_tarea_minutos">
+                </div>
+            </div>
+            <div style="padding-bottom:20px ;">
+                <label for="detalle_tarea" class="form-label">Detalle de tarea</label>
+                <textarea class="form-control" id="detalle_tarea" name="detalle_tarea"  rows="4" placeholder="Escribe tus comentarios aquí..."></textarea>
+            </div>
             <h2 class="section-title text-center">Level Of Repair Analysis (LORA)</h2>
 
             <div class="mt-3 popup">

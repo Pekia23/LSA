@@ -58,7 +58,7 @@
           <td>{{ analisis.cantidad }}</td>
           <td>{{ analisis.valor }}</td>
           <td>
-            <button class="boton btn-editar-analisis" data-id="{{ analisis.id }}"><i class="bi bi-pen"></button>
+            <button class="boton btn-editar-analisis" data-id="{{ analisis.id }}" data-equipo-info-id="{{id_equipo_info}}"><i class="bi bi-pen"></button>
           </td>
           <td>    
             <button class="btn btn-danger btn-eliminar-analisis" data-id="{{ analisis.id }}"><i class="bi bi-trash"></button>
@@ -102,7 +102,7 @@
           <td>{{ herramienta.valor }}</td>
           <td>{{ herramienta.manual_referencia }}</td>
           <td>
-            <button class="boton btn btn-primary btn-editar" data-id="{{ herramienta.id }}"><i class="bi bi-pen"></i></button>
+            <button class="boton btn btn-primary btn-editar" data-id="{{ herramienta.id }}" data-equipo-info-id="{{id_equipo_info}}"><i class="bi bi-pen"></i></button>
 
           </td>
           <td>

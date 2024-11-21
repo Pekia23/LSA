@@ -15,9 +15,11 @@ document.getElementById("botonPDF").addEventListener("click", function (event) {
         if (result.isConfirmed) {
             // Generar y descargar el PDF
             generatePDF("section", true); // El segundo parámetro indica que se debe descargar
+            generateSpecialPDF("special-fmea", true)
         } else {
             // Solo visualizar el PDF sin descargar
             generatePDF("section", false); // No descargar, solo visualizar
+            generateSpecialPDF("special-fmea", false)
         }
     });
 });
@@ -63,7 +65,7 @@ function generatePDF(className, shouldDownload) {
         filename: `informe_${nombreEquipo}.pdf`,
         image: { type: 'jpeg', quality: 0.90 },
         html2canvas: { scale: 1.5 },
-        jsPDF: { unit: 'mm', format: 'a1', orientation: 'portrait' },
+        jsPDF: { unit: 'mm', format: 'a2', orientation: 'portrait' },
         margin: [20, 20, 20, 20]
     };
 
@@ -101,5 +103,59 @@ function generatePDF(className, shouldDownload) {
         });
         noPrintElements.forEach(el => el.style.display = '');
         document.body.removeChild(container); // Asegurar la limpieza en caso de error
+    });
+}
+
+function generateSpecialPDF(className, shouldDownload) {
+
+    const elements = document.querySelectorAll(`.${className}`);
+    if (elements.length === 0) {
+        Swal.close();
+        Swal.fire({
+            title: 'Error',
+            text: 'No se encontraron elementos para generar el PDF de análisis especial.',
+            icon: 'error',
+        });
+        return;
+    }
+
+    const container = document.createElement("div");
+    container.setAttribute("id", "special-pdf-container");
+    elements.forEach(element => {
+        const clone = element.cloneNode(true);
+        container.appendChild(clone);
+    });
+
+    document.body.appendChild(container);
+
+    const nombreEquipo = document.getElementById("botonPDF").getAttribute("data-nombre-equipo") || "Informe";
+    const options = {
+        filename: `analisis_especial_${nombreEquipo}.pdf`,
+        image: { type: 'jpeg', quality: 0.95 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a1', orientation: 'landscape' },
+        margin: [10, 10, 10, 10]
+    };
+
+    html2pdf().set(options).from(container).outputPdf('blob').then((pdfBlob) => {
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+        if (shouldDownload) {
+            const link = document.createElement('a');
+            link.href = pdfUrl;
+            link.download = `analisis_especial_${nombreEquipo}.pdf`;
+            link.click();
+        }else {
+            // Solo abrir el PDF en una nueva pestaña para visualizar
+            window.open(pdfUrl, '_blank');
+        }
+        Swal.close();
+        document.body.removeChild(container);
+    }).catch(error => {
+        console.error("Error al generar el PDF de análisis especial:", error);
+        Swal.fire({
+            title: 'Error',
+            text: 'Ocurrió un problema al generar el PDF de análisis especial.',
+            icon: 'error',
+        });
     });
 }
