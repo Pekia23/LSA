@@ -32,6 +32,10 @@ function generatePDF(className, shouldDownload) {
             Swal.showLoading(); // Muestra un spinner mientras se procesa
         }
     });
+    // Mostrar todas las pestañas temporalmente
+    const tabPanes = document.querySelectorAll('.tab-pane');
+    tabPanes.forEach(pane => pane.classList.add('show', 'active'));
+
     const elements = document.querySelectorAll(`.${className}`);
     
     if (elements.length === 0) {
@@ -59,7 +63,7 @@ function generatePDF(className, shouldDownload) {
         filename: `informe_${nombreEquipo}.pdf`,
         image: { type: 'jpeg', quality: 0.90 },
         html2canvas: { scale: 1.5 },
-        jsPDF: { unit: 'mm', format: 'a1', orientation: 'landscape' },
+        jsPDF: { unit: 'mm', format: 'a1', orientation: 'portrait' },
         margin: [20, 20, 20, 20]
     };
 
@@ -84,6 +88,10 @@ function generatePDF(className, shouldDownload) {
         // Restaurar visibilidad de los elementos ocultos
         noPrintElements.forEach(el => el.style.display = '');
         document.body.removeChild(container); // Eliminar el contenedor temporal
+        // Restaurar el estado original de las pestañas
+        tabPanes.forEach(pane => pane.classList.remove('show', 'active'));
+        const activeTab = document.querySelector('.nav-link.active');
+        if (activeTab) activeTab.click(); // Volver a la pestaña activa original
     }).catch(error => {
         console.error("Error al generar el PDF:", error);
         Swal.fire({

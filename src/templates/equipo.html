@@ -125,17 +125,17 @@
       {% if diagrama.diagrama_flujo %}
       <img src="data:image/png;base64,{{ diagrama.diagrama_flujo|b64encode }}" class="imagend">
       {% endif %}
-      <br><br><br><br>
+      <br><br>
       <h3>Diagrama Caja Negra de la Función</h3>
       {% if diagrama.diagrama_caja_negra %}
       <img src="data:image/png;base64,{{ diagrama.diagrama_caja_negra|b64encode }}" class="imagend">
       {% endif %}
-      <br><br><br><br>
+      <br><br>
       <h3>Diagrama de Caja Transparente</h3>
       {% if diagrama.diagrama_caja_transparente %}
       <img src="data:image/png;base64,{{ diagrama.diagrama_caja_transparente|b64encode }}" class="imagend">
       {% endif %}
-      <br><br><br><br>
+      <br><br>
       <h3>Procedimiento de Arranque</h3>
       <p>{{ procedimiento.arranque }}</p>
       <br>
