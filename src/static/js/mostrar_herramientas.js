@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
     deleteButtonsAnalisis.forEach(function(button) {
         button.addEventListener('click', function() {
             const herramientaId = this.getAttribute('data-id');
-
+            
             // Confirmación de SweetAlert2 antes de eliminar
             Swal.fire({
                 title: '¿Estás seguro?',
@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
     editButtonsEspecial.forEach(function(button) {
         button.addEventListener('click', function() {
             const herramientaId = this.getAttribute('data-id');
-
+            const idEquipoInfo = button.getAttribute('data-equipo-info-id');
             // Confirmación de SweetAlert2 antes de editar
             Swal.fire({
                 title: '¿Deseas editar esta herramienta especial?',
@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 cancelButtonColor: '#d33'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = '/LSA/editar-herramienta-especial/' + herramientaId;
+                    window.location.href = `/LSA/editar-herramienta-especial/${herramientaId}?id_equipo_info=${idEquipoInfo}`;
                 }
             });
         });

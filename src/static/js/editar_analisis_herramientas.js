@@ -64,21 +64,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function redirigirSegunURLAnterior() {
         const urlAnterior = document.referrer; // URL previa
-        const idEquipoInfo = document.getElementById('id_equipo_info')?.value; // Asegura que no falle si el elemento no existe
+        const idEquipoInfo = document.getElementById('id_equipo_info')?.value; // Obtener el valor del id_equipo_info
     
-        // Verifica que idEquipoInfo tenga un valor válido
+        // Verifica si el id_equipo_info es válido
         if (!idEquipoInfo) {
             console.error("El id_equipo_info no está definido o es inválido.");
-            return; // Detén la ejecución si no hay idEquipoInfo
+            Swal.fire({
+                title: 'Error',
+                text: 'El ID del equipo no está disponible. Por favor, verifica.',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+            });
+            // Redirige a una página predeterminada para manejar el caso
+            window.location.href = '/LSA';
+            return;
         }
     
-        // Verifica si la URL anterior contiene la parte esperada, ignorando los parámetros
+        // Verifica si la URL anterior contiene la parte esperada
         if (urlAnterior.includes('/LSA/mostrar-herramientas-especiales-ext')) {
             // Redirige con el id dinámico
             window.location.href = `/LSA/mostrar-herramientas-especiales-ext?id_equipo_info=${idEquipoInfo}`;
         } else {
-            // Redirige a una vista por defecto si no coincide
-            window.location.href = '/LSA/mostrar-herramientas-especiales';
+            // Redirige a una vista predeterminada
+            window.location.href = `/LSA/mostrar-herramientas-especiales`;
         }
-    }
+    }    
 });

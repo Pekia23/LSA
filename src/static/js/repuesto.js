@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     text: 'Por favor, complete todos los campos obligatorios',
                     confirmButtonText: 'OK'
                 }).then(() => {
-                    window.location.href = '/LSA/mostrar-repuesto';
+                    window.location.href = '/LSA/registro-repuesto';
                 });
             }
         })

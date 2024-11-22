@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block nombre %}LSA | Editar Herramienta Especial{% endblock %}
-{{id_equipo_info}}
+
 {% block body %}
 <div class="container-fluid">
     <div class="row">
@@ -17,6 +17,7 @@
             <h2 class="section-title text-center">Editar Herramienta Especial</h2>
             <br>
             <form id="editar-herramienta-form" enctype="multipart/form-data" data-herramienta-id="{{ herramienta.id }}">
+                <input type="hidden" id="id_equipo_info" name="id_equipo_info" value="{{ id_equipo_info }}">
                 <div class="row">
                     <!-- Primera columna -->
                     <div class="col-md-4 my-4">
@@ -40,8 +41,17 @@
                         <label for="parte_numero" class="form-label">Parte número</label>
                         <input type="text" class="form-control" id="parte_numero" name="parte_numero" value="{{ herramienta.parte_numero }}">
 
-                        <label for="valor" class="form-label mt-3">Costo</label>
-                        <input type="number" class="form-control" id="valor" name="valor" value="{{ herramienta.valor }}">
+                        <div>
+                            <label for="valor" class="form-label mt-3">Costo</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="valor" name="valor" value="{{ herramienta.valor }}">
+                                <select class="form-select" id="moneda" name="moneda" style="width: auto;">
+                                    <option value="USD">USD</option>
+                                    <option value="EURO">EURO</option>
+                                    <option value="COP">COP</option>
+                                </select>
+                            </div>
+                        </div>
 
                         <label for="cantidad" class="form-label mt-3">Cantidad</label>
                         <input type="number" class="form-control" id="cantidad" name="cantidad" value="{{ herramienta.cantidad }}">

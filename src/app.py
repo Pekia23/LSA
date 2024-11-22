@@ -873,14 +873,14 @@ def eliminar_repuesto_route(id_repuesto):
 @app.route('/LSA/editar-repuesto/<int:id_repuesto>', methods=['GET'])
 def editar_repuesto(id_repuesto):
     token = g.user_token
-    user_data = obtener_info_usuario(token)
-    id_equipo_info = user_data.get('id_equipo_info')
-    if id_equipo_info is None:
-        id_equipo_info = request.form.get('id_equipo_info')
+    id_equipo_info = request.args.get('id_equipo_info')  # Obtiene el ID del equipo desde los parámetros de la URL
+
+    # Validar que id_equipo_info esté presente
+    if not id_equipo_info:
+        return 'ID del equipo no proporcionado', 400
 
     # Obtener los datos del repuesto
     repuesto = obtener_repuesto_por_id(id_repuesto)
-
     if not repuesto:
         return 'Repuesto no encontrado', 404
 
@@ -1218,13 +1218,14 @@ def registro_herramientas_especiales():
 @app.route('/LSA/editar-herramienta-especial/<int:id_herramienta>', methods=['GET'])
 def editar_herramienta_especial(id_herramienta):
     token = g.user_token
+    id_equipo_info = request.args.get('id_equipo_info')
     herramienta = obtener_herramienta_especial_por_id(id_herramienta)
     if herramienta is None:
         return "Herramienta no encontrada", 404
 
     tipos_herramientas = obtener_tipos_herramientas()
 
-    return render_template('editar_herramienta_especial.html', herramienta=herramienta, tipos_herramientas=tipos_herramientas)
+    return render_template('editar_herramienta_especial.html', herramienta=herramienta, tipos_herramientas=tipos_herramientas, id_equipo_info=id_equipo_info)
 
 
 @app.route('/api/herramientas-especiales/<int:id_herramienta>', methods=['PUT'])
@@ -2122,7 +2123,7 @@ def actualizar_MTA(mta_id,id_equipo_info):
     # Actualizar la información de LORA
     actualizar_mta_lora(nivel, actividades, operario, mta_id)
 
-    return redirect(url_for('editar_RCM_lista',id_equipo_info=id_equipo_info))
+    return redirect(url_for('editar_MTA_lista',id_equipo_info=id_equipo_info))
 
 @app.route('/LSA/equipo/mostrar-MTA')
 def mostrar_MTA():

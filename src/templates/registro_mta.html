@@ -211,41 +211,19 @@
             <tbody>
                 <tr>
                     <td>
-                        <select class="form-select" id="nivel" name="nivel">
+                        <select class="form-select" id="nivel_lora" name="nivel">
 
                             <option value="1" {% if lora_mta['nivel']=="1" %}selected{% endif %}>I</option>
                             <option value="2" {% if lora_mta['nivel']=="2" %}selected{% endif %}>II</option>
                             <option value="3" {% if lora_mta['nivel']=="3" %}selected{% endif %}>III</option>
-                            <option value="2" {% if lora_mta['nivel']=="4" %}selected{% endif %}>IV</option>
-                            <option value="3" {% if lora_mta['nivel']=="5" %}selected{% endif %}>V</option>
+                            <option value="4" {% if lora_mta['nivel']=="4" %}selected{% endif %}>IV</option>
+                            <option value="5" {% if lora_mta['nivel']=="5" %}selected{% endif %}>V</option>
                         </select>
                     </td>
                     <td><input type="text" class="form-control gray-input" id="actividades" name="actividades" readonly
                             value="{{ lora_mta['actividades'] }}"></td>
                     <td>
-                        <select class="form-select" id="operario" name="operario">
-                            <option value="Nivel operador" {% if lora_mta['operario']=="operario_1" %}selected{% endif %}>
-                                Nivel operador</option>
-                            <option value="Técnicas de nivel aprendiz" {% if lora_mta['operario']=="operario_2" %}selected{% endif %}>
-                                Técnicas de nivel aprendiz</option>
-                            <option value="Técnico intermedio con curso básico del equipo" {% if lora_mta['operario']=="operario_3" %}selected{% endif %}>
-                                Técnico intermedio con curso básico del equipo</option>
-                            <option value="Técnicos del más alto nivel en la empresa, con varios años de experiencia y
-                            cursosavanzados sobre el equipo" {% if lora_mta['operario']=="operario_4" %}selected{% endif %}>
-                                Técnicos del más alto nivel en la empresa, con varios años de experiencia y
-                                cursosavanzados sobre el equipo</option>
-                            <option value="Grupo de trabajo con experiencia previa" {% if lora_mta['operario']=="operario_5" %}selected{% endif %}>
-                                Grupo de trabajo con experiencia previa</option>
-                            <option value="Conformado por técnicos en varias disciplinas bajo la dirección de un ingeniero de campo" {% if lora_mta['operario']=="operario_6" %}selected{% endif %}>
-                                Conformado por técnicos en varias disciplinas bajo la dirección de un ingeniero de campo
-                            </option>
-                            <option value="Las labores de planeación corresponden a otro nivel dentro de la misma organización" {% if lora_mta['operario']=="operario_7" %}selected{% endif %}>
-                                Las labores de planeación corresponden a otro nivel dentro de la misma organización
-                            </option>
-                            <option value="Apoyo permanente del fabricante" {% if lora_mta['operario']=="operario_8" %}selected{% endif %}>
-                                Apoyo permanente del fabricante</option>
-                            <option value="Apoyo permanente de talleres especializados" {% if lora_mta['operario']=="operario_9" %}selected{% endif %}>
-                                Apoyo permanente de talleres especializados</option>
+                        <select class="form-select" id="operario_lora" name="operario">
                         </select>
                     </td>
 
@@ -450,32 +428,22 @@
               <tbody>
                 <tr>
                     <td>
-                    <select class="form-select" id="nivel" name="nivel">
+                    <select class="form-select" id="nivel_lora" name="nivel">
                         <option value="1" {% if lora_mta['nivel'] == "1" %}selected{% endif %}>I</option>
                         <option value="2" {% if lora_mta['nivel'] == "2" %}selected{% endif %}>II</option>
                         <option value="3" {% if lora_mta['nivel'] == "3" %}selected{% endif %}>III</option>
-                        <option value="2" {% if lora_mta['nivel'] == "4" %}selected{% endif %}>IV</option>
-                        <option value="3" {% if lora_mta['nivel'] == "5" %}selected{% endif %}>V</option>
+                        <option value="4" {% if lora_mta['nivel'] == "4" %}selected{% endif %}>IV</option>
+                        <option value="5" {% if lora_mta['nivel'] == "5" %}selected{% endif %}>V</option>
                     </select>
                     </td>
-                    <td><input type="text" class="form-control gray-input" id="actividades" name="actividades" readonly value="{{ lora_mta['actividades'] }}"></td>
+                    <td><input type="text" class="form-control" id="actividades" name="actividades" readonly value="{{ lora_mta['actividades'] }}"></td>
                     <td>
-                    <select class="form-select" id="operario" name="operario">
-                        <option value="Nivel operador" {% if lora_mta['operario'] == "operario_1" %}selected{% endif %}>Nivel operador</option>
-                        <option value="Técnicas de nivel aprendiz" {% if lora_mta['operario'] == "operario_2" %}selected{% endif %}>Técnicas de nivel aprendiz</option>
-                        <option value="Técnico intermedio con curso básico del equipo" {% if lora_mta['operario'] == "operario_3" %}selected{% endif %}>Técnico intermedio con curso básico del equipo</option>
-                        <option value="Técnicos del más alto nivel en la empresa, con varios años de experiencia y cursosavanzados sobre el equipo" {% if lora_mta['operario'] == "operario_4" %}selected{% endif %}>Técnicos del más alto nivel en la empresa, con varios años de experiencia y cursosavanzados sobre el equipo</option>
-                        <option value="Grupo de trabajo con experiencia previa" {% if lora_mta['operario'] == "operario_5" %}selected{% endif %}>Grupo de trabajo con experiencia previa</option>
-                        <option value="Conformado por técnicos en varias disciplinas bajo la dirección de un ingeniero de campo" {% if lora_mta['operario'] == "operario_6" %}selected{% endif %}>Conformado por técnicos en varias disciplinas bajo la dirección de un ingeniero de campo</option>
-                        <option value="Las labores de planeación corresponden a otro nivel dentro de la misma organización" {% if lora_mta['operario'] == "operario_7" %}selected{% endif %}>Las labores de planeación corresponden a otro nivel dentro de la misma organización</option>
-                        <option value="Apoyo permanente del fabricante" {% if lora_mta['operario'] == "operario_8" %}selected{% endif %}>Apoyo permanente del fabricante</option>
-                        <option value="Apoyo permanente de talleres especializados" {% if lora_mta['operario'] == "operario_9" %}selected{% endif %}>Apoyo permanente de talleres especializados</option>
+                    <select class="form-select" id="operario_lora" name="operario">
                     </select>
                     </td>
                 </tr>
               </tbody>
             </table>
-
             <!-- Botón siguiente -->
             <div class="text-end mt-4">
                 <button type="submit" class="btn btn-siguiente" id="btn-siguiente">Actualizar MTA</button>
@@ -545,5 +513,74 @@ document.getElementById('mta-form').addEventListener('submit', function (event) 
     // Actualizar la lista al cargar la página
     updateSelectedHerramientas();
 </script>
+
+<script>
+    // Opciones de operarios para cada nivel
+    const operarioOptions = {
+        "1": [
+            { value: "Nivel operador", text: "Nivel operador" },
+            { value: "Técnicas de nivel aprendiz", text: "Técnicas de nivel aprendiz" }
+        ],
+        "2": [
+            { value: "Técnico intermedio con curso básico del equipo", text: "Técnico intermedio con curso básico del equipo" }
+        ],
+        "3": [
+            { value: "Técnicos del más alto nivel en la empresa con varios años de experiencia y cursos avanzados sobre del equipo", text: "Técnicos del más alto nivel en la empresa con varios años de experiencia y cursos avanzados sobre del equipo" }
+        ],
+        "4": [
+            { value: "Grupo de trabajo con experiencia previa", text: "Grupo de trabajo con experiencia previa" },
+            { value: "Técnicos de varias disciplanas bajo dirección de un ingeniero de campo", text: "Técnicos de varias disciplanas bajo dirección de un ingeniero de campo" },
+            { value: "Labores de planeación corresponden a otro nivel dentro de la misma organización", text: "Labores de planeación corresponden a otro nivel dentro de la misma organización" },
+            { value: "Apoyo de talleres especializados", text: "Apoyo de talleres especializados" }
+        ],
+        "5": [
+            { value: "Grupo de trabajo con experiencia previa", text: "Grupo de trabajo con experiencia previa" },
+            { value: "Técnicos de varias disciplanas bajo dirección de un ingeniero de campo", text: "Técnicos de varias disciplanas bajo dirección de un ingeniero de campo" },
+            { value: "Labores de planeación corresponden a otro nivel dentro de la misma organización", text: "Labores de planeación corresponden a otro nivel dentro de la misma organización" },
+            { value: "Apoyo permanente del fabricante", text: "Apoyo permanente del fabricante" },
+
+        ]
+    };
+
+    const nivelSelect = document.getElementById('nivel_lora');
+    const operarioSelect = document.getElementById('operario_lora');
+
+    // Función para cargar todas las opciones inicialmente
+    function loadAllOperarioOptions() {
+        operarioSelect.innerHTML = ''; // Limpia el select
+
+        Object.values(operarioOptions).flat().forEach(option => {
+            const opt = document.createElement('option');
+            opt.value = option.value;
+            opt.textContent = option.text;
+            operarioSelect.appendChild(opt);
+        });
+    }
+
+    // Función para filtrar las opciones según el nivel
+    function filterOperarioOptions() {
+        const selectedNivel = nivelSelect.value;
+
+        if (selectedNivel) {
+            // Limpia las opciones actuales
+            operarioSelect.innerHTML = '';
+
+            // Agrega solo las opciones correspondientes al nivel seleccionado
+            operarioOptions[selectedNivel].forEach(option => {
+                const opt = document.createElement('option');
+                opt.value = option.value;
+                opt.textContent = option.text;
+                operarioSelect.appendChild(opt);
+            });
+        }
+    }
+
+    // Escucha cambios en el nivel seleccionado
+    nivelSelect.addEventListener('change', filterOperarioOptions);
+
+    // Cargar todas las opciones al cargar la página
+    loadAllOperarioOptions();
+</script>
+
 {% endblock %}
 

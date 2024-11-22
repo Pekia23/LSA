@@ -14,16 +14,25 @@
 
 <div class="col">
     <h2 class="section-title text-center">Editar Repuesto</h2>
-    {{id_equipo_info}}
     <form id="editar-repuesto-form" data-repuesto-id="{{ repuesto.id }}" enctype="multipart/form-data">
+        <input type="hidden" id="id_equipo_info" name="id_equipo_info" value="{{ id_equipo_info }}">
         <div class="row">
             <div class="col-md-12">
                 
                 <label for="nombre_repuesto" class="form-label mt-3">Nombre del Repuesto</label>
                 <input type="text" class="form-control" id="nombre_repuesto" name="nombre_repuesto" value="{{ repuesto.nombre_repuesto }}">
 
-                <label for="valor" class="form-label mt-3">Valor</label>
-                <input type="text" class="form-control" id="valor" name="valor" value="{{ repuesto.valor }}">
+                <div class="mt-3">
+                    <label for="valor" class="form-label">Valor</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="valor" name="valor" value="{{ repuesto.valor }}">
+                        <select class="form-select" id="moneda" name="moneda" style="width: auto;">
+                            <option value="USD">USD</option>
+                            <option value="EURO">EURO</option>
+                            <option value="COP">COP</option>
+                        </select>
+                    </div>
+                </div>
 
                 <label for="mtbf" class="form-label mt-3">MTBF</label>
                 <input type="text" class="form-control" id="mtbf" name="mtbf" value="{{ repuesto.mtbf }}">

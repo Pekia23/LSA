@@ -9,7 +9,6 @@
 {% endblock %}
 
 {% block nombre %}LSA | Repuestos{% endblock %}
-
 {% block content %}
 <h2 class="section-title text-center">Repuesto</h2>
 <table class="table mt-3">
@@ -41,7 +40,7 @@
           <button class="btn boton btn-editar " data-id="{{ repuesto.id }}" data-id-equipo-info="{{id_equipo_info}}"><i class="bi bi-pen pen" ></i></button>
         </td>
         <td>
-          <button class="btn btn-danger btn-eliminar" data-id="{{ repuesto.id }}" data-id-equipo-info="{{id_equipo_info}}""><i class="bi bi-trash-fill"></i></button>
+          <button class="btn btn-danger btn-eliminar" data-id="{{ repuesto.id }}" data-id-equipo-info="{{id_equipo_info}}"><i class="bi bi-trash-fill"></i></button>
         </td>
       </tr>
       {% endfor %}

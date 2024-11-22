@@ -16,7 +16,6 @@
         <div class="col">
             <h2 class="section-title text-center">Editar Herramientas generales</h2>
             <br>
-            {{id_equipo_info}}
             <form id="editar-analisis-herramienta-form" enctype="multipart/form-data" data-analisis-id="{{ analisis.id }}">
                 <input type="hidden" id="id_equipo_info" name="id_equipo_info" value="{{ id_equipo_info }}">
                 <div class="row">
@@ -36,8 +35,17 @@
 
                     <!-- Segunda columna -->
                     <div class="col-md-4 my-4">
-                        <label for="valor" class="form-label">Costo</label>
-                        <input type="number" class="form-control" id="valor" name="valor" value="{{ analisis.valor }}">
+                        <div>
+                            <label for="valor" class="form-label">Costo</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="valor" name="valor" value="{{ analisis.valor }}">
+                                <select class="form-select" id="moneda" name="moneda" style="width: auto;">
+                                    <option value="USD">USD</option>
+                                    <option value="EURO">EURO</option>
+                                    <option value="COP">COP</option>
+                                </select>
+                            </div>
+                        </div>
                         
                         <label for="cantidad" class="form-label mt-3">Cantidad</label>
                         <input type="number" class="form-control" id="cantidad" name="cantidad" value="{{ analisis.cantidad }}">
