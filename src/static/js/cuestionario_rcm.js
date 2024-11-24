@@ -190,7 +190,6 @@ function mostrarPregunta(nodeId) {
 
     // Si es el nodo de fin, ocultamos todos los botones
     if (nodeId === "fin") {
-        llenarCamposVaciosConGuion(); 
         ocultarBotones(); // Aseguramos que todos los botones estén ocultos
         return;
     }
@@ -381,22 +380,28 @@ function continuarLlenadoSecuencial() {
     }
 }
 
-// Función para llenar todos los campos vacíos con '--'
-function llenarCamposVaciosConGuion() {
-    for (let i = 2; i <= 10; i++) {
+function limpiarCampos() {
+    for (let i = 1; i <= 10; i++) {
         const inputId = `cuestionario_rcm${i}`;
         const inputElement = document.getElementById(inputId);
+        const labelId = `label_rcm${i}`;
+        const labelElement = document.getElementById(labelId);
 
-        // Si el campo está vacío, lo llenamos con '--'
-        if (inputElement && inputElement.value === "") {
-            inputElement.value = "--";
-            actualizarLabelPorCampo(inputId, "--");
+        // Limpia los valores de los inputs
+        if (inputElement) {
+            inputElement.value = "";
+        }
+
+        // Restaura los labels a su estado inicial
+        if (labelElement) {
+            labelElement.textContent = `${labelElement.textContent.split(':')[0]}: `;
         }
     }
-}
+}   
 
 // Iniciar el cuestionario cuando se abra el modal
 document.getElementById("startQuizBtn").addEventListener("click", function () {
+    limpiarCampos();
     currentNode = "inicio"; // Reiniciar el cuestionario al inicio
     questionHistory = []; // Limpiar el historial cuando se reinicia
     respuestas = {}; // Limpiar las respuestas anteriores
