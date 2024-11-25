@@ -1,7 +1,6 @@
-document.getElementById("botonPDF").addEventListener("click", function (event) {
+document.getElementById("botonPDF").addEventListener("click", async function (event) {
     event.preventDefault();
 
-    // Mostrar el pop-up de confirmación con SweetAlert
     Swal.fire({
         title: '¿Deseas descargar el PDF?',
         text: "Puedes visualizarlo antes o descargarlo directamente.",
@@ -11,151 +10,137 @@ document.getElementById("botonPDF").addEventListener("click", function (event) {
         cancelButtonColor: '#d33',
         confirmButtonText: 'Sí, descargar',
         cancelButtonText: 'Solo visualizar'
-    }).then((result) => {
+    }).then(async (result) => {
         if (result.isConfirmed) {
-            // Generar y descargar el PDF
-            generatePDF("section", true); // El segundo parámetro indica que se debe descargar
-            generateSpecialPDF("special-fmea", true)
+            const pdfBlob1 = await generatePDF("section", false); // Genera el primer PDF
+            const pdfBlob2 = await generateSpecialPDF("special-fmea", false); // Genera el segundo PDF
+            if (pdfBlob1 && pdfBlob2) {
+                const combinedPdfBlob = await combinePDFs(pdfBlob1, pdfBlob2);
+                downloadOrOpenPDF(combinedPdfBlob, true); // Descargar el PDF combinado
+            }
         } else {
-            // Solo visualizar el PDF sin descargar
-            generatePDF("section", false); // No descargar, solo visualizar
-            generateSpecialPDF("special-fmea", false)
+            const pdfBlob1 = await generatePDF("section", false); // Genera el primer PDF
+            const pdfBlob2 = await generateSpecialPDF("special-fmea", false); // Genera el segundo PDF
+            if (pdfBlob1 && pdfBlob2) {
+                const combinedPdfBlob = await combinePDFs(pdfBlob1, pdfBlob2);
+                downloadOrOpenPDF(combinedPdfBlob, false); // Descargar el PDF combinado
+            }
         }
     });
 });
 
-function generatePDF(className, shouldDownload) {
-    // Seleccionar todos los elementos con la clase "section"
-    Swal.fire({
-        title: 'Generando PDF...',
-        text: 'Por favor, espera mientras se genera el archivo.',
-        allowOutsideClick: false,
-        didOpen: () => {
-            Swal.showLoading(); // Muestra un spinner mientras se procesa
+async function generatePDF(className, shouldDownload) {
+    // Generación del primer PDF como Blob
+    return new Promise((resolve, reject) => {
+        const elements = document.querySelectorAll(`.${className}`);
+        if (elements.length === 0) {
+            Swal.fire("Error", "No se encontraron elementos para generar el PDF.", "error");
+            reject(null);
         }
-    });
-    // Mostrar todas las pestañas temporalmente
-    const tabPanes = document.querySelectorAll('.tab-pane');
-    tabPanes.forEach(pane => pane.classList.add('show', 'active'));
 
-    const elements = document.querySelectorAll(`.${className}`);
-    
-    if (elements.length === 0) {
-        Swal.close(); // Cierra el aviso si no se encuentran elementos
-        Swal.fire({
-            title: 'Error',
-            text: 'No se encontraron elementos para generar el PDF.',
-            icon: 'error',
+        // Mostrar todos los tab-panes temporalmente
+        const tabPanes = document.querySelectorAll('.tab-pane');
+        tabPanes.forEach(pane => pane.classList.add('show', 'active'));
+
+        // Ocultar los elementos no imprimibles
+        const noPrintElements = document.querySelectorAll('.no-print');
+        noPrintElements.forEach(el => el.style.display = 'none');
+
+        // Crear contenedor temporal para clonar los elementos
+        const container = document.createElement("div");
+        elements.forEach(element => container.appendChild(element.cloneNode(true)));
+        document.body.appendChild(container);
+
+        const options = {
+            filename: "temp1.pdf",
+            image: { type: "jpeg", quality: 1 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: "mm", format: "a2", orientation: "portrait" },
+            margin: [20, 20, 20, 20]
+        };
+
+        html2pdf().set(options).from(container).outputPdf('blob').then((pdfBlob) => {
+            // Restaurar visibilidad de los botones y tabs
+            noPrintElements.forEach(el => el.style.display = '');
+            tabPanes.forEach(pane => pane.classList.remove('show', 'active'));
+            resolve(pdfBlob);
+        }).catch((error) => {
+            console.error("Error al generar el PDF:", error);
+            reject(null);
+        }).finally(() => {
+            document.body.removeChild(container);
         });
-        return;
-    }
-
-    // Crear un contenedor temporal para juntar los elementos seleccionados
-    const container = document.createElement("div");
-    container.setAttribute("id", "pdf-container");
-    elements.forEach(element => {
-        const clone = element.cloneNode(true); // Clonar los elementos para preservar el original
-        container.appendChild(clone);
-    });
-
-    document.body.appendChild(container); // Añadir el contenedor temporal al body
-
-    const nombreEquipo = document.getElementById("botonPDF").getAttribute("data-nombre-equipo") || "Informe";
-    const options = {
-        filename: `informe_${nombreEquipo}.pdf`,
-        image: { type: 'jpeg', quality: 0.90 },
-        html2canvas: { scale: 1.5 },
-        jsPDF: { unit: 'mm', format: 'a2', orientation: 'portrait' },
-        margin: [20, 20, 20, 20]
-    };
-
-    // Ocultar elementos no imprimibles
-    const noPrintElements = document.querySelectorAll('.no-print');
-    noPrintElements.forEach(el => el.style.display = 'none');
-
-    // Generar el PDF
-    html2pdf().set(options).from(container).outputPdf('blob').then((pdfBlob) => {
-        const pdfUrl = URL.createObjectURL(pdfBlob);
-        if (shouldDownload) {
-            // Descargar el PDF
-            const link = document.createElement('a');
-            link.href = pdfUrl;
-            link.download = `informe_${nombreEquipo}.pdf`;
-            link.click();
-        } else {
-            // Solo abrir el PDF en una nueva pestaña para visualizar
-            window.open(pdfUrl, '_blank');
-        }
-        Swal.close();
-        // Restaurar visibilidad de los elementos ocultos
-        noPrintElements.forEach(el => el.style.display = '');
-        document.body.removeChild(container); // Eliminar el contenedor temporal
-        // Restaurar el estado original de las pestañas
-        tabPanes.forEach(pane => pane.classList.remove('show', 'active'));
-        const activeTab = document.querySelector('.nav-link.active');
-        if (activeTab) activeTab.click(); // Volver a la pestaña activa original
-    }).catch(error => {
-        console.error("Error al generar el PDF:", error);
-        Swal.fire({
-            title: 'Error',
-            text: 'Ocurrió un problema al generar el PDF.',
-            icon: 'error',
-        });
-        noPrintElements.forEach(el => el.style.display = '');
-        document.body.removeChild(container); // Asegurar la limpieza en caso de error
     });
 }
 
-function generateSpecialPDF(className, shouldDownload) {
-
-    const elements = document.querySelectorAll(`.${className}`);
-    if (elements.length === 0) {
-        Swal.close();
-        Swal.fire({
-            title: 'Error',
-            text: 'No se encontraron elementos para generar el PDF de análisis especial.',
-            icon: 'error',
-        });
-        return;
-    }
-
-    const container = document.createElement("div");
-    container.setAttribute("id", "special-pdf-container");
-    elements.forEach(element => {
-        const clone = element.cloneNode(true);
-        container.appendChild(clone);
-    });
-
-    document.body.appendChild(container);
-
-    const nombreEquipo = document.getElementById("botonPDF").getAttribute("data-nombre-equipo") || "Informe";
-    const options = {
-        filename: `analisis_especial_${nombreEquipo}.pdf`,
-        image: { type: 'jpeg', quality: 0.95 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'mm', format: 'a1', orientation: 'landscape' },
-        margin: [10, 10, 10, 10]
-    };
-
-    html2pdf().set(options).from(container).outputPdf('blob').then((pdfBlob) => {
-        const pdfUrl = URL.createObjectURL(pdfBlob);
-        if (shouldDownload) {
-            const link = document.createElement('a');
-            link.href = pdfUrl;
-            link.download = `analisis_especial_${nombreEquipo}.pdf`;
-            link.click();
-        }else {
-            // Solo abrir el PDF en una nueva pestaña para visualizar
-            window.open(pdfUrl, '_blank');
+async function generateSpecialPDF(className, shouldDownload) {
+    // Generación del segundo PDF como Blob
+    return new Promise((resolve, reject) => {
+        const elements = document.querySelectorAll(`.${className}`);
+        if (elements.length === 0) {
+            Swal.fire("Error", "No se encontraron elementos para generar el PDF especial.", "error");
+            reject(null);
         }
-        Swal.close();
-        document.body.removeChild(container);
-    }).catch(error => {
-        console.error("Error al generar el PDF de análisis especial:", error);
-        Swal.fire({
-            title: 'Error',
-            text: 'Ocurrió un problema al generar el PDF de análisis especial.',
-            icon: 'error',
+
+        // Mostrar todos los tab-panes temporalmente
+        const tabPanes = document.querySelectorAll('.tab-pane');
+        tabPanes.forEach(pane => pane.classList.add('show', 'active'));
+
+        // Ocultar los elementos no imprimibles
+        const noPrintElements = document.querySelectorAll('.no-print');
+        noPrintElements.forEach(el => el.style.display = 'none');
+
+        const container = document.createElement("div");
+        elements.forEach(element => container.appendChild(element.cloneNode(true)));
+        document.body.appendChild(container);
+
+        const options = {
+            filename: "temp2.pdf",
+            image: { type: "jpeg", quality: 0.95 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: "mm", format: "a1", orientation: "landscape" },
+            margin: [20, 20, 20, 20]
+        };
+
+        html2pdf().set(options).from(container).outputPdf('blob').then((pdfBlob) => {
+            // Restaurar visibilidad de los botones y tabs
+            noPrintElements.forEach(el => el.style.display = '');
+            tabPanes.forEach(pane => pane.classList.remove('show', 'active'));
+            resolve(pdfBlob);
+        }).catch((error) => {
+            console.error("Error al generar el PDF especial:", error);
+            reject(null);
+        }).finally(() => {
+            document.body.removeChild(container);
         });
     });
+}
+
+async function combinePDFs(blob1, blob2) {
+    // Combina los dos blobs de PDF
+    const pdfDoc = await PDFLib.PDFDocument.create();
+    const pdf1 = await PDFLib.PDFDocument.load(await blob1.arrayBuffer());
+    const pdf2 = await PDFLib.PDFDocument.load(await blob2.arrayBuffer());
+
+    const copiedPages1 = await pdfDoc.copyPages(pdf1, pdf1.getPageIndices());
+    const copiedPages2 = await pdfDoc.copyPages(pdf2, pdf2.getPageIndices());
+
+    copiedPages1.forEach(page => pdfDoc.addPage(page));
+    copiedPages2.forEach(page => pdfDoc.addPage(page));
+
+    const mergedPdfBlob = new Blob([await pdfDoc.save()], { type: 'application/pdf' });
+    return mergedPdfBlob;
+}
+
+function downloadOrOpenPDF(blob, shouldDownload) {
+    const nombreEquipo = document.getElementById("botonPDF").getAttribute("data-nombre-equipo") || "Informe";
+    const url = URL.createObjectURL(blob);
+    if (shouldDownload) {
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `informe_${nombreEquipo}.pdf`;
+        link.click();
+    } else {
+        window.open(url, '_blank');
+    }
 }

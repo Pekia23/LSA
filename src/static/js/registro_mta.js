@@ -16,6 +16,5 @@ document.addEventListener('DOMContentLoaded', function () {
         let checkboxes = document.querySelectorAll('#generales .form-check-input');
         checkboxes.forEach(checkbox => checkbox.checked = this.checked);
     });
-
 });
 

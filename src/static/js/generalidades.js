@@ -174,6 +174,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const sistema = document.getElementById('sistema');
     const equipo = document.getElementById('equipo');
     const tipoEquipo = document.getElementById('tipo_equipo');
+    const fechaInput = document.getElementById('fecha');
+    const responsable = document.getElementById('responsable');
+    const aor = document.getElementById('aor');
+    const mtbf = document.getElementById('mtbf');
+    const gresSistema = document.getElementById('gres_sistema');
+    const fiabilidadEquipo = document.getElementById('fiabilidad_equipo');
+    const criticidadEquipo = document.getElementById('criticidad_equipo');
+    const marca = document.getElementById('marca');
+    const modelo = document.getElementById('modelo');
+    const pesoSeco = document.getElementById('peso_seco');
+    const dimensiones = document.getElementById('dimensiones');
+    const imagenEquipo = document.getElementById('imagen_equipo');
+    const descripcionEquipo = document.getElementById('descripcion_equipo');
+    const procedimientoArranque = document.getElementById('procedimiento_arranque');
+    const procedimientoParada = document.getElementById('procedimiento_parada');
+    const diagramaFlujo = document.getElementById('diagrama_flujo');
+    const diagramaCajaNegra = document.getElementById('diagrama_caja_negra');
+    const diagramaCajaTransparente = document.getElementById('diagrama_caja_transparente');
     const submitBtn = document.getElementById('submitBtn'); // Botón para enviar el formulario
 
     // Función de validación
@@ -214,10 +232,121 @@ document.addEventListener('DOMContentLoaded', () => {
             return false;
         }
 
+        if (!aor.value.trim()) {
+            mostrarAlerta('El campo AOR es obligatorio.');
+            aor.focus();
+            return false;
+        }
+
+        if (!mtbf.value || isNaN(mtbf.value)) {
+            mostrarAlerta('El campo MTBF debe ser un número válido.');
+            mtbf.focus();
+            return false;
+        }
+
+        if (!gresSistema.value.trim()) {
+            mostrarAlerta('El campo GRES del sistema es obligatorio.');
+            gresSistema.focus();
+            return false;
+        }
+
+        if (!fiabilidadEquipo.value.trim()) {
+            mostrarAlerta('El campo Fiabilidad del equipo es obligatorio.');
+            fiabilidadEquipo.focus();
+            return false;
+        }
+
+        if (!criticidadEquipo.value.trim()) {
+            mostrarAlerta('El campo Criticidad del equipo es obligatorio.');
+            criticidadEquipo.focus();
+            return false;
+        }
+
+        if (!marca.value.trim()) {
+            mostrarAlerta('El campo Marca es obligatorio.');
+            marca.focus();
+            return false;
+        }
+
+        if (!modelo.value.trim()) {
+            mostrarAlerta('El campo Modelo es obligatorio.');
+            modelo.focus();
+            return false;
+        }
+
+        if (!pesoSeco.value || isNaN(pesoSeco.value)) {
+            mostrarAlerta('El campo Peso seco debe ser un número válido.');
+            pesoSeco.focus();
+            return false;
+        }
+
+        if (!dimensiones.value.trim()) {
+            mostrarAlerta('El campo Dimensiones es obligatorio.');
+            dimensiones.focus();
+            return false;
+        }
+
+        if (!descripcionEquipo.value.trim()) {
+            mostrarAlerta('El campo Descripción del equipo es obligatorio.');
+            descripcionEquipo.focus();
+            return false;
+        }
+
+        if (!procedimientoArranque.value.trim()) {
+            mostrarAlerta('El campo Procedimiento de arranque es obligatorio.');
+            procedimientoArranque.focus();
+            return false;
+        }
+
+        if (!procedimientoParada.value.trim()) {
+            mostrarAlerta('El campo Procedimiento de parada es obligatorio.');
+            procedimientoParada.focus();
+            return false;
+        }
+
+        if (!validarImagen(imagenEquipo)) {
+            mostrarAlerta('Debe cargar una imagen válida del equipo.');
+            imagenEquipo.focus();
+            return false;
+        }
+
+        if (!validarImagen(diagramaFlujo)) {
+            mostrarAlerta('Debe cargar un diagrama de flujo válido.');
+            diagramaFlujo.focus();
+            return false;
+        }
+
+        if (!validarImagen(diagramaCajaNegra)) {
+            mostrarAlerta('Debe cargar un diagrama de caja negra válido.');
+            diagramaCajaNegra.focus();
+            return false;
+        }
+
+        if (!validarImagen(diagramaCajaTransparente)) {
+            mostrarAlerta('Debe cargar un diagrama de caja transparente válido.');
+            diagramaCajaTransparente.focus();
+            return false;
+        }
+
         // Si todo está lleno, devuelve verdadero
         return true;
     }
 
+    // Función para validar los campos de imágenes
+    function validarImagen(inputFile) {
+        if (!inputFile.value) {
+            return false; // Campo vacío
+        }
+
+        const file = inputFile.files[0];
+        const allowedExtensions = ['image/jpeg', 'image/png', 'image/gif'];
+
+        if (!allowedExtensions.includes(file.type)) {
+            return false; // Tipo de archivo no permitido
+        }
+
+        return true;
+    }
     // Mostrar alerta utilizando SweetAlert
     function mostrarAlerta(mensaje) {
         Swal.fire({

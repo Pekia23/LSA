@@ -4,6 +4,24 @@ document.addEventListener('DOMContentLoaded', function() {
     form.addEventListener('submit', function(e) {
         e.preventDefault();
 
+        // Validación de campos vacíos
+        const nombreRepuesto = document.getElementById('nombre_repuesto').value.trim();
+        const valor = document.getElementById('valor').value.trim();
+        const moneda = document.getElementById('moneda').value;
+        const mtbf = document.getElementById('mtbf').value.trim();
+        const codigoOtan = document.getElementById('codigo_otan').value.trim();
+
+        if (!nombreRepuesto || !valor || !moneda || !mtbf || !codigoOtan) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Campos incompletos',
+                text: 'Por favor, complete todos los campos obligatorios antes de continuar.',
+                confirmButtonText: 'OK'
+            });
+            return; // Detener el envío del formulario
+        }
+
+        // Si todos los campos están completos, enviar el formulario
         const formData = new FormData(form);
 
         fetch('/api/repuesto', {
@@ -44,4 +62,3 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
-

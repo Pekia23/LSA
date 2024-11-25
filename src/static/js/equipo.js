@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 confirmButtonText: 'OK'
                             }).then(() => {
                                 // Redirigir o actualizar la página después de eliminar
-                                window.location.href = '/LSA/equipos';
+                                window.location.href = '/LSA';
                             });
                         } else {
                             Swal.fire('Error', 'No se pudo eliminar el equipo', 'error');
