@@ -359,8 +359,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Manejar el envío del formulario
     submitBtn.addEventListener('click', (event) => {
+        event.preventDefault(); // Evita el envío predeterminado del formulario
+    
         if (!validarFormulario()) {
-            event.preventDefault(); // Evita que se envíe el formulario si la validación falla
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Por favor, completa todos los campos requeridos.',
+            });
+            return; // Detiene la ejecución si la validación falla
         }
+    
+        // Si el formulario pasa la validación
+        Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: 'Formulario enviado con éxito.',
+        }).then(() => {
+            // Opcional: Puedes enviar el formulario aquí si todo está bien
+            document.querySelector('form').submit(); // Envía el formulario
+        });
     });
 });

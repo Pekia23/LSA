@@ -937,9 +937,8 @@ def agregar_analisis_herramienta():
 
 
 
-    if not nombre:
-        return jsonify({'error': 'Faltan datos obligatorios'}), 400
-    # Convertir 'valor' a float
+    if not all([nombre, valor, parte_numero, id_tipo_herramienta, cantidad]):
+        return jsonify({'error': 'Todos los campos son obligatorios excepto la imagen'}), 400
 
 
     try:
@@ -955,14 +954,12 @@ def agregar_analisis_herramienta():
 
     # Insertar en la tabla herramientas_generales, incluyendo el archivo si está disponible
     analisis_id = insertar_analisis_herramienta(
-
         nombre, valor, id_equipo_info, parte_numero, id_herramienta_requerida, id_tipo_herramienta,id_clase_herramienta,
         dibujo_seccion_transversal,cantidad
-
-
-        
     )
 
+    print(request.form)
+    print(request.files)
 
     return jsonify({'message': 'Análisis de herramienta agregado', 'id': analisis_id}), 200
 
@@ -1071,8 +1068,8 @@ def agregar_herramienta_especial():
     id_clase_herramienta = 2  # Define que es herramienta especial
 
 
-    if not nombre_herramienta or not id_tipo_herramienta:
-        return jsonify({'error': 'Faltan datos obligatorios'}), 400
+    if not all([nombre_herramienta, parte_numero, id_tipo_herramienta, cantidad]):
+        return jsonify({'error': 'Faltan datos obligatorios.'}), 400
 
     # Convertir 'valor' a float
 
@@ -1094,9 +1091,6 @@ def agregar_herramienta_especial():
         id_herramienta_requerida,id_clase_herramienta  # Asegurarse de pasar el id_herramienta_requerida aquí
     )
     insertar_herramienta_relacion(id_herramienta_requerida, id_clase_herramienta, id_equipo_info)
-
-
-
     return jsonify({'message': 'Herramienta especial agregada', 'id': herramienta_id}), 200
 
 
