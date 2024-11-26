@@ -262,9 +262,9 @@ app.secret_key = 'tu_clave_secreta'
 app.config['SECRET_KEY'] = 'tu_clave_secreta_aquí'
 
 
-# @app.errorhandler(Exception)
-# def handle_all_errors(error):
-#     return render_template('error.html'), 500
+@app.errorhandler(Exception)
+def handle_all_errors(error):
+     return render_template('error.html'), 500
 
 
 
@@ -386,8 +386,6 @@ def registro_generalidades(id_sistema=None, id_equipo=None):
         # Insertar en la tabla diagramas
         id_diagrama = insertar_diagrama(diagrama_flujo, diagrama_caja_negra, diagrama_caja_transparente)
 
-        print(f"Nombre del tipo de equipo recibido: {id_equipo}")
-
         # Insertar en la tabla equipo_info
         equipo_info_id = insertar_equipo_info(
             nombre_equipo, AOR, fecha, fiabilidad_equipo, MTBF, GRES, criticidad_equipo,
@@ -476,12 +474,6 @@ def registro_analisis_funcional():
     id_equipo = obtener_id_equipo_por_id_info(id_equipo_info)
     id_sistema = obtener_id_sistema_por_equipo_info(id_equipo_info)
 
-    # Logs para depuración
-    print(f"Token: {token}")
-    print(f"id_sistema: {id_sistema}")
-    print(f"id_equipo: {id_equipo}")
-    print(f"id_equipo_info: {id_equipo_info}")
-
     # Verificación de existencia de id_sistema y obtención de sistema y subsistemas
     if id_sistema is None:
         sistema = None
@@ -501,7 +493,6 @@ def registro_analisis_funcional():
 def api_analisis_funcional():
     token = g.get('user_token', None)
     data = request.get_json()
-    print('Datos recibidos:', data)
 
     id_equipo_info = (
         data.get('id_equipo_info') or
@@ -597,7 +588,6 @@ def editar_analisis_funcional(id):
     analisis_funcional, componentes_analisis_funcionales = obtener_analisis_funcional_por_id(id)
 
     if request.method == 'POST':
-        print('Datos del formulario:', request.form)
         # Capturar datos de análisis funcional
         verbo = request.form['verbo']
         accion = request.form['accion']
@@ -628,10 +618,9 @@ def editar_analisis_funcional(id):
 
 
         # Debug para verificar los componentes formateados
-        print("\n--- Componentes Formateados para Actualización ---")
+
         for componente in componentes_formateados:
             print(f"ID: {componente['id_']}, Verbo: {componente['verbo']}, Acción: {componente['accion']}")
-        print("--- Fin de Componentes Formateados ---\n")
 
         # Llamar a la función de actualización con los datos capturados
         actualizar_analisis_funcional(id, verbo, accion, estandar_desempeño, id_subsistema, componentes_formateados)
@@ -668,7 +657,6 @@ def before_request():
     rutas_sin_autenticacion = ['login', 'static']  # Rutas que no requieren autenticación
     if request.endpoint not in rutas_sin_autenticacion:
         token = request.cookies.get('user_token')  # Leer la cookie 'user_token'
-        print(f"Token en before_request: {token}")
         if not token or token not in usuario_info_temporal:
             return redirect(url_for('login'))  # Redirigir al login si no está autenticado
         else:
@@ -713,10 +701,8 @@ def login():
         print("Entra")
         correo = request.form.get('correo')
         password = request.form.get('password')
-        print(correo,password)
         # Verificar las credenciales del usuario
         usuario = obtener_usuario_por_correo(correo)
-        print(usuario)
         if usuario and usuario['password'] == password:
             # Autenticación exitosa
             token = generar_token()  # Generar un token único
@@ -778,7 +764,6 @@ def mostrar_repuestos_ext():
     #    repuestos = obtener_repuestos_por_equipo_info(id_equipo_info)
     if id_equipo_info is None:
         return redirect(url_for('registro_generalidades'))
-    print("Rutas de búsqueda de templates:", app.jinja_loader.searchpath)
 
     repuestos = obtener_repuestos_por_equipo_info(id_equipo_info)
     return render_template('mostrar_respuestos_ext.html', repuestos=repuestos,id_equipo_info=id_equipo_info)
@@ -793,9 +778,6 @@ def agregar_repuesto():
     id_equipo_info = user_data.get('id_equipo_info')
     if id_equipo_info is None:
         id_equipo_info = request.form.get('id_equipo_info')
-
-
-    print(f"id_equipo_info en agregar_repuesto: {id_equipo_info}")
 
     # Si estás manejando archivos (imágenes), debes usar request.form en lugar de request.get_json()
     nombre_repuesto = request.form.get('nombre_repuesto')
@@ -957,10 +939,6 @@ def agregar_analisis_herramienta():
         nombre, valor, id_equipo_info, parte_numero, id_herramienta_requerida, id_tipo_herramienta,id_clase_herramienta,
         dibujo_seccion_transversal,cantidad
     )
-
-    print(request.form)
-    print(request.files)
-
     return jsonify({'message': 'Análisis de herramienta agregado', 'id': analisis_id}), 200
 
 
@@ -1036,23 +1014,12 @@ def agregar_herramienta_especial():
         request.form.get('id_equipo_info')
     )
 
-
-    # Depuración para verificar el valor recibido
-    print(f"ID Equipo Info recibido del formulario: {request.form.get('id_equipo_info')}")
-
-    print(f"ID Equipo Info recibido del formulario: {id_equipo_info}")
-
     # Si no se recibe desde el formulario, tomarlo del usuario
     if not id_equipo_info:
         token = g.user_token
         user_data = obtener_info_usuario(token)
         id_equipo_info = user_data.get('id_equipo_info')
 
-    # Depuración para verificar el valor
-    print(f"ID Equipo Info recibido del formulario: {request.form.get('id_equipo_info')}")
-    print(f"ID Equipo Info final después de validación: {id_equipo_info}")
-
-    print(f"ID Equipo Info después de validación: {id_equipo_info}")
 
 
     parte_numero = request.form.get('parte_numero')
@@ -1126,7 +1093,6 @@ def mostrar_herramientas_especiales():
 
     # Obtener herramientas relacionadas para el equipo desde la tabla de relaciones
     herramientas_relacionadas = obtener_herramientas_relacionadas_por_equipo(id_equipo_info)
-    print("Herramientas relacionadas:", herramientas_relacionadas)
 
 
     return render_template(
@@ -1168,7 +1134,6 @@ def mostrar_herramientas_especiales_ext():
 
     # Obtener herramientas relacionadas para el equipo desde la tabla de relaciones
     herramientas_relacionadas = obtener_herramientas_relacionadas_por_equipo(id_equipo_info)
-    print("Herramientas relacionadas:", herramientas_relacionadas)
 
 
     return render_template(
@@ -1271,8 +1236,6 @@ def eliminar_herramienta_especial_route(id_herramienta):
 def cargar_id_equipo_info():
     # Asignamos el id_equipo_info de la sesión si está disponible
     g.id_equipo_info = session.get('id_equipo_info')
-    print(f"Token en before_request: {g.user_token}")
-    print(f"id_equipo_info en sesión: {g.id_equipo_info}")
 
 
 @app.route('/LSA/equipo/editar-FMEA/<int:id_equipo_info>')
@@ -1290,13 +1253,7 @@ def editar_FMEA_lista(id_equipo_info):
             id_equipo_info = user_data.get('id_equipo_info')
             if id_equipo_info:
                 session['id_equipo_info'] = id_equipo_info
-
-
-
-
-    print(f'El id del equipo info es: {id_equipo_info}')
     fmeas = obtener_fmeas(id_equipo_info) #Estoy llamando los fmeas para que salgan en la lista
-    #print(f'Para la lista{fmeas}')
     fmeas_con_rcm = obtener_fmeas_con_rcm()
     return render_template('editar_FMEA.html', fmeas=fmeas, fmeas_con_rcm=fmeas_con_rcm, id_equipo_info=id_equipo_info)
 
@@ -1331,19 +1288,16 @@ def editar_FMEA(id_equipo_info,fmea_id):
     # Obtener los datos del FMEA a partir del ID
     fmea = obtener_fmea_por_id(fmea_id, id_equipo_info)
     fmea_id = obtener_ID_FMEA(fmea_id)
-    print(f'\n\n\n\n{fmea}\n\n\n\n') 
     # Cargar la información del sistema
 
     subsistema = fmea.get('sistema')
     #Obtener datos para desplegables
     
     componente = fmea.get('componente')
-    print(f'\n\n\n\nlos componentes son: {componente}\n\n\n\n')
 
     #pasarle sistema_id con alguna funcion
     #componentes = obtener_componentes_por_subsistema(subsistema_id)
     #componentes = obtener_componentes_por_subsistema(sistema_id)
-    print(f'\n\n\n\nlos componentes son: {componente}\n\n\n\n')
     mecanismos_falla = obtener_mecanismos_falla()
     codigos_modo_falla = obtener_codigos_modo_falla()
     metodos_deteccion_falla = obtener_metodos_deteccion_falla() 
@@ -1430,8 +1384,6 @@ def guardar_cambios_fmea(fmea_id,id_equipo_info):
     id_falla_funcional = insertar_falla_funcional(falla_funcional)
     id_descripcion_modo_falla = insertar_descripcion_modo_falla(descripcion_modo_falla)
     id_causa = insertar_causa(causas)
-
-    print(f'\n\n\nValue: {id_probabilidad_deteccion}\n\n')
 
 
     # Actualizar el registro FMEA con los nuevos datos
@@ -1833,7 +1785,6 @@ def registro_MTA(fmea_id):
         # Obtener los datos de FMEA por su ID
         fmea = obtener_fmea_por_id(fmea_id,id_equipo_info)  #obtenemos los nombres en los compos de fmea
         fmea_id = obtener_ID_FMEA(fmea_id) # optenermos el id de fmea 
-        print(f'\nfmea:{fmea}\n\nfmea_id:{fmea_id}\n\n') #imprimo a ver
         # Variables precargadas desde el FMEA
         sistema = fmea.get('id_sistema')
         componente = fmea.get('id_componente')
@@ -1845,7 +1796,6 @@ def registro_MTA(fmea_id):
         componente = None
         fmea = []
     repuestos = obtener_repuestos_por_equipo_info(fmea['id_equipo_info'])
-    print(repuestos)
     #Obtener datos para desplegables
     tipo_de_manteniemto = obtener_tipos_mantenimiento()
     tarea_mantenimento = obtener_tareas_mantenimiento()
@@ -1897,11 +1847,7 @@ def editar_MTA(rcm_id,id_equipo_info):
     tarea_mantenimento = obtener_tareas_mantenimiento()
     lora_mta = obtener_lora_mta_por_id_mta(mta['id'])
     repuestos_mta = obtener_repuestos_mta_por_id_mta(mta['id'])
-    print("repuestos_mta")
-    print(repuestos_mta)
     herramientas_mta = obtener_herramientas_mta_por_id_mta(mta['id'])
-    print("herramientas_mta")
-    print(herramientas_mta)
     dict_herramientas_por_tipo = obtener_herramientas_requeridas_por_tipo()
     herramientas = 0
     return render_template('registro_mta.html',
@@ -2013,7 +1959,6 @@ def guardar_MTA(fmea_id,id_equipo_info):
     # Decodificar el JSON de herramientas seleccionadas en una lista
     selected_herramientas_json = request.form.get('selected_herramientas')
     selected_herramientas = json.loads(selected_herramientas_json) if selected_herramientas_json else []
-    print("Herramientas seleccionadas:", selected_herramientas)  # Para depuración
 
     # Obtener nombres de las herramientas seleccionadas y luego sus datos
     nombres_herramientas = []
@@ -2025,11 +1970,6 @@ def guardar_MTA(fmea_id,id_equipo_info):
             id_herramienta, id_clase_herramienta = obtener_datos_herramienta(nombre)
             if id_herramienta:
                 ids_herramientas.append((id_herramienta, id_clase_herramienta))
-
-    print("Datos de herramientas seleccionadas:", ids_herramientas)  # Para ver los ID y clase de herramienta
-
-    # Ahora puedes usar la lista de repuestos seleccionados
-    print(selected_repuestos)
 
     # Insertar relaciones en la tabla herramientas_relacion
     for id_herramienta, id_clase_herramienta in ids_herramientas:
@@ -2096,12 +2036,6 @@ def actualizar_MTA(mta_id,id_equipo_info):
         requeridos_tarea, condiciones_ambientales, condiciones_estado_equipo, condiciones_especiales,
         horas, minutos, detalle_tarea
     )
-    print("id mta")
-    print(mta_id)
-    print("selected_repuestos")
-    print(selected_repuestos)
-    print("selected_herramientas")
-    print(selected_herramientas)
     # Actualizar las herramientas requeridas
     eliminar_herramientas_requeridas_mta(mta_id)
     if selected_herramientas:
@@ -2485,12 +2419,10 @@ def crear_RCM(fmea_id,id_equipo_info):
     fmea = obtener_fmea_por_id(fmea_id,id_equipo_info)
     acciones = obtener_lista_acciones_recomendadas()
     if fmea:
-        print(fmea)
         return render_template('registro_rcm.html',id_equipo_info=id_equipo_info, fmea=fmea, acciones=acciones, editar = False)
 
 
     else:
-        print("no tiene")
         return "FMEA no encontrado", 404
 
 #funcion para guardar el RCM
@@ -2843,7 +2775,6 @@ def status404(error):
 def before_request():
     # Si necesitas limpiar `id_equipo_info` en cada reinicio del servidor
     session.pop('id_equipo_info', None)
-    print("id_equipo_info en sesión:", session.get('id_equipo_info'))
 
 
 
@@ -2900,7 +2831,3 @@ def status404(error):
 if __name__ == '__main__':
     app.register_error_handler(404, status404)
     app.run()
-
-
-
-
