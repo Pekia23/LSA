@@ -1,6 +1,7 @@
 /* Estilos generales */
 body {
     background-color: #f5f5f5; /* Fondo gris claro */
+    font-family:sans-serif
 }
 
 /* Asegurar que el navbar permanece blanco */
@@ -22,8 +23,8 @@ body {
 
 /* Estilos para las tarjetas */
 .card {
-    width: 200px; /* Tamaño de tarjeta ajustado */
-    height: 300px; /* Ajuste de altura */
+    width: 350px; /* Tamaño de tarjeta ajustado */
+    height: 250px; /* Ajuste de altura */
     background-color: white;
     box-shadow: 0 4px 10px rgba(123, 115, 235, 0.473);
     border-radius: 8px;
@@ -37,27 +38,35 @@ body {
     font-weight: bold;
     cursor: pointer;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    padding: 10px; /* Asegura que todo el contenido tenga algo de padding */
+    
 }
 
 .card img {
     width: 100%;
-    height: 150px; /* Asegura que las imágenes tengan la misma altura */
-    object-fit: cover; /* Recorta las imágenes para que se adapten al contenedor */
-    margin-bottom: 10px; /* Espacio entre la imagen y el texto */
-    
+    height: 180px;
+    border-top-left-radius: 8px; /* Opcional: ajusta los bordes si la card tiene esquinas redondeadas */
+    border-top-right-radius: 8px;
+    background-color: rgba(0, 0, 255, 0.3); 
+    mix-blend-mode: multiply;
 }
 
 .card h1 {
-    font-size: 24px;
-    color: #0c377f;
+    font-size: 30px;
+    color: #004AAD;
     margin: 5px 0; /* Espaciado más ajustado */
+    font-weight: bold;
+    
 }
 
 .card p {
     font-size: 16px;
-    color: #0c377f;
-    margin: 5px 0; /* Espaciado más ajustado */
+    color: #143072;
+    padding-right: 4px;
+    padding-left: 4px;
+}
+
+.grupo{
+    padding:10px;
 }
 
 .card:hover {
@@ -149,7 +158,7 @@ i {
 }
 
 .dynamic-card {
-    width: 200px; /* Tamaño de tarjeta ajustado */
+    width: 250px; /* Tamaño de tarjeta ajustado */
     height: 150px; /* Ajuste de altura */
     background-color: white;
     box-shadow: 0 4px 10px rgba(123, 115, 235, 0.473);
@@ -164,7 +173,7 @@ i {
     font-weight: bold;
     cursor: pointer;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    padding: 10px;
+    padding: 10px 5px;
 }
 
 .dynamic-card:hover {

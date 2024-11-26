@@ -21,6 +21,28 @@ document.addEventListener('DOMContentLoaded', function() {
         return camposVacios;
     }
 
+    // Función para redirigir según la URL anterior
+    function redirigirSegunURLAnterior(idEquipoInfo) {
+        const urlAnterior = document.referrer; // URL previa
+
+        if (!idEquipoInfo) {
+            Swal.fire({
+                title: 'Error',
+                text: 'El ID del equipo no está disponible. Por favor, verifica.',
+                icon: 'warning',
+                confirmButtonText: 'OK',
+            });
+            window.location.href = '/LSA';
+            return;
+        }
+
+        if (urlAnterior.includes('/LSA/equipo/mostrar-analisis-funcional-ext')) {
+            window.location.href = `/LSA/equipo//mostrar-analisis-funcional-ext?id_equipo_info=${idEquipoInfo}`;
+        } else {
+            window.location.href = `/LSA/equipo/mostrar-analisis-funcional`;
+        }
+    }
+
     // Capturar el evento submit del formulario de Análisis Funcional
     const form = document.getElementById('analisis-funcional-form');
     const id_equipo_info_element = document.getElementById('id_equipo_info');
@@ -94,7 +116,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 confirmButtonText: 'OK'
             }).then(() => {
                 // Redirigir a la página de mostrar análisis funcional después de cerrar la alerta
-                window.location.href = '/LSA/equipo/mostrar-analisis-funcional';
+                redirigirSegunURLAnterior(id_equipo_info_element.value);
             });
         })
         .catch(error => {

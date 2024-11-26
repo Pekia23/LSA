@@ -1,6 +1,27 @@
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('repuesto-form');
 
+    function redirigirSegunURLAnterior(idEquipoInfo) {
+        const urlAnterior = document.referrer; // URL previa
+
+        if (!idEquipoInfo) {
+            Swal.fire({
+                title: 'Error',
+                text: 'El ID del equipo no está disponible. Por favor, verifica.',
+                icon: 'warning',
+                confirmButtonText: 'OK',
+            });
+            window.location.href = '/LSA';
+            return;
+        }
+
+        if (urlAnterior.includes('/LSA/mostrar-repuesto-ext')) {
+            window.location.href = `/LSA/mostrar-repuesto-ext?id_equipo_info=${idEquipoInfo}`;
+        } else {
+            window.location.href = `/LSA/mostrar-repuesto`;
+        }
+    }
+
     form.addEventListener('submit', function(e) {
         e.preventDefault();
 
@@ -10,7 +31,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const moneda = document.getElementById('moneda').value;
         const mtbf = document.getElementById('mtbf').value.trim();
         const codigoOtan = document.getElementById('codigo_otan').value.trim();
-
+        const idEquipoInfo = form.querySelector('input[name="id_equipo_info"]').value.trim();
+        
         if (!nombreRepuesto || !valor || !moneda || !mtbf || !codigoOtan) {
             Swal.fire({
                 icon: 'warning',
@@ -38,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     text: result.message,
                     confirmButtonText: 'OK'
                 }).then(() => {
-                    window.location.href = '/LSA/mostrar-repuesto';
+                    redirigirSegunURLAnterior(idEquipoInfo);
                 });
             } else {
                 Swal.fire({

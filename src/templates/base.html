@@ -4,6 +4,7 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- Bootstrap CSS -->
@@ -11,8 +12,6 @@
     <!-- Tu CSS personalizado -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/desglose.css') }}">
     <link rel="icon" href="{{url_for('static', filename='img/favicon.ico')}}" type="image/x-icon">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   
     <title>{% block title %}{% endblock %}</title>
     <!--Incluyendo bootstrap-->
@@ -24,8 +23,8 @@
     <nav class="navbar">
         <div class="container-fluid">
           <a class="navbar-brand" href="{{url_for('index')}}">
-            <img src="{{url_for('static', filename='img/CotecmarLogo.png')}}" alt="Logo" width="70" height="70" class="d-inline-block">
-            <b style="color: #052647;">{%block nombre%}{%endblock%}</b>
+            <img src="{{url_for('static', filename='img/CotecmarLogo.png')}}" alt="Logo" width="50"  class="d-inline-block">
+            <b style="color: #013579; text-transform: uppercase;">{%block nombre%}{%endblock%}</b>
           </a>
         </div>
       </nav>

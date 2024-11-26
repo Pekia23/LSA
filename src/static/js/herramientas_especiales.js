@@ -4,6 +4,27 @@ document.addEventListener('DOMContentLoaded', function() {
         form.reset(); // Limpiar todos los campos del formulario
     }
 
+    function redirigirSegunURLAnterior(idEquipoInfo) {
+        const urlAnterior = document.referrer; // URL previa
+
+        if (!idEquipoInfo) {
+            Swal.fire({
+                title: 'Error',
+                text: 'El ID del equipo no está disponible. Por favor, verifica.',
+                icon: 'warning',
+                confirmButtonText: 'OK',
+            });
+            window.location.href = '/LSA';
+            return;
+        }
+
+        if (urlAnterior.includes('/LSA/mostrar-herramientas-especiales-ext')) {
+            window.location.href = `/LSA/mostrar-herramientas-especiales-ext?id_equipo_info=${idEquipoInfo}`;
+        } else {
+            window.location.href = `/LSA/mostrar-herramientas-especiales`;
+        }
+    }
+
     // Manejo del formulario de Análisis de Herramientas
     const formAnalisis = document.getElementById('analisis-herramientas-form');
 
@@ -33,9 +54,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }).then(() => {
                 // Limpiar el formulario después de enviar la información
                 limpiarFormulario(formAnalisis);
-
-                // Redirigir o actualizar la página si es necesario
-                // window.location.reload(); // Descomentar si se desea recargar la página
             });
         })
         .catch(error => {
@@ -93,4 +111,13 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Error al guardar herramientas especiales:', error);
         });
     });
+    
+    const btnVisualizar = document.querySelector('.btn-visualizar-herramientas');
+    if (btnVisualizar) {
+        btnVisualizar.addEventListener('click', function(e) {
+            e.preventDefault(); // Evitar comportamiento predeterminado
+            const idEquipoInfo = document.querySelector('input[name="id_equipo_info"]').value;
+            redirigirSegunURLAnterior(idEquipoInfo);
+        });
+    }
 });

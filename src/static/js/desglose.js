@@ -180,15 +180,15 @@ document.addEventListener('DOMContentLoaded', function () {
     
             if (type === 'grupo') {
                 card.classList.add('card');
-                let imageSrc = item.numeracion == 200 ? 'img/200.jpeg' :
-                               item.numeracion == 300 ? 'img/300.jpeg' :
-                               item.numeracion == 400 ? 'img/400.jpeg' :
-                               item.numeracion == 500 ? 'img/500.jpeg' :
-                               item.numeracion == 600 ? 'img/600.jpeg' : 'img/700.jpeg';
-                card.innerHTML = `<img src="/static/${imageSrc}" alt="Grupo"><h1>${item.numeracion}</h1><p>${item.nombre}</p>`;
+                let imageSrc = item.numeracion == 200 ? 'img/1.png' :
+                               item.numeracion == 300 ? 'img/2.png' :
+                               item.numeracion == 400 ? 'img/3.png' :
+                               item.numeracion == 500 ? 'img/4.png' :
+                               item.numeracion == 600 ? 'img/5.png' : 'img/6.png';
+                card.innerHTML = `<img src="/static/${imageSrc}" alt="Grupo"><p>${item.nombre}</p>`;
             } else if (type === 'subgrupo' || type === 'sistema') {
                 card.classList.add('dynamic-card');
-                card.innerHTML = `<p>${item.numeracion ? item.numeracion + ' - ' : ''}${item.nombre}</p>`;
+                card.innerHTML = `<h1>${item.numeracion}</h1><p>${item.nombre}</p>`;
             } else if (type === 'equipo') {
                 // Verificar cuál es el nombre de la propiedad del equipo
                 card.classList.add('dynamic-card');
