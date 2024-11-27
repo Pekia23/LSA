@@ -25,7 +25,7 @@
 
                         <a class="nav-link {% if request.endpoint == 'registro_herramientas_especiales' %}active{% endif %}" href="{{ url_for('registro_herramientas_especiales',id_equipo_info=id_equipo_info) }}">
 
-                            Modulo de herramientas
+                            Módulo de herramientas
                         </a>
                     </li>
                     <li class="nav-item">
@@ -44,13 +44,13 @@
                     </li>
                     <li class="nav-item">
 
-                        <a class="nav-link {% if request.endpoint == 'registro_RCM' %}active{% endif %}" href="{{ url_for('registro_RCM',id_equipo_info=id_equipo_info) }}">
+                        <a class="nav-link {% if request.endpoint == 'registro_RCM' %}active{% endif %}">
 
                             RCM
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if request.endpoint == 'registro_MTA' %}active{% endif %}" href="{{ url_for('registro_MTA',id_equipo_info=id_equipo_info,fmea_id=0) }}">
+                        <a class="nav-link {% if request.endpoint == 'registro_MTA' %}active{% endif %}">
 
                             MTA - LORA
                         </a>

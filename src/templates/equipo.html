@@ -11,7 +11,7 @@
   <body>
     <main>
       {% if equipo.imagen %}
-      <img src="data:image/png;base64,{{ equipo.imagen|b64encode }}" class="imagen" style="float: right;" >
+      <img src="data:image/png;base64,{{ equipo.imagen|b64encode }}" class="imagen" style="float: right; border: #d3d3d388 2px solid; border-radius: 8px;" >
       {% endif %}
 
       <div class="imagens">
@@ -123,17 +123,17 @@
       <br><br>
       <h3>Diagrama de Flujo del Subsistema Donde se encuentra Ubicado el Equipo</h3>
       {% if diagrama.diagrama_flujo %}
-      <img src="data:image/png;base64,{{ diagrama.diagrama_flujo|b64encode }}" class="imagend">
+      <img src="data:image/png;base64,{{ diagrama.diagrama_flujo|b64encode }}" class="imagend" style="border: #d3d3d388 5px solid; border-radius: 8px;">
       {% endif %}
       <br><br>
       <h3>Diagrama Caja Negra de la Función</h3>
       {% if diagrama.diagrama_caja_negra %}
-      <img src="data:image/png;base64,{{ diagrama.diagrama_caja_negra|b64encode }}" class="imagend">
+      <img src="data:image/png;base64,{{ diagrama.diagrama_caja_negra|b64encode }}" class="imagend"  style="border: #d3d3d388 5px solid; border-radius: 8px;">
       {% endif %}
       <br><br>
       <h3>Diagrama de Caja Transparente</h3>
       {% if diagrama.diagrama_caja_transparente %}
-      <img src="data:image/png;base64,{{ diagrama.diagrama_caja_transparente|b64encode }}" class="imagend">
+      <img src="data:image/png;base64,{{ diagrama.diagrama_caja_transparente|b64encode }}" class="imagend"  style="border: #d3d3d388 5px solid; border-radius: 8px;">
       {% endif %}
       <br><br>
       <h3>Procedimiento de Arranque</h3>
