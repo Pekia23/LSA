@@ -113,3 +113,55 @@ hr {
     margin-bottom: 20px;
     text-align: center;
 }
+
+/* Estilo del contenedor */
+.tooltip-container {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+    
+/* Información oculta inicialmente */
+.tooltip-text {
+visibility: hidden;
+width: 450px;
+background-color:  #6567ce6e ;
+color: #fff;
+text-align: center;
+border-radius: 5px;
+padding: 10px;
+position: absolute;
+bottom: 125%; /* Ajusta la posición vertical */
+left: 50%;
+transform: translateX(-70%);
+opacity: 0;
+transition: opacity 0.3s;
+}
+
+/* Triángulo que apunta al botón */
+.tooltip-text::after {
+content: "";
+position: absolute;
+top: 100%; /* Apunta hacia abajo */
+left: 72%;
+transform: translateX(-150%);
+border-width: 5px;
+border-style: solid;
+border-color: #6567ce6e transparent transparent transparent;
+}
+
+/* Mostrar información al pasar el ratón */
+.tooltip-container:hover .tooltip-text {
+visibility: visible;
+opacity: 1;
+}
+
+.info{
+    font-size:25px;
+    border: none;
+    background-color: transparent;
+}
+
+.matrizRiesgo{
+    width: 400px;
+}

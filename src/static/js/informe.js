@@ -47,6 +47,27 @@ document.getElementById("botonPDF").addEventListener("click", async function (ev
     });
 });
 
+function addNumberingToTitles(container, initialH2Counter = 1) {
+    const titleSelectors = ['h2', 'h3']; // Niveles de encabezado a numerar
+    let h2Counter = initialH2Counter - 1; // Configura el valor inicial para <h2>
+    let h3Counter = 0; // Contador para <h3>
+
+    // Itera por los encabezados en el orden en que aparecen
+    const titles = container.querySelectorAll(titleSelectors.join(','));
+    titles.forEach(title => {
+        if (title.tagName.toLowerCase() === 'h2') {
+            // Incrementa el contador de <h2> y reinicia el de <h3>
+            h2Counter++;
+            h3Counter = 0;
+            title.textContent = `${h2Counter}. ${title.textContent}`; // Numeración para <h2>
+        } else if (title.tagName.toLowerCase() === 'h3') {
+            // Incrementa el contador de <h3>
+            h3Counter++;
+            title.textContent = `${h2Counter}.${h3Counter} ${title.textContent}`; // Numeración para <h3>
+        }
+    });
+}
+
 async function createCoverPage() {
     // Crear un documento PDF con PDFLib
     const pdfDoc = await PDFLib.PDFDocument.create();
@@ -101,6 +122,7 @@ async function generatePDF(className, shouldDownload) {
         // Crear contenedor temporal para clonar los elementos
         const container = document.createElement("div");
         elements.forEach(element => container.appendChild(element.cloneNode(true)));
+        addNumberingToTitles(container);
         document.body.appendChild(container);
 
         const options = {
@@ -144,6 +166,7 @@ async function generateSpecialPDF(className, shouldDownload) {
 
         const container = document.createElement("div");
         elements.forEach(element => container.appendChild(element.cloneNode(true)));
+        addNumberingToTitles(container,5);
         document.body.appendChild(container);
 
         const options = {
