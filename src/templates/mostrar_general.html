@@ -14,9 +14,7 @@
 {% block body %}
 
     <div class="container" id="reporte" >
-
-        <button class="reporte no-print" id="botonPDF" data-nombre-equipo="{{ equipo.nombre_equipo }}">
-
+        <button class="reporte no-print" id="botonPDF" data-nombre-equipo="{{ equipo.nombre_equipo }}" data-marca-equipo="{{ equipo.marca }}" data-modelo-equipo="{{ equipo.modelo }}">
             <img src="{{ url_for('static', filename='img/acrobata.png') }}" alt="PDF">
             <span class="text">Generar informe</span>
         </button>

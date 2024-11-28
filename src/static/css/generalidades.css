@@ -1,5 +1,6 @@
 .row{
-    background-color: #f0f0f0;
+    background-color:#f3f4f6;
+    font-family: 'Inter', sans-serif;
 }
 .navbar{
     position: sticky;  /* Hace que el elemento sea pegajoso */

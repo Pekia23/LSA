@@ -83,6 +83,7 @@ tr{
 /* Evitar que las tablas se partan entre páginas */
 table {
     page-break-inside: avoid;
+    border:#0c377f 5px solid
 }
 
 /* Forzar que cada sección empiece en una nueva página */
@@ -120,7 +121,7 @@ table, h3, .section {
     break-inside: avoid;      /* Evitar cortes dentro de la sección FMEA */
     overflow: visible;        /* Asegurar que todo el contenido sea visible */
     width: 100%;              /* Asegurar que la sección ocupe todo el ancho */
-    font-size: 14px;
+    font-size: 13px;
 }
 
 .imagend{
@@ -133,4 +134,12 @@ table, h3, .section {
 
 img {
     break-inside: avoid;
+}
+
+.diagrama{
+    page-break-inside: avoid;
+}
+
+body{
+    font-family: 'Inter', sans-serif;
 }

@@ -69,27 +69,33 @@ function addNumberingToTitles(container, initialH2Counter = 1) {
 }
 
 async function createCoverPage() {
-    // Crear un documento PDF con PDFLib
-    const pdfDoc = await PDFLib.PDFDocument.create();
+    // Fetch equipment information (name, brand, model)
+    const botonPDF = document.getElementById("botonPDF");
+    const nombre = botonPDF.getAttribute("data-nombre-equipo");
+    const marca = botonPDF.getAttribute("data-marca-equipo");
+    const modelo = botonPDF.getAttribute("data-modelo-equipo");
     
-    // Añadir una página con dimensiones A2 (mm convertido a puntos)
-    const a2Width = 1190.55; // Ancho en puntos
-    const a2Height = 1683.78; // Alto en puntos
+    // Create a PDF document using PDFLib
+    const pdfDoc = await PDFLib.PDFDocument.create();
+
+    // Add a page with dimensions A2 (converted to points)
+    const a2Width = 1190.55; // Width in points
+    const a2Height = 1683.78; // Height in points
     const page = pdfDoc.addPage([a2Width, a2Height]);
 
-    // Cargar la imagen de portada
+    // Load the cover image
     const imageBytes = await fetch('/static/img/portada.png').then(res => res.arrayBuffer());
     const coverImage = await pdfDoc.embedPng(imageBytes);
 
-    // Obtener las dimensiones de la imagen para escalar correctamente
+    // Get image dimensions for scaling
     const { width, height } = coverImage;
 
-    // Calcular la escala para abarcar toda la página
+    // Scale the image to fill the page
     const scale = Math.max(a2Width / width, a2Height / height);
     const scaledWidth = width * scale;
     const scaledHeight = height * scale;
 
-    // Dibujar la imagen centrada en la página
+    // Draw the image centered on the page
     page.drawImage(coverImage, {
         x: (a2Width - scaledWidth) / 2,
         y: (a2Height - scaledHeight) / 2,
@@ -97,10 +103,63 @@ async function createCoverPage() {
         height: scaledHeight,
     });
 
-    // Exportar el documento como Blob
+    // Add dynamic text (Equipment Name, Brand, Model)
+    const font = await pdfDoc.embedFont(PDFLib.StandardFonts.HelveticaBold);
+    const fontSize = 55;
+    const fontSizes = 40;
+    const textColor = PDFLib.rgb(0 / 255, 74 / 255, 173 / 255); // RGB: (0, 74, 173)
+
+    page.drawText("INFORME DE ANÁLISIS DE ", {
+        x: 105,
+        y: a2Height - 1150,
+        size: fontSize,
+        font,
+        color: textColor,
+    });
+
+    page.drawText("DE SOPORTE LOGÍSTICO ", {
+        x: 105,
+        y: a2Height - 1200,
+        size: fontSize,
+        font,
+        color: textColor,
+    });
+
+    page.drawText("(LSA)", {
+        x: 105,
+        y: a2Height - 1250,
+        size: fontSize,
+        font,
+        color: textColor,
+    });
+    
+    page.drawText(`Nombre: ${nombre}`, {
+        x: 105,
+        y: a2Height - 1330,
+        size: fontSizes,
+        font,
+        color: textColor,
+    });
+
+    page.drawText(`Marca: ${marca}`, {
+        x: 105,
+        y: a2Height - 1380,
+        size: fontSizes,
+        font,
+        color: textColor,
+    });
+
+    page.drawText(`Modelo: ${modelo}`, {
+        x: 105,
+        y: a2Height - 1430,
+        size: fontSizes,
+        font,
+        color: textColor,
+    });
+
+    // Export the document as a Blob
     return new Blob([await pdfDoc.save()], { type: 'application/pdf' });
 }
-
 
 async function generatePDF(className, shouldDownload) {
     // Generación del primer PDF como Blob

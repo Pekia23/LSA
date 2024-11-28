@@ -120,20 +120,26 @@
           {{ equipo.descripcion }}
         </p>
       <br><br>
-      <h3>Diagrama de Flujo del Subsistema Donde se encuentra Ubicado el Equipo</h3>
-      {% if diagrama.diagrama_flujo %}
-      <img src="data:image/png;base64,{{ diagrama.diagrama_flujo|b64encode }}" class="imagend" style="border: #d3d3d388 5px solid; border-radius: 8px;">
-      {% endif %}
+      <diV class="diagrama">
+        <h3>Diagrama de Flujo del Subsistema Donde se encuentra Ubicado el Equipo</h3>
+        {% if diagrama.diagrama_flujo %}
+        <img src="data:image/png;base64,{{ diagrama.diagrama_flujo|b64encode }}" class="imagend" style="border: #d3d3d388 5px solid; border-radius: 8px;">
+        {% endif %}
+      </diV>  
       <br><br>
-      <h3>Diagrama Caja Negra de la Función</h3>
-      {% if diagrama.diagrama_caja_negra %}
-      <img src="data:image/png;base64,{{ diagrama.diagrama_caja_negra|b64encode }}" class="imagend"  style="border: #d3d3d388 5px solid; border-radius: 8px;">
-      {% endif %}
+      <div class="diagrama">
+        <h3>Diagrama Caja Negra de la Función</h3>
+        {% if diagrama.diagrama_caja_negra %}
+        <img src="data:image/png;base64,{{ diagrama.diagrama_caja_negra|b64encode }}" class="imagend"  style="border: #d3d3d388 5px solid; border-radius: 8px;">
+        {% endif %}
+      </div>  
       <br><br>
-      <h3>Diagrama de Caja Transparente</h3>
-      {% if diagrama.diagrama_caja_transparente %}
-      <img src="data:image/png;base64,{{ diagrama.diagrama_caja_transparente|b64encode }}" class="imagend"  style="border: #d3d3d388 5px solid; border-radius: 8px;">
-      {% endif %}
+      <div class="diagrama">
+        <h3>Diagrama de Caja Transparente</h3>
+        {% if diagrama.diagrama_caja_transparente %}
+        <img src="data:image/png;base64,{{ diagrama.diagrama_caja_transparente|b64encode }}" class="imagend"  style="border: #d3d3d388 5px solid; border-radius: 8px;">
+        {% endif %}
+      </div>  
       <br><br>
       <h3>Procedimiento de Arranque</h3>
       <p>{{ procedimiento.arranque }}</p>
