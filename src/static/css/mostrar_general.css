@@ -1,7 +1,6 @@
 .imagens h2{
     color: #0c377f !important;
     font-weight: bold;
-    margin-top: 20px;
     margin-bottom: 20px;
 }
 
@@ -19,7 +18,6 @@
 h3 {
     color: #0c377f !important;
     font-weight: bold !important;
-    margin-top: 10px;  /* Espaciado superior */
 }
 
 .volver{
@@ -77,7 +75,6 @@ tr{
 #reporte{
     margin-left: 25px;
     padding: 0;
-
 }
 
 /* Evitar que las tablas se partan entre páginas */
@@ -110,17 +107,10 @@ tr {
 
 td,th {
     page-break-inside: avoid;
+    page-break-after: auto;
 
 }
 
-main{
-    padding: 0;
-}
-
-/* Asegura un espacio inferior en cada tabla o sección */
-table, h3, .section {
-    margin-bottom: 20px; /* Ajusta según tus necesidades */
-}
 
 .special-fmea {
     page-break-inside: avoid; /* Evitar cortes dentro de la sección FMEA */
@@ -148,4 +138,11 @@ img {
 
 body{
     font-family: 'Inter', sans-serif;
+}
+
+.section, .special-fmea{
+    background-color: rgba(248, 248, 248, 0.685);
+    border: #0c367f2c 2px solid;
+    padding: 5px 20px 10px 20px;
+    border-radius: 8px;
 }

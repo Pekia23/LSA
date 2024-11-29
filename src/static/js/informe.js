@@ -180,7 +180,15 @@ async function generatePDF(className, shouldDownload) {
 
         // Crear contenedor temporal para clonar los elementos
         const container = document.createElement("div");
-        elements.forEach(element => container.appendChild(element.cloneNode(true)));
+        elements.forEach(element => {
+            const clone = element.cloneNode(true);
+
+            // Quitar estilos de fondo y borde
+            clone.style.backgroundColor = "transparent";
+            clone.style.border = "none";
+
+            container.appendChild(clone);
+        });
         addNumberingToTitles(container);
         document.body.appendChild(container);
 
@@ -224,7 +232,15 @@ async function generateSpecialPDF(className, shouldDownload) {
         noPrintElements.forEach(el => el.style.display = 'none');
 
         const container = document.createElement("div");
-        elements.forEach(element => container.appendChild(element.cloneNode(true)));
+        elements.forEach(element => {
+            const clone = element.cloneNode(true);
+
+            // Quitar estilos de fondo y borde
+            clone.style.backgroundColor = "transparent";
+            clone.style.border = "none";
+
+            container.appendChild(clone);
+        });
         addNumberingToTitles(container,5);
         document.body.appendChild(container);
 
