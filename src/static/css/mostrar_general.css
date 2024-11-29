@@ -8,7 +8,7 @@
 
 .imagens{
     padding: 5px;
-    background-color: rgba(211, 211, 211, 0.534);
+    background-color: #d3d3d388;
 }
 
 .imagen{
@@ -81,9 +81,14 @@ tr{
 }
 
 /* Evitar que las tablas se partan entre páginas */
-table {
+table{
     page-break-inside: avoid;
-    border:#0c377f 5px solid
+    border:#d3d3d388 8px solid !important;
+    
+}
+
+td,tr,th{
+    border:#d3d3d388 2px solid !important;
 }
 
 /* Forzar que cada sección empiece en una nueva página */
@@ -103,8 +108,9 @@ tr {
     page-break-after: auto;
 }
 
-td {
+td,th {
     page-break-inside: avoid;
+
 }
 
 main{
