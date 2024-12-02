@@ -1,7 +1,7 @@
 ##este es el pro
 
 from flask import Flask,session,flash, render_template, request, jsonify, redirect, url_for, make_response, g, send_file
-
+from dotenv import load_dotenv
 from markupsafe import Markup
 
 import uuid

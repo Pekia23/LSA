@@ -128,7 +128,7 @@ td,th {
     margin-right: auto; /* Centra horizontalmente */
 }
 
-img {
+img,h2,h3 {
     break-inside: avoid;
 }
 

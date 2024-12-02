@@ -14,7 +14,7 @@
       {% endif %}
 
       <div class="imagens">
-        <h2>{{ equipo.nombre_equipo }}</h2>
+        <h2>{{ equipo.nombre_equipo | title }}</h2>
       </div>
       <br>
       
@@ -91,12 +91,12 @@
           <div class="row">
             <div class="col-md-6 section1">
               <div class="mb-3">
-                <label><b>Peso:</b></label>
+                <label><b>Peso (Kg):</b></label>
                 <span>{{ equipo.peso_seco }}</span>
               </div>
               
               <div class="mb-3">
-                <label><b>Dimensiones:</b></label>
+                <label><b>Dimensiones (mmxmmxmm):</b></label>
                 <span>{{ equipo.dimensiones }}</span>
               </div>
             </div>
