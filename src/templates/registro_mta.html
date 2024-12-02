@@ -101,43 +101,6 @@
             </div>
         </div>
 
-        <!-- Segunda columna -->
-        <div class="row my-4">
-            <div class="col-md-4">
-                <label for="condiciones_requeridas_ambientales" class="form-label">Condiciones Requeridas (Ambientales)</label>
-                <input type="text" class="form-control" id="condiciones_requeridas_ambientales" name="condiciones_requeridas_ambientales" value="{{ mta['condiciones_ambientales'] }}">
-            </div>
-            <div class="col-md-4">
-                <label for="condiciones_requeridas_estado_equipo" class="form-label">Condiciones Requeridas (Estado del equipo)</label>
-                <select class="form-control" id="condiciones_requeridas_estado_equipo" name="condiciones_requeridas_estado_equipo">
-                    <option value="" disabled selected>---- Selecciona ----</option>
-                    <option value="Apagado" {% if mta['condiciones_estado_equipo'] == "Apagado" %}selected{% endif %}>Apagado</option>
-                    <option value="Apagado sin alimentacion" {% if mta['condiciones_estado_equipo'] == "Apagado sin alimentacion" %}selected{% endif %}>Apagado sin alimentación</option>
-                    <option value="Funcionando" {% if mta['condiciones_estado_equipo'] == "Funcionando" %}selected{% endif %}>Funcionando</option>
-                </select>
-            </div>
-            <div class="col-md-4">
-                <label for="condiciones_requeridas_especiales" class="form-label">Condiciones Requeridas (Especiales)</label>
-                <input type="text" class="form-control" id="condiciones_requeridas_especiales" name="condiciones_requeridas_especiales" value="{{ mta['condiciones_especiales'] }}">
-            </div>
-        </div>
-
-        <!-- Tercera columna -->
-        <div class="row my-4">
-            <div class="col-md-4">
-                <label for="duracion_tarea_horas" class="form-label">Duración de la Tarea (Horas)</label>
-                <input type="number" class="form-control" id="duracion_tarea_horas" name="duracion_tarea_horas" value="{{ mta['horas'] }}">
-            </div>
-            <div class="col-md-4">
-                <label for="duracion_tarea_minutos" class="form-label">Duración de la Tarea (Minutos)</label>
-                <input type="number" class="form-control" id="duracion_tarea_minutos" name="duracion_tarea_minutos" value="{{ mta['minutos'] }}">
-            </div>
-            <div class="col-md-4">
-                <label for="detalle_tarea" class="form-label">Detalle de tarea</label>
-                <input type="text" class="form-control" id="detalle_tarea" name="detalle_tarea" value="{{ mta['detalle_tarea'] }}">
-            </div>
-        </div>
-
         {% if repuestos %}
         <label for="repuestos_requeridos" class="form-label">Repuestos Requeridos (referenciado del manual)</label>
         
@@ -161,6 +124,48 @@
 
         <!-- Fin Herramientas / Equipos Requeridos -->
 
+        <!-- Segunda columna -->
+        <div style="padding-top:10px ;">
+            <div>
+                <label for="condiciones_requeridas_ambientales" class="form-label">Condiciones Requeridas (Ambientales)</label>
+                <textarea class="form-control" id="condiciones_requeridas_ambientales" name="condiciones_requeridas_ambientales" rows="4" value="{{ mta['condiciones_ambientales'] }}"></textarea>
+            </div>
+            <div>
+                <label for="condiciones_requeridas_especiales" class="form-label">Condiciones Requeridas (Especiales)</label>
+                <textarea type="text" class="form-control" id="condiciones_requeridas_especiales" name="condiciones_requeridas_especiales" rows="4" value="{{ mta['condiciones_especiales'] }}"></textarea>
+            </div>
+        </div>    
+            
+            
+        
+
+        <!-- Tercera columna -->
+        <div class="row my-4">
+            <div class="col-md-4">
+                <label for="condiciones_requeridas_estado_equipo" class="form-label">Condiciones Requeridas (Estado del equipo)</label>
+                <select class="form-control" id="condiciones_requeridas_estado_equipo" name="condiciones_requeridas_estado_equipo">
+                    <option value="" disabled selected>---- Selecciona ----</option>
+                    <option value="Apagado" {% if mta['condiciones_estado_equipo'] == "Apagado" %}selected{% endif %}>Apagado</option>
+                    <option value="Apagado sin alimentacion" {% if mta['condiciones_estado_equipo'] == "Apagado sin alimentacion" %}selected{% endif %}>Apagado sin alimentación</option>
+                    <option value="Funcionando" {% if mta['condiciones_estado_equipo'] == "Funcionando" %}selected{% endif %}>Funcionando</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="duracion_tarea_horas" class="form-label">Duración de la Tarea (Horas)</label>
+                <input type="number" class="form-control" id="duracion_tarea_horas" name="duracion_tarea_horas" value="{{ mta['horas'] }}">
+            </div>
+            <div class="col-md-4">
+                <label for="duracion_tarea_minutos" class="form-label">Duración de la Tarea (Minutos)</label>
+                <input type="number" class="form-control" id="duracion_tarea_minutos" name="duracion_tarea_minutos" value="{{ mta['minutos'] }}">
+            </div>
+            
+        </div>
+
+        <div>
+            <label for="detalle_tarea" class="form-label">Detalle de tarea</label>
+            <textarea class="form-control" id="detalle_tarea" name="detalle_tarea" rows="4" value="{{ mta['detalle_tarea'] }}"></textarea>
+        </div>
+        <br>
         <!-- checkbox por repuesto -->
         <h2 class="section-title text-center">Level Of Repair Analysis (LORA)</h2>
 
@@ -203,7 +208,7 @@
             <thead>
                 <tr>
                     <th scope="col">Nivel</th>
-                    <th scope="col">Actividades</th>
+                    <th scope="col">Actividades (LORA)</th>
                     <th scope="col">Operario</th>
                 </tr>
             </thead>
@@ -242,7 +247,6 @@
                 <label for="sistema" class="form-label">Sistema</label>
                 <input type="text" id="sistema" class="form-control" name="sistema"
                     value="{{ fmea['sistema'] | default('') }}" readonly>
-
                 <label for="tipo_mantenimiento" class="form-label">Tipo de mantenimiento</label>
                 <select class="form-control" id="tipo_mantenimiento" name="tipo_mantenimiento">
                     <option value="" disabled selected>---- Selecciona ----</option>
@@ -482,7 +486,6 @@ document.getElementById('mta-form').addEventListener('submit', function (event) 
 
 
 </script>
-
 <script>
     const selectedHerramientas = [];
 
@@ -512,7 +515,6 @@ document.getElementById('mta-form').addEventListener('submit', function (event) 
     // Actualizar la lista al cargar la página
     updateSelectedHerramientas();
 </script>
-
 <script>
     // Opciones de operarios para cada nivel
     const operarioOptions = {
