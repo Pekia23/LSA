@@ -81,8 +81,6 @@ from database import (
     obtener_probablilidad_deteccion,
     obtener_herramientas_por_equipo,
 
-
-
     obtener_fmeas,
     obtener_fmea_por_id,
     actualizar_fmea,
